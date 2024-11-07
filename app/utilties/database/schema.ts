@@ -65,7 +65,7 @@ export const adminTable = pgTable("Admin", {
 export const buildingTable = pgTable("Building", {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 225 }).notNull(),
-    staffId: integer('staff_ids').notNull().references(() => staffTable.id),
+    staffId: integer('staff_id').notNull().references(() => staffTable.id),
     latitude: doublePrecision('latitude'),
     longitude: doublePrecision('longitude')
 })
@@ -85,14 +85,14 @@ export const violationTable = pgTable("Violation", {
 })
 
 export const outstandWorkOrderTable = pgTable("OutstandingWorkOrder", {
-    id: integer("id").primaryKey(),
+    id: serial("id").primaryKey(),
     roundId: integer("round_report_id").notNull().references(() => roundReportTable.id),
     description: varchar("description", { length: 225 }).notNull()
 })
 
 
 export const consverationReportTable = pgTable("ConversationReport", {
-    id: integer().primaryKey(),
+    id: serial('id').primaryKey(),
     residentId: integer().notNull().references(() => residentTable.id),
     zoneId: integer().notNull().references(() => zoneTable.id),
     submitted: date("submitted").notNull().defaultNow(),
@@ -102,7 +102,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
 })
 
 export const eventReportTable = pgTable('EventReport', {
-    id: integer().primaryKey(),
+    id: serial('id').primaryKey(),
     time: timestamp('time').notNull(),
     description: varchar('description', { length: 225 }).notNull(),
     attendance: integer().notNull(),
@@ -110,14 +110,14 @@ export const eventReportTable = pgTable('EventReport', {
 })
 
 export const zoneShiftTable = pgTable("ZoneShift", {
-    id: integer().primaryKey(),
+    id: serial('id').primaryKey(),
     zoneId: integer().references(() => zoneTable.id),
     start: date('start').notNull(),
     finish: date('finish').notNull()
 })
 
 export const staffShiftTable = pgTable("StaffShift", {
-    id: integer().primaryKey(),
+    id: serial('id').primaryKey(),
     staffId: integer().references(() => staffTable.id),
     start: date('start').notNull(),
     finish: date('finish').notNull()
@@ -218,3 +218,4 @@ export const colonialRCITable = pgTable('ColonialRCI', {
     status: statusEnum(),
     signedOn: date('signed_on')
 });
+
