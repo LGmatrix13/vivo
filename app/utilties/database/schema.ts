@@ -1,4 +1,3 @@
-import { time } from "drizzle-orm/mysql-core";
 import { integer, pgEnum, pgTable, varchar, doublePrecision, timestamp, serial, date , boolean, json, primaryKey } from "drizzle-orm/pg-core";
 
 export const genderEnum = pgEnum("genders", ["MALE", "FEMALE"]);

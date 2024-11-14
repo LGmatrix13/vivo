@@ -18,7 +18,7 @@ export default function Index() {
           </a>
         </div>
         
-        <p>Live, Laugh, Love</p>
+        <p className="font-bold">Live, Laugh, Love</p>
       </div>
     </div>
   );
