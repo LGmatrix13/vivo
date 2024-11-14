@@ -1,3 +1,4 @@
+import { time } from "drizzle-orm/mysql-core";
 import { integer, pgEnum, pgTable, varchar, doublePrecision, timestamp, serial, date , boolean, json, primaryKey } from "drizzle-orm/pg-core";
 
 export const genderEnum = pgEnum("genders", ["MALE", "FEMALE"]);
@@ -105,6 +106,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
     explanation: varchar({ length: 225 }).notNull(),
     level: levelEnum().notNull(),
     sentiment: sentimentEnum().notNull(),
+    highPriority: boolean().notNull().default(false)
 })
 
 export const eventReportTable = pgTable('EventReport', {
@@ -116,9 +118,9 @@ export const eventReportTable = pgTable('EventReport', {
 })
 
 export const readTable = pgTable("Read", {
-    staffId: integer().notNull().references(() => staffTable.id),
-    adminId: integer().notNull().references(() => adminTable.id),
-    zoneId: integer().notNull().references(() => zoneTable.id),
+    staffId: integer().references(() => staffTable.id),
+    adminId: integer().references(() => adminTable.id),
+    zoneId: integer().references(() => zoneTable.id),
     reportType: reportTypeEnum().notNull(),
     reportId: integer().notNull()
 }, (table) => {
@@ -145,15 +147,15 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
 export const zoneShiftTable = pgTable("ZoneShift", {
     id: serial('id').notNull().primaryKey(),
     zoneId: integer().references(() => zoneTable.id),
-    start: date('start').notNull(),
-    finish: date('finish').notNull()
+    start: timestamp('start').notNull(),
+    finish: timestamp('finish').notNull()
 })
 
 export const staffShiftTable = pgTable("StaffShift", {
     id: serial('id').notNull().primaryKey(),
     staffId: integer().references(() => staffTable.id),
-    start: date('start').notNull(),
-    finish: date('finish').notNull()
+    start: timestamp('start').notNull(),
+    finish: timestamp('finish').notNull()
 })
 
 export const RCITable = pgTable('RCI', {
