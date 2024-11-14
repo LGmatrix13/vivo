@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, varchar, doublePrecision, timestamp, serial, date , boolean, json} from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, varchar, doublePrecision, timestamp, serial, date , boolean, json, primaryKey } from "drizzle-orm/pg-core";
 
 export const genderEnum = pgEnum("genders", ["MALE", "FEMALE"]);
 export const levelEnum = pgEnum("levels", ["1", "2", "3"])
@@ -14,6 +14,13 @@ export const ratingEnum = pgEnum("rating", [
     "OK",
     "ROUGH",
     "REALLY_ROUGH"
+])
+export const reportTypeEnum = pgEnum("reportType", [
+    "RCI",
+    "CONVERSATION",
+    "WEEKLY",
+    "ROUND",
+    "EVENT"
 ])
 
 export const residentTable = pgTable("Resident", {
@@ -84,24 +91,10 @@ export const roundReportTable = pgTable("RoundReport", {
     description: varchar('description', { length: 225 }).notNull(),
 })
 
-export const roundReportReadTable = pgTable("RoundReportRead", {
-    conversationId: integer().notNull().references(() => consverationReportTable.id).primaryKey(),
-    zoneId: integer().notNull().references(() => zoneTable.id),
-    staffId: integer().notNull().references(() => staffTable.id),
-    adminId: integer().notNull().references(() => adminTable.id)
-})
-
 export const violationTable = pgTable("Violation", {
     id: serial('id').notNull().primaryKey(),
     roundReportId: integer("round_report_id").notNull().references(() => roundReportTable.id),
     description: varchar("description", { length: 225 }).notNull()
-})
-
-export const violationReadTable = pgTable("ViolationRead", {
-    violationId: integer().notNull().references(() => violationTable.id),
-    zoneId: integer().references(() => zoneTable.id),
-    staffId: integer().references(() => staffTable.id),
-    adminId: integer().references(() => adminTable.id)
 })
 
 export const consverationReportTable = pgTable("ConversationReport", {
@@ -114,13 +107,6 @@ export const consverationReportTable = pgTable("ConversationReport", {
     sentiment: sentimentEnum().notNull(),
 })
 
-export const conservationReportReadTable = pgTable("ConversationReportRead", {
-    conversationId: integer().notNull().references(() => consverationReportTable.id).primaryKey(),
-    zoneId: integer().references(() => zoneTable.id),
-    staffId: integer().references(() => staffTable.id),
-    adminId: integer().references(() => adminTable.id)
-})
-
 export const eventReportTable = pgTable('EventReport', {
     id: serial('id').notNull().primaryKey(),
     time: timestamp('time').notNull(),
@@ -129,11 +115,16 @@ export const eventReportTable = pgTable('EventReport', {
     zoneId: integer('zone_id').notNull().references(() => zoneTable.id)
 })
 
-export const eventReportReadTable = pgTable("ConversationReportRead", {
-    eventId: integer().notNull().references(() => eventReportTable.id).primaryKey(),
-    zoneId: integer().references(() => zoneTable.id),
-    staffId: integer().references(() => staffTable.id),
-    adminId: integer().references(() => adminTable.id)
+export const readTable = pgTable("Read", {
+    staffId: integer().notNull().references(() => staffTable.id),
+    adminId: integer().notNull().references(() => adminTable.id),
+    zoneId: integer().notNull().references(() => zoneTable.id),
+    reportType: reportTypeEnum().notNull(),
+    reportId: integer().notNull()
+}, (table) => {
+    return {
+        pk: primaryKey({ columns: [table.reportId, table.reportType] })
+    }
 })
 
 export const weeklyReportTable = pgTable("WeeklyReport", {
@@ -174,10 +165,3 @@ export const RCITable = pgTable('RCI', {
     signedOn: date('signed_on'),
     sentToLimble: boolean('sent_to_limble').notNull().default(false)
 });
-
-export const RCIReadTable = pgTable("RCIReadTable", {
-    RICId: integer().notNull().references(() => RCITable.id).primaryKey(),
-    zoneId: integer().references(() => zoneTable.id),
-    staffId: integer().references(() => staffTable.id),
-    adminId: integer().references(() => adminTable.id)
-})
