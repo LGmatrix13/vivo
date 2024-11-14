@@ -22,12 +22,18 @@ export const reportTypeEnum = pgEnum("reportType", [
     "ROUND",
     "EVENT"
 ])
+export const personTypeEnum = pgEnum("personType", [
+    "ZONE",
+    "STAFF",
+    "ASSISTANT_STAFF",
+    "ADMIN"
+])
 
 export const residentTable = pgTable("Resident", {
     id: serial('id').notNull().primaryKey(),
     firstName: varchar('first_name', { length: 225 }).notNull(),
     lastName: varchar('last_name', { length: 225 }).notNull(),
-    emailAddress: varchar('email_addresss', { length: 225 }).notNull(),
+    emailAddress: varchar('email_address', { length: 225 }).notNull(),
     city: varchar('city', { length: 225 }).notNull(),
     state: varchar('state', { length: 225 }).notNull(),
     phoneNumber: varchar('phone_number', { length: 225 }).notNull(),
@@ -48,7 +54,7 @@ export const roomTable = pgTable("Room", {
     id: serial('id').notNull().primaryKey(),
     roomNumber: varchar('room_number', { length: 225 }).notNull(),
     buildingId: integer('building_id').notNull().references(() => buildingTable.id),
-    zoneId: integer('zone_id').notNull().references(() => zoneTable.id),
+    zoneId: integer('zone_id').references(() => zoneTable.id),
     capacity: integer('capacity').notNull(),
 });
 
@@ -117,14 +123,13 @@ export const eventReportTable = pgTable('EventReport', {
 })
 
 export const readTable = pgTable("Read", {
-    staffId: integer().references(() => staffTable.id),
-    adminId: integer().references(() => adminTable.id),
-    zoneId: integer().references(() => zoneTable.id),
+    personId: integer().notNull(),
     reportType: reportTypeEnum().notNull(),
-    reportId: integer().notNull()
+    reportId: integer().notNull(),
+    personType: personTypeEnum().notNull()
 }, (table) => {
     return {
-        pk: primaryKey({ columns: [table.reportId, table.reportType] })
+        pk: primaryKey({ columns: [table.reportId, table.reportType, table.personType, table.personId] })
     }
 })
 
