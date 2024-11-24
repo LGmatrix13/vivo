@@ -8,7 +8,7 @@ const paths = {
   INSIGHTS: "/admin/insights",
   RCIS: "/admin/rcis",
   PEOPLE: "/admin/people",
-  HOUSING: "/admin/housing/buildings",
+  HOUSING: "/admin/housing",
 };
 
 export default function AdminHeader() {

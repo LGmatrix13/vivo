@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { HomeSearch } from "./Icons";
+import SelectedRow from "./SelectedRow";
 
 interface TableProps {
-  columns: string[];
+  columnKeys: {
+    [key: string]: string;
+  };
   rows: {
     [key: string]: any;
   }[];
-  SelectedComponent?: (props: any) => React.ReactNode;
+  rowKeys: {
+    [key: string]: string;
+  };
+  InstructionComponent?: () => React.ReactElement;
 }
 
 export default function Table(props: TableProps) {
-  const { rows, columns, SelectedComponent } = props;
+  const { rows, rowKeys, columnKeys, InstructionComponent } = props;
+  const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
 
   return (
@@ -19,10 +25,10 @@ export default function Table(props: TableProps) {
         <table className="text-left table-auto w-full">
           <thead className="uppercase border-b bg-gray-50">
             <tr>
-              {columns.map((column, index) => (
+              {originalColumnKeys.map((originalColumnKey, index) => (
                 <th scope="col" className="px-5 py-3" key={index}>
                   <div className="space-x-2 flex flex-row items-center">
-                    <span>{column}</span>
+                    <span>{columnKeys[originalColumnKey]}</span>
                   </div>
                 </th>
               ))}
@@ -40,9 +46,9 @@ export default function Table(props: TableProps) {
                 key={rowIndex}
                 onClick={() => setOpened(rowIndex)}
               >
-                {columns.map((column, colIndex) => (
+                {originalColumnKeys.map((originalColumnKey, colIndex) => (
                   <td className="px-5 py-3" key={colIndex}>
-                    {row[column]}
+                    {row[originalColumnKey]}
                   </td>
                 ))}
               </tr>
@@ -50,15 +56,10 @@ export default function Table(props: TableProps) {
           </tbody>
         </table>
       </div>
-      {opened < 0 && (
-        <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-          <HomeSearch className="w-7 h-7" />
-          <h2 className="text-xl font-bold">First Open a Building</h2>
-        </div>
-      )}
-      {SelectedComponent && opened >= 0 && (
+      {opened < 0 && InstructionComponent && <InstructionComponent />}
+      {opened >= 0 && (
         <div className="w-2/5 p-5">
-          <SelectedComponent {...rows[opened]} />
+          <SelectedRow keys={rowKeys} row={rows[opened]} />
         </div>
       )}
     </div>
