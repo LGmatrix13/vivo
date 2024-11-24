@@ -1,8 +1,9 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { count, eq, sql, sum } from "drizzle-orm";
+import { count, eq, sum } from "drizzle-orm";
 import { useState } from "react";
-import { HomeSearch } from "~/components/Icons";
+import IconButton from "~/components/IconButton";
+import { Download, HomeSearch, Plus } from "~/components/Icons";
 import Search from "~/components/Search";
 import Table from "~/components/Table";
 import { db } from "~/utilties/database/connection";
@@ -56,12 +57,17 @@ export default function AdminBuldingsPage() {
 
   return (
     <section className="space-y-5">
-      <Search
-        placeholder="Search for a building..."
-        handleSearch={handleSearch}
-      />
+      <div className="flex">
+        <Search
+          placeholder="Search for a building..."
+          handleSearch={handleSearch}
+        />
+        <div className="ml-auto order-2 flex space-x-3">
+          <IconButton Icon={Plus}>Add Building</IconButton>
+          <IconButton Icon={Download}>Export</IconButton>{" "}
+        </div>
+      </div>
       <Table
-        columns={["name", "rd", "zones", "capacity"]}
         columnKeys={{
           name: "Name",
           rd: "rd",

@@ -2,7 +2,10 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { count, eq, sql, sum } from "drizzle-orm";
 import { useState } from "react";
-import { HomeSearch } from "~/components/Icons";
+import Button from "~/components/Button";
+import ExportButton from "~/components/ExportButton";
+import IconButton from "~/components/IconButton";
+import { Download, HomeSearch, Plus } from "~/components/Icons";
 import Search from "~/components/Search";
 import Table from "~/components/Table";
 import { db } from "~/utilties/database/connection";
@@ -56,7 +59,16 @@ export default function AdminRoomsPage() {
 
   return (
     <section className="space-y-5">
-      <Search placeholder="Search for a room..." handleSearch={handleSearch} />
+      <div className="flex">
+        <Search
+          placeholder="Search for a Room..."
+          handleSearch={handleSearch}
+        />
+        <div className="ml-auto order-2 flex space-x-3">
+          <IconButton Icon={Plus}>Add Room</IconButton>
+          <IconButton Icon={Download}>Export</IconButton>{" "}
+        </div>
+      </div>
       <Table
         columnKeys={{
           building: "Building",

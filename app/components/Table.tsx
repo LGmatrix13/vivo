@@ -57,7 +57,7 @@ export default function Table(props: TableProps) {
         </table>
       </div>
       {opened < 0 && InstructionComponent && <InstructionComponent />}
-      {opened >= 0 && (
+      {opened >= 0 && rows.length > opened && (
         <div className="w-2/5 p-5">
           <SelectedRow keys={rowKeys} row={rows[opened]} />
         </div>
