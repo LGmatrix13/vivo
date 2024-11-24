@@ -1,0 +1,29 @@
+import { Dispatch } from "react";
+
+interface InputProps {
+    label: string;
+    name: string;
+    type: string;
+    placeholder?: string;
+    value?: string;
+    required?: boolean;
+    readonly?: boolean;
+    disabled?: boolean;
+    setState?: Dispatch<string>;
+    [key: string]: any
+}
+
+export default function Input(props: InputProps) {
+    const { name, label, required, setState } = props;
+
+    return (
+        <div className="space-y-3 flex flex-col">
+            <label htmlFor={name} className="font-bold">{label} 
+                <span className="text-red-600 text-sm">
+                {" "}{required ? "*" : ''}
+                </span>
+                </label>
+            <input {...props} className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600" onChange={(e) => setState && setState(e.target.value)} />
+        </div>
+    )
+}

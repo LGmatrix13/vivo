@@ -17,8 +17,7 @@ export default function Index() {
             <img className="object-contain h-40" src={logo} />
           </a>
         </div>
-        
-        <p className="font-bold">Live, Laugh, Love</p>
+        <p className="font-bold text-xl">Live, Laugh, Love</p>
       </div>
     </div>
   );
