@@ -310,6 +310,35 @@ export function HomeSearch(props: IconProps) {
   );
 }
 
+export function Calendar(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
+      <path d="M16 3v4"></path>
+      <path d="M8 3v4"></path>
+      <path d="M4 11h16"></path>
+      <path d="M7 14h.013"></path>
+      <path d="M10.01 14h.005"></path>
+      <path d="M13.01 14h.005"></path>
+      <path d="M16.015 14h.005"></path>
+      <path d="M13.015 17h.005"></path>
+      <path d="M7.01 17h.005"></path>
+      <path d="M10.01 17h.005"></path>
+    </svg>
+  );
+}
+
 export function Logo(props: IconProps) {
   return (
     <svg
@@ -336,6 +365,28 @@ export function Logo(props: IconProps) {
         d="M64.6254 25C61.1052 25 58.5022 24.2313 56.8165 22.694C55.1556 21.1567 54.3251 18.9117 54.3251 15.959C54.3251 13.0307 55.1679 10.798 56.8537 9.26062C58.5394 7.69888 61.13 6.91801 64.6254 6.91801C68.1455 6.91801 70.7485 7.69888 72.4342 9.26062C74.1447 10.798 75 13.0307 75 15.959C75 18.9117 74.1571 21.1567 72.4714 22.694C70.7857 24.2313 68.1703 25 64.6254 25ZM64.6254 19.9854C65.7657 19.9854 66.5838 19.6681 67.0796 19.0337C67.6002 18.3992 67.8605 17.3743 67.8605 15.959C67.8605 14.5681 67.6002 13.5554 67.0796 12.9209C66.5838 12.2621 65.7657 11.9327 64.6254 11.9327C63.5098 11.9327 62.7041 12.2621 62.2083 12.9209C61.7125 13.5554 61.4646 14.5681 61.4646 15.959C61.4646 17.3743 61.7125 18.3992 62.2083 19.0337C62.7041 19.6681 63.5098 19.9854 64.6254 19.9854Z"
         fill="black"
       />
+    </svg>
+  );
+}
+
+export function Users(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="2"
+    >
+      <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+      <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
     </svg>
   );
 }
