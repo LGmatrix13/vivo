@@ -1,9 +1,7 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { count, eq, sql, sum } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { useState } from "react";
-import Button from "~/components/Button";
-import ExportButton from "~/components/ExportButton";
 import IconButton from "~/components/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/Icons";
 import Search from "~/components/Search";
@@ -13,7 +11,6 @@ import {
   buildingTable,
   residentTable,
   roomTable,
-  staffTable,
   zoneTable,
 } from "~/utilties/database/schema";
 

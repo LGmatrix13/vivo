@@ -23,7 +23,7 @@ export default function AdminHeader() {
     <header className="border-b mb-7">
       <nav className="max-w-screen-xl mx-auto flex items-center px-7 justify-between">
         <Link to={paths.SCHEDULES}>
-          <Logo className="fill-black" />
+          <Logo />
         </Link>
         <div className="ml-auto order-2 flex space-x-5 text-lg">
           <Link to={paths.SCHEDULES}>

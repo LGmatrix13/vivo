@@ -339,12 +339,12 @@ export function Calendar(props: IconProps) {
   );
 }
 
-export function Logo(props: IconProps) {
+export function Logo() {
   return (
     <svg
       width="75"
       height="25"
-      className={props.className || ""}
+      className="group"
       viewBox="0 0 75 25"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -355,6 +355,7 @@ export function Logo(props: IconProps) {
       />
       <path
         d="M23.7953 4.97804V0H31.3438V4.97804H23.7953ZM24.353 24.634V12.2987H21.7873L22.3822 7.28404H31.3438V24.634H24.353Z"
+        className="group-hover:fill-black duration-300 ease-in-out transition-all"
         fill="#2463EB"
       />
       <path
