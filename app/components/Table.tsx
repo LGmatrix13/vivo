@@ -41,7 +41,7 @@ export default function Table(props: TableProps) {
                   rowIndex + 1 < rows.length &&
                   "border-b border-l-blue-600 border-l-2"
                 } ${
-                  opened == rowIndex ? "bg-blue-600/[.05]" : "hover:bg-gray-50"
+                  opened == rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
                 } cursor-pointer transition ease-in-out`}
                 key={rowIndex}
                 onClick={() => setOpened(rowIndex)}
