@@ -1,7 +1,6 @@
 import { Outlet } from "@remix-run/react";
 import AdminHeader from "~/components/AdminHeader";
 import "@fontsource-variable/golos-text";
-import SubHeader from "~/components/SubHeader";
 
 export default function AdminLayout() {
   return (

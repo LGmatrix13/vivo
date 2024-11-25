@@ -1,11 +1,13 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
 import { count, eq, sum } from "drizzle-orm";
 import { useState } from "react";
 import IconButton from "~/components/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/Icons";
+import Loading from "~/components/Loading";
 import Search from "~/components/Search";
 import Table from "~/components/Table";
+import useLoading from "~/hooks/useLoading";
 import { db } from "~/utilties/database/connection";
 import {
   buildingTable,
@@ -42,6 +44,7 @@ export async function loader() {
 
 export default function AdminBuldingsPage() {
   const initialData = useLoaderData<typeof loader>();
+  const { loading } = useLoading();
   const [data, setData] = useState(initialData);
 
   function handleSearch(term: string) {
@@ -53,6 +56,10 @@ export default function AdminBuldingsPage() {
         )
       )
     );
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   return (
