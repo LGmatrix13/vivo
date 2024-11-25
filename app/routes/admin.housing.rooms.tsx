@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { useState } from "react";
 import IconButton from "~/components/IconButton";

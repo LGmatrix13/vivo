@@ -370,6 +370,35 @@ export function Logo() {
   );
 }
 
+export function LoginLogo() {
+  return (
+    <svg
+      width="75"
+      height="25"
+      viewBox="0 0 75 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6.95361 24.634L0 7.28404H7.28828L10.6349 17.4597L13.9816 7.28404H21.2699L14.3163 24.634H6.95361Z"
+        fill="black"
+      />
+      <path
+        d="M23.7953 4.97804V0H31.3438V4.97804H23.7953ZM24.353 24.634V12.2987H21.7873L22.3822 7.28404H31.3438V24.634H24.353Z"
+        fill="#2463EB"
+      />
+      <path
+        d="M40.1805 24.634L33.2269 7.28404H40.5152L43.8618 17.4597L47.2085 7.28404H54.4968L47.5432 24.634H40.1805Z"
+        fill="black"
+      />
+      <path
+        d="M64.6254 25C61.1052 25 58.5022 24.2313 56.8165 22.694C55.1556 21.1567 54.3251 18.9117 54.3251 15.959C54.3251 13.0307 55.1679 10.798 56.8537 9.26062C58.5394 7.69888 61.13 6.91801 64.6254 6.91801C68.1455 6.91801 70.7485 7.69888 72.4342 9.26062C74.1447 10.798 75 13.0307 75 15.959C75 18.9117 74.1571 21.1567 72.4714 22.694C70.7857 24.2313 68.1703 25 64.6254 25ZM64.6254 19.9854C65.7657 19.9854 66.5838 19.6681 67.0796 19.0337C67.6002 18.3992 67.8605 17.3743 67.8605 15.959C67.8605 14.5681 67.6002 13.5554 67.0796 12.9209C66.5838 12.2621 65.7657 11.9327 64.6254 11.9327C63.5098 11.9327 62.7041 12.2621 62.2083 12.9209C61.7125 13.5554 61.4646 14.5681 61.4646 15.959C61.4646 17.3743 61.7125 18.3992 62.2083 19.0337C62.7041 19.6681 63.5098 19.9854 64.6254 19.9854Z"
+        fill="black"
+      />
+    </svg>
+  );
+}
+
 export function Users(props: IconProps) {
   return (
     <svg
@@ -434,6 +463,108 @@ export function Loader(props: IconProps) {
       <path d="M7.75 16.25l-2.15 2.15"></path>
       <path d="M6 12l-3 0"></path>
       <path d="M7.75 7.75l-2.15 -2.15"></path>
+    </svg>
+  );
+}
+
+export function ArrowNarrowUp(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M12 5l0 14"></path> <path d="M16 9l-4 -4"></path>{" "}
+      <path d="M8 9l4 -4"></path>{" "}
+    </svg>
+  );
+}
+
+export function ArrowNarrowDown(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M12 5l0 14"></path>
+      <path d="M16 15l-4 4"></path>
+      <path d="M8 15l4 4"></path>
+    </svg>
+  );
+}
+
+export function ArrowsDownUp(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M17 3l0 18"></path>
+      <path d="M10 18l-3 3l-3 -3"></path>
+      <path d="M7 21l0 -18"></path>
+      <path d="M20 6l-3 -3l-3 3"></path>
+    </svg>
+  );
+}
+
+export function Office(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M4 18h9v-12l-5 2v5l-4 2v-8l9 -4l7 2v13l-7 3z"></path>
+    </svg>
+  );
+}
+
+export function Close(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="24"
+      height="24"
+      stroke-width="1.5"
+    >
+      <path d="M18 6l-12 12"></path>
+      <path d="M6 6l12 12"></path>
     </svg>
   );
 }

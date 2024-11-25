@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SelectedRow from "./SelectedRow";
+import { ArrowNarrowDown, ArrowNarrowUp, ArrowsDownUp } from "./Icons";
 
 interface TableProps {
   columnKeys: {
@@ -18,30 +19,76 @@ export default function Table(props: TableProps) {
   const { rows, rowKeys, columnKeys, InstructionComponent } = props;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+
+  // Sort rows based on the sortConfig
+  const sortedRows = [...rows].sort((a, b) => {
+    if (!sortConfig) return 0;
+    const { key, direction } = sortConfig;
+    const aValue = a[key];
+    const bValue = b[key];
+
+    if (aValue < bValue) return direction === "asc" ? -1 : 1;
+    if (aValue > bValue) return direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const handleSort = (columnKey: string) => {
+    setSortConfig((prevConfig) => {
+      if (prevConfig && prevConfig.key === columnKey) {
+        // Toggle the direction if the column is already being sorted
+        return {
+          key: columnKey,
+          direction: prevConfig.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      // Default to ascending order for a new column
+      return { key: columnKey, direction: "asc" };
+    });
+  };
 
   return (
     <div className="flex flex-row border rounded-lg divide-x overflow-hidden">
-      <div className="w-3/5 min-h-80">
+      <div className="w-3/5 h-96 overflow-y-auto">
         <table className="text-left table-auto w-full">
-          <thead className="uppercase border-b bg-gray-50">
+          <thead className="sticky top-0 uppercase border-b bg-gray-50 z-10">
             <tr>
               {originalColumnKeys.map((originalColumnKey, index) => (
-                <th scope="col" className="px-5 py-3" key={index}>
+                <th
+                  scope="col"
+                  className="px-5 py-3 cursor-pointer"
+                  key={index}
+                  onClick={() => handleSort(originalColumnKey)}
+                >
                   <div className="space-x-2 flex flex-row items-center">
                     <span>{columnKeys[originalColumnKey]}</span>
+                    {sortConfig?.key === originalColumnKey ? (
+                      <>
+                        {sortConfig.direction === "asc" ? (
+                          <ArrowNarrowUp className="w-5 h-5" />
+                        ) : (
+                          <ArrowNarrowDown className="w-5 h-5" />
+                        )}
+                      </>
+                    ) : (
+                      <div className="w-5 h-5" />
+                    )}
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, rowIndex) => (
+            {sortedRows.map((row, rowIndex) => (
               <tr
                 className={`${
                   rowIndex + 1 < rows.length &&
                   "border-b border-l-blue-600 border-l-2"
                 } ${
-                  opened == rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
+                  opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
                 } cursor-pointer transition ease-in-out`}
                 key={rowIndex}
                 onClick={() => setOpened(rowIndex)}

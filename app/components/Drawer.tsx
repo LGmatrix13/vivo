@@ -1,6 +1,12 @@
 import { useState, createContext, useContext, cloneElement } from "react";
+import { Close } from "./Icons";
 
-const DrawerContext = createContext(useState(false));
+type DrawerContextType = [
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>
+];
+
+const DrawerContext = createContext<DrawerContextType | undefined>(undefined);
 
 type DrawerProps = {
   open?: boolean;
@@ -23,25 +29,23 @@ type DrawerContentProps = {
 };
 
 function DrawerContent(props: DrawerContentProps) {
-  const [open, setOpen] = useContext(DrawerContext);
+  const context = useContext(DrawerContext);
+  if (!context) {
+    throw new Error("DrawerContent must be used within a Drawer");
+  }
+  const [open, setOpen] = context;
 
   return (
     <>
       {open && (
         <div
           className="fixed pointer-events-auto bg-black/[.8] top-0 right-0 bottom-0 left-0 z-50 !m-0"
-          onClick={() => {
-            setOpen(false);
-            props.onClose && props.onClose();
-          }}
           id="Drawer"
         >
-          <div
-            className="relative bg-white p-10 space-y-5 w-1/2 flex flex-col h-full animate-drawer ml-auto overflow-y-scroll"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
+          <div className="relative bg-white p-7 space-y-5 w-1/2 flex flex-col h-full animate-drawer ml-auto overflow-y-scroll">
+            <button onClick={() => setOpen(false)} className="flex ml-auto">
+              <Close />
+            </button>
             {props.children}
           </div>
         </div>
@@ -51,7 +55,11 @@ function DrawerContent(props: DrawerContentProps) {
 }
 
 function DrawerButton(props: { children: JSX.Element }) {
-  const [, setOpen] = useContext(DrawerContext);
+  const context = useContext(DrawerContext);
+  if (!context) {
+    throw new Error("DrawerContent must be used within a Drawer");
+  }
+  const [open, setOpen] = context;
 
   return cloneElement(props.children, {
     onClick: () => setOpen(true),

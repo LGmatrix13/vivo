@@ -11,7 +11,7 @@ export default function IconButton(props: IconButtonProps) {
 
   return (
     <Button className="flex items-center space-x-2" onClick={onClick}>
-      <Icon />
+      <Icon className="w-5 h-5" />
       <span>{children}</span>
     </Button>
   );

@@ -6,3 +6,20 @@ html,
 body {
   font-family: "Golos Text Variable", sans-serif;
 }
+
+@layer utilities {
+  .animate-drawer {
+    animation: fade-in-left 0.3s ease-in;
+  }
+}
+
+@keyframes fade-in-left {
+  0% {
+    opacity: 0;
+    left: 15px;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}

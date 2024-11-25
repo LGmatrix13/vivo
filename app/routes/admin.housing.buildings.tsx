@@ -2,6 +2,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { count, eq, sum } from "drizzle-orm";
 import { useState } from "react";
+import { Drawer, DrawerButton, DrawerContent } from "~/components/Drawer";
 import IconButton from "~/components/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/Icons";
 import Loading from "~/components/Loading";
@@ -70,8 +71,15 @@ export default function AdminBuldingsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
-          <IconButton Icon={Plus}>Add Building</IconButton>
-          <IconButton Icon={Download}>Export</IconButton>{" "}
+          <Drawer>
+            <DrawerContent>
+              <h2 className="text-xl font-bold">Add a Building</h2>
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Building</IconButton>
+            </DrawerButton>
+            <IconButton Icon={Download}>Export</IconButton>{" "}
+          </Drawer>
         </div>
       </div>
       <Table
