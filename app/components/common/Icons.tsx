@@ -275,8 +275,8 @@ export function Home(props: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
       strokeWidth="1.5"
@@ -296,11 +296,11 @@ export function HomeSearch(props: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M21 12l-9 -9l-9 9h2v7a2 2 0 0 0 2 2h4.7"></path>
       <path d="M9 21v-6a2 2 0 0 1 2 -2h2"></path>
@@ -318,11 +318,11 @@ export function Calendar(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
       <path d="M16 3v4"></path>
@@ -407,11 +407,11 @@ export function Users(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
       <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
@@ -429,11 +429,11 @@ export function Plus(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M12 5l0 14"></path>
       <path d="M5 12l14 0"></path>
@@ -449,11 +449,11 @@ export function Loader(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M12 6l0 -3"></path>
       <path d="M16.25 7.75l2.15 -2.15"></path>
@@ -475,11 +475,11 @@ export function ArrowNarrowUp(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M12 5l0 14"></path> <path d="M16 9l-4 -4"></path>{" "}
       <path d="M8 9l4 -4"></path>{" "}
@@ -495,11 +495,11 @@ export function ArrowNarrowDown(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M12 5l0 14"></path>
       <path d="M16 15l-4 4"></path>
@@ -516,11 +516,11 @@ export function ArrowsDownUp(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M17 3l0 18"></path>
       <path d="M10 18l-3 3l-3 -3"></path>
@@ -538,11 +538,11 @@ export function Office(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M4 18h9v-12l-5 2v5l-4 2v-8l9 -4l7 2v13l-7 3z"></path>
     </svg>
@@ -557,11 +557,11 @@ export function Close(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M18 6l-12 12"></path>
       <path d="M6 6l12 12"></path>
@@ -577,11 +577,11 @@ export function Door(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M14 12v.01"></path>
       <path d="M3 21h18"></path>
@@ -598,17 +598,36 @@ export function Trash(props: IconProps) {
       className={`w-5 h-5 ${props.className || ""}`}
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       width="24"
       height="24"
-      stroke-width="1.5"
+      strokeWidth="1.5"
     >
       <path d="M4 7l16 0"></path>
       <path d="M10 11l0 6"></path>
       <path d="M14 11l0 6"></path>
       <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
       <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+    </svg>
+  );
+}
+
+export function Check(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="24"
+      height="24"
+      strokeWidth="1.5"
+    >
+      <path d="M5 12l5 5l10 -10"></path>
     </svg>
   );
 }

@@ -13,7 +13,7 @@ type DrawerProps = {
   children: React.ReactNode;
 };
 
-function Drawer(props: DrawerProps) {
+export function DrawerProvider(props: DrawerProps) {
   const [open, setOpen] = useState(props.open ? props.open : false);
 
   return (
@@ -28,7 +28,7 @@ type DrawerContentProps = {
   onClose?: Function;
 };
 
-function DrawerContent(props: DrawerContentProps) {
+export function DrawerContent(props: DrawerContentProps) {
   const context = useContext(DrawerContext);
   if (!context) {
     throw new Error("DrawerContent must be used within a Drawer");
@@ -54,19 +54,16 @@ function DrawerContent(props: DrawerContentProps) {
   );
 }
 
-function DrawerButton(props: { children: JSX.Element }) {
+export function DrawerButton(props: { children: JSX.Element }) {
   const context = useContext(DrawerContext);
   if (!context) {
     throw new Error("DrawerContent must be used within a Drawer");
   }
-  const [open, setOpen] = context;
+  const [, setOpen] = context;
 
   return cloneElement(props.children, {
-    onClick: (e: Event) => {
+    onClick: () => {
       setOpen(true);
-      e.stopPropagation();
     },
   });
 }
-
-export { DrawerContext, Drawer, DrawerButton, DrawerContent };

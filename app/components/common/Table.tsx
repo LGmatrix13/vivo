@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SelectedRow from "./SelectedRow";
 import { ArrowNarrowDown, ArrowNarrowUp, Pencil, Trash } from "./Icons";
-import { Drawer, DrawerButton, DrawerContent } from "./Drawer";
+import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 
 interface TableProps {
   columnKeys: {
@@ -94,55 +94,53 @@ export default function Table(props: TableProps) {
           </thead>
           <tbody>
             {sortedRows.map((row, rowIndex) => (
-              <Drawer>
-                <tr
-                  className={`${
-                    rowIndex + 1 < rows.length &&
-                    "border-b border-l-blue-600 border-l-2"
-                  } ${
-                    opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
-                  } transition ease-in-out`}
-                  key={rowIndex}
-                >
-                  {originalColumnKeys.map((originalColumnKey, colIndex) => (
-                    <td
-                      className="px-5 py-3 cursor-pointer"
-                      onClick={() => setOpened(rowIndex)}
-                      key={colIndex}
-                    >
-                      {row[originalColumnKey]}
-                    </td>
-                  ))}
-                  {(EditComponent || DeleteComponent) && (
-                    <td className="px-5 py-3 space-x-2 flex">
-                      {EditComponent && (
-                        <Drawer>
-                          <DrawerContent>
-                            <EditComponent />
-                          </DrawerContent>
-                          <DrawerButton>
-                            <button>
-                              <Pencil className="w-5 h-5" />
-                            </button>
-                          </DrawerButton>
-                        </Drawer>
-                      )}
-                      {DeleteComponent && (
-                        <Drawer>
-                          <DrawerContent>
-                            <DeleteComponent />
-                          </DrawerContent>
-                          <DrawerButton>
-                            <button>
-                              <Trash className="w-5 h-5" />
-                            </button>
-                          </DrawerButton>
-                        </Drawer>
-                      )}
-                    </td>
-                  )}
-                </tr>
-              </Drawer>
+              <tr
+                className={`${
+                  rowIndex + 1 < rows.length &&
+                  "border-b border-l-blue-600 border-l-2"
+                } ${
+                  opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
+                } transition ease-in-out`}
+                key={rowIndex}
+              >
+                {originalColumnKeys.map((originalColumnKey, colIndex) => (
+                  <td
+                    className="px-5 py-3 cursor-pointer"
+                    onClick={() => setOpened(rowIndex)}
+                    key={colIndex}
+                  >
+                    {row[originalColumnKey]}
+                  </td>
+                ))}
+                {(EditComponent || DeleteComponent) && (
+                  <td className="px-5 py-3 space-x-2 flex">
+                    {EditComponent && (
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <EditComponent />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Pencil className="w-5 h-5" />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    )}
+                    {DeleteComponent && (
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <DeleteComponent />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Trash className="w-5 h-5" />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    )}
+                  </td>
+                )}
+              </tr>
             ))}
           </tbody>
         </table>

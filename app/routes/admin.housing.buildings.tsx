@@ -1,13 +1,9 @@
 import { json } from "@remix-run/node";
-import {
-  useLoaderData,
-  useNavigation,
-  useOutletContext,
-} from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { count, eq, sum } from "drizzle-orm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Drawer,
+  DrawerProvider,
   DrawerButton,
   DrawerContent,
 } from "~/components/common/Drawer";
@@ -16,6 +12,7 @@ import { Download, HomeSearch, Plus } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
+import { useToastContext } from "~/components/common/Toast";
 import AddBuilding from "~/components/forms/AddBuilding";
 import DeleteBuilding from "~/components/forms/DeleteBuilding";
 import EditBuilding from "~/components/forms/EditBuilding";
@@ -82,7 +79,7 @@ export default function AdminBuldingsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
-          <Drawer>
+          <DrawerProvider>
             <DrawerContent>
               <AddBuilding />
             </DrawerContent>
@@ -90,7 +87,7 @@ export default function AdminBuldingsPage() {
               <IconButton Icon={Plus}>Add Building</IconButton>
             </DrawerButton>
             <IconButton Icon={Download}>Export</IconButton>{" "}
-          </Drawer>
+          </DrawerProvider>
         </div>
       </div>
       <Table

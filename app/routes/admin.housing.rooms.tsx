@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { useState } from "react";
 import {
-  Drawer,
+  DrawerProvider,
   DrawerButton,
   DrawerContent,
 } from "~/components/common/Drawer";
@@ -76,7 +76,7 @@ export default function AdminRoomsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
-          <Drawer>
+          <DrawerProvider>
             <DrawerContent>
               <AddRoom />
             </DrawerContent>
@@ -84,7 +84,7 @@ export default function AdminRoomsPage() {
               <IconButton Icon={Plus}>Add Room</IconButton>
             </DrawerButton>
             <IconButton Icon={Download}>Export</IconButton>{" "}
-          </Drawer>
+          </DrawerProvider>
         </div>
       </div>
       <Table
