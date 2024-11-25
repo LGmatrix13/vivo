@@ -2,19 +2,27 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { useState } from "react";
-import IconButton from "~/components/IconButton";
-import { Download, HomeSearch, Plus } from "~/components/Icons";
-import Loading from "~/components/Loading";
-import Search from "~/components/Search";
-import Table from "~/components/Table";
+import {
+  DrawerProvider,
+  DrawerButton,
+  DrawerContent,
+} from "~/components/common/Drawer";
+import IconButton from "~/components/common/IconButton";
+import { Download, HomeSearch, Plus } from "~/components/common/Icons";
+import Loading from "~/components/common/Loading";
+import Search from "~/components/common/Search";
+import Table from "~/components/common/Table";
+import AddRoom from "~/components/forms/AddRoom";
+import DeleteRoom from "~/components/forms/DeleteRoom";
+import EditRoom from "~/components/forms/EditRoom";
 import useLoading from "~/hooks/useLoading";
-import { db } from "~/utilties/database/connection";
+import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
   residentTable,
   roomTable,
   zoneTable,
-} from "~/utilties/database/schema";
+} from "~/utilties/server/database/schema";
 
 export async function loader() {
   const data = await db
@@ -68,8 +76,15 @@ export default function AdminRoomsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
-          <IconButton Icon={Plus}>Add Room</IconButton>
-          <IconButton Icon={Download}>Export</IconButton>{" "}
+          <DrawerProvider>
+            <DrawerContent>
+              <AddRoom />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Room</IconButton>
+            </DrawerButton>
+            <IconButton Icon={Download}>Export</IconButton>{" "}
+          </DrawerProvider>
         </div>
       </div>
       <Table
@@ -92,6 +107,8 @@ export default function AdminRoomsPage() {
             <h2 className="text-xl font-bold">First Open a Room</h2>
           </div>
         )}
+        EditComponent={EditRoom}
+        DeleteComponent={DeleteRoom}
       />
     </section>
   );

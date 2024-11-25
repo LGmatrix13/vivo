@@ -1,5 +1,5 @@
-import { MetaFunction, Outlet } from "@remix-run/react";
-import SubHeader from "~/components/SubHeader";
+import { MetaFunction, Outlet, useOutletContext } from "@remix-run/react";
+import SubHeader from "~/components/common/SubHeader";
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,6 +9,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function AdminHousingLayout() {
+  const context = useOutletContext();
   return (
     <>
       <SubHeader
@@ -23,7 +24,7 @@ export default function AdminHousingLayout() {
           },
         ]}
       />
-      <Outlet />
+      <Outlet context={context} />
     </>
   );
 }

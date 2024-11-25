@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SelectedRow from "./SelectedRow";
-import { ArrowNarrowDown, ArrowNarrowUp, ArrowsDownUp } from "./Icons";
+import { ArrowNarrowDown, ArrowNarrowUp, Pencil, Trash } from "./Icons";
+import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 
 interface TableProps {
   columnKeys: {
@@ -13,10 +14,19 @@ interface TableProps {
     [key: string]: string;
   };
   InstructionComponent?: () => React.ReactElement;
+  EditComponent?: () => React.ReactElement;
+  DeleteComponent?: () => React.ReactElement;
 }
 
 export default function Table(props: TableProps) {
-  const { rows, rowKeys, columnKeys, InstructionComponent } = props;
+  const {
+    rows,
+    rowKeys,
+    columnKeys,
+    InstructionComponent,
+    DeleteComponent,
+    EditComponent,
+  } = props;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
   const [sortConfig, setSortConfig] = useState<{
@@ -79,6 +89,7 @@ export default function Table(props: TableProps) {
                   </div>
                 </th>
               ))}
+              {(EditComponent || DeleteComponent) && <th scope="col" />}
             </tr>
           </thead>
           <tbody>
@@ -89,15 +100,46 @@ export default function Table(props: TableProps) {
                   "border-b border-l-blue-600 border-l-2"
                 } ${
                   opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
-                } cursor-pointer transition ease-in-out`}
+                } transition ease-in-out`}
                 key={rowIndex}
-                onClick={() => setOpened(rowIndex)}
               >
                 {originalColumnKeys.map((originalColumnKey, colIndex) => (
-                  <td className="px-5 py-3" key={colIndex}>
+                  <td
+                    className="px-5 py-3 cursor-pointer"
+                    onClick={() => setOpened(rowIndex)}
+                    key={colIndex}
+                  >
                     {row[originalColumnKey]}
                   </td>
                 ))}
+                {(EditComponent || DeleteComponent) && (
+                  <td className="px-5 py-3 space-x-2 flex">
+                    {EditComponent && (
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <EditComponent />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Pencil className="w-5 h-5" />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    )}
+                    {DeleteComponent && (
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <DeleteComponent />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Trash className="w-5 h-5" />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

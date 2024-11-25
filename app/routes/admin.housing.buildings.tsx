@@ -1,21 +1,28 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { count, eq, sum } from "drizzle-orm";
 import { useState } from "react";
-import { Drawer, DrawerButton, DrawerContent } from "~/components/Drawer";
-import IconButton from "~/components/IconButton";
-import { Download, HomeSearch, Plus } from "~/components/Icons";
-import Loading from "~/components/Loading";
-import Search from "~/components/Search";
-import Table from "~/components/Table";
+import {
+  DrawerProvider,
+  DrawerButton,
+  DrawerContent,
+} from "~/components/common/Drawer";
+import IconButton from "~/components/common/IconButton";
+import { Download, HomeSearch, Plus } from "~/components/common/Icons";
+import Loading from "~/components/common/Loading";
+import Search from "~/components/common/Search";
+import Table from "~/components/common/Table";
+import AddBuilding from "~/components/forms/AddBuilding";
+import DeleteBuilding from "~/components/forms/DeleteBuilding";
+import EditBuilding from "~/components/forms/EditBuilding";
 import useLoading from "~/hooks/useLoading";
-import { db } from "~/utilties/database/connection";
+import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
   roomTable,
   staffTable,
   zoneTable,
-} from "~/utilties/database/schema";
+} from "~/utilties/server/database/schema";
 
 export async function loader() {
   const data = await db
@@ -71,15 +78,15 @@ export default function AdminBuldingsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
-          <Drawer>
+          <DrawerProvider>
             <DrawerContent>
-              <h2 className="text-xl font-bold">Add a Building</h2>
+              <AddBuilding />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add Building</IconButton>
             </DrawerButton>
             <IconButton Icon={Download}>Export</IconButton>{" "}
-          </Drawer>
+          </DrawerProvider>
         </div>
       </div>
       <Table
@@ -103,6 +110,8 @@ export default function AdminBuldingsPage() {
             <h2 className="text-xl font-bold">First Open a Building</h2>
           </div>
         )}
+        EditComponent={EditBuilding}
+        DeleteComponent={DeleteBuilding}
       />
     </section>
   );
