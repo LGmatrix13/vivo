@@ -42,7 +42,7 @@ function DrawerContent(props: DrawerContentProps) {
           className="fixed pointer-events-auto bg-black/[.8] top-0 right-0 bottom-0 left-0 z-50 !m-0"
           id="Drawer"
         >
-          <div className="relative bg-white p-7 space-y-5 w-1/2 flex flex-col h-full animate-drawer ml-auto overflow-y-scroll">
+          <div className="relative bg-white p-7 space-y-5 w-1/3 flex flex-col h-full animate-drawer ml-auto overflow-y-scroll">
             <button onClick={() => setOpen(false)} className="flex ml-auto">
               <Close />
             </button>
@@ -62,7 +62,10 @@ function DrawerButton(props: { children: JSX.Element }) {
   const [open, setOpen] = context;
 
   return cloneElement(props.children, {
-    onClick: () => setOpen(true),
+    onClick: (e: Event) => {
+      setOpen(true);
+      e.stopPropagation();
+    },
   });
 }
 

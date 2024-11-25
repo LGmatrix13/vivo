@@ -1,6 +1,15 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "@remix-run/react";
-import { Chart, File, Pencil, Home, Logo, Calendar, Users } from "./Icons";
+import {
+  Chart,
+  File,
+  Pencil,
+  Home,
+  Logo,
+  Calendar,
+  Users,
+  Door,
+} from "./Icons";
 
 const paths = {
   SCHEDULES: "/admin/schedules",
@@ -21,7 +30,7 @@ export default function AdminHeader() {
 
   return (
     <header className="border-b mb-7">
-      <nav className="max-w-screen-xl mx-auto flex items-center px-7 justify-between">
+      <nav className="max-w-screen-2xl mx-auto flex items-center px-10 justify-between">
         <Link to={paths.SCHEDULES}>
           <Logo />
         </Link>
@@ -62,7 +71,7 @@ export default function AdminHeader() {
                 paths.RCIS
               )} py-7 flex items-center space-x-2`}
             >
-              <Pencil />
+              <Door />
               <p className="font-bold">RCIs</p>
             </button>
           </Link>

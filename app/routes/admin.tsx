@@ -1,13 +1,37 @@
-import { Outlet } from "@remix-run/react";
-import AdminHeader from "~/components/AdminHeader";
+import { Outlet, redirect, useLoaderData } from "@remix-run/react";
+import AdminHeader from "~/components/common/AdminHeader";
 import "@fontsource-variable/golos-text";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { auth } from "~/utilties/server/security/auth";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie = await auth.cookie.parse(cookieHeader);
+  if (!cookie) {
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await auth.cookie.serialize(""),
+      },
+    });
+  }
+  const decodedJwt = await auth.decodeJWT(cookie, "admin");
+  if (!decodedJwt) {
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await auth.cookie.serialize(""),
+      },
+    });
+  }
+  return decodedJwt;
+}
 
 export default function AdminLayout() {
+  const data = useLoaderData<typeof loader>();
   return (
     <>
       <AdminHeader />
-      <main className="max-w-screen-xl mx-auto pl-5 pr-5 nb-7">
-        <Outlet />
+      <main className="max-w-screen-2xl mx-auto px-10 mb-7">
+        <Outlet context={data} />
       </main>
     </>
   );
