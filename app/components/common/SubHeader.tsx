@@ -19,7 +19,7 @@ export default function SubHeader(props: SubHeaderProps) {
   return (
     <div className="flex flex-row space-x-3 mb-7">
       {pages.map((page, index) => (
-        <Link to={page.path} key={index}>
+        <Link to={page.path} key={index} prefetch="intent">
           <button
             className={`${isActivePage(
               page.path
