@@ -1,7 +1,7 @@
-import { defer, json } from "@remix-run/node";
+import { defer } from "@remix-run/node";
 import { Await, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import {
   DrawerProvider,
   DrawerButton,
