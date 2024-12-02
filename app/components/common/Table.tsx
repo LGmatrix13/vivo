@@ -64,7 +64,7 @@ export default function Table(props: TableProps) {
     <div className="flex flex-row border rounded-lg divide-x overflow-hidden">
       <div className="w-3/5 h-96 overflow-y-auto">
         <table className="text-left table-auto w-full">
-          <thead className="sticky top-0 uppercase border-b bg-gray-50 z-10">
+          <thead className="sticky top-0 uppercase border-b z-10">
             <tr>
               {originalColumnKeys.map((originalColumnKey, index) => (
                 <th

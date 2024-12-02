@@ -1,6 +1,5 @@
 import { Outlet, redirect, useLoaderData } from "@remix-run/react";
 import AdminHeader from "~/components/common/AdminHeader";
-import "@fontsource-variable/golos-text";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/server/security/auth";
 import { ToastProvider } from "~/components/common/Toast";

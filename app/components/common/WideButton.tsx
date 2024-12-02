@@ -1,0 +1,24 @@
+interface ButtonProps {
+  className?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+  options?: {
+    [key: string]: string;
+  };
+}
+
+export default function Button(props: ButtonProps) {
+  const { onClick, children, options, className } = props;
+
+  return (
+    <button
+      className={`w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition ease-in-out ${
+        className || ""
+      }`}
+      onClick={onClick}
+      {...options}
+    >
+      {children}
+    </button>
+  );
+}

@@ -51,7 +51,7 @@ export default function AdminHeader() {
   return (
     <header className="border-b mb-7">
       <nav className="max-w-screen-2xl mx-auto flex items-center px-10 justify-between">
-        <Link to="/schedules/schedule">
+        <Link to="/admin/schedules/schedule">
           <Logo />
         </Link>
         <div className="ml-auto order-2 flex space-x-5 text-lg">

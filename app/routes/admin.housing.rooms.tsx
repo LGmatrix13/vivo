@@ -1,7 +1,7 @@
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { defer, json } from "@remix-run/node";
+import { Await, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import {
   DrawerProvider,
   DrawerButton,
@@ -15,7 +15,8 @@ import Table from "~/components/common/Table";
 import AddRoom from "~/components/forms/AddRoom";
 import DeleteRoom from "~/components/forms/DeleteRoom";
 import EditRoom from "~/components/forms/EditRoom";
-import useLoading from "~/hooks/useLoading";
+import useSearch from "~/hooks/useSearch";
+import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
@@ -45,71 +46,65 @@ export async function loader() {
     ra: row.raFirstName ? `${row.raFirstName} ${row.raLastName}` : "",
   }));
 
-  return json(formattedData);
+  return defer({
+    data: formattedData,
+  });
 }
 
 export default function AdminRoomsPage() {
   const initialData = useLoaderData<typeof loader>();
-  const { loading } = useLoading();
-  const [data, setData] = useState(initialData);
-
-  function handleSearch(term: string) {
-    const lowerCaseTerm = term.toLowerCase();
-    setData(() =>
-      initialData.filter((row) =>
-        Object.values(row).some((value) =>
-          String(value).toLowerCase().includes(lowerCaseTerm)
-        )
-      )
-    );
-  }
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
-    <section className="space-y-5">
-      <div className="flex">
-        <Search
-          placeholder="Search for a Room..."
-          handleSearch={handleSearch}
-        />
-        <div className="ml-auto order-2 flex space-x-3">
-          <DrawerProvider>
-            <DrawerContent>
-              <AddRoom />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Plus}>Add Room</IconButton>
-            </DrawerButton>
-            <IconButton Icon={Download}>Export</IconButton>{" "}
-          </DrawerProvider>
-        </div>
-      </div>
-      <Table
-        columnKeys={{
-          building: "Building",
-          roomNumber: "Room Number",
-          ra: "RA",
-          capacity: "Capacity",
+    <Suspense fallback={<Loading />}>
+      <Await resolve={delay(initialData.data)}>
+        {(data) => {
+          const { handleSearch, filteredData } = useSearch(data);
+          return (
+            <section className="space-y-5">
+              <div className="flex">
+                <Search
+                  placeholder="Search for a Room..."
+                  handleSearch={handleSearch}
+                />
+                <div className="ml-auto order-2 flex space-x-3">
+                  <DrawerProvider>
+                    <DrawerContent>
+                      <AddRoom />
+                    </DrawerContent>
+                    <DrawerButton>
+                      <IconButton Icon={Plus}>Add Room</IconButton>
+                    </DrawerButton>
+                    <IconButton Icon={Download}>Export</IconButton>{" "}
+                  </DrawerProvider>
+                </div>
+              </div>
+              <Table
+                columnKeys={{
+                  building: "Building",
+                  roomNumber: "Room Number",
+                  ra: "RA",
+                  capacity: "Capacity",
+                }}
+                rows={filteredData}
+                rowKeys={{
+                  building: "Building",
+                  roomNumber: "Room Number",
+                  ra: "RA",
+                  capacity: "Capacity",
+                }}
+                InstructionComponent={() => (
+                  <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
+                    <HomeSearch className="w-7 h-7" />
+                    <h2 className="text-xl font-bold">First Open a Room</h2>
+                  </div>
+                )}
+                EditComponent={EditRoom}
+                DeleteComponent={DeleteRoom}
+              />
+            </section>
+          );
         }}
-        rows={data}
-        rowKeys={{
-          building: "Building",
-          roomNumber: "Room Number",
-          ra: "RA",
-          capacity: "Capacity",
-        }}
-        InstructionComponent={() => (
-          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-            <HomeSearch className="w-7 h-7" />
-            <h2 className="text-xl font-bold">First Open a Room</h2>
-          </div>
-        )}
-        EditComponent={EditRoom}
-        DeleteComponent={DeleteRoom}
-      />
-    </section>
+      </Await>
+    </Suspense>
   );
 }
