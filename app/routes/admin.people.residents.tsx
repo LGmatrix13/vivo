@@ -37,6 +37,7 @@ export async function loader() {
       fullName: sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as("fullName"),
       email: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
+      mailbox: residentTable.mailbox,
       hometown: sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as("hometown"),
       class: residentTable.class,
       roomBuilding: sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as("roomBuilding"),
@@ -83,6 +84,7 @@ export default function AdminPeopleResidentsPage() {
                   ra: "RA",
                   email: "Email",
                   phone: "Phone Number",
+                  mailbox: "Mailbox Number",
                   hometown: "Hometown",
                   class: "Class",
                 }}

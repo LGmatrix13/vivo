@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
-import { count, eq, sum } from "drizzle-orm";
+import { count, eq, sum, sql } from "drizzle-orm";
 import { Suspense } from "react";
 import {
   DrawerProvider,
@@ -32,8 +32,7 @@ export async function loader() {
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
-      rdFirstName: staffTable.firstName,
-      rdLastName: staffTable.lastName,
+      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd"),
       rooms: count(roomTable.id),
       zones: count(zoneTable.id),
       capacity: sum(roomTable.capacity),
@@ -109,14 +108,14 @@ export default function AdminBuldingsPage() {
               <Table
                 columnKeys={{
                   name: "Name",
-                  rdFirstName: "FirstName",
+                  rd: "RD",
                   zones: "Zones",
                   capacity: "Capacity",
                 }}
                 rows={filteredData}
                 rowKeys={{
                   name: "Name",
-                  rdFirstName: "FirstName",
+                  rd: "RD",
                   zones: "Zones",
                   capacity: "Capacity",
                   rooms: "Rooms",

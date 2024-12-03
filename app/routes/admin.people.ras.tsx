@@ -32,12 +32,13 @@ import { build } from "vite";
 export async function loader() {
   const data = await db
     .select({
-      id: residentTable.id,
+      id: zoneTable.id,
       first: residentTable.firstName,
       last: residentTable.lastName,
       fullName: sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as("fullName"),
       email: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
+      mailbox: residentTable.mailbox,
       hometown: sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as("hometown"),
       class: residentTable.class,
       building: buildingTable.name,
@@ -45,7 +46,7 @@ export async function loader() {
       rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd")
     })
     .from(zoneTable)
-    .leftJoin(residentTable, eq(zoneTable.residentId, zoneTable.id))
+    .innerJoin(residentTable, eq(zoneTable.residentId, zoneTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
