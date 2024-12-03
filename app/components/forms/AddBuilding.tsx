@@ -12,7 +12,14 @@ export default function AddBuilding() {
       <Input label="Staff ID" name="staffID" type="number" required />
       <Input label="Latitude" name="latitude" type="number" required />
       <Input label="Longitude" name="longitude" type="number" required />
-      <WideButton>Save Building</WideButton>
+      <WideButton
+        options={{
+          name: "_action",
+          type: "create",
+        }}
+      >
+        Save Building
+      </WideButton>
     </Form>
   );
 }

@@ -92,13 +92,10 @@ export default function Table(props: TableProps) {
               {(EditComponent || DeleteComponent) && <th scope="col" />}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y">
             {sortedRows.map((row, rowIndex) => (
               <tr
                 className={`${
-                  rowIndex + 1 < rows.length &&
-                  "border-b border-l-blue-600 border-l-2"
-                } ${
                   opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
                 } transition ease-in-out`}
                 key={rowIndex}
@@ -109,7 +106,9 @@ export default function Table(props: TableProps) {
                     onClick={() => setOpened(rowIndex)}
                     key={colIndex}
                   >
-                    {row[originalColumnKey]}
+                    {row[originalColumnKey] === null
+                      ? "-"
+                      : row[originalColumnKey]}
                   </td>
                 ))}
                 {(EditComponent || DeleteComponent) && (

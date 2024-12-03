@@ -1,7 +1,7 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
 import { count, eq, sum } from "drizzle-orm";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import {
   DrawerProvider,
   DrawerButton,
@@ -24,6 +24,7 @@ import {
   staffTable,
   zoneTable,
 } from "~/utilties/server/database/schema";
+import { z } from "zod";
 
 export async function loader() {
   const data = await db
@@ -88,7 +89,7 @@ export default function AdminBuldingsPage() {
               <Table
                 columnKeys={{
                   name: "Name",
-                  rd: "rd",
+                  rd: "RD",
                   zones: "Zones",
                   capacity: "Capacity",
                 }}
