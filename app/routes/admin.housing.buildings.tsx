@@ -24,7 +24,7 @@ import {
   staffTable,
   zoneTable,
 } from "~/utilties/server/database/schema";
-import { z } from "zod";
+import { csv } from "~/utilties/client/csv";
 
 export async function loader() {
   const data = await db
@@ -82,7 +82,12 @@ export default function AdminBuldingsPage() {
                     <DrawerButton>
                       <IconButton Icon={Plus}>Add Building</IconButton>
                     </DrawerButton>
-                    <IconButton Icon={Download}>Export</IconButton>{" "}
+                    <IconButton
+                      Icon={Download}
+                      onClick={() => csv(filteredData, "buildingExport")}
+                    >
+                      Export
+                    </IconButton>{" "}
                   </DrawerProvider>
                 </div>
               </div>
