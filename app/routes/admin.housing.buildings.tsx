@@ -33,7 +33,6 @@ export async function loader() {
       name: buildingTable.name,
       rdFirstName: staffTable.firstName,
       rdLastName: staffTable.lastName,
-      lastName: staffTable.lastName,
       rooms: count(roomTable.id),
       zones: count(zoneTable.id),
       capacity: sum(roomTable.capacity),
@@ -45,13 +44,10 @@ export async function loader() {
     .groupBy(buildingTable.id, staffTable.id)
     .orderBy(buildingTable.name);
 
-  const formattedData = data.map((row) => ({
-    ...row,
-    rd: `${row.rdFirstName} ${row.rdLastName}`,
-  }));
+  
 
   return defer({
-    data: formattedData,
+    data: data,
   });
 }
 
@@ -95,14 +91,14 @@ export default function AdminBuldingsPage() {
               <Table
                 columnKeys={{
                   name: "Name",
-                  rd: "RD",
+                  rdFirstName: "FirstName",
                   zones: "Zones",
                   capacity: "Capacity",
                 }}
                 rows={filteredData}
                 rowKeys={{
                   name: "Name",
-                  rd: "RD",
+                  rdFirstName: "FirstName",
                   zones: "Zones",
                   capacity: "Capacity",
                   rooms: "Rooms",
