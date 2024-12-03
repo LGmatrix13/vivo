@@ -25,6 +25,7 @@ import {
   zoneTable,
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
+import { z } from "zod";
 
 export async function loader() {
   const data = await db
@@ -51,8 +52,25 @@ export async function loader() {
   });
 }
 
+const Building = z.object({
+  name: z.string(),
+  staffId: z.coerce.number(),
+  latitude: z.coerce.number(),
+  longitude: z.coerce.number(),
+});
+
 export async function action({ request }: ActionFunctionArgs) {
-  const body = await request.formData();
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  if (intent === "create") {
+    const building = Building.safeParse(values);
+    if (building.success) {
+      console.log(building.data);
+      await db.insert(buildingTable).values(building.data);
+    }
+  }
+
   return redirect("/admin/housing/buildings");
 }
 
