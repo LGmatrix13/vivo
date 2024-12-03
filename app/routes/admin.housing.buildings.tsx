@@ -42,7 +42,8 @@ export async function loader() {
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .leftJoin(zoneTable, eq(staffTable.id, zoneTable.staffId))
     .leftJoin(roomTable, eq(zoneTable.id, roomTable.zoneId))
-    .groupBy(buildingTable.id, staffTable.id);
+    .groupBy(buildingTable.id, staffTable.id)
+    .orderBy(buildingTable.name);
 
   const formattedData = data.map((row) => ({
     ...row,
