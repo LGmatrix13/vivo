@@ -95,7 +95,9 @@ export default function AdminRoomsPage() {
                     <DrawerButton>
                       <IconButton Icon={Plus}>Add Room</IconButton>
                     </DrawerButton>
-                    <IconButton Icon={Download}>Export</IconButton>{" "}
+                    <IconButton Icon={Download} onClick={() =>
+                csv(filteredData || initialData.data, "roomsExport")
+              }>Export</IconButton>{" "}
                   </DrawerProvider>
                 </div>
               </div>
