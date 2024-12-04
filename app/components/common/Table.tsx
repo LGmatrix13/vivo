@@ -8,6 +8,7 @@ interface TableProps {
     [key: string]: string;
   };
   rows: {
+    id: number;
     [key: string]: any;
   }[];
   rowKeys: {
@@ -15,7 +16,7 @@ interface TableProps {
   };
   InstructionComponent?: () => React.ReactElement;
   EditComponent?: () => React.ReactElement;
-  DeleteComponent?: () => React.ReactElement;
+  DeleteComponent?: (prosp: { id: number }) => React.ReactElement;
 }
 
 export default function Table(props: TableProps) {
@@ -74,7 +75,7 @@ export default function Table(props: TableProps) {
                   onClick={() => handleSort(originalColumnKey)}
                 >
                   <div className="space-x-2 flex flex-row items-center">
-                    <span>{columnKeys[originalColumnKey]}</span>
+                    <span>{columnKeys[originalColumnKey]}</span>s
                     {sortConfig?.key === originalColumnKey ? (
                       <>
                         {sortConfig.direction === "asc" ? (
@@ -128,7 +129,7 @@ export default function Table(props: TableProps) {
                     {DeleteComponent && (
                       <DrawerProvider>
                         <DrawerContent>
-                          <DeleteComponent />
+                          <DeleteComponent id={row.id} />
                         </DrawerContent>
                         <DrawerButton>
                           <button>

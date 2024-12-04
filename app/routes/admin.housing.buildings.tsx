@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
-import { count, eq, sum, sql } from "drizzle-orm";
+import { count, eq, sum, sql, desc } from "drizzle-orm";
 import { Suspense } from "react";
 import {
   DrawerProvider,
@@ -44,7 +44,7 @@ export async function loader() {
     .leftJoin(zoneTable, eq(staffTable.id, zoneTable.staffId))
     .leftJoin(roomTable, eq(zoneTable.id, roomTable.zoneId))
     .groupBy(buildingTable.id, staffTable.id)
-    .orderBy(buildingTable.name);
+    .orderBy(desc(buildingTable.id));
 
   return defer({
     data: data,
@@ -61,6 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
     if (building.success) {
       await db.insert(buildingTable).values(building.data);
     }
+  } else if (intent === "delete") {
   }
 
   return redirect(request.url);
