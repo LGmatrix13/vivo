@@ -20,9 +20,11 @@ import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
   staffTable,
+  buildingTable
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { z } from "zod";
+import { build } from "vite";
 
 export async function loader() {
   const data = await db
@@ -33,8 +35,11 @@ export async function loader() {
       fullName: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("fullName"),
       email: staffTable.emailAddress,
       mailbox: staffTable.mailbox,
+      buildings: sql`STRING_AGG(${buildingTable.name}, ', ' ORDER BY ${buildingTable.name})`.as("buildings")
     })
     .from(staffTable)
+    .leftJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
+    .groupBy(staffTable.id)
     .orderBy(staffTable.lastName, staffTable.firstName);
 
   return defer({
@@ -62,13 +67,14 @@ export default function AdminPeopleRDsPage() {
                 columnKeys={{
                   first: "First",
                   last: "Last",
-                  email: "Email",
+                  buildings: "Building",
                 }}
                 rows={filteredData}
                 rowKeys={{
                   fullName: "Name",
+                  buildings: "Building",
                   email: "Email",
-                  mailbox: "Mailbox Number",
+                  mailbox: "Mailbox Number"
                 }}
                 InstructionComponent={() => (
                   <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
