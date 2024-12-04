@@ -25,14 +25,16 @@ import {
   zoneTable,
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
-import { z } from "zod";
+import { Building } from "~/schemas/building";
 
 export async function loader() {
   const data = await db
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
-      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd"),
+      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
       rooms: count(roomTable.id),
       zones: count(zoneTable.id),
       capacity: sum(roomTable.capacity),
@@ -44,19 +46,10 @@ export async function loader() {
     .groupBy(buildingTable.id, staffTable.id)
     .orderBy(buildingTable.name);
 
-  
-
   return defer({
     data: data,
   });
 }
-
-const Building = z.object({
-  name: z.string(),
-  staffId: z.coerce.number(),
-  latitude: z.coerce.number(),
-  longitude: z.coerce.number(),
-});
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -64,13 +57,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (intent === "create") {
     const building = Building.safeParse(values);
+
     if (building.success) {
-      console.log(building.data);
       await db.insert(buildingTable).values(building.data);
     }
   }
 
-  return redirect("/admin/housing/buildings");
+  return redirect(request.url);
 }
 
 export default function AdminBuldingsPage() {
@@ -81,6 +74,7 @@ export default function AdminBuldingsPage() {
       <Await resolve={delay(initialData.data)}>
         {(data) => {
           const { handleSearch, filteredData } = useSearch(data);
+          console.log(data);
           return (
             <section className="space-y-5">
               <div className="flex">
@@ -98,10 +92,12 @@ export default function AdminBuldingsPage() {
                     </DrawerButton>
                     <IconButton
                       Icon={Download}
-                      onClick={() => csv(filteredData, "buildingExport")}
+                      onClick={() =>
+                        csv(filteredData || data, "buildingExport")
+                      }
                     >
                       Export
-                    </IconButton>{" "}
+                    </IconButton>
                   </DrawerProvider>
                 </div>
               </div>
@@ -112,7 +108,7 @@ export default function AdminBuldingsPage() {
                   zones: "Zones",
                   capacity: "Capacity",
                 }}
-                rows={filteredData}
+                rows={filteredData || data}
                 rowKeys={{
                   name: "Name",
                   rd: "RD",

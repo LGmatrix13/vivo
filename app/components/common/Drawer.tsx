@@ -67,3 +67,11 @@ export function DrawerButton(props: { children: JSX.Element }) {
     },
   });
 }
+
+export const useDrawerContext = () => {
+  const context = useContext(DrawerContext);
+  if (!context) {
+    throw new Error("useDrawerContext must be used within a DrawerProvider");
+  }
+  return context;
+};

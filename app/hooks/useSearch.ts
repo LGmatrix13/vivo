@@ -1,9 +1,13 @@
 import { useState } from "react";
 
 export default function useSearch<T extends Object>(data: T[]) {
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState<T[] | null>(null);
 
   function handleSearch(term: string) {
+    if (term === "") {
+      return setFilteredData(null);
+    }
+
     const lowerCaseTerm = term.toLowerCase();
     setFilteredData(() =>
       data.filter((row) =>
