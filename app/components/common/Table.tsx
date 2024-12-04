@@ -75,7 +75,7 @@ export default function Table(props: TableProps) {
                   onClick={() => handleSort(originalColumnKey)}
                 >
                   <div className="space-x-2 flex flex-row items-center">
-                    <span>{columnKeys[originalColumnKey]}</span>s
+                    <span>{columnKeys[originalColumnKey]}</span>
                     {sortConfig?.key === originalColumnKey ? (
                       <>
                         {sortConfig.direction === "asc" ? (
