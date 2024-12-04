@@ -60,7 +60,7 @@ function Toasts(props: ToastsProps) {
   const { toasts } = props;
 
   return (
-    <div className="fixed bottom-5 right-5">
+    <div className="fixed bottom-5 left-5">
       <div className="flex flex-col space-y-5">
         {toasts.map((toast, index) => (
           <Toast key={index} level={toast.level}>

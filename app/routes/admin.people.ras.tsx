@@ -23,7 +23,7 @@ import {
   roomTable,
   residentTable,
   zoneTable,
-  staffTable
+  staffTable,
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { z } from "zod";
@@ -35,22 +35,37 @@ export async function loader() {
       id: zoneTable.id,
       first: residentTable.firstName,
       last: residentTable.lastName,
-      fullName: sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as("fullName"),
+      fullName:
+        sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+          "fullName"
+        ),
       email: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
       mailbox: residentTable.mailbox,
-      hometown: sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as("hometown"),
+      hometown:
+        sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
+          "hometown"
+        ),
       class: residentTable.class,
       building: buildingTable.name,
-      roomBuilding: sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as("roomBuilding"),
-      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd")
+      roomBuilding:
+        sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
+          "roomBuilding"
+        ),
+      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
     })
     .from(zoneTable)
     .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-    .orderBy(buildingTable.name, residentTable.lastName, residentTable.firstName);
+    .orderBy(
+      buildingTable.name,
+      residentTable.lastName,
+      residentTable.firstName
+    );
 
   return defer({
     data: data,
@@ -78,7 +93,7 @@ export default function AdminPeopleRAsPage() {
                   first: "First",
                   last: "Last",
                   building: "Building",
-                  rd: "RD"
+                  rd: "RD",
                 }}
                 rows={filteredData || data}
                 rowKeys={{

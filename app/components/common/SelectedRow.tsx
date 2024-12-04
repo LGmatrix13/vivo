@@ -15,7 +15,7 @@ export default function SelectedRow(props: SelectedRowProps) {
       {originalKeys.map((originalKey, index) => (
         <div className="space-y-3 flex flex-col" key={index}>
           <h2 className="font-bold">{keys[originalKey]}</h2>
-          <p>{row[originalKey]}</p>
+          <p>{row[originalKey] === null ? "-" : row[originalKey]}</p>
         </div>
       ))}
     </div>

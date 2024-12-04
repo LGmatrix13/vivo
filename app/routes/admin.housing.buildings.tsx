@@ -62,6 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await db.insert(buildingTable).values(building.data);
     }
   } else if (intent === "delete") {
+    await db.delete(buildingTable).where(eq(buildingTable.id, Number(values["id"])));
   }
 
   return redirect(request.url);
@@ -70,66 +71,58 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminBuldingsPage() {
   const initialData = useLoaderData<typeof loader>();
 
+  const { handleSearch, filteredData } = useSearch(initialData.data);
+
   return (
-    <Suspense fallback={<Loading />}>
-      <Await resolve={delay(initialData.data)}>
-        {(data) => {
-          const { handleSearch, filteredData } = useSearch(data);
-          console.log(data);
-          return (
-            <section className="space-y-5">
-              <div className="flex">
-                <Search
-                  placeholder="Search for a building..."
-                  handleSearch={handleSearch}
-                />
-                <div className="ml-auto order-2 flex space-x-3">
-                  <DrawerProvider>
-                    <DrawerContent>
-                      <AddBuilding />
-                    </DrawerContent>
-                    <DrawerButton>
-                      <IconButton Icon={Plus}>Add Building</IconButton>
-                    </DrawerButton>
-                    <IconButton
-                      Icon={Download}
-                      onClick={() =>
-                        csv(filteredData || data, "buildingExport")
-                      }
-                    >
-                      Export
-                    </IconButton>
-                  </DrawerProvider>
-                </div>
-              </div>
-              <Table
-                columnKeys={{
-                  name: "Name",
-                  rd: "RD",
-                  zones: "Zones",
-                  capacity: "Capacity",
-                }}
-                rows={filteredData || data}
-                rowKeys={{
-                  name: "Name",
-                  rd: "RD",
-                  zones: "Zones",
-                  capacity: "Capacity",
-                  rooms: "Rooms",
-                }}
-                InstructionComponent={() => (
-                  <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-                    <HomeSearch className="w-7 h-7" />
-                    <h2 className="text-xl font-bold">First Open a Building</h2>
-                  </div>
-                )}
-                EditComponent={EditBuilding}
-                DeleteComponent={DeleteBuilding}
-              />
-            </section>
-          );
+    <section className="space-y-5">
+      <div className="flex">
+        <Search
+          placeholder="Search for a building..."
+          handleSearch={handleSearch}
+        />
+        <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <AddBuilding />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Building</IconButton>
+            </DrawerButton>
+            <IconButton
+              Icon={Download}
+              onClick={() =>
+                csv(filteredData || initialData.data, "buildingExport")
+              }
+            >
+              Export
+            </IconButton>
+          </DrawerProvider>
+        </div>
+      </div>
+      <Table
+        columnKeys={{
+          name: "Name",
+          rd: "RD",
+          zones: "Zones",
+          capacity: "Capacity",
         }}
-      </Await>
-    </Suspense>
+        rows={filteredData || initialData.data}
+        rowKeys={{
+          name: "Name",
+          rd: "RD",
+          zones: "Zones",
+          capacity: "Capacity",
+          rooms: "Rooms",
+        }}
+        InstructionComponent={() => (
+          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
+            <HomeSearch className="w-7 h-7" />
+            <h2 className="text-xl font-bold">First Open a Building</h2>
+          </div>
+        )}
+        EditComponent={EditBuilding}
+        DeleteComponent={DeleteBuilding}
+      />
+    </section>
   );
 }
