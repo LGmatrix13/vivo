@@ -8,7 +8,7 @@ import {
   DrawerContent,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, HomeSearch, Plus } from "~/components/common/Icons";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -84,16 +84,16 @@ export default function AdminPeopleARDsPage() {
                 rowKeys={{
                   fullName: "Name",
                   roomBuilding: "Room Number",
+                  rd: "RD",
                   email: "Email",
                   phone: "Phone Number",
                   mailbox: "Mailbox Number",
                   hometown: "Hometown",
-                  class: "Class",
-                  rd: "RD",
+                  class: "Class"
                 }}
                 InstructionComponent={() => (
                   <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-                    <HomeSearch className="w-7 h-7" />
+                    <UserSearch className="w-7 h-7" />
                     <h2 className="text-xl font-bold">First Select an ARD</h2>
                   </div>
                 )}
