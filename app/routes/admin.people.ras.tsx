@@ -87,6 +87,16 @@ export default function AdminPeopleRAsPage() {
                   placeholder="Search for an RA..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                Icon={Download}
+                onClick={() =>
+                  csv(filteredData || initialData.data, "rasExport")
+                }
+              >
+                Export
+              </IconButton>
+              </div>
               </div>
               <Table
                 columnKeys={{

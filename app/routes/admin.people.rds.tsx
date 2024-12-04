@@ -62,6 +62,16 @@ export default function AdminPeopleRDsPage() {
                   placeholder="Search for an RD..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                Icon={Download}
+                onClick={() =>
+                  csv(filteredData || initialData.data, "rdsExport")
+                }
+              >
+                Export
+              </IconButton>
+              </div>
               </div>
               <Table
                 columnKeys={{

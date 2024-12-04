@@ -30,6 +30,7 @@ import { csv } from "~/utilties/client/csv";
 import { z } from "zod";
 import { build } from "vite";
 
+
 export async function loader() {
   const data = await db
     .select({
@@ -72,7 +73,18 @@ export default function AdminPeopleARDsPage() {
                   placeholder="Search for an ARD..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                Icon={Download}
+                onClick={() =>
+                  csv(filteredData || initialData.data, "ardsExport")
+                }
+              >
+                Export
+              </IconButton>
               </div>
+              </div>
+              
               <Table
                 columnKeys={{
                   first: "First",
