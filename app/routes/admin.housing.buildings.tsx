@@ -20,9 +20,7 @@ import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
-  roomTable,
-  staffTable,
-  zoneTable,
+  staffTable
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { Building } from "~/schemas/building";
@@ -34,16 +32,10 @@ export async function loader() {
       name: buildingTable.name,
       rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
         "rd"
-      ),
-      rooms: count(roomTable.id),
-      zones: count(zoneTable.id),
-      capacity: sum(roomTable.capacity),
+      )
     })
     .from(buildingTable)
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-    .leftJoin(zoneTable, eq(staffTable.id, zoneTable.staffId))
-    .leftJoin(roomTable, eq(zoneTable.id, roomTable.zoneId))
-    .groupBy(buildingTable.id, staffTable.id)
     .orderBy(desc(buildingTable.id));
 
   return defer({
@@ -102,17 +94,12 @@ export default function AdminBuldingsPage() {
       <Table
         columnKeys={{
           name: "Name",
-          rd: "RD",
-          zones: "Zones",
-          capacity: "Capacity",
+          rd: "RD"
         }}
         rows={filteredData || initialData.data}
         rowKeys={{
           name: "Name",
-          rd: "RD",
-          zones: "Zones",
-          capacity: "Capacity",
-          rooms: "Rooms",
+          rd: "RD"
         }}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
