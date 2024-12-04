@@ -80,7 +80,7 @@ export default function AdminPeopleRAsPage() {
                   building: "Building",
                   rd: "RD"
                 }}
-                rows={filteredData}
+                rows={filteredData || data}
                 rowKeys={{
                   fullName: "Name",
                   roomBuilding: "Room Number",

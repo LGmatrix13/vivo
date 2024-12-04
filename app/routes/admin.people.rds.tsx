@@ -67,9 +67,9 @@ export default function AdminPeopleRDsPage() {
                 columnKeys={{
                   first: "First",
                   last: "Last",
-                  buildings: "Building",
+                  buildings: "Building"
                 }}
-                rows={filteredData}
+                rows={filteredData || data}
                 rowKeys={{
                   fullName: "Name",
                   buildings: "Building",
