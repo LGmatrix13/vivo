@@ -46,7 +46,7 @@ export async function loader() {
       rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd")
     })
     .from(zoneTable)
-    .innerJoin(residentTable, eq(zoneTable.residentId, zoneTable.id))
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
@@ -57,7 +57,7 @@ export async function loader() {
   });
 }
 
-export default function AdminPeopleRDsPage() {
+export default function AdminPeopleRAsPage() {
   const initialData = useLoaderData<typeof loader>();
 
   return (
