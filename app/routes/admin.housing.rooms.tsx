@@ -44,7 +44,7 @@ export async function loader() {
 
   const formattedData = data.map((row) => ({
     ...row,
-    ra: row.raFirstName ? `${row.raFirstName} ${row.raLastName}` : "",
+    ra: row.raFirstName ? `${row.raFirstName} ${row.raLastName}` : null,
   }));
 
   return defer({
