@@ -86,7 +86,7 @@ export default function AdminRoomsPage() {
                   ra: "RA",
                   capacity: "Capacity",
                 }}
-                rows={filteredData}
+                rows={filteredData || data}
                 rowKeys={{
                   building: "Building",
                   roomNumber: "Room Number",

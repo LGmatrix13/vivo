@@ -77,7 +77,7 @@ export default function AdminPeopleResidentsPage() {
                   last: "Last",
                   roomBuilding: "Room Number"
                 }}
-                rows={filteredData}
+                rows={filteredData || data}
                 rowKeys={{
                   fullName: "Name",
                   roomBuilding: "Room Number",
