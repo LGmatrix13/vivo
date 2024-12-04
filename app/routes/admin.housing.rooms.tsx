@@ -24,6 +24,10 @@ import {
   roomTable,
   zoneTable,
 } from "~/utilties/server/database/schema";
+import { Room } from "~/schemas/room";
+import { csv } from "~/utilties/client/csv";
+import { redirect } from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function loader() {
   const data = await db
@@ -52,6 +56,22 @@ export async function loader() {
   });
 }
 
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  if (intent === "create") {
+    const room = Room.safeParse(values);
+
+    if (room.success) {
+      await db.insert(roomTable).values(room.data);
+    }
+  } else if (intent === "delete") {
+  }
+
+  return redirect(request.url);
+}
+
 export default function AdminRoomsPage() {
   const initialData = useLoaderData<typeof loader>();
 
@@ -75,7 +95,9 @@ export default function AdminRoomsPage() {
                     <DrawerButton>
                       <IconButton Icon={Plus}>Add Room</IconButton>
                     </DrawerButton>
-                    <IconButton Icon={Download}>Export</IconButton>{" "}
+                    <IconButton Icon={Download} onClick={() =>
+                csv(filteredData || initialData.data, "roomsExport")
+              }>Export</IconButton>{" "}
                   </DrawerProvider>
                 </div>
               </div>
