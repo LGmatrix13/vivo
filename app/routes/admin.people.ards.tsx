@@ -8,7 +8,7 @@ import {
   DrawerContent,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, UserSearch, Plus } from "~/components/common/Icons";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -23,7 +23,8 @@ import {
   roomTable,
   residentTable,
   zoneTable,
-  staffTable
+  staffTable,
+  assistantStaffTable
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { z } from "zod";
@@ -32,7 +33,7 @@ import { build } from "vite";
 export async function loader() {
   const data = await db
     .select({
-      id: zoneTable.id,
+      id: assistantStaffTable.id,
       first: residentTable.firstName,
       last: residentTable.lastName,
       fullName: sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as("fullName"),
@@ -45,19 +46,18 @@ export async function loader() {
       roomBuilding: sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as("roomBuilding"),
       rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd")
     })
-    .from(zoneTable)
-    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .from(assistantStaffTable)
+    .leftJoin(residentTable, eq(assistantStaffTable.residentId, residentTable.id))
+    .leftJoin(staffTable, eq(assistantStaffTable.staffId, staffTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
-    .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-    .orderBy(buildingTable.name, residentTable.lastName, residentTable.firstName);
+    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id));
 
   return defer({
     data: data,
   });
 }
 
-export default function AdminPeopleRAsPage() {
+export default function AdminPeopleARDsPage() {
   const initialData = useLoaderData<typeof loader>();
 
   return (
@@ -69,7 +69,7 @@ export default function AdminPeopleRAsPage() {
             <section className="space-y-5">
               <div className="flex">
                 <Search
-                  placeholder="Search for an RA..."
+                  placeholder="Search for an ARD..."
                   handleSearch={handleSearch}
                 />
               </div>
@@ -94,7 +94,7 @@ export default function AdminPeopleRAsPage() {
                 InstructionComponent={() => (
                   <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
                     <UserSearch className="w-7 h-7" />
-                    <h2 className="text-xl font-bold">First Select an RA</h2>
+                    <h2 className="text-xl font-bold">First Select an ARD</h2>
                   </div>
                 )}
                 EditComponent={EditBuilding} //TODO

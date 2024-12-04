@@ -8,7 +8,7 @@ import {
   DrawerContent,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, HomeSearch, Plus } from "~/components/common/Icons";
+import { Download, UserSearch, Plus } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -90,7 +90,7 @@ export default function AdminPeopleResidentsPage() {
                 }}
                 InstructionComponent={() => (
                   <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-                    <HomeSearch className="w-7 h-7" />
+                    <UserSearch className="w-7 h-7" />
                     <h2 className="text-xl font-bold">First Select a Resident</h2>
                   </div>
                 )}

@@ -4,7 +4,7 @@ import SubHeader from "~/components/common/SubHeader";
 export const meta: MetaFunction = () => {
   return [
     { title: "Vivo: People" },
-    { name: "Vivo: People", content: "Residents, RAs, and RDs" },
+    { name: "Vivo: People", content: "Residents, RAs, ARDS, and RDs" },
   ];
 };
 
@@ -21,6 +21,10 @@ export default function AdminPeopleLayout() {
           {
             name: "RAs",
             path: "/admin/people/ras",
+          },
+          {
+            name: "ARDs",
+            path: "/admin/people/ards",
           },
           {
             name: "RDs",
