@@ -24,6 +24,10 @@ import {
   roomTable,
   zoneTable,
 } from "~/utilties/server/database/schema";
+import { Room } from "~/schemas/room";
+import { csv } from "~/utilties/client/csv";
+import { redirect } from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function loader() {
   const data = await db
@@ -50,6 +54,22 @@ export async function loader() {
   return defer({
     data: formattedData,
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  if (intent === "create") {
+    const room = Room.safeParse(values);
+
+    if (room.success) {
+      await db.insert(roomTable).values(room.data);
+    }
+  } else if (intent === "delete") {
+  }
+
+  return redirect(request.url);
 }
 
 export default function AdminRoomsPage() {
