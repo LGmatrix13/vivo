@@ -62,6 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await db.insert(buildingTable).values(building.data);
     }
   } else if (intent === "delete") {
+    await db.delete(buildingTable).where(eq(buildingTable.id, Number(values["id"])));
   }
 
   return redirect(request.url);
