@@ -1,12 +1,20 @@
 import { Await, defer, useLoaderData } from "@remix-run/react";
 import { sql, aliasedTable, eq } from "drizzle-orm";
 import { Suspense } from "react";
-import { UserSearch } from "~/components/common/Icons";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
+import IconButton from "~/components/common/IconButton";
+import { Upload, UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
+import UploadButton from "~/components/common/UploadButton";
 import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
+import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
@@ -71,7 +79,18 @@ export default function AdminPeopleResidentsPage() {
                   placeholder="Search for a resident..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2">
+                  <DrawerProvider>
+                    <DrawerContent>
+                      <UploadForm />
+                    </DrawerContent>
+                    <DrawerButton>
+                      <IconButton Icon={Upload}>Upload</IconButton>
+                    </DrawerButton>
+                  </DrawerProvider>
+                </div>
               </div>
+
               <Table<any>
                 columnKeys={{
                   first: "First",

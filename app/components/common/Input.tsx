@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 
 interface InputProps<T> {
-  label: string;
+  label?: string;
   name: string;
   type: string;
   placeholder?: string;
