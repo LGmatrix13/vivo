@@ -7,14 +7,16 @@ import {
   DrawerProvider,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Upload, UserSearch } from "~/components/common/Icons";
+import { Download, Upload, UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
+import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
+import { csv } from "~/utilties/client/csv";
 import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
@@ -65,6 +67,7 @@ export async function loader() {
 
 export default function AdminPeopleResidentsPage() {
   const initialData = useLoaderData<typeof loader>();
+  const toast = useToastContext()
 
   return (
     <Suspense fallback={<Loading />}>
@@ -78,6 +81,7 @@ export default function AdminPeopleResidentsPage() {
                   placeholder="Search for a resident..."
                   handleSearch={handleSearch}
                 />
+                
                 <div className="ml-auto order-2">
                   <DrawerProvider>
                     <DrawerContent>
@@ -86,6 +90,15 @@ export default function AdminPeopleResidentsPage() {
                     <DrawerButton>
                       <IconButton Icon={Upload}>Upload</IconButton>
                     </DrawerButton>
+                    <IconButton
+                  Icon={Download}
+                  onClick={() => {
+                    csv(filteredData || initialData.data, "Residents");
+                    toast.success("Residents Exported");
+                  }}
+                >
+                  {filteredData?.length ? "Export Subset" : "Export"}
+                </IconButton>
                   </DrawerProvider>
                 </div>
               </div>

@@ -22,6 +22,7 @@ import { build } from "vite";
 import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
+import { useToastContext } from "~/components/common/Toast";
 
 export async function loader() {
   const data = await db
@@ -66,6 +67,7 @@ export async function loader() {
 
 export default function AdminPeopleARDsPage() {
   const initialData = useLoaderData<typeof loader>();
+  const toast = useToastContext()
 
   return (
     <Suspense fallback={<Loading />}>
@@ -79,6 +81,17 @@ export default function AdminPeopleARDsPage() {
                   placeholder="Search for an ARD..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                  Icon={Download}
+                  onClick={() => {
+                    csv(filteredData || initialData.data, "ARDs");
+                    toast.success("ARDs Exported");
+                  }}
+                >
+                  {filteredData?.length ? "Export Subset" : "Export"}
+                </IconButton>
+              </div>
               </div>
               <Table<any>
                 columnKeys={{
