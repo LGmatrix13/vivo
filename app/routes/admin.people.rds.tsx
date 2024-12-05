@@ -44,28 +44,28 @@ export async function loader() {
 export default function AdminPeopleRDsPage() {
   const initialData = useLoaderData<typeof loader>();
   const { handleSearch, filteredData } = useSearch(initialData.data);
-  const toast = useToastContext()
+  const toast = useToastContext();
 
   return (
     <section className="space-y-5">
       <div className="flex">
         <Search placeholder="Search for an RD..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
-                <IconButton
-                  Icon={Download}
-                  onClick={() => {
-                    csv(filteredData || initialData.data, "RDs");
-                    toast.success("RDs Exported");
-                  }}
-                >
-                  {filteredData?.length ? "Export Subset" : "Export"}
-                </IconButton>
-              </div>
+          <IconButton
+            Icon={Download}
+            onClick={() => {
+              csv(filteredData || initialData.data, "RDs");
+              toast.success("RDs Exported");
+            }}
+          >
+            {filteredData?.length ? "Export Subset" : "Export"}
+          </IconButton>
+        </div>
       </div>
       <Table<IRD>
         columnKeys={{
-          first: "First",
-          last: "Last",
+          firstName: "Firstname",
+          lastName: "Lastname",
           buildings: "Building",
         }}
         rows={filteredData || initialData.data}

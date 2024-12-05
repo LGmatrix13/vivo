@@ -1,6 +1,5 @@
-import { Await, defer, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { sql, aliasedTable, eq } from "drizzle-orm";
-import { Suspense } from "react";
 import {
   DrawerButton,
   DrawerContent,
@@ -8,7 +7,6 @@ import {
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
 import { Download, Upload, UserSearch } from "~/components/common/Icons";
-import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
@@ -17,7 +15,6 @@ import ResidentForm from "~/components/forms/ResidentForm";
 import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/client/csv";
-import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
@@ -28,28 +25,28 @@ import {
 
 export async function loader() {
   const raInfoTable = aliasedTable(residentTable, "raInfoTable");
-  const data = await db
+  const residents = await db
     .select({
       id: residentTable.id,
-      first: residentTable.firstName,
-      last: residentTable.lastName,
+      firstName: residentTable.firstName,
+      lastName: residentTable.lastName,
       fullName:
-        sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
           "fullName"
         ),
       email: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
       mailbox: residentTable.mailbox,
       hometown:
-        sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
+        sql<string>`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
           "hometown"
         ),
       class: residentTable.class,
       roomBuilding:
-        sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
+        sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
         ),
-      ra: sql`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`.as(
+      ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`.as(
         "ra"
       ),
     })
@@ -60,81 +57,70 @@ export async function loader() {
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .orderBy(residentTable.lastName, residentTable.firstName);
 
-  return defer({
-    data: data,
+  return json({
+    residents,
   });
 }
 
 export default function AdminPeopleResidentsPage() {
-  const initialData = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   const toast = useToastContext();
-
+  const { handleSearch, filteredData } = useSearch(data.residents);
   return (
-    <Suspense fallback={<Loading />}>
-      <Await resolve={delay(initialData.data)}>
-        {(data) => {
-          const { handleSearch, filteredData } = useSearch(data);
-          return (
-            <section className="space-y-5">
-              <div className="flex">
-                <Search
-                  placeholder="Search for a resident..."
-                  handleSearch={handleSearch}
-                />
-                <div className="ml-auto order-2 flex space-x-3">
-                  <DrawerProvider>
-                    <DrawerContent>
-                      <UploadForm />
-                    </DrawerContent>
-                    <DrawerButton>
-                      <IconButton Icon={Upload}>Upload</IconButton>
-                    </DrawerButton>
-                    <IconButton
-                      Icon={Download}
-                      onClick={() => {
-                        csv(filteredData || initialData.data, "Residents");
-                        toast.success("Residents Exported");
-                      }}
-                    >
-                      {filteredData?.length ? "Export Subset" : "Export"}
-                    </IconButton>
-                  </DrawerProvider>
-                </div>
-              </div>
-              <Table<any>
-                columnKeys={{
-                  first: "First",
-                  last: "Last",
-                  roomBuilding: "Room Number",
-                }}
-                rows={filteredData || data}
-                rowKeys={{
-                  fullName: "Name",
-                  roomBuilding: "Room Number",
-                  ra: "RA",
-                  email: "Email",
-                  phone: "Phone Number",
-                  mailbox: "Mailbox Number",
-                  hometown: "Hometown",
-                  class: "Class",
-                }}
-                InstructionComponent={() => (
-                  <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-                    <UserSearch className="w-7 h-7" />
-                    <h2 className="text-xl font-bold">
-                      First Select a Resident
-                    </h2>
-                  </div>
-                )}
-                EditComponent={({ row }) => <ResidentForm resident={row} />} //TODO
-                DeleteComponent={({ row }) => (
-                  <DeleteForm id={row.id} title={row.fullName} />
-                )}
-              />
-            </section>
-          );
+    <section className="space-y-5">
+      <div className="flex">
+        <Search
+          placeholder="Search for a resident..."
+          handleSearch={handleSearch}
+        />
+        <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <UploadForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Upload}>Upload</IconButton>
+            </DrawerButton>
+            <IconButton
+              Icon={Download}
+              onClick={() => {
+                csv(filteredData || data.residents, "Residents");
+                toast.success("Residents Exported");
+              }}
+            >
+              {filteredData?.length ? "Export Subset" : "Export"}
+            </IconButton>
+          </DrawerProvider>
+        </div>
+      </div>
+      <Table<any>
+        columnKeys={{
+          firstName: "Firstname",
+          lastName: "Lastname",
+          roomBuilding: "Room Number",
         }}
-      </Await>
-    </Suspense>
+        rows={filteredData || data.residents}
+        rowKeys={{
+          fullName: "Name",
+          roomBuilding: "Room Number",
+          ra: "RA",
+          email: "Email",
+          phone: "Phone Number",
+          mailbox: "Mailbox Number",
+          hometown: "Hometown",
+          class: "Class",
+        }}
+        InstructionComponent={() => (
+          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
+            <UserSearch className="w-7 h-7" />
+            <h2 className="text-xl font-bold">First Select a Resident</h2>
+          </div>
+        )}
+        EditComponent={({ row }) => <ResidentForm resident={row} />} //TODO
+        DeleteComponent={({ row }) => (
+          <DeleteForm id={row.id} title={row.fullName} />
+        )}
+      />
+    </section>
   );
 }
