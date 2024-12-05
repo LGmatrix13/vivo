@@ -1,0 +1,40 @@
+import Form from "../common/Form";
+import Input from "../common/Input";
+import { IRoom } from "~/models/room";
+
+interface RoomFormProps {
+  room?: IRoom;
+}
+
+export default function RoomForm(props: RoomFormProps) {
+  const { room } = props;
+  return (
+    <Form toast="Saved Room" button="Save Room">
+      <h2 className="font-bold text-xl">
+        {room ? `Edit Room ${room.roomNumber}` : "Add Room"}
+      </h2>
+      <Input
+        label="Building"
+        name="building"
+        type="text"
+        value={room?.building}
+        required
+      />
+      <Input label="Zone" name="zoneId" type="number" required />
+      <Input
+        label="Room Number"
+        name="roomNumber"
+        type="number"
+        value={room?.roomNumber}
+        required
+      />
+      <Input
+        label="Capacity"
+        name="capacity"
+        type="number"
+        value={room?.capacity}
+        required
+      />
+    </Form>
+  );
+}

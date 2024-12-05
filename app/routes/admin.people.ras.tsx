@@ -1,22 +1,12 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
-import { sql, aliasedTable, eq } from "drizzle-orm";
-import { Suspense } from "react";
-import {
-  DrawerProvider,
-  DrawerButton,
-  DrawerContent,
-} from "~/components/common/Drawer";
-import IconButton from "~/components/common/IconButton";
-import { Download, UserSearch, Plus } from "~/components/common/Icons";
-import Loading from "~/components/common/Loading";
+import { defer, useLoaderData } from "@remix-run/react";
+import { sql, eq } from "drizzle-orm";
+import { UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import AddBuilding from "~/components/forms/AddBuilding";
-import DeleteBuilding from "~/components/forms/DeleteBuilding";
-import EditBuilding from "~/components/forms/EditBuilding";
+import DeleteForm from "~/components/forms/DeleteForm";
+import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
-import { delay } from "~/utilties/client/delay";
+import { IRA } from "~/models/ra";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
@@ -25,16 +15,13 @@ import {
   zoneTable,
   staffTable,
 } from "~/utilties/server/database/schema";
-import { csv } from "~/utilties/client/csv";
-import { z } from "zod";
-import { build } from "vite";
 
 export async function loader() {
   const data = await db
     .select({
       id: zoneTable.id,
-      first: residentTable.firstName,
-      last: residentTable.lastName,
+      firstName: residentTable.firstName,
+      lastName: residentTable.lastName,
       fullName:
         sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
           "fullName"
@@ -68,57 +55,48 @@ export async function loader() {
     );
 
   return defer({
-    data: data,
+    data: data as IRA[],
   });
 }
 
 export default function AdminPeopleRAsPage() {
   const initialData = useLoaderData<typeof loader>();
+  const { handleSearch, filteredData } = useSearch(initialData.data);
 
   return (
-    <Suspense fallback={<Loading />}>
-      <Await resolve={delay(initialData.data)}>
-        {(data) => {
-          const { handleSearch, filteredData } = useSearch(data);
-          return (
-            <section className="space-y-5">
-              <div className="flex">
-                <Search
-                  placeholder="Search for an RA..."
-                  handleSearch={handleSearch}
-                />
-              </div>
-              <Table
-                columnKeys={{
-                  first: "First",
-                  last: "Last",
-                  building: "Building",
-                  rd: "RD",
-                }}
-                rows={filteredData || data}
-                rowKeys={{
-                  fullName: "Name",
-                  roomBuilding: "Room Number",
-                  rd: "RD",
-                  email: "Email",
-                  phone: "Phone Number",
-                  mailbox: "Mailbox Number",
-                  hometown: "Hometown",
-                  class: "Class"
-                }}
-                InstructionComponent={() => (
-                  <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-                    <UserSearch className="w-7 h-7" />
-                    <h2 className="text-xl font-bold">First Select an RA</h2>
-                  </div>
-                )}
-                EditComponent={EditBuilding} //TODO
-                DeleteComponent={DeleteBuilding} //TODO
-              />
-            </section>
-          );
+    <section className="space-y-5">
+      <div className="flex">
+        <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
+      </div>
+      <Table<IRA>
+        columnKeys={{
+          firstName: "Firstname",
+          lastName: "Lastname",
+          building: "Building",
+          rd: "RD",
         }}
-      </Await>
-    </Suspense>
+        rows={filteredData || initialData.data}
+        rowKeys={{
+          fullName: "Name",
+          roomBuilding: "Room Number",
+          rd: "RD",
+          email: "Email",
+          phone: "Phone Number",
+          mailbox: "Mailbox Number",
+          hometown: "Hometown",
+          class: "Class",
+        }}
+        InstructionComponent={() => (
+          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
+            <UserSearch className="w-7 h-7" />
+            <h2 className="text-xl font-bold">First Select an RA</h2>
+          </div>
+        )}
+        EditComponent={({ row }) => <RAForm ra={row} />} //TODO
+        DeleteComponent={({ row }) => (
+          <DeleteForm id={row.id} title={row.fullName} />
+        )}
+      />
+    </section>
   );
 }

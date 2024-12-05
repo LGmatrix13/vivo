@@ -1,20 +1,10 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
-import { sql, aliasedTable, eq } from "drizzle-orm";
+import { Await, defer, useLoaderData } from "@remix-run/react";
+import { sql, eq } from "drizzle-orm";
 import { Suspense } from "react";
-import {
-  DrawerProvider,
-  DrawerButton,
-  DrawerContent,
-} from "~/components/common/Drawer";
-import IconButton from "~/components/common/IconButton";
-import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import { UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import AddBuilding from "~/components/forms/AddBuilding";
-import DeleteBuilding from "~/components/forms/DeleteBuilding";
-import EditBuilding from "~/components/forms/EditBuilding";
 import useSearch from "~/hooks/useSearch";
 import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
@@ -24,11 +14,13 @@ import {
   residentTable,
   zoneTable,
   staffTable,
-  assistantStaffTable
+  assistantStaffTable,
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { z } from "zod";
 import { build } from "vite";
+import ARDForm from "~/components/forms/ARDForm";
+import DeleteForm from "~/components/forms/DeleteForm";
 
 export async function loader() {
   const data = await db
@@ -36,18 +28,32 @@ export async function loader() {
       id: assistantStaffTable.id,
       first: residentTable.firstName,
       last: residentTable.lastName,
-      fullName: sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as("fullName"),
+      fullName:
+        sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+          "fullName"
+        ),
       email: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
       mailbox: residentTable.mailbox,
-      hometown: sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as("hometown"),
+      hometown:
+        sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
+          "hometown"
+        ),
       class: residentTable.class,
       building: buildingTable.name,
-      roomBuilding: sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as("roomBuilding"),
-      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as("rd")
+      roomBuilding:
+        sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
+          "roomBuilding"
+        ),
+      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
     })
     .from(assistantStaffTable)
-    .leftJoin(residentTable, eq(assistantStaffTable.residentId, residentTable.id))
+    .leftJoin(
+      residentTable,
+      eq(assistantStaffTable.residentId, residentTable.id)
+    )
     .leftJoin(staffTable, eq(assistantStaffTable.staffId, staffTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id));
@@ -73,12 +79,12 @@ export default function AdminPeopleARDsPage() {
                   handleSearch={handleSearch}
                 />
               </div>
-              <Table
+              <Table<any>
                 columnKeys={{
                   first: "First",
                   last: "Last",
                   building: "Building",
-                  rd: "RD"
+                  rd: "RD",
                 }}
                 rows={filteredData || data}
                 rowKeys={{
@@ -89,7 +95,7 @@ export default function AdminPeopleARDsPage() {
                   phone: "Phone Number",
                   mailbox: "Mailbox Number",
                   hometown: "Hometown",
-                  class: "Class"
+                  class: "Class",
                 }}
                 InstructionComponent={() => (
                   <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
@@ -97,8 +103,10 @@ export default function AdminPeopleARDsPage() {
                     <h2 className="text-xl font-bold">First Select an ARD</h2>
                   </div>
                 )}
-                EditComponent={EditBuilding} //TODO
-                DeleteComponent={DeleteBuilding} //TODO
+                EditComponent={({ row }) => <ARDForm ard={row} />}
+                DeleteComponent={({ row }) => (
+                  <DeleteForm id={row.id} title={row.fullName} />
+                )}
               />
             </section>
           );

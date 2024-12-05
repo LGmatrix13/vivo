@@ -1,7 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import { Await, defer, redirect, useLoaderData } from "@remix-run/react";
+import { defer, redirect, useLoaderData } from "@remix-run/react";
 import { count, eq, sum, sql, desc } from "drizzle-orm";
-import { Suspense } from "react";
 import {
   DrawerProvider,
   DrawerButton,
@@ -9,14 +8,9 @@ import {
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/common/Icons";
-import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import AddBuilding from "~/components/forms/AddBuilding";
-import DeleteBuilding from "~/components/forms/DeleteBuilding";
-import EditBuilding from "~/components/forms/EditBuilding";
 import useSearch from "~/hooks/useSearch";
-import { delay } from "~/utilties/client/delay";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
@@ -26,6 +20,10 @@ import {
 } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { Building } from "~/schemas/building";
+import { IBuilding } from "~/models/building";
+import { useToastContext } from "~/components/common/Toast";
+import DeleteForm from "~/components/forms/DeleteForm";
+import BuildingForm from "~/components/forms/BuildingForm";
 
 export async function loader() {
   const data = await db
@@ -38,6 +36,8 @@ export async function loader() {
       rooms: count(roomTable.id),
       zones: count(zoneTable.id),
       capacity: sum(roomTable.capacity),
+      latitude: buildingTable.latitude,
+      longitude: buildingTable.longitude,
     })
     .from(buildingTable)
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
@@ -47,7 +47,7 @@ export async function loader() {
     .orderBy(desc(buildingTable.id));
 
   return defer({
-    data: data,
+    data: data as IBuilding[],
   });
 }
 
@@ -62,7 +62,9 @@ export async function action({ request }: ActionFunctionArgs) {
       await db.insert(buildingTable).values(building.data);
     }
   } else if (intent === "delete") {
-    await db.delete(buildingTable).where(eq(buildingTable.id, Number(values["id"])));
+    await db
+      .delete(buildingTable)
+      .where(eq(buildingTable.id, Number(values["id"])));
   }
 
   return redirect(request.url);
@@ -72,7 +74,7 @@ export default function AdminBuldingsPage() {
   const initialData = useLoaderData<typeof loader>();
 
   const { handleSearch, filteredData } = useSearch(initialData.data);
-
+  const toast = useToastContext();
   return (
     <section className="space-y-5">
       <div className="flex">
@@ -83,23 +85,24 @@ export default function AdminBuldingsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <AddBuilding />
+              <BuildingForm />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add Building</IconButton>
             </DrawerButton>
             <IconButton
               Icon={Download}
-              onClick={() =>
-                csv(filteredData || initialData.data, "buildingExport")
-              }
+              onClick={() => {
+                csv(filteredData || initialData.data, "buildings");
+                toast.success("Buildings Exported");
+              }}
             >
               Export
             </IconButton>
           </DrawerProvider>
         </div>
       </div>
-      <Table
+      <Table<IBuilding>
         columnKeys={{
           name: "Name",
           rd: "RD",
@@ -120,8 +123,10 @@ export default function AdminBuldingsPage() {
             <h2 className="text-xl font-bold">First Open a Building</h2>
           </div>
         )}
-        EditComponent={EditBuilding}
-        DeleteComponent={DeleteBuilding}
+        EditComponent={({ row }) => <BuildingForm building={row} />}
+        DeleteComponent={({ row }) => (
+          <DeleteForm id={row.id} title={row.name} />
+        )}
       />
     </section>
   );

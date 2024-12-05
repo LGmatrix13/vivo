@@ -1,11 +1,11 @@
 import { Dispatch } from "react";
 
-interface InputProps {
-  label?: string;
+interface InputProps<T> {
+  label: string;
   name: string;
   type: string;
   placeholder?: string;
-  value?: string;
+  value?: T;
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;
@@ -13,7 +13,7 @@ interface InputProps {
   [key: string]: any;
 }
 
-export default function Input(props: InputProps) {
+export default function Input<T>(props: InputProps<T>) {
   const { name, label, required, setState } = props;
 
   return (
@@ -26,6 +26,7 @@ export default function Input(props: InputProps) {
       )}
       <input
         {...props}
+        value={props.value ? `${props.value}` : undefined}
         className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
         onChange={(e) => setState && setState(e.target.value)}
       />

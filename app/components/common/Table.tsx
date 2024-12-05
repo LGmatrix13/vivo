@@ -3,23 +3,24 @@ import SelectedRow from "./SelectedRow";
 import { ArrowNarrowDown, ArrowNarrowUp, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 
-interface TableProps {
+interface TableProps<T> {
   columnKeys: {
     [key: string]: string;
   };
-  rows: {
-    id: number;
-    [key: string]: any;
-  }[];
+  rows: T[];
   rowKeys: {
     [key: string]: string;
   };
   InstructionComponent?: () => React.ReactElement;
-  EditComponent?: () => React.ReactElement;
-  DeleteComponent?: (prosp: { id: number }) => React.ReactElement;
+  EditComponent?: (props: { row: T }) => React.ReactElement;
+  DeleteComponent?: (props: { row: T }) => React.ReactElement;
 }
 
-export default function Table(props: TableProps) {
+export default function Table<
+  T extends {
+    [key: string]: any;
+  }
+>(props: TableProps<T>) {
   const {
     rows,
     rowKeys,
@@ -64,7 +65,7 @@ export default function Table(props: TableProps) {
   return (
     <div className="flex flex-row border rounded-lg divide-x overflow-hidden">
       <div className="w-3/5 h-96 overflow-y-auto">
-        <table className="text-left table-auto w-full">
+        <table className="text-left table-fixed w-full">
           <thead className="uppercase border-b z-10 bg-white">
             <tr>
               {originalColumnKeys.map((originalColumnKey, index) => (
@@ -90,7 +91,12 @@ export default function Table(props: TableProps) {
                   </div>
                 </th>
               ))}
-              {(EditComponent || DeleteComponent) && <th scope="col" />}
+              {EditComponent && <th scope="col" className="w-5" />}
+              {EditComponent && DeleteComponent && (
+                <th scope="col" className="w-3" />
+              )}
+              {DeleteComponent && <th scope="col" className="w-5" />}
+              {DeleteComponent && <th scope="col" className="w-5" />}
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -112,34 +118,36 @@ export default function Table(props: TableProps) {
                       : row[originalColumnKey]}
                   </td>
                 ))}
-                {(EditComponent || DeleteComponent) && (
-                  <td className="px-5 py-3 space-x-2 flex">
-                    {EditComponent && (
-                      <DrawerProvider>
-                        <DrawerContent>
-                          <EditComponent />
-                        </DrawerContent>
-                        <DrawerButton>
-                          <button>
-                            <Pencil className="w-5 h-5" />
-                          </button>
-                        </DrawerButton>
-                      </DrawerProvider>
-                    )}
-                    {DeleteComponent && (
-                      <DrawerProvider>
-                        <DrawerContent>
-                          <DeleteComponent id={row.id} />
-                        </DrawerContent>
-                        <DrawerButton>
-                          <button>
-                            <Trash className="w-5 h-5" />
-                          </button>
-                        </DrawerButton>
-                      </DrawerProvider>
-                    )}
+                {EditComponent && (
+                  <td className="py-3">
+                    <DrawerProvider>
+                      <DrawerContent>
+                        <EditComponent row={row} />
+                      </DrawerContent>
+                      <DrawerButton>
+                        <button>
+                          <Pencil className="w-5" />
+                        </button>
+                      </DrawerButton>
+                    </DrawerProvider>
                   </td>
                 )}
+                {EditComponent && <td />}
+                {DeleteComponent && (
+                  <td className="py-3">
+                    <DrawerProvider>
+                      <DrawerContent>
+                        <DeleteComponent row={row} />
+                      </DrawerContent>
+                      <DrawerButton>
+                        <button>
+                          <Trash className="w-5" />
+                        </button>
+                      </DrawerButton>
+                    </DrawerProvider>
+                  </td>
+                )}
+                {DeleteComponent && <td />}
               </tr>
             ))}
           </tbody>

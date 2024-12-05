@@ -1,6 +1,6 @@
 export interface IBuilding {
-  rd: string;
   id: number;
+  rd: string;
   name: string;
   rdFirstName: string;
   rdLastName: string;
@@ -8,4 +8,6 @@ export interface IBuilding {
   rooms: number;
   zones: number;
   capacity: string | null;
+  latitude: number;
+  longitude: number;
 }
