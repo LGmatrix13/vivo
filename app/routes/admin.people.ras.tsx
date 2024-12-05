@@ -1,12 +1,15 @@
 import { defer, useLoaderData } from "@remix-run/react";
 import { sql, eq } from "drizzle-orm";
-import { UserSearch } from "~/components/common/Icons";
+import IconButton from "~/components/common/IconButton";
+import { Download, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
+import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/ra";
+import { csv } from "~/utilties/client/csv";
 import { db } from "~/utilties/server/database/connection";
 import {
   buildingTable,
@@ -62,11 +65,23 @@ export async function loader() {
 export default function AdminPeopleRAsPage() {
   const initialData = useLoaderData<typeof loader>();
   const { handleSearch, filteredData } = useSearch(initialData.data);
+  const toast = useToastContext()
 
   return (
     <section className="space-y-5">
       <div className="flex">
         <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
+        <div className="ml-auto order-2 flex space-x-3">
+            <IconButton
+              Icon={Download}
+              onClick={() => {
+                csv(filteredData || initialData.data, "RAs");
+                toast.success("RAs Exported");
+              }}
+            >
+              {filteredData?.length ? "Export Subset" : "Export"}
+            </IconButton>
+        </div>
       </div>
       <Table<IRA>
         columnKeys={{

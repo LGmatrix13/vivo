@@ -1,7 +1,7 @@
 import { defer, useLoaderData } from "@remix-run/react";
 import { sql, eq } from "drizzle-orm";
 
-import { UserSearch } from "~/components/common/Icons";
+import { Download, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
@@ -10,6 +10,9 @@ import { staffTable, buildingTable } from "~/utilties/server/database/schema";
 import { IRD } from "~/models/rd";
 import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
+import { useToastContext } from "~/components/common/Toast";
+import IconButton from "~/components/common/IconButton";
+import { csv } from "~/utilties/client/csv";
 
 export async function loader() {
   const data = await db
@@ -41,11 +44,23 @@ export async function loader() {
 export default function AdminPeopleRDsPage() {
   const initialData = useLoaderData<typeof loader>();
   const { handleSearch, filteredData } = useSearch(initialData.data);
+  const toast = useToastContext()
 
   return (
     <section className="space-y-5">
       <div className="flex">
         <Search placeholder="Search for an RD..." handleSearch={handleSearch} />
+        <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                  Icon={Download}
+                  onClick={() => {
+                    csv(filteredData || initialData.data, "RDs");
+                    toast.success("RDs Exported");
+                  }}
+                >
+                  {filteredData?.length ? "Export Subset" : "Export"}
+                </IconButton>
+              </div>
       </div>
       <Table<IRD>
         columnKeys={{
