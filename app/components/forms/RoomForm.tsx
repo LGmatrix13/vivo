@@ -15,14 +15,22 @@ export default function RoomForm(props: RoomFormProps) {
       </h2>
       <Input
         label="Building"
+        placeholder="Building"
         name="building"
         type="text"
         value={room?.building}
         required
       />
-      <Input label="Zone" name="zoneId" type="number" required />
+      <Input
+        label="Zone"
+        placeholder="Zone"
+        name="zoneId"
+        type="number"
+        required
+      />
       <Input
         label="Room Number"
+        placeholder="Room Number"
         name="roomNumber"
         type="number"
         value={room?.roomNumber}
@@ -30,6 +38,7 @@ export default function RoomForm(props: RoomFormProps) {
       />
       <Input
         label="Capacity"
+        placeholder="Capacity"
         name="capacity"
         type="number"
         value={room?.capacity}

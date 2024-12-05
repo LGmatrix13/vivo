@@ -15,14 +15,22 @@ export default function BuildingForm(props: BuildingFormProps) {
       </h2>
       <Input
         label="Name"
+        placeholder="Name"
         name="name"
         type="text"
         value={building?.name}
         required
       />
-      <Input label="Staff ID" name="staffId" type="number" required />
+      <Input
+        label="Staff ID"
+        placeholder="Staff ID"
+        name="staffId"
+        type="number"
+        required
+      />
       <Input
         label="Latitude"
+        placeholder="Latitude"
         name="latitude"
         type="number"
         value={building?.latitude}
@@ -30,6 +38,7 @@ export default function BuildingForm(props: BuildingFormProps) {
       />
       <Input
         label="Longitude"
+        placeholder="Longitude"
         name="longitude"
         type="number"
         value={building?.longitude}

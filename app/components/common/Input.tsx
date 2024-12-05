@@ -4,7 +4,7 @@ interface InputProps<T> {
   label?: string;
   name: string;
   type: string;
-  placeholder?: string;
+  placeholder: string;
   value?: T;
   required?: boolean;
   readonly?: boolean;
@@ -27,7 +27,7 @@ export default function Input<T>(props: InputProps<T>) {
       <input
         {...props}
         value={props.value ? `${props.value}` : undefined}
-        className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
+        className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600 placeholder:text-gray-300"
         onChange={(e) => setState && setState(e.target.value)}
       />
     </div>
