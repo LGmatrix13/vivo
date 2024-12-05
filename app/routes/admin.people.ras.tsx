@@ -19,7 +19,16 @@ export async function loader() {
 
 export default function AdminPeopleRAsPage() {
   const initialData = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(initialData.data);
+  const columnKeys = {
+    firstName: "Firstname",
+    lastName: "Lastname",
+    building: "Building",
+    rd: "RD",
+  };
+  const { handleSearch, filteredData } = useSearch(
+    initialData.data,
+    Object.keys(columnKeys)
+  );
   const toast = useToastContext();
 
   return (
@@ -39,12 +48,7 @@ export default function AdminPeopleRAsPage() {
         </div>
       </div>
       <Table<IRA>
-        columnKeys={{
-          firstName: "Firstname",
-          lastName: "Lastname",
-          building: "Building",
-          rd: "RD",
-        }}
+        columnKeys={columnKeys}
         rows={filteredData || initialData.data}
         rowKeys={{
           fullName: "Name",

@@ -48,7 +48,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AdminRoomsPage() {
   const data = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(data.rooms);
+  const columnKeys = {
+    building: "Building",
+    roomNumber: "Room #",
+    capacity: "Capacity",
+    raFullName: "RA",
+  };
+  const { handleSearch, filteredData } = useSearch(
+    data.rooms,
+    Object.keys(columnKeys)
+  );
   const toast = useToastContext();
 
   return (
@@ -79,12 +88,7 @@ export default function AdminRoomsPage() {
         </div>
       </div>
       <Table<IRoom>
-        columnKeys={{
-          building: "Building",
-          roomNumber: "Room #",
-          capacity: "Capacity",
-          raFullName: "RA",
-        }}
+        columnKeys={columnKeys}
         rows={filteredData || data.rooms}
         rowKeys={{
           building: "Building",

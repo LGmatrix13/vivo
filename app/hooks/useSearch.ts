@@ -1,7 +1,10 @@
 import { useState } from "react";
 
-// TODO: only serach by columnKeys
-export default function useSearch<T extends Object>(data: T[]) {
+// Only search by columnKeys
+export default function useSearch<T extends Record<string, any>>(
+  data: T[],
+  columns: string[]
+) {
   const [filteredData, setFilteredData] = useState<T[] | null>(null);
 
   function handleSearch(term: string) {
@@ -10,10 +13,11 @@ export default function useSearch<T extends Object>(data: T[]) {
     }
 
     const lowerCaseTerm = term.toLowerCase();
+
     setFilteredData(() =>
       data.filter((row) =>
-        Object.values(row).some((value) =>
-          String(value).toLowerCase().includes(lowerCaseTerm)
+        columns.some((key) =>
+          String(row[key]).toLowerCase().includes(lowerCaseTerm)
         )
       )
     );

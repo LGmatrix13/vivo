@@ -20,8 +20,16 @@ export async function loader() {
 export default function AdminPeopleARDsPage() {
   const data = useLoaderData<typeof loader>();
   const toast = useToastContext();
-
-  const { handleSearch, filteredData } = useSearch(data.ards);
+  const columnKeys = {
+    firstName: "Firstname",
+    lastName: "Lastname",
+    building: "Building",
+    rd: "RD",
+  };
+  const { handleSearch, filteredData } = useSearch(
+    data.ards,
+    Object.keys(columnKeys)
+  );
   return (
     <section className="space-y-5">
       <div className="flex">
@@ -42,12 +50,7 @@ export default function AdminPeopleARDsPage() {
         </div>
       </div>
       <Table<IARD>
-        columnKeys={{
-          firstName: "Firstname",
-          lastName: "Lastname",
-          building: "Building",
-          rd: "RD",
-        }}
+        columnKeys={columnKeys}
         rows={filteredData || data.ards}
         rowKeys={{
           fullName: "Name",

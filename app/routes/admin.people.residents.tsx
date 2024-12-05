@@ -28,7 +28,15 @@ export default function AdminPeopleResidentsPage() {
   const data = useLoaderData<typeof loader>();
   const toast = useToastContext();
   const context = useOutletContext<AdminPeopleOutletContext>();
-  const { handleSearch, filteredData } = useSearch(data.residents);
+  const columnKeys = {
+    firstName: "Firstname",
+    lastName: "Lastname",
+    roomBuilding: "Room Number",
+  };
+  const { handleSearch, filteredData } = useSearch(
+    data.residents,
+    Object.keys(columnKeys)
+  );
   return (
     <section className="space-y-5">
       <div className="flex">
@@ -57,11 +65,7 @@ export default function AdminPeopleResidentsPage() {
         </div>
       </div>
       <Table<IResident>
-        columnKeys={{
-          firstName: "Firstname",
-          lastName: "Lastname",
-          roomBuilding: "Room Number",
-        }}
+        columnKeys={columnKeys}
         rows={filteredData || data.residents}
         rowKeys={{
           fullName: "Name",

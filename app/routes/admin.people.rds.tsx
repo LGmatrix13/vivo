@@ -19,7 +19,15 @@ export async function loader() {
 
 export default function AdminPeopleRDsPage() {
   const initialData = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(initialData.rds);
+  const columnKeys = {
+    firstName: "Firstname",
+    lastName: "Lastname",
+    buildings: "Building",
+  };
+  const { handleSearch, filteredData } = useSearch(
+    initialData.rds,
+    Object.keys(columnKeys)
+  );
   const toast = useToastContext();
 
   return (
@@ -39,11 +47,7 @@ export default function AdminPeopleRDsPage() {
         </div>
       </div>
       <Table<IRD>
-        columnKeys={{
-          firstName: "Firstname",
-          lastName: "Lastname",
-          buildings: "Building",
-        }}
+        columnKeys={columnKeys}
         rows={filteredData || initialData.rds}
         rowKeys={{
           fullName: "Name",
