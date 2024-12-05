@@ -67,7 +67,7 @@ export async function loader() {
 
 export default function AdminPeopleResidentsPage() {
   const initialData = useLoaderData<typeof loader>();
-  const toast = useToastContext()
+  const toast = useToastContext();
 
   return (
     <Suspense fallback={<Loading />}>
@@ -81,8 +81,7 @@ export default function AdminPeopleResidentsPage() {
                   placeholder="Search for a resident..."
                   handleSearch={handleSearch}
                 />
-                
-                <div className="ml-auto order-2">
+                <div className="ml-auto order-2 flex space-x-3">
                   <DrawerProvider>
                     <DrawerContent>
                       <UploadForm />
@@ -91,18 +90,17 @@ export default function AdminPeopleResidentsPage() {
                       <IconButton Icon={Upload}>Upload</IconButton>
                     </DrawerButton>
                     <IconButton
-                  Icon={Download}
-                  onClick={() => {
-                    csv(filteredData || initialData.data, "Residents");
-                    toast.success("Residents Exported");
-                  }}
-                >
-                  {filteredData?.length ? "Export Subset" : "Export"}
-                </IconButton>
+                      Icon={Download}
+                      onClick={() => {
+                        csv(filteredData || initialData.data, "Residents");
+                        toast.success("Residents Exported");
+                      }}
+                    >
+                      {filteredData?.length ? "Export Subset" : "Export"}
+                    </IconButton>
                   </DrawerProvider>
                 </div>
               </div>
-
               <Table<any>
                 columnKeys={{
                   first: "First",
