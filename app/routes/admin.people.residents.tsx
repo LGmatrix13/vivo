@@ -71,6 +71,16 @@ export default function AdminPeopleResidentsPage() {
                   placeholder="Search for a resident..."
                   handleSearch={handleSearch}
                 />
+                <div className="ml-auto order-2 flex space-x-3">
+                <IconButton
+                Icon={Download}
+                onClick={() =>
+                  csv(filteredData || initialData.data, "residentsExport")
+                }
+              >
+                Export
+              </IconButton>
+              </div>
               </div>
               <Table<any>
                 columnKeys={{

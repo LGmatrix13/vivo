@@ -12,12 +12,7 @@ import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
 import { db } from "~/utilties/server/database/connection";
-import {
-  buildingTable,
-  roomTable,
-  staffTable,
-  zoneTable,
-} from "~/utilties/server/database/schema";
+import { buildingTable, staffTable } from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import { Building } from "~/schemas/building";
 import { IBuilding } from "~/models/building";
@@ -33,17 +28,9 @@ export async function loader() {
       rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
         "rd"
       ),
-      rooms: count(roomTable.id),
-      zones: count(zoneTable.id),
-      capacity: sum(roomTable.capacity),
-      latitude: buildingTable.latitude,
-      longitude: buildingTable.longitude,
     })
     .from(buildingTable)
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-    .leftJoin(zoneTable, eq(staffTable.id, zoneTable.staffId))
-    .leftJoin(roomTable, eq(zoneTable.id, roomTable.zoneId))
-    .groupBy(buildingTable.id, staffTable.id)
     .orderBy(desc(buildingTable.id));
 
   return defer({
@@ -106,16 +93,11 @@ export default function AdminBuldingsPage() {
         columnKeys={{
           name: "Name",
           rd: "RD",
-          zones: "Zones",
-          capacity: "Capacity",
         }}
         rows={filteredData || initialData.data}
         rowKeys={{
           name: "Name",
           rd: "RD",
-          zones: "Zones",
-          capacity: "Capacity",
-          rooms: "Rooms",
         }}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
