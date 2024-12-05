@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import { defer, redirect, useLoaderData } from "@remix-run/react";
-import { count, eq, sum, sql, desc } from "drizzle-orm";
+import { defer, json, redirect, useLoaderData } from "@remix-run/react";
+import { count, eq, sum, sql, desc, asc } from "drizzle-orm";
 import {
   DrawerProvider,
   DrawerButton,
@@ -21,11 +21,11 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
 
 export async function loader() {
-  const data = await db
+  const buildings = await db
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
-      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+      rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
         "rd"
       ),
     })
@@ -33,8 +33,19 @@ export async function loader() {
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .orderBy(desc(buildingTable.id));
 
-  return defer({
-    data: data as IBuilding[],
+  const staff = await db
+    .select({
+      id: staffTable.id,
+      rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
+    })
+    .from(staffTable)
+    .orderBy(asc(staffTable.lastName));
+
+  return json({
+    buildings: buildings as IBuilding[],
+    staff: staff,
   });
 }
 
@@ -57,9 +68,9 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function AdminBuldingsPage() {
-  const initialData = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
-  const { handleSearch, filteredData } = useSearch(initialData.data);
+  const { handleSearch, filteredData } = useSearch(data.buildings);
   const toast = useToastContext();
   return (
     <section className="space-y-5">
@@ -71,7 +82,7 @@ export default function AdminBuldingsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <BuildingForm />
+              <BuildingForm staff={data.staff} />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add Building</IconButton>
@@ -79,7 +90,7 @@ export default function AdminBuldingsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv(filteredData || initialData.data, "buildings");
+                csv(filteredData || data.buildings, "buildings");
                 toast.success("Buildings Exported");
               }}
             >
@@ -93,7 +104,7 @@ export default function AdminBuldingsPage() {
           name: "Name",
           rd: "RD",
         }}
-        rows={filteredData || initialData.data}
+        rows={filteredData || data.buildings}
         rowKeys={{
           name: "Name",
           rd: "RD",
@@ -104,7 +115,9 @@ export default function AdminBuldingsPage() {
             <h2 className="text-xl font-bold">First Open a Building</h2>
           </div>
         )}
-        EditComponent={({ row }) => <BuildingForm building={row} />}
+        EditComponent={({ row }) => (
+          <BuildingForm building={row} staff={data.staff} />
+        )}
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={row.name} />
         )}

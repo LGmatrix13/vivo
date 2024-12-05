@@ -1,13 +1,24 @@
 import { IBuilding } from "~/models/building";
 import Form from "../common/Form";
 import Input from "../common/Input";
+import Select from "../common/Select";
 
 interface BuildingFormProps {
+  staff: {
+    id: number;
+    rd: string;
+  }[];
   building?: IBuilding;
 }
 
 export default function BuildingForm(props: BuildingFormProps) {
-  const { building } = props;
+  const { building, staff } = props;
+  const options = staff.map((option) => {
+    return {
+      key: option.rd,
+      value: option.id,
+    };
+  });
   return (
     <Form toast="Saved Building" button="Save Building" intent="create">
       <h2 className="font-bold text-xl">
@@ -21,13 +32,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         value={building?.name}
         required
       />
-      <Input
-        label="Staff ID"
-        placeholder="Staff ID"
-        name="staffId"
-        type="number"
-        required
-      />
+      <Select label="RD" name="staffId" options={options} required />
       <Input
         label="Latitude"
         placeholder="Latitude"
