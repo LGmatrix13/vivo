@@ -1,5 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
-import { sql, aliasedTable, eq } from "drizzle-orm";
+import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 import {
   DrawerButton,
   DrawerContent,
@@ -15,56 +14,20 @@ import ResidentForm from "~/components/forms/ResidentForm";
 import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/client/csv";
-import { db } from "~/utilties/server/database/connection";
-import {
-  buildingTable,
-  roomTable,
-  residentTable,
-  zoneTable,
-} from "~/utilties/server/database/schema";
+import type { AdminPeopleOutletContext } from "./admin.people";
+import { residents } from "~/repositories/people";
+import { IResident } from "~/models/people";
 
 export async function loader() {
-  const raInfoTable = aliasedTable(residentTable, "raInfoTable");
-  const residents = await db
-    .select({
-      id: residentTable.id,
-      firstName: residentTable.firstName,
-      lastName: residentTable.lastName,
-      fullName:
-        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
-          "fullName"
-        ),
-      email: residentTable.emailAddress,
-      phone: residentTable.phoneNumber,
-      mailbox: residentTable.mailbox,
-      hometown:
-        sql<string>`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
-          "hometown"
-        ),
-      class: residentTable.class,
-      roomBuilding:
-        sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
-          "roomBuilding"
-        ),
-      ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`.as(
-        "ra"
-      ),
-    })
-    .from(residentTable)
-    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
-    .leftJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
-    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
-    .orderBy(residentTable.lastName, residentTable.firstName);
-
   return json({
-    residents,
+    residents: await residents(),
   });
 }
 
 export default function AdminPeopleResidentsPage() {
   const data = useLoaderData<typeof loader>();
   const toast = useToastContext();
+  const context = useOutletContext<AdminPeopleOutletContext>();
   const { handleSearch, filteredData } = useSearch(data.residents);
   return (
     <section className="space-y-5">
@@ -93,7 +56,7 @@ export default function AdminPeopleResidentsPage() {
           </DrawerProvider>
         </div>
       </div>
-      <Table<any>
+      <Table<IResident>
         columnKeys={{
           firstName: "Firstname",
           lastName: "Lastname",

@@ -1,61 +1,19 @@
 import { json, useLoaderData } from "@remix-run/react";
-import { sql, eq } from "drizzle-orm";
 import { Download, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/server/database/connection";
-import {
-  buildingTable,
-  roomTable,
-  residentTable,
-  staffTable,
-  assistantStaffTable,
-} from "~/utilties/server/database/schema";
 import { csv } from "~/utilties/client/csv";
 import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { useToastContext } from "~/components/common/Toast";
+import { ards } from "~/repositories/people";
+import { IARD } from "~/models/people";
 
 export async function loader() {
-  const ards = await db
-    .select({
-      id: assistantStaffTable.id,
-      firstName: residentTable.firstName,
-      lastName: residentTable.lastName,
-      fullName:
-        sql`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
-          "fullName"
-        ),
-      email: residentTable.emailAddress,
-      phone: residentTable.phoneNumber,
-      mailbox: residentTable.mailbox,
-      hometown:
-        sql`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
-          "hometown"
-        ),
-      class: residentTable.class,
-      building: buildingTable.name,
-      roomBuilding:
-        sql`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
-          "roomBuilding"
-        ),
-      rd: sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
-        "rd"
-      ),
-    })
-    .from(assistantStaffTable)
-    .leftJoin(
-      residentTable,
-      eq(assistantStaffTable.residentId, residentTable.id)
-    )
-    .leftJoin(staffTable, eq(assistantStaffTable.staffId, staffTable.id))
-    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id));
-
   return json({
-    ards,
+    ards: await ards(),
   });
 }
 
@@ -83,7 +41,7 @@ export default function AdminPeopleARDsPage() {
           </IconButton>
         </div>
       </div>
-      <Table<any>
+      <Table<IARD>
         columnKeys={{
           firstName: "Firstname",
           lastName: "Lastname",

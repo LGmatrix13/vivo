@@ -1,49 +1,25 @@
-import { defer, useLoaderData } from "@remix-run/react";
-import { sql, eq } from "drizzle-orm";
-
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/server/database/connection";
-import { staffTable, buildingTable } from "~/utilties/server/database/schema";
-import { IRD } from "~/models/rd";
 import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import { useToastContext } from "~/components/common/Toast";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/client/csv";
+import { rds } from "~/repositories/people";
+import { IRD } from "~/models/people";
 
 export async function loader() {
-  const data = await db
-    .select({
-      id: staffTable.id,
-      firstName: staffTable.firstName,
-      lastName: staffTable.lastName,
-      fullName:
-        sql`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
-          "fullName"
-        ),
-      email: staffTable.emailAddress,
-      mailbox: staffTable.mailbox,
-      buildings:
-        sql`STRING_AGG(${buildingTable.name}, ', ' ORDER BY ${buildingTable.name})`.as(
-          "buildings"
-        ),
-    })
-    .from(staffTable)
-    .leftJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .groupBy(staffTable.id)
-    .orderBy(staffTable.lastName, staffTable.firstName);
-
-  return defer({
-    data: data as IRD[],
+  return json({
+    rds: await rds(),
   });
 }
 
 export default function AdminPeopleRDsPage() {
   const initialData = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(initialData.data);
+  const { handleSearch, filteredData } = useSearch(initialData.rds);
   const toast = useToastContext();
 
   return (
@@ -54,7 +30,7 @@ export default function AdminPeopleRDsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || initialData.data, "RDs");
+              csv(filteredData || initialData.rds, "RDs");
               toast.success("RDs Exported");
             }}
           >
@@ -68,7 +44,7 @@ export default function AdminPeopleRDsPage() {
           lastName: "Lastname",
           buildings: "Building",
         }}
-        rows={filteredData || initialData.data}
+        rows={filteredData || initialData.rds}
         rowKeys={{
           fullName: "Name",
           buildings: "Building",

@@ -1,19 +1,17 @@
-import { IBuilding } from "~/models/building";
+import type { IBuilding } from "~/models/housing";
 import Form from "../common/Form";
 import Input from "../common/Input";
 import Select from "../common/Select";
+import { IRDDropdown } from "~/models/people";
 
 interface BuildingFormProps {
-  staff: {
-    id: number;
-    rd: string;
-  }[];
+  rds: IRDDropdown[];
   building?: IBuilding;
 }
 
 export default function BuildingForm(props: BuildingFormProps) {
-  const { building, staff } = props;
-  const options = staff.map((option) => {
+  const { building, rds } = props;
+  const options = rds.map((option) => {
     return {
       key: option.rd,
       value: option.id,

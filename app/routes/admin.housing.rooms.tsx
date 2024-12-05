@@ -1,5 +1,5 @@
 import { defer } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import {
   DrawerProvider,
@@ -14,43 +14,18 @@ import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import useSearch from "~/hooks/useSearch";
-import { IRoom } from "~/models/room";
 import { db } from "~/utilties/server/database/connection";
-import {
-  buildingTable,
-  residentTable,
-  roomTable,
-  zoneTable,
-} from "~/utilties/server/database/schema";
+import { roomTable } from "~/utilties/server/database/schema";
 import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/client/csv";
 import { redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { rooms } from "~/repositories/housing";
+import { IRoom } from "~/models/housing";
 
 export async function loader() {
-  const data = await db
-    .select({
-      id: roomTable.id,
-      building: buildingTable.name,
-      raFirstName: residentTable.firstName,
-      raLastName: residentTable.lastName,
-      roomNumber: roomTable.roomNumber,
-      capacity: roomTable.capacity,
-    })
-    .from(roomTable)
-    .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-    .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
-    .leftJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .groupBy(roomTable.id, buildingTable.id, residentTable.id)
-    .orderBy(buildingTable.name, roomTable.roomNumber);
-
-  const formattedData = data.map((row) => ({
-    ...row,
-    ra: row.raFirstName ? `${row.raFirstName} ${row.raLastName}` : null,
-  }));
-
-  return defer({
-    data: formattedData as IRoom[],
+  return json({
+    rooms: await rooms(),
   });
 }
 
@@ -72,8 +47,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function AdminRoomsPage() {
-  const initialData = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(initialData.data);
+  const data = useLoaderData<typeof loader>();
+  const { handleSearch, filteredData } = useSearch(data.rooms);
   const toast = useToastContext();
 
   return (
@@ -94,7 +69,7 @@ export default function AdminRoomsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv(filteredData || initialData.data, "rooms");
+                csv(filteredData || data.rooms, "rooms");
                 toast.success("Rooms Exported");
               }}
             >
@@ -108,13 +83,13 @@ export default function AdminRoomsPage() {
           building: "Building",
           roomNumber: "Room #",
           capacity: "Capacity",
-          ra: "RA",
+          raFullName: "RA",
         }}
-        rows={filteredData || initialData.data}
+        rows={filteredData || data.rooms}
         rowKeys={{
           building: "Building",
-          roomNumber: "Room Number",
-          ra: "RA",
+          roomNumber: "Room #",
+          raFullName: "RA",
           capacity: "Capacity",
         }}
         InstructionComponent={() => (

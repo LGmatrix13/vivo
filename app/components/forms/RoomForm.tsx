@@ -1,9 +1,9 @@
+import { Room } from "~/models/housing";
 import Form from "../common/Form";
 import Input from "../common/Input";
-import { IRoom } from "~/models/room";
 
 interface RoomFormProps {
-  room?: IRoom;
+  room?: Room;
 }
 
 export default function RoomForm(props: RoomFormProps) {
