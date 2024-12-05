@@ -8,12 +8,12 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import { useToastContext } from "~/components/common/Toast";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/client/csv";
-import { rds } from "~/repositories/people";
+import { readRDs } from "~/repositories/people";
 import { IRD } from "~/models/people";
 
 export async function loader() {
   return json({
-    rds: await rds(),
+    rds: await readRDs(),
   });
 }
 

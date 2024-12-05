@@ -19,7 +19,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="First Name"
         name="firstName"
         type="text"
-        value={resident}
+        value={resident?.firstName}
         required
       />
       <Input
@@ -27,6 +27,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Last Name"
         name="lastName"
         type="text"
+        value={resident?.lastName}
         required
       />
       <Input
@@ -34,14 +35,23 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Email Address"
         name="emailAddress"
         type="email"
+        value={resident?.email}
         required
       />
-      <Input label="City" placeholder="City" name="city" type="text" required />
+      <Input
+        label="City"
+        placeholder="City"
+        name="city"
+        type="text"
+        value={resident?.city}
+        required
+      />
       <Input
         label="Phone Number"
         placeholder="Phone Number"
         name="phoneNumber"
         type="tel"
+        value={resident?.phone}
         required
       />
       <Input
@@ -49,6 +59,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Mailbox"
         name="mailbox"
         type="text"
+        value={resident?.mailbox}
         required
       />
       <Input
@@ -56,11 +67,13 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Class"
         name="class"
         type="text"
+        value={resident?.class}
         required
       />
       <Select
         label="Gender"
         name="gender"
+        value={resident?.gender}
         options={[
           {
             key: "Male",
@@ -77,6 +90,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Student ID"
         name="studentId"
         type="number"
+        value={resident?.studentId}
         required
       />
     </Form>

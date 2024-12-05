@@ -8,7 +8,7 @@ import {
   zoneTable,
 } from "~/utilties/server/database/schema";
 
-export async function buildings() {
+export async function readBuildings() {
   const buildings = await db
     .select({
       id: buildingTable.id,
@@ -26,7 +26,7 @@ export async function buildings() {
   return buildings;
 }
 
-export async function rooms() {
+export async function readRooms() {
   const rooms = await db
     .select({
       id: roomTable.id,

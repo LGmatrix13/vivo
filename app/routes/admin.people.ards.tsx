@@ -8,12 +8,12 @@ import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { useToastContext } from "~/components/common/Toast";
-import { ards } from "~/repositories/people";
+import { readARDs } from "~/repositories/people";
 import { IARD } from "~/models/people";
 
 export async function loader() {
   return json({
-    ards: await ards(),
+    ards: await readARDs(),
   });
 }
 

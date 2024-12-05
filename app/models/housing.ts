@@ -1,4 +1,4 @@
-import { buildings, rooms } from "~/repositories/housing";
+import { readBuildings, readRooms } from "~/repositories/housing";
 
-export type IBuilding = Awaited<ReturnType<typeof buildings>>[number];
-export type IRoom = Awaited<ReturnType<typeof rooms>>[number];
+export type IBuilding = Awaited<ReturnType<typeof readBuildings>>[number];
+export type IRoom = Awaited<ReturnType<typeof readRooms>>[number];

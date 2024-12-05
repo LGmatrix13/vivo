@@ -10,7 +10,7 @@ import {
   assistantStaffTable,
 } from "~/utilties/server/database/schema";
 
-export async function residents() {
+export async function readResidents() {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const residents = await db
     .select({
@@ -36,6 +36,9 @@ export async function residents() {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`.as(
         "ra"
       ),
+      gender: residentTable.gender,
+      studentId: residentTable.studentId,
+      city: residentTable.city,
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
@@ -46,7 +49,7 @@ export async function residents() {
   return residents;
 }
 
-export async function rds() {
+export async function readRDs() {
   const rds = await db
     .select({
       id: staffTable.id,
@@ -70,7 +73,7 @@ export async function rds() {
   return rds;
 }
 
-export async function ras() {
+export async function readRAs() {
   const ras = await db
     .select({
       id: zoneTable.id,
@@ -111,7 +114,7 @@ export async function ras() {
   return ras;
 }
 
-export async function ards() {
+export async function readARDs() {
   const ards = await db
     .select({
       id: assistantStaffTable.id,
@@ -150,7 +153,7 @@ export async function ards() {
   return ards;
 }
 
-export async function rdsDropdown() {
+export async function readRDsDropdown() {
   const rds = await db
     .select({
       id: staffTable.id,

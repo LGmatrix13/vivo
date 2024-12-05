@@ -17,15 +17,15 @@ import { csv } from "~/utilties/client/csv";
 import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
-import { buildings } from "~/repositories/housing";
-import { rdsDropdown } from "~/repositories/people";
+import { readBuildings } from "~/repositories/housing";
+import { readRDsDropdown } from "~/repositories/people";
 import type { IBuilding } from "~/models/housing";
 import { Building } from "~/schemas/building";
 
 export async function loader() {
   return json({
-    buildings: await buildings(),
-    rds: await rdsDropdown(),
+    buildings: await readBuildings(),
+    rds: await readRDsDropdown(),
   });
 }
 

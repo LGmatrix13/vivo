@@ -20,12 +20,12 @@ import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/client/csv";
 import { redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { rooms } from "~/repositories/housing";
+import { readRooms } from "~/repositories/housing";
 import { IRoom } from "~/models/housing";
 
 export async function loader() {
   return json({
-    rooms: await rooms(),
+    rooms: await readRooms(),
   });
 }
 

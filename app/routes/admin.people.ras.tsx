@@ -8,12 +8,12 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
-import { ras } from "~/repositories/people";
+import { readRAs } from "~/repositories/people";
 import { csv } from "~/utilties/client/csv";
 
 export async function loader() {
   return json({
-    data: await ras(),
+    data: await readRAs(),
   });
 }
 

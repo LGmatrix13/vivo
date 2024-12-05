@@ -1,7 +1,13 @@
-import { ards, ras, rds, rdsDropdown, residents } from "~/repositories/people";
+import {
+  readARDs,
+  readRAs,
+  readRDs,
+  readRDsDropdown,
+  readResidents,
+} from "~/repositories/people";
 
-export type IRD = Awaited<ReturnType<typeof rds>>[number];
-export type IRA = Awaited<ReturnType<typeof ras>>[number];
-export type IARD = Awaited<ReturnType<typeof ards>>[number];
-export type IRDDropdown = Awaited<ReturnType<typeof rdsDropdown>>[number];
-export type IResident = Awaited<ReturnType<typeof residents>>[number];
+export type IRD = Awaited<ReturnType<typeof readRDs>>[number];
+export type IRA = Awaited<ReturnType<typeof readRAs>>[number];
+export type IARD = Awaited<ReturnType<typeof readARDs>>[number];
+export type IRDDropdown = Awaited<ReturnType<typeof readRDsDropdown>>[number];
+export type IResident = Awaited<ReturnType<typeof readResidents>>[number];

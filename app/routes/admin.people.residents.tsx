@@ -15,12 +15,12 @@ import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/client/csv";
 import type { AdminPeopleOutletContext } from "./admin.people";
-import { residents } from "~/repositories/people";
+import { readResidents } from "~/repositories/people";
 import { IResident } from "~/models/people";
 
 export async function loader() {
   return json({
-    residents: await residents(),
+    residents: await readResidents(),
   });
 }
 
