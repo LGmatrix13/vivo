@@ -31,7 +31,7 @@ export async function loader() {
     })
     .from(buildingTable)
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-    .orderBy(desc(buildingTable.id));
+    .orderBy(buildingTable.name);
 
   const staff = await db
     .select({

@@ -64,8 +64,8 @@ export default function AdminPeopleRDsPage() {
       </div>
       <Table<IRD>
         columnKeys={{
-          first: "First",
-          last: "Last",
+          firstName: "First",
+          lastName: "Last",
           buildings: "Building",
         }}
         rows={filteredData || initialData.data}
