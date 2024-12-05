@@ -21,7 +21,7 @@ export default function Form(props: FormProps) {
   const [, setOpen] = useDrawerContext();
   return (
     <RemixForm
-      action="post"
+      method="post"
       onSubmit={(event) => {
         setOpen(false);
         if (toastMessage) toast.success(toastMessage);
@@ -35,7 +35,7 @@ export default function Form(props: FormProps) {
         options={{
           type: "submit",
           name: "intent",
-          value: "delete",
+          value: "create",
         }}
       >
         {button}

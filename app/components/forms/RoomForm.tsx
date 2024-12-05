@@ -16,7 +16,7 @@ export default function RoomForm(props: RoomFormProps) {
       <Input
         label="Building"
         placeholder="Building"
-        name="building"
+        name="buildingId"
         type="text"
         value={room?.building}
         required

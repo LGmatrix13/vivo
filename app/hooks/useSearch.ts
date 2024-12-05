@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// TODO: only serach by columnKeys
 export default function useSearch<T extends Object>(data: T[]) {
   const [filteredData, setFilteredData] = useState<T[] | null>(null);
 

@@ -41,7 +41,6 @@ export async function loader() {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
   if (intent === "create") {
     const building = Building.safeParse(values);
 
