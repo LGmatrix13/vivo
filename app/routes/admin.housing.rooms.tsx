@@ -97,7 +97,7 @@ export default function AdminRoomsPage() {
                 toast.success("Rooms Exported");
               }}
             >
-              Export
+              {filteredData?.length ? "Export Subset" : "Export"}
             </IconButton>
           </DrawerProvider>
         </div>
