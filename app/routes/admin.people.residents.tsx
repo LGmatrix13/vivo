@@ -11,7 +11,6 @@ import { Upload, UserSearch } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import UploadButton from "~/components/common/UploadButton";
 import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import UploadForm from "~/components/forms/UploadForm";
