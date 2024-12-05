@@ -65,6 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await db.insert(roomTable).values(room.data);
     }
   } else if (intent === "delete") {
+    await db.delete(roomTable).where(eq(roomTable.id, Number(values["id"])));
   }
 
   return redirect(request.url);
@@ -105,8 +106,9 @@ export default function AdminRoomsPage() {
       <Table<IRoom>
         columnKeys={{
           building: "Building",
-          ra: "RA",
+          roomNumber: "Room #",
           capacity: "Capacity",
+          ra: "RA",
         }}
         rows={filteredData || initialData.data}
         rowKeys={{

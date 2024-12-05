@@ -5,6 +5,7 @@ import { useDrawerContext } from "./Drawer";
 import React from "react";
 
 interface FormProps {
+  intent: string;
   toast?: string;
   children: React.ReactNode;
   button: string;
@@ -15,7 +16,7 @@ interface FormProps {
 }
 
 export default function Form(props: FormProps) {
-  const { toast: toastMessage, children, button, encType } = props;
+  const { toast: toastMessage, children, button, encType, intent } = props;
   const toast = useToastContext();
   const submit = useSubmit();
   const [, setOpen] = useDrawerContext();
@@ -35,7 +36,7 @@ export default function Form(props: FormProps) {
         options={{
           type: "submit",
           name: "intent",
-          value: "create",
+          value: intent,
         }}
       >
         {button}

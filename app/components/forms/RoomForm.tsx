@@ -9,7 +9,7 @@ interface RoomFormProps {
 export default function RoomForm(props: RoomFormProps) {
   const { room } = props;
   return (
-    <Form toast="Saved Room" button="Save Room">
+    <Form toast="Saved Room" button="Save Room" intent="create">
       <h2 className="font-bold text-xl">
         {room ? `Edit Room ${room.roomNumber}` : "Add Room"}
       </h2>

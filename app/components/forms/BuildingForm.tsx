@@ -9,7 +9,7 @@ interface BuildingFormProps {
 export default function BuildingForm(props: BuildingFormProps) {
   const { building } = props;
   return (
-    <Form toast="Saved Building" button="Save Building">
+    <Form toast="Saved Building" button="Save Building" intent="create">
       <h2 className="font-bold text-xl">
         {building ? `Edit ${building.name}` : "Add Building"}
       </h2>
