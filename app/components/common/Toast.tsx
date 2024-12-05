@@ -52,26 +52,6 @@ export function Toast(props: ToastProps) {
   );
 }
 
-interface ToastsProps {
-  toasts: Toast[];
-}
-
-function Toasts(props: ToastsProps) {
-  const { toasts } = props;
-
-  return (
-    <div className="fixed bottom-5 left-5">
-      <div className="flex flex-col space-y-5">
-        {toasts.map((toast, index) => (
-          <Toast key={index} level={toast.level}>
-            {toast.message}
-          </Toast>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 interface ToastContextType {
   success: (message: string) => void;
   failure: (message: string) => void;
@@ -82,30 +62,26 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 // Provider component
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toast, setToast] = useState<Toast>();
 
   function success(message: string) {
-    const toast = {
+    setToast({
       level: "success",
       message: message,
-    };
-    console.log("ran");
-    setToasts((prevToasts) => [toast as Toast, ...prevToasts]);
+    });
   }
 
   function failure(message: string) {
-    const toast = {
+    setToast({
       level: "failure",
       message: message,
-    };
-    console.log("ran");
-    setToasts((prevToasts) => [toast as Toast, ...prevToasts]);
+    });
   }
 
   return (
     <ToastContext.Provider value={{ success, failure }}>
       {children}
-      <Toasts toasts={toasts} />
+      {toast && <Toast level={toast.level}>{toast.message}</Toast>}
     </ToastContext.Provider>
   );
 };
