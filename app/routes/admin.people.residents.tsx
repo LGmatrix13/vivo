@@ -46,19 +46,19 @@ export async function action({ request }: ActionFunctionArgs) {
       const data = csv.parse<Record<string, any>[]>(content);
 
       const errors = [];
-      const correctRows = [];
-      for (const row of data) {
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
         const result = MasterCSV.safeParse(row);
-        if (result.success) {
-          correctRows.push(result.data);
-        } else {
-          errors.push(result.error.message);
+        if (!result.success) {
+          errors.push({
+            rowNumber: i + 1,
+            message: result.error.message,
+          });
         }
       }
 
       if (errors.length) {
         return json({
-          rows: correctRows,
           errors: errors,
         });
       }
