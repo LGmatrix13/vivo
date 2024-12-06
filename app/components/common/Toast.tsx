@@ -11,12 +11,12 @@ interface Toast {
 interface ToastProps {
   level: Level;
   children: React.ReactNode;
+  clearToast: () => void;
 }
 
 export function Toast(props: ToastProps) {
   const [show, setShow] = useState(false);
-  const [remove, setRemove] = useState(false);
-  const { level, children } = props;
+  const { level, children, clearToast } = props;
   const background = level === "success" ? "bg-green-600" : "bg-red-600";
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function Toast(props: ToastProps) {
       setShow(false);
     }, 3500);
     const timer3 = setTimeout(() => {
-      setRemove(true);
+      clearToast();
     }, 3800);
     return () => {
       clearTimeout(timer1);
@@ -37,18 +37,14 @@ export function Toast(props: ToastProps) {
   }, []);
 
   return (
-    <>
-      {!remove && (
-        <div
-          className={`${background} p-3 rounded-lg text-white transition-all ease-in-out min-w-56 duration-300 flex items-center space-x-2 ${
-            show ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <Check className="w-5 h-5" />
-          <span>{children}</span>
-        </div>
-      )}
-    </>
+    <div
+      className={`${background} p-3 rounded-lg text-white transition-all ease-in-out min-w-56 duration-300 flex items-center space-x-2 ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <Check className="w-5 h-5" />
+      <span>{children}</span>
+    </div>
   );
 }
 
@@ -62,7 +58,7 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 // Provider component
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
-  const [toast, setToast] = useState<Toast>();
+  const [toast, setToast] = useState<Toast | null>();
 
   function success(message: string) {
     setToast({
@@ -76,6 +72,10 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
       level: "failure",
       message: message,
     });
+  }
+
+  function clearToast() {
+    setToast(null);
   }
 
   return (
