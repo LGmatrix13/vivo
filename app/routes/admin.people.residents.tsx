@@ -26,6 +26,7 @@ import { db } from "~/utilties/connection.server";
 import { residentTable } from "~/utilties/schema.server";
 import { eq } from "drizzle-orm";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { masterCSV } from "~/schemas/masterCSV";
 
 export async function loader() {
   return json({
@@ -38,18 +39,41 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
+    case "upload":
+      const file = values["file"] as File;
+      const arrayBuffer = await file.arrayBuffer();
+      const content = new TextDecoder("utf-8").decode(arrayBuffer);
+      const data = csv.parse<Record<string, any>[]>(content);
+
+      const errors = [];
+      const correctRows = [];
+      for (const row of data) {
+        const result = masterCSV.safeParse(row);
+        if (result.success) {
+          correctRows.push(result.data);
+        } else {
+          errors.push(result.error.message);
+        }
+      }
+
+      if (errors.length) {
+        return json({
+          rows: correctRows,
+          errors: errors,
+        });
+      }
+
+      return redirect(request.url);
     case "create":
-      break;
+      return redirect(request.url);
     case "update":
-      break;
+      return redirect(request.url);
     case "delete":
       await db
         .delete(residentTable)
         .where(eq(residentTable.id, Number(values["id"])));
-      break;
+      return redirect(request.url);
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminPeopleResidentsPage() {
