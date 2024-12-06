@@ -1,4 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { json, redirect, useLoaderData } from "@remix-run/react";
 import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -15,12 +15,34 @@ import {
   DrawerContent,
   DrawerButton,
 } from "~/components/common/Drawer";
-import RDForm from "~/components/forms/RDForm";
+import { assistantStaffTable } from "~/utilties/schema.server";
+import { db } from "~/utilties/connection.server";
+import { eq } from "drizzle-orm";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function loader() {
   return json({
     ards: await readARDs(),
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "create":
+      break;
+    case "update":
+      break;
+    case "delete":
+      await db
+        .delete(assistantStaffTable)
+        .where(eq(assistantStaffTable.id, Number(values["id"])));
+      break;
+  }
+
+  return redirect(request.url);
 }
 
 export default function AdminPeopleARDsPage() {

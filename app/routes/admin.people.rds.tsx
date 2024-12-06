@@ -1,4 +1,4 @@
-import { data, json, useLoaderData } from "@remix-run/react";
+import { data, json, redirect, useLoaderData } from "@remix-run/react";
 import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -16,6 +16,10 @@ import {
   DrawerButton,
 } from "~/components/common/Drawer";
 import { readBuildingsDropdown } from "~/repositories/housing";
+import { staffTable } from "~/utilties/schema.server";
+import { eq } from "drizzle-orm";
+import { db } from "~/utilties/connection.server";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -23,6 +27,25 @@ export async function loader() {
     rds: parallelized[0],
     buildingsDropdown: parallelized[1],
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "create":
+      break;
+    case "update":
+      break;
+    case "delete":
+      await db
+        .delete(staffTable)
+        .where(eq(staffTable.id, Number(values["id"])));
+      break;
+  }
+
+  return redirect(request.url);
 }
 
 export default function AdminPeopleRDsPage() {

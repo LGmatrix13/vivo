@@ -1,4 +1,6 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect, useLoaderData } from "@remix-run/react";
+import { eq } from "drizzle-orm";
 import {
   DrawerButton,
   DrawerContent,
@@ -14,7 +16,9 @@ import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import { readRAs, readResidentsDropdown } from "~/repositories/people";
+import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
+import { zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
   const parallelized = await Promise.all([readRAs(), readResidentsDropdown()]);
@@ -23,6 +27,21 @@ export async function loader() {
     ras: parallelized[0],
     residentsDropdown: parallelized[1],
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "create":
+      break;
+    case "delete":
+      await db.delete(zoneTable).where(eq(zoneTable.id, Number(values["id"])));
+      break;
+  }
+
+  return redirect(request.url);
 }
 
 export default function AdminPeopleRAsPage() {

@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  redirect,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import {
   DrawerButton,
   DrawerContent,
@@ -17,11 +22,34 @@ import { csv } from "~/utilties/csv";
 import type { AdminPeopleOutletContext } from "./admin.people";
 import { readResidents } from "~/repositories/people";
 import { IResident } from "~/models/people";
+import { db } from "~/utilties/connection.server";
+import { residentTable } from "~/utilties/schema.server";
+import { eq } from "drizzle-orm";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function loader() {
   return json({
     residents: await readResidents(),
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "create":
+      break;
+    case "update":
+      break;
+    case "delete":
+      await db
+        .delete(residentTable)
+        .where(eq(residentTable.id, Number(values["id"])));
+      break;
+  }
+
+  return redirect(request.url);
 }
 
 export default function AdminPeopleResidentsPage() {
