@@ -50,7 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminBuldingsPage() {
   const data = useLoaderData<typeof loader>();
 
-  const { handleSearch, filteredData } = useSearch(data.buildings);
+  const { handleSearch, filteredData } = useSearch(data.buildings, []);
   const toast = useToastContext();
   return (
     <section className="space-y-5">
@@ -99,7 +99,7 @@ export default function AdminBuldingsPage() {
           <BuildingForm building={row} rds={data.rds} />
         )}
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={row.name} />
+          <DeleteForm id={row.id} title={`Delete ${row.name}`} />
         )}
       />
     </section>

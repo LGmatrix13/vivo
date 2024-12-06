@@ -1,4 +1,4 @@
-import { sql, eq, asc } from "drizzle-orm";
+import { sql, eq, asc, not } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/server/database/connection";
 import {
@@ -163,6 +163,21 @@ export async function readRDsDropdown() {
     })
     .from(staffTable)
     .orderBy(asc(staffTable.lastName));
+
+  return rds;
+}
+
+export async function readResidentsDropdown() {
+  const rds = await db
+    .select({
+      id: residentTable.id,
+      resident:
+        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+          "rd"
+        ),
+    })
+    .from(residentTable)
+    .orderBy(asc(residentTable.lastName));
 
   return rds;
 }

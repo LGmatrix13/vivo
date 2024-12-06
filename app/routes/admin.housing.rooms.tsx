@@ -106,7 +106,7 @@ export default function AdminRoomsPage() {
         DeleteComponent={({ row }) => (
           <DeleteForm
             id={row.id}
-            title={`${row.building} ${row.roomNumber}`}
+            title={`Delete ${row.building} ${row.roomNumber}`}
             toast="Deleted Room"
           />
         )}

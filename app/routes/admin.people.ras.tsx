@@ -1,6 +1,11 @@
 import { json, useLoaderData } from "@remix-run/react";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
@@ -8,17 +13,18 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
-import { readRAs } from "~/repositories/people";
+import { readRAs, readResidentsDropdown } from "~/repositories/people";
 import { csv } from "~/utilties/client/csv";
 
 export async function loader() {
   return json({
-    data: await readRAs(),
+    ras: await readRAs(),
+    residentsDropdown: await readResidentsDropdown(),
   });
 }
 
 export default function AdminPeopleRAsPage() {
-  const initialData = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
@@ -26,7 +32,7 @@ export default function AdminPeopleRAsPage() {
     rd: "RD",
   };
   const { handleSearch, filteredData } = useSearch(
-    initialData.data,
+    data.ras,
     Object.keys(columnKeys)
   );
   const toast = useToastContext();
@@ -36,10 +42,18 @@ export default function AdminPeopleRAsPage() {
       <div className="flex">
         <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <RAForm residentDropdown={data.residentsDropdown} />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add RA</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || initialData.data, "RAs");
+              csv(filteredData || data.ras, "RAs");
               toast.success("RAs Exported");
             }}
           >
@@ -49,7 +63,7 @@ export default function AdminPeopleRAsPage() {
       </div>
       <Table<IRA>
         columnKeys={columnKeys}
-        rows={filteredData || initialData.data}
+        rows={filteredData || data.ras}
         rowKeys={{
           fullName: "Name",
           roomBuilding: "Room Number",
@@ -66,9 +80,11 @@ export default function AdminPeopleRAsPage() {
             <h2 className="text-xl font-bold">First Select an RA</h2>
           </div>
         )}
-        EditComponent={({ row }) => <RAForm ra={row} />} //TODO
+        EditComponent={({ row }) => (
+          <RAForm residentDropdown={data.residentsDropdown} />
+        )} //TODO
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={row.fullName} />
+          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
       />
     </section>

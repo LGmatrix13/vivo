@@ -1,5 +1,5 @@
 import { json, useLoaderData } from "@remix-run/react";
-import { Download, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
@@ -10,6 +10,12 @@ import IconButton from "~/components/common/IconButton";
 import { useToastContext } from "~/components/common/Toast";
 import { readARDs } from "~/repositories/people";
 import { IARD } from "~/models/people";
+import {
+  DrawerProvider,
+  DrawerContent,
+  DrawerButton,
+} from "~/components/common/Drawer";
+import RDForm from "~/components/forms/RDForm";
 
 export async function loader() {
   return json({
@@ -38,6 +44,14 @@ export default function AdminPeopleARDsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <ARDForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add ARD</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
           <IconButton
             Icon={Download}
             onClick={() => {
@@ -70,7 +84,7 @@ export default function AdminPeopleARDsPage() {
         )}
         EditComponent={({ row }) => <ARDForm ard={row} />}
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={row.fullName} />
+          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
       />
     </section>

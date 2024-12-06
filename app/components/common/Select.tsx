@@ -1,4 +1,5 @@
 import { Dispatch } from "react";
+import { ChevronDown } from "./Icons";
 
 interface SelectProps {
   label: string;
@@ -22,14 +23,22 @@ export default function Select(props: SelectProps) {
         {label}
         <span className="text-red-600 text-sm"> {required ? "*" : ""}</span>
       </label>
-      <select
-        {...props}
-        className="border p-3 rounded-lg focus:ring-blue-600 focus:border-blue-600"
-      >
-        {options.map((option) => (
-          <option value={`${option.value}`}>{`${option.key}`}</option>
-        ))}
-      </select>
+      <div className="relative border rounded-lg">
+        <select
+          className="w-full p-3 rounded-lg focus:ring-blue-600 appearance-none h-12"
+          {...props}
+        >
+          {options.map((option, index) => (
+            <option
+              key={index}
+              value={`${option.value}`}
+            >{`${option.key}`}</option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+          <ChevronDown />
+        </div>
+      </div>
     </div>
   );
 }

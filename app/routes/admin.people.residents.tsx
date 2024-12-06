@@ -5,7 +5,7 @@ import {
   DrawerProvider,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, Upload, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
@@ -52,16 +52,24 @@ export default function AdminPeopleResidentsPage() {
             <DrawerButton>
               <IconButton Icon={Upload}>Upload</IconButton>
             </DrawerButton>
-            <IconButton
-              Icon={Download}
-              onClick={() => {
-                csv(filteredData || data.residents, "Residents");
-                toast.success("Residents Exported");
-              }}
-            >
-              {filteredData?.length ? "Export Subset" : "Export"}
-            </IconButton>
           </DrawerProvider>
+          <DrawerProvider>
+            <DrawerContent>
+              <ResidentForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Resident</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
+          <IconButton
+            Icon={Download}
+            onClick={() => {
+              csv(filteredData || data.residents, "Residents");
+              toast.success("Residents Exported");
+            }}
+          >
+            {filteredData?.length ? "Export Subset" : "Export"}
+          </IconButton>
         </div>
       </div>
       <Table<IResident>
@@ -85,7 +93,7 @@ export default function AdminPeopleResidentsPage() {
         )}
         EditComponent={({ row }) => <ResidentForm resident={row} />} //TODO
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={row.fullName} />
+          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
       />
     </section>

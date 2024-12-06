@@ -674,3 +674,22 @@ export function Upload(props: IconProps) {
     </svg>
   );
 }
+
+export function ChevronDown(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={`w-5 h-5 ${props.className || ""}`}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="24"
+      height="24"
+      strokeWidth="1.5"
+    >
+      <path d="M6 9l6 6l6 -6"></path>
+    </svg>
+  );
+}
