@@ -17,7 +17,12 @@ export default function RAForm(props: RAFormProps) {
   return (
     <Form toast="Saved RA" button="Save RA" intent="create">
       <h2 className="font-bold text-xl">Add RA</h2>
-      <Select label="Resident" name="resident" options={options} />
+      <Select
+        label="Resident"
+        name="resident"
+        explanation="Select someone to promote to RA"
+        options={options}
+      />
     </Form>
   );
 }

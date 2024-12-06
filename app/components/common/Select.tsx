@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import { ChevronDown } from "./Icons";
 
 interface SelectProps {
@@ -9,12 +8,13 @@ interface SelectProps {
     value: any;
   }[];
   value?: string;
+  explanation?: string;
   required?: boolean;
   [key: string]: any;
 }
 
 export default function Select(props: SelectProps) {
-  const { name, label, required, options } = props;
+  const { name, label, required, options, explanation } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -22,6 +22,7 @@ export default function Select(props: SelectProps) {
         {label}
         <span className="text-red-600 text-sm"> {required ? "*" : ""}</span>
       </label>
+      {explanation && <p>{explanation}</p>}
       <div className="relative border rounded-lg">
         <select
           className="w-full p-3 rounded-lg focus:ring-blue-600 appearance-none h-12"
