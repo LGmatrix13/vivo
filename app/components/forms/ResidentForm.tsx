@@ -10,16 +10,21 @@ interface ResidentFormProps {
 export default function ResidentForm(props: ResidentFormProps) {
   const { resident } = props;
   return (
-    <Form toast="Saved Resident" button="Save Resident" intent="create">
+    <Form
+      toast="Saved Resident"
+      button="Save Resident"
+      intent={resident ? "update" : "create"}
+    >
       <h2 className="font-bold text-xl">
         {resident ? `Edit ${resident.fullName}` : "Add Resident"}
       </h2>
+      {resident && <input type="hidden" name="id" value={resident.id} />}
       <Input
         label="First Name"
         placeholder="First Name"
         name="firstName"
         type="text"
-        value={resident?.firstName}
+        defaultValue={resident?.firstName}
         required
       />
       <Input
@@ -27,7 +32,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Last Name"
         name="lastName"
         type="text"
-        value={resident?.lastName}
+        defaultValue={resident?.lastName}
         required
       />
       <Input
@@ -35,7 +40,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Email Address"
         name="emailAddress"
         type="email"
-        value={resident?.email}
+        defaultValue={resident?.email}
         required
       />
       <Input
@@ -43,7 +48,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="City"
         name="city"
         type="text"
-        value={resident?.city}
+        defaultValue={resident?.city}
         required
       />
       <Input
@@ -51,7 +56,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Phone Number"
         name="phoneNumber"
         type="tel"
-        value={resident?.phone}
+        defaultValue={resident?.phone}
         required
       />
       <Input
@@ -59,7 +64,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Mailbox"
         name="mailbox"
         type="text"
-        value={resident?.mailbox}
+        defaultValue={resident?.mailbox}
         required
       />
       <Input
@@ -67,13 +72,13 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Class"
         name="class"
         type="text"
-        value={resident?.class}
+        defaultValue={resident?.class}
         required
       />
       <Select
         label="Gender"
         name="gender"
-        value={resident?.gender}
+        defaultValue={resident?.gender}
         options={[
           {
             key: "Male",
@@ -91,7 +96,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Student ID"
         name="studentId"
         type="number"
-        value={resident?.studentId}
+        defaultValue={resident?.studentId}
         required
       />
     </Form>

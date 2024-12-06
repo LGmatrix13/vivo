@@ -33,16 +33,30 @@ export async function loader() {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-  if (intent === "create") {
-    const building = Building.safeParse(values);
 
-    if (building.success) {
-      await db.insert(buildingTable).values(building.data);
-    }
-  } else if (intent === "delete") {
-    await db
-      .delete(buildingTable)
-      .where(eq(buildingTable.id, Number(values["id"])));
+  switch (intent) {
+    case "create":
+      const createdBuilding = Building.safeParse(values);
+
+      if (createdBuilding.success) {
+        await db.insert(buildingTable).values(createdBuilding.data);
+      }
+      break;
+    case "delete":
+      await db
+        .delete(buildingTable)
+        .where(eq(buildingTable.id, Number(values["id"])));
+      break;
+    case "update":
+      const updatedBuilding = Building.safeParse(values);
+
+      if (updatedBuilding.success) {
+        await db
+          .update(buildingTable)
+          .set(updatedBuilding.data)
+          .where(eq(buildingTable.id, updatedBuilding.data.id!!));
+      }
+      break;
   }
 
   return redirect(request.url);

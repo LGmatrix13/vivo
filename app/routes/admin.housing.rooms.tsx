@@ -40,14 +40,26 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
-  if (intent === "create") {
-    const room = Room.safeParse(values);
+  switch (intent) {
+    case "create":
+      const createdRoom = Room.safeParse(values);
 
-    if (room.success) {
-      await db.insert(roomTable).values(room.data);
-    }
-  } else if (intent === "delete") {
-    await db.delete(roomTable).where(eq(roomTable.id, Number(values["id"])));
+      if (createdRoom.success) {
+        await db.insert(roomTable).values(createdRoom.data);
+      }
+      break;
+    case "update":
+      const updatedRoom = Room.safeParse(values);
+
+      if (updatedRoom.success) {
+        await db
+          .update(roomTable)
+          .set(updatedRoom.data)
+          .where(eq(roomTable.id, updatedRoom.data.id!!));
+      }
+    case "delete":
+      await db.delete(roomTable).where(eq(roomTable.id, Number(values["id"])));
+      break;
   }
 
   return redirect(request.url);

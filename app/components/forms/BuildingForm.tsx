@@ -22,6 +22,7 @@ export default function BuildingForm(props: BuildingFormProps) {
       <h2 className="font-bold text-xl">
         {building ? `Edit ${building.name}` : "Add Building"}
       </h2>
+      {building && <input name="id" type="hidden" value={building?.id} />}
       <Input
         label="Name"
         placeholder="Name"
@@ -36,7 +37,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         placeholder="Latitude"
         name="latitude"
         type="number"
-        value={building?.latitude}
+        defaultValue={building?.latitude || undefined}
         required
       />
       <Input
@@ -44,7 +45,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         placeholder="Longitude"
         name="longitude"
         type="number"
-        value={building?.longitude}
+        defaultValue={building?.longitude || undefined}
         required
       />
     </Form>

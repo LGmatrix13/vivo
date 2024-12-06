@@ -19,16 +19,17 @@ export default function RDForm(props: RDFormProps) {
     };
   });
   return (
-    <Form toast="Saved RD" button="Save RD" intent="create">
+    <Form toast="Saved RD" button="Save RD" intent={rd ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {rd ? `Edit ${rd.fullName}` : "Add RD"}
       </h2>
+      {rd && <input name="id" type="hidden" value={rd?.id} />}
       <Input
         label="First Name"
         placeholder="First Name"
         name="firstName"
         type="text"
-        value={rd?.firstName}
+        defaultValue={rd?.firstName}
         required
       />
       <Input
@@ -36,7 +37,7 @@ export default function RDForm(props: RDFormProps) {
         placeholder="Last Name"
         name="lastName"
         type="text"
-        value={rd?.lastName}
+        defaultValue={rd?.lastName}
         required
       />
       <Input
@@ -44,7 +45,7 @@ export default function RDForm(props: RDFormProps) {
         placeholder="Email Address"
         name="emailAddress"
         type="email"
-        value={rd?.email}
+        defaultValue={rd?.email}
         required
       />
       <Input
@@ -52,7 +53,7 @@ export default function RDForm(props: RDFormProps) {
         placeholder="Mailbox"
         name="mailbox"
         type="text"
-        value={rd?.mailbox}
+        defaultValue={rd?.mailbox}
         required
       />
       <MultipleSelect

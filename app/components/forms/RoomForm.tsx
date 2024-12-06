@@ -25,23 +25,28 @@ export default function RoomForm(props: RoomFormProps) {
     };
   });
   return (
-    <Form toast="Saved Room" button="Save Room" intent="create">
+    <Form
+      toast="Saved Room"
+      button="Save Room"
+      intent={room ? "update" : "create"}
+    >
       <h2 className="font-bold text-xl">
         {room ? `Edit Room ${room.roomNumber}` : "Add Room"}
       </h2>
+      {room && <input type="hidden" name="id" value={room.id} />}
       <Select
         label="Building"
         name="buildingId"
         options={buildingOptions}
         required
       />
-      <Select label="RA" name="buildingId" options={raOptions} required />
+      <Select label="RA" name="zoneId" options={raOptions} required />
       <Input
         label="Room Number"
         placeholder="Room Number"
         name="roomNumber"
         type="number"
-        value={room?.roomNumber}
+        defaultValue={room?.roomNumber || undefined}
         required
       />
       <Input
@@ -49,7 +54,7 @@ export default function RoomForm(props: RoomFormProps) {
         placeholder="Capacity"
         name="capacity"
         type="number"
-        value={room?.capacity}
+        defaultValue={room?.capacity || undefined}
         required
       />
     </Form>

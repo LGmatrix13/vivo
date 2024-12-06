@@ -82,9 +82,6 @@ export default function AdminPeopleRAsPage() {
             <h2 className="text-xl font-bold">First Select an RA</h2>
           </div>
         )}
-        EditComponent={({ row }) => (
-          <RAForm residentDropdown={data.residentsDropdown} />
-        )} //TODO
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}

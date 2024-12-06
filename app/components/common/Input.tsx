@@ -1,18 +1,16 @@
-import { Dispatch } from "react";
-
-interface InputProps<T> {
+interface InputProps {
   label?: string;
   name: string;
   type: string;
-  placeholder: string;
-  value?: T;
+  placeholder?: string;
+  defaultValue?: string | number;
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;
   [key: string]: any;
 }
 
-export default function Input<T>(props: InputProps<T>) {
+export default function Input(props: InputProps) {
   const { name, label, required } = props;
 
   return (
@@ -25,7 +23,6 @@ export default function Input<T>(props: InputProps<T>) {
       )}
       <input
         {...props}
-        value={props.value ? `${props.value}` : undefined}
         className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600 placeholder:text-gray-300 h-12"
       />
     </div>

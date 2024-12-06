@@ -81,7 +81,11 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastContext.Provider value={{ success, failure }}>
       {children}
-      {toast && <Toast level={toast.level}>{toast.message}</Toast>}
+      {toast && (
+        <div className="absolute left-5 bottom-5">
+          <Toast level={toast.level}>{toast.message}</Toast>
+        </div>
+      )}
     </ToastContext.Provider>
   );
 };
