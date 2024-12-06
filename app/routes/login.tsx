@@ -1,7 +1,7 @@
 import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
 import { Form, redirect } from "@remix-run/react";
-import { auth } from "~/utilties/server/security/auth";
+import { auth } from "~/utilties/auth.server";
 import "@fontsource-variable/golos-text";
 import { IUser } from "~/models/user";
 

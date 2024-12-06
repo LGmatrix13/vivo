@@ -1,33 +1,41 @@
-import { Room } from "~/models/housing";
+import { IBuildingDropdown, IRoom } from "~/models/housing";
 import Form from "../common/Form";
 import Input from "../common/Input";
+import Select from "../common/Select";
+import { IRADropdown } from "~/models/people";
 
 interface RoomFormProps {
-  room?: Room;
+  room?: IRoom;
+  buildingsDropdown: IBuildingDropdown[];
+  rasDropdown: IRADropdown[];
 }
 
 export default function RoomForm(props: RoomFormProps) {
-  const { room } = props;
+  const { room, buildingsDropdown, rasDropdown } = props;
+  const buildingOptions = buildingsDropdown.map((option) => {
+    return {
+      key: option.name,
+      value: option.id,
+    };
+  });
+  const raOptions = rasDropdown.map((option) => {
+    return {
+      key: option.name,
+      value: option.id,
+    };
+  });
   return (
     <Form toast="Saved Room" button="Save Room" intent="create">
       <h2 className="font-bold text-xl">
         {room ? `Edit Room ${room.roomNumber}` : "Add Room"}
       </h2>
-      <Input
+      <Select
         label="Building"
-        placeholder="Building"
         name="buildingId"
-        type="text"
-        value={room?.building}
+        options={buildingOptions}
         required
       />
-      <Input
-        label="Zone"
-        placeholder="Zone"
-        name="zoneId"
-        type="number"
-        required
-      />
+      <Select label="RA" name="buildingId" options={raOptions} required />
       <Input
         label="Room Number"
         placeholder="Room Number"

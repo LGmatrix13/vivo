@@ -1,4 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { data, json, useLoaderData } from "@remix-run/react";
 import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -7,7 +7,7 @@ import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import { useToastContext } from "~/components/common/Toast";
 import IconButton from "~/components/common/IconButton";
-import { csv } from "~/utilties/client/csv";
+import { csv } from "~/utilties/csv";
 import { readRDs } from "~/repositories/people";
 import { IRD } from "~/models/people";
 import {
@@ -15,23 +15,25 @@ import {
   DrawerContent,
   DrawerButton,
 } from "~/components/common/Drawer";
-import ResidentForm from "~/components/forms/ResidentForm";
+import { readBuildingsDropdown } from "~/repositories/housing";
 
 export async function loader() {
+  const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
   return json({
-    rds: await readRDs(),
+    rds: parallelized[0],
+    buildingsDropdown: parallelized[1],
   });
 }
 
 export default function AdminPeopleRDsPage() {
-  const initialData = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
     buildings: "Building",
   };
   const { handleSearch, filteredData } = useSearch(
-    initialData.rds,
+    data.rds,
     Object.keys(columnKeys)
   );
   const toast = useToastContext();
@@ -43,7 +45,7 @@ export default function AdminPeopleRDsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <RDForm />
+              <RDForm buildingsDropdown={data.buildingsDropdown} />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add RD</IconButton>
@@ -52,7 +54,7 @@ export default function AdminPeopleRDsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || initialData.rds, "RDs");
+              csv(filteredData || data.rds, "RDs");
               toast.success("RDs Exported");
             }}
           >
@@ -62,7 +64,7 @@ export default function AdminPeopleRDsPage() {
       </div>
       <Table<IRD>
         columnKeys={columnKeys}
-        rows={filteredData || initialData.rds}
+        rows={filteredData || data.rds}
         rowKeys={{
           fullName: "Name",
           buildings: "Building",
@@ -75,7 +77,9 @@ export default function AdminPeopleRDsPage() {
             <h2 className="text-xl font-bold">First Select an RD</h2>
           </div>
         )}
-        EditComponent={({ row }) => <RDForm rd={row} />}
+        EditComponent={({ row }) => (
+          <RDForm rd={row} buildingsDropdown={data.buildingsDropdown} />
+        )}
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}

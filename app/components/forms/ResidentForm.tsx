@@ -84,6 +84,7 @@ export default function ResidentForm(props: ResidentFormProps) {
             value: "FEMALE",
           },
         ]}
+        required
       />
       <Input
         label="Student ID"

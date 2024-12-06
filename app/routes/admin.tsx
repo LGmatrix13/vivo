@@ -1,7 +1,7 @@
 import { Outlet, redirect, useLoaderData } from "@remix-run/react";
 import AdminHeader from "~/components/common/AdminHeader";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { auth } from "~/utilties/server/security/auth";
+import { auth } from "~/utilties/auth.server";
 import { ToastProvider } from "~/components/common/Toast";
 
 export async function loader({ request }: LoaderFunctionArgs) {

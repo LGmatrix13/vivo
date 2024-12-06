@@ -10,12 +10,11 @@ interface SelectProps {
   }[];
   value?: string;
   required?: boolean;
-  setState?: Dispatch<string>;
   [key: string]: any;
 }
 
 export default function Select(props: SelectProps) {
-  const { name, label, required, options, setState } = props;
+  const { name, label, required, options } = props;
 
   return (
     <div className="space-y-3 flex flex-col">

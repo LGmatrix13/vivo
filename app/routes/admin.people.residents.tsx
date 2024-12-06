@@ -13,7 +13,7 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
-import { csv } from "~/utilties/client/csv";
+import { csv } from "~/utilties/csv";
 import type { AdminPeopleOutletContext } from "./admin.people";
 import { readResidents } from "~/repositories/people";
 import { IResident } from "~/models/people";

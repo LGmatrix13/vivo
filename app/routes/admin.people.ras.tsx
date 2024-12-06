@@ -14,12 +14,14 @@ import RAForm from "~/components/forms/RAForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import { readRAs, readResidentsDropdown } from "~/repositories/people";
-import { csv } from "~/utilties/client/csv";
+import { csv } from "~/utilties/csv";
 
 export async function loader() {
+  const parallelized = await Promise.all([readRAs(), readResidentsDropdown()]);
+
   return json({
-    ras: await readRAs(),
-    residentsDropdown: await readResidentsDropdown(),
+    ras: parallelized[0],
+    residentsDropdown: parallelized[1],
   });
 }
 

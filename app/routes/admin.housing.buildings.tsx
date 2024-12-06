@@ -11,9 +11,9 @@ import { Download, HomeSearch, Plus } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/server/database/connection";
-import { buildingTable } from "~/utilties/server/database/schema";
-import { csv } from "~/utilties/client/csv";
+import { db } from "~/utilties/connection.server";
+import { buildingTable } from "~/utilties/schema.server";
+import { csv } from "~/utilties/csv";
 import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
@@ -23,9 +23,10 @@ import type { IBuilding } from "~/models/housing";
 import { Building } from "~/schemas/building";
 
 export async function loader() {
+  const parallelized = await Promise.all([readBuildings(), readRDsDropdown()]);
   return json({
-    buildings: await readBuildings(),
-    rds: await readRDsDropdown(),
+    buildings: parallelized[0],
+    rds: parallelized[1],
   });
 }
 

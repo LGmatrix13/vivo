@@ -9,12 +9,11 @@ interface InputProps<T> {
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;
-  setState?: Dispatch<string>;
   [key: string]: any;
 }
 
 export default function Input<T>(props: InputProps<T>) {
-  const { name, label, required, setState } = props;
+  const { name, label, required } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -28,7 +27,6 @@ export default function Input<T>(props: InputProps<T>) {
         {...props}
         value={props.value ? `${props.value}` : undefined}
         className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600 placeholder:text-gray-300 h-12"
-        onChange={(e) => setState && setState(e.target.value)}
       />
     </div>
   );

@@ -7,13 +7,13 @@ import {
 } from "@remix-run/react";
 import { eq, sql } from "drizzle-orm";
 import SubHeader from "~/components/common/SubHeader";
-import { db } from "~/utilties/server/database/connection";
+import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
   residentTable,
   staffTable,
   zoneTable,
-} from "~/utilties/server/database/schema";
+} from "~/utilties/schema.server";
 
 export const meta: MetaFunction = () => {
   return [

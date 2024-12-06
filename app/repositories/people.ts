@@ -1,6 +1,6 @@
 import { sql, eq, asc, not } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { db } from "~/utilties/server/database/connection";
+import { db } from "~/utilties/connection.server";
 import {
   residentTable,
   buildingTable,
@@ -8,7 +8,7 @@ import {
   zoneTable,
   staffTable,
   assistantStaffTable,
-} from "~/utilties/server/database/schema";
+} from "~/utilties/schema.server";
 
 export async function readResidents() {
   const raInfoTable = alias(residentTable, "raInfoTable");
@@ -180,4 +180,19 @@ export async function readResidentsDropdown() {
     .orderBy(asc(residentTable.lastName));
 
   return rds;
+}
+
+export async function readRAsDropdown() {
+  const ras = await db
+    .select({
+      id: zoneTable.id,
+      name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+        "rd"
+      ),
+    })
+    .from(residentTable)
+    .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .orderBy(asc(residentTable.lastName));
+
+  return ras;
 }

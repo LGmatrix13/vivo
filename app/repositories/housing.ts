@@ -1,12 +1,12 @@
-import { sql, eq } from "drizzle-orm";
-import { db } from "~/utilties/server/database/connection";
+import { sql, eq, asc } from "drizzle-orm";
+import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
   residentTable,
   roomTable,
   staffTable,
   zoneTable,
-} from "~/utilties/server/database/schema";
+} from "~/utilties/schema.server";
 
 export async function readBuildings() {
   const buildings = await db
@@ -45,4 +45,15 @@ export async function readRooms() {
     .orderBy(buildingTable.name, roomTable.roomNumber);
 
   return rooms;
+}
+
+export async function readBuildingsDropdown() {
+  const buildings = await db
+    .select({
+      id: buildingTable.id,
+      name: buildingTable.name,
+    })
+    .from(buildingTable)
+    .orderBy(asc(buildingTable.name));
+  return buildings;
 }

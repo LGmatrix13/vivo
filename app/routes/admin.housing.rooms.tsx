@@ -1,4 +1,3 @@
-import { defer } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import {
@@ -14,18 +13,26 @@ import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/server/database/connection";
-import { roomTable } from "~/utilties/server/database/schema";
+import { db } from "~/utilties/connection.server";
+import { roomTable } from "~/utilties/schema.server";
 import { Room } from "~/schemas/room";
-import { csv } from "~/utilties/client/csv";
+import { csv } from "~/utilties/csv";
 import { redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { readRooms } from "~/repositories/housing";
+import { readBuildingsDropdown, readRooms } from "~/repositories/housing";
 import { IRoom } from "~/models/housing";
+import { readRAsDropdown } from "~/repositories/people";
 
 export async function loader() {
+  const parallelized = await Promise.all([
+    readRooms(),
+    readBuildingsDropdown(),
+    readRAsDropdown(),
+  ]);
   return json({
-    rooms: await readRooms(),
+    rooms: parallelized[0],
+    buildingsDropdown: parallelized[1],
+    rasDropdown: parallelized[2],
   });
 }
 
@@ -70,7 +77,10 @@ export default function AdminRoomsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <RoomForm />
+              <RoomForm
+                buildingsDropdown={data.buildingsDropdown}
+                rasDropdown={data.rasDropdown}
+              />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add Room</IconButton>
@@ -102,7 +112,13 @@ export default function AdminRoomsPage() {
             <h2 className="text-xl font-bold">First Open a Room</h2>
           </div>
         )}
-        EditComponent={({ row }) => <RoomForm room={row} />}
+        EditComponent={({ row }) => (
+          <RoomForm
+            room={row}
+            buildingsDropdown={data.buildingsDropdown}
+            rasDropdown={data.rasDropdown}
+          />
+        )}
         DeleteComponent={({ row }) => (
           <DeleteForm
             id={row.id}
