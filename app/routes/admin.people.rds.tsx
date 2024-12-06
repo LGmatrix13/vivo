@@ -77,7 +77,7 @@ export default function AdminPeopleRDsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || data.rds, "RDs");
+              csv.download(filteredData || data.rds, "RDs");
               toast.success("RDs Exported");
             }}
           >

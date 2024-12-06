@@ -92,7 +92,7 @@ export default function AdminPeopleResidentsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || data.residents, "Residents");
+              csv.download(filteredData || data.residents, "Residents");
               toast.success("Residents Exported");
             }}
           >

@@ -85,7 +85,7 @@ export default function AdminBuldingsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv(filteredData || data.buildings, "buildings");
+                csv.download(filteredData || data.buildings, "buildings");
                 toast.success("Buildings Exported");
               }}
             >

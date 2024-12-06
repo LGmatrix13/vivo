@@ -1,6 +1,4 @@
 import Form from "../common/Form";
-import Input from "../common/Input";
-import WideButton from "../common/WideButton";
 
 interface DeleteFormProps {
   id: number;

@@ -74,7 +74,7 @@ export default function AdminPeopleRAsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv(filteredData || data.ras, "RAs");
+              csv.download(filteredData || data.ras, "RAs");
               toast.success("RAs Exported");
             }}
           >

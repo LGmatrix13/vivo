@@ -100,7 +100,7 @@ export default function AdminRoomsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv(filteredData || data.rooms, "rooms");
+                csv.download(filteredData || data.rooms, "rooms");
                 toast.success("Rooms Exported");
               }}
             >

@@ -1,4 +1,4 @@
-export function csv(data: { [key: string]: any }[], filename: string) {
+function download(data: Record<string, any>[], filename: string) {
   const headers = Object.keys(data[0]);
   const header = headers.join(",");
   const lines = data.map((row) => Object.values(row).join(","));
@@ -11,3 +11,10 @@ export function csv(data: { [key: string]: any }[], filename: string) {
   tempLink.click();
   URL.revokeObjectURL(blobUrl);
 }
+
+function parse() {}
+
+export const csv = {
+  parse,
+  download,
+};
