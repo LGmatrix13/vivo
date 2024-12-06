@@ -83,7 +83,9 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
       {toast && (
         <div className="absolute left-5 bottom-5">
-          <Toast level={toast.level}>{toast.message}</Toast>
+          <Toast level={toast.level} clearToast={clearToast}>
+            {toast.message}
+          </Toast>
         </div>
       )}
     </ToastContext.Provider>
