@@ -26,7 +26,7 @@ import { db } from "~/utilties/connection.server";
 import { residentTable } from "~/utilties/schema.server";
 import { eq } from "drizzle-orm";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { masterCSV } from "~/schemas/masterCSV";
+import { MasterCSV } from "~/schemas/masterCSV";
 
 export async function loader() {
   return json({
@@ -48,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const errors = [];
       const correctRows = [];
       for (const row of data) {
-        const result = masterCSV.safeParse(row);
+        const result = MasterCSV.safeParse(row);
         if (result.success) {
           correctRows.push(result.data);
         } else {
@@ -62,7 +62,6 @@ export async function action({ request }: ActionFunctionArgs) {
           errors: errors,
         });
       }
-
       return redirect(request.url);
     case "create":
       return redirect(request.url);

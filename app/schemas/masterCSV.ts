@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const masterCSV = z.object({
+export const MasterCSV = z.object({
   id: z.coerce.number(),
   firstName: z.string(),
   lastName: z.string(),
