@@ -12,7 +12,21 @@ function download(data: Record<string, any>[], filename: string) {
   URL.revokeObjectURL(blobUrl);
 }
 
-function parse() {}
+function parse<T>(content: string) {
+  const lines = content.split("\n");
+  const headers = lines[0].split(",").map((header) => header.trim());
+
+  const jsonObjects = lines.slice(1).map((line) => {
+    const values = line.split(",").map((value) => value.trim());
+    const jsonObject: Record<string, string> = {};
+    headers.forEach((header, index) => {
+      jsonObject[header] = values[index];
+    });
+    return jsonObject;
+  });
+
+  return jsonObjects as T;
+}
 
 export const csv = {
   parse,
