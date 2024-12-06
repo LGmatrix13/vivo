@@ -5,7 +5,7 @@ export default function UploadForm() {
     <Form
       button="Continue"
       encType="application/x-www-form-urlencoded"
-      intent="create"
+      intent="upload"
     >
       <h2 className="font-bold text-xl">Upload</h2>
       <label htmlFor="file" className="sr-only">
