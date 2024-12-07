@@ -31,7 +31,13 @@ export default function BuildingForm(props: BuildingFormProps) {
         value={building?.name}
         required
       />
-      <Select label="RD" name="staffId" options={options} required />
+      <Select
+        label="RD"
+        name="staffId"
+        options={options}
+        selected={building?.rd}
+        required
+      />
       <Input
         label="Latitude"
         placeholder="Latitude"

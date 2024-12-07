@@ -10,12 +10,13 @@ interface MultipleSelectProps {
   }[];
   value?: string;
   multiple?: boolean;
+  selected?: any[];
   required?: boolean;
   [key: string]: any;
 }
 
 export default function MultipleSelect(props: MultipleSelectProps) {
-  const { name, label, required, options } = props;
+  const { name, label, required, options, selected } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -32,6 +33,7 @@ export default function MultipleSelect(props: MultipleSelectProps) {
           <option
             key={index}
             value={`${option.value}`}
+            selected={selected?.includes(option.key)}
           >{`${option.key}`}</option>
         ))}
       </select>

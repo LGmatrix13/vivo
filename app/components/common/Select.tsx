@@ -7,6 +7,7 @@ interface SelectProps {
     key: any;
     value: any;
   }[];
+  selected?: any;
   value?: string;
   explanation?: string;
   required?: boolean;
@@ -14,7 +15,7 @@ interface SelectProps {
 }
 
 export default function Select(props: SelectProps) {
-  const { name, label, required, options, explanation } = props;
+  const { name, label, required, options, explanation, selected } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -32,6 +33,7 @@ export default function Select(props: SelectProps) {
             <option
               key={index}
               value={`${option.value}`}
+              selected={option.key === selected}
             >{`${option.key}`}</option>
           ))}
         </select>

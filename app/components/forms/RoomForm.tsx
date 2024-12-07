@@ -38,6 +38,7 @@ export default function RoomForm(props: RoomFormProps) {
         label="Building"
         name="buildingId"
         options={buildingOptions}
+        selected={room?.buildingId}
         required
       />
       <Select label="RA" name="zoneId" options={raOptions} required />

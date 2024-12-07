@@ -78,7 +78,7 @@ export default function ResidentForm(props: ResidentFormProps) {
       <Select
         label="Gender"
         name="gender"
-        defaultValue={resident?.gender}
+        selected={resident?.gender}
         options={[
           {
             key: "Male",
