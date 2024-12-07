@@ -13,8 +13,27 @@ import {
 type Values = Record<string, FormDataEntryValue>;
 
 export async function createResident(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  try {
+    const residentData = {
+      firstName: values["firstName"],
+      lastName: values["lastName"],
+      emailAddress: values["emailAddress"],
+      city: values["city"],
+      state: values["state"],
+      phoneNumber: values["phoneNumber"],
+      mailbox: values["mailbox"],
+      class: values["class"],
+      gender: values["gender"],
+      studentId: Number(values["studentId"])
+    };
+    await db
+      .insert(residentTable)
+      .values(residentData)
+  } catch (error) {
+    console.log(values);
+    console.log(error)
+  }
+  
 }
 
 export async function updateResident(values: Values) {
