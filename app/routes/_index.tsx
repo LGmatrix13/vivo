@@ -1,5 +1,4 @@
 import { redirect, type MetaFunction } from "@remix-run/node";
-import logo from "../images/logo-white.png";
 
 export const meta: MetaFunction = () => {
   return [

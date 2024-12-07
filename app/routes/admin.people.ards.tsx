@@ -1,5 +1,5 @@
 import { json, redirect, useLoaderData } from "@remix-run/react";
-import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
@@ -19,6 +19,8 @@ import { assistantStaffTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/connection.server";
 import { eq } from "drizzle-orm";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { createARD, updateARD } from "~/actions/people";
+import UploadForm from "~/components/forms/UploadForm";
 
 export async function loader() {
   return json({
@@ -32,14 +34,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      break;
+      await createARD(values);
+      return redirect(request.url);
     case "update":
-      break;
+      await updateARD(values);
+      return redirect(request.url);
     case "delete":
-      await db
-        .delete(assistantStaffTable)
-        .where(eq(assistantStaffTable.id, Number(values["id"])));
-      break;
+      await updateARD(values);
+      return redirect(request.url);
   }
 
   return redirect(request.url);
@@ -66,6 +68,14 @@ export default function AdminPeopleARDsPage() {
           handleSearch={handleSearch}
         />
         <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <UploadForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Upload}>Upload</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
           <DrawerProvider>
             <DrawerContent>
               <ARDForm />

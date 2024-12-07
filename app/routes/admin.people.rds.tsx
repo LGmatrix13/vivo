@@ -1,5 +1,5 @@
-import { data, json, redirect, useLoaderData } from "@remix-run/react";
-import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import { json, redirect, useLoaderData } from "@remix-run/react";
+import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
@@ -16,10 +16,14 @@ import {
   DrawerButton,
 } from "~/components/common/Drawer";
 import { readBuildingsDropdown } from "~/repositories/housing";
-import { staffTable } from "~/utilties/schema.server";
-import { eq } from "drizzle-orm";
-import { db } from "~/utilties/connection.server";
 import { ActionFunctionArgs } from "@remix-run/node";
+import {
+  createRD,
+  deleteRD,
+  updateRD,
+  uploadMasterCSV,
+} from "~/actions/people";
+import UploadForm from "~/components/forms/UploadForm";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -34,18 +38,18 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
+    case "upload":
+      return (await uploadMasterCSV(values)) || redirect(request.url);
     case "create":
-      break;
+      await createRD(values);
+      return redirect(request.url);
     case "update":
-      break;
+      await updateRD(values);
+      return redirect(request.url);
     case "delete":
-      await db
-        .delete(staffTable)
-        .where(eq(staffTable.id, Number(values["id"])));
-      break;
+      await deleteRD(values);
+      return redirect(request.url);
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminPeopleRDsPage() {
@@ -66,6 +70,14 @@ export default function AdminPeopleRDsPage() {
       <div className="flex">
         <Search placeholder="Search for an RD..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <UploadForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Upload}>Upload</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
           <DrawerProvider>
             <DrawerContent>
               <RDForm buildingsDropdown={data.buildingsDropdown} />

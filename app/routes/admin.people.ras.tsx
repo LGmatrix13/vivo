@@ -1,18 +1,20 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
+import { createRA, deleteRA, uploadMasterCSV } from "~/actions/people";
 import {
   DrawerButton,
   DrawerContent,
   DrawerProvider,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
+import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import { readRAs, readResidentsDropdown } from "~/repositories/people";
@@ -34,11 +36,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
+    case "upload":
+      return (await uploadMasterCSV(values)) || redirect(request.url);
     case "create":
-      break;
+      await createRA(values);
+      return redirect(request.url);
     case "delete":
-      await db.delete(zoneTable).where(eq(zoneTable.id, Number(values["id"])));
-      break;
+      await deleteRA(values);
+      return redirect(request.url);
   }
 
   return redirect(request.url);
@@ -63,6 +68,14 @@ export default function AdminPeopleRAsPage() {
       <div className="flex">
         <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <UploadForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Upload}>Upload</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
           <DrawerProvider>
             <DrawerContent>
               <RAForm residentDropdown={data.residentsDropdown} />

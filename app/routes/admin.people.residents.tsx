@@ -22,11 +22,13 @@ import { csv } from "~/utilties/csv";
 import type { AdminPeopleOutletContext } from "./admin.people";
 import { readResidents } from "~/repositories/people";
 import { IResident } from "~/models/people";
-import { db } from "~/utilties/connection.server";
-import { residentTable } from "~/utilties/schema.server";
-import { eq } from "drizzle-orm";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { MasterCSV } from "~/schemas/masterCSV";
+import {
+  createResident,
+  deleteResident,
+  updateResident,
+  uploadMasterCSV,
+} from "~/actions/people";
 
 export async function loader() {
   return json({
@@ -40,37 +42,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      const file = values["file"] as File;
-      const arrayBuffer = await file.arrayBuffer();
-      const content = new TextDecoder("utf-8").decode(arrayBuffer);
-      const data = csv.parse<Record<string, any>[]>(content);
-
-      const errors = [];
-      for (let i = 0; i < data.length; i++) {
-        const row = data[i];
-        const result = MasterCSV.safeParse(row);
-        if (!result.success) {
-          errors.push({
-            rowNumber: i + 1,
-            message: result.error.message,
-          });
-        }
-      }
-
-      if (errors.length) {
-        return json({
-          errors: errors,
-        });
-      }
-      return redirect(request.url);
+      return (await uploadMasterCSV(values)) || redirect(request.url);
     case "create":
+      await createResident(values);
       return redirect(request.url);
     case "update":
+      await updateResident(values);
       return redirect(request.url);
     case "delete":
-      await db
-        .delete(residentTable)
-        .where(eq(residentTable.id, Number(values["id"])));
+      await deleteResident(values);
       return redirect(request.url);
   }
 }
