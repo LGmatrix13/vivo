@@ -31,6 +31,7 @@ export async function readRooms() {
     .select({
       id: roomTable.id,
       building: buildingTable.name,
+      buildingId: buildingTable.id,
       raFirstName: residentTable.firstName,
       raLastName: residentTable.lastName,
       raFullName: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
