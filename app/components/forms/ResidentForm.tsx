@@ -49,7 +49,13 @@ export default function ResidentForm(props: ResidentFormProps) {
         name="city"
         type="text"
         defaultValue={resident?.city}
-        required
+      />
+      <Input
+        label="State"
+        placeholder="State"
+        name="state"
+        type="text"
+        defaultValue={resident?.state}
       />
       <Input
         label="Phone Number"
@@ -57,7 +63,6 @@ export default function ResidentForm(props: ResidentFormProps) {
         name="phoneNumber"
         type="tel"
         defaultValue={resident?.phone}
-        required
       />
       <Input
         label="Mailbox"
@@ -65,7 +70,6 @@ export default function ResidentForm(props: ResidentFormProps) {
         name="mailbox"
         type="text"
         defaultValue={resident?.mailbox}
-        required
       />
       <Input
         label="Class"

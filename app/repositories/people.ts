@@ -39,6 +39,7 @@ export async function readResidents() {
       gender: residentTable.gender,
       studentId: residentTable.studentId,
       city: residentTable.city,
+      state: residentTable.state
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
