@@ -109,7 +109,6 @@ export default function AdminPeopleARDsPage() {
             <h2 className="text-xl font-bold">First Select an ARD</h2>
           </div>
         )}
-        EditComponent={({ row }) => <ARDForm ard={row} />}
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
