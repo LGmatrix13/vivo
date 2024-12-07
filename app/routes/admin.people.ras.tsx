@@ -1,6 +1,5 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
-import { eq } from "drizzle-orm";
 import { createRA, deleteRA, uploadMasterCSV } from "~/actions/people";
 import {
   DrawerButton,
@@ -14,13 +13,11 @@ import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
-import UploadForm from "~/components/forms/UploadForm";
+import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import { readRAs, readResidentsDropdown } from "~/repositories/people";
-import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
-import { zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
   const parallelized = await Promise.all([readRAs(), readResidentsDropdown()]);
@@ -70,7 +67,7 @@ export default function AdminPeopleRAsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadForm />
+              <UploadMasterCSVForm />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Upload}>Upload</IconButton>

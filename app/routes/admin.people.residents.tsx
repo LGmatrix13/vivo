@@ -16,7 +16,6 @@ import Table from "~/components/common/Table";
 import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
-import UploadForm from "~/components/forms/UploadForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
 import type { AdminPeopleOutletContext } from "./admin.people";
@@ -29,6 +28,7 @@ import {
   updateResident,
   uploadMasterCSV,
 } from "~/actions/people";
+import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 
 export async function loader() {
   return json({
@@ -78,7 +78,7 @@ export default function AdminPeopleResidentsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadForm />
+              <UploadMasterCSVForm />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Upload}>Upload</IconButton>

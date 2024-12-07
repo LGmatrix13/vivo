@@ -15,12 +15,9 @@ import {
   DrawerContent,
   DrawerButton,
 } from "~/components/common/Drawer";
-import { assistantStaffTable } from "~/utilties/schema.server";
-import { db } from "~/utilties/connection.server";
-import { eq } from "drizzle-orm";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { createARD, updateARD } from "~/actions/people";
-import UploadForm from "~/components/forms/UploadForm";
+import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 
 export async function loader() {
   return json({
@@ -43,8 +40,6 @@ export async function action({ request }: ActionFunctionArgs) {
       await updateARD(values);
       return redirect(request.url);
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminPeopleARDsPage() {
@@ -70,7 +65,7 @@ export default function AdminPeopleARDsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadForm />
+              <UploadMasterCSVForm />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Upload}>Upload</IconButton>

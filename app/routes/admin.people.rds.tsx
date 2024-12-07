@@ -23,7 +23,7 @@ import {
   updateRD,
   uploadMasterCSV,
 } from "~/actions/people";
-import UploadForm from "~/components/forms/UploadForm";
+import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -72,7 +72,7 @@ export default function AdminPeopleRDsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadForm />
+              <UploadMasterCSVForm />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Upload}>Upload</IconButton>
