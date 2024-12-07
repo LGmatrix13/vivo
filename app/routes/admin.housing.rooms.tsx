@@ -57,6 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
           .set(updatedRoom.data)
           .where(eq(roomTable.id, updatedRoom.data.id!!));
       }
+      //break;
     case "delete":
       await db.delete(roomTable).where(eq(roomTable.id, Number(values["id"])));
       break;
