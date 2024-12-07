@@ -13,8 +13,12 @@ export default function UploadMasterCSVForm() {
         <h2 className="font-bold text-xl">Upload Master CSV</h2>
         <p>{data.errors.length} errors occured</p>
         <ul className="space-y-3 list-disc ml-3">
-          {data.errors.map((error, index) => (
-            <li>{error.message}</li>
+          {data.errors.map((errors) => (
+            <>
+              {Object.values(errors).map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </>
           ))}
         </ul>
       </div>
@@ -23,8 +27,8 @@ export default function UploadMasterCSVForm() {
 
   return (
     <Form
-      encType="application/x-www-form-urlencoded"
       method="post"
+      encType="multipart/form-data"
       className="space-y-5"
       onSubmit={(event) => {
         submit(event.currentTarget);

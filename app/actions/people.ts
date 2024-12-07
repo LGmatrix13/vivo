@@ -69,6 +69,11 @@ export async function deleteARD(values: Values) {
 
 export async function uploadMasterCSV(values: Values) {
   const file = values["file"] as File;
+
+  if (!(file instanceof File)) {
+    throw new Error("Uploaded value is not a valid file.");
+  }
+
   const arrayBuffer = await file.arrayBuffer();
   const content = new TextDecoder("utf-8").decode(arrayBuffer);
   const data = csv.parse(content);
@@ -77,17 +82,20 @@ export async function uploadMasterCSV(values: Values) {
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
     const result = MasterCSV.safeParse(row);
+
     if (!result.success) {
-      errors.push({
+      const rowErrors = result.error.errors.map((err) => ({
         rowNumber: i + 1,
-        message: result.error.message,
-      });
+        path: err.path.join("."),
+        message: err.message,
+      }));
+      errors.push(...rowErrors);
     }
   }
 
   if (errors.length) {
     return json({
-      errors: errors,
+      errors,
     });
   }
 }

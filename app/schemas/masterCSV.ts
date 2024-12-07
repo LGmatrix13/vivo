@@ -5,7 +5,7 @@ export const MasterCSV = z.object({
   "First Name": z.string(),
   "Last Name": z.string(),
   Building: z.string(),
-  Suite: z.boolean().optional(),
+  Suite: z.coerce.boolean().optional(),
   Room: z.string(),
   RoomType: z.string(),
   Zone: z.string(),
