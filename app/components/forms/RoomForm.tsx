@@ -45,7 +45,7 @@ export default function RoomForm(props: RoomFormProps) {
         label="Room Number"
         placeholder="Room Number"
         name="roomNumber"
-        type="number"
+        type="String"
         defaultValue={room?.roomNumber || undefined}
         required
       />
