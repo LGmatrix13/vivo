@@ -63,6 +63,7 @@ export const residentTable = pgTable("Resident", {
 export const zoneTable = pgTable("Zone", {
   id: serial("id").notNull().primaryKey(),
   residentId: integer("resident_id").notNull(),
+  alias: varchar({ length: 225 }).notNull(),
   staffId: integer("staff_id").references(() => staffTable.id),
 });
 
