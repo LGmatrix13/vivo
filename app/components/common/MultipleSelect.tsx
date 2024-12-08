@@ -30,7 +30,7 @@ export default function MultipleSelect(props: MultipleSelectProps) {
           <option
             key={index}
             value={`${option.value}`}
-            selected={selected?.includes(option.key)}
+            selected={selected?.includes(option.value)}
           >{`${option.key}`}</option>
         ))}
       </select>

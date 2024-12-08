@@ -1,5 +1,5 @@
 import { json, useLoaderData } from "@remix-run/react";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import {
   DrawerProvider,
   DrawerButton,
@@ -14,7 +14,7 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import useSearch from "~/hooks/useSearch";
 import { db } from "~/utilties/connection.server";
-import { roomTable } from "~/utilties/schema.server";
+import { residentTable, roomTable } from "~/utilties/schema.server";
 import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/csv";
 import { redirect } from "@remix-run/react";
@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
       if (createdRoom.success) {
         await db.insert(roomTable).values(createdRoom.data);
       }
-      break;
+      return redirect(request.url);
     case "update":
       const updatedRoom = Room.safeParse(values);
 
@@ -57,10 +57,25 @@ export async function action({ request }: ActionFunctionArgs) {
           .set(updatedRoom.data)
           .where(eq(roomTable.id, updatedRoom.data.id!!));
       }
-      break;
+      return redirect(request.url);
     case "delete":
-      await db.delete(roomTable).where(eq(roomTable.id, Number(values["id"])));
-      break;
+      const id = Number(values["id"]);
+      const peopleInRoom = await db
+        .select({
+          fullName: sql<string>`concat(${residentTable.firstName} ${residentTable.lastName})`,
+        })
+        .from(residentTable)
+        .where(eq(residentTable.id, id));
+      if (peopleInRoom.length) {
+        return json({
+          error: `There are people assigned to this room: ${peopleInRoom
+            .map((_) => _.fullName)
+            .join(", ")}.`,
+        });
+      }
+
+      await db.delete(roomTable).where(eq(roomTable.id, id));
+      return redirect(request.url);
   }
 
   return redirect(request.url);
