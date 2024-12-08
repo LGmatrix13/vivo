@@ -47,24 +47,28 @@ export default function ResidentForm(props: ResidentFormProps) {
         label="City"
         placeholder="City"
         name="city"
+        defaultValue={resident?.city ?? ""}
         type="text"
       />
       <Input
         label="State"
         placeholder="State"
         name="state"
+        defaultValue={resident?.state ?? ""}
         type="text"
       />
       <Input
         label="Phone Number"
         placeholder="Phone Number"
         name="phoneNumber"
+        defaultValue={resident?.phone ?? ""}
         type="tel"
       />
       <Input
         label="Mailbox"
         placeholder="Mailbox"
         name="mailbox"
+        defaultValue={resident?.mailbox ?? ""}
         type="text"
       />
       <Input
