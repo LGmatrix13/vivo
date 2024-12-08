@@ -40,7 +40,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         placeholder="Email Address"
         name="emailAddress"
         type="email"
-        defaultValue={resident?.email}
+        defaultValue={resident?.emailAddress}
         required
       />
       <Input
