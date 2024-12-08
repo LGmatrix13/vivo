@@ -2,8 +2,6 @@ import Form from "../common/Form";
 import type { IRD } from "~/models/people";
 import Input from "../common/Input";
 import { IBuildingDropdown } from "~/models/housing";
-import Select from "../common/Select";
-import MultipleSelect from "../common/MultipleSelect";
 
 interface RDFormProps {
   rd?: IRD;
@@ -54,12 +52,6 @@ export default function RDForm(props: RDFormProps) {
         name="mailbox"
         type="text"
         defaultValue={rd?.mailbox}
-        required
-      />
-      <MultipleSelect
-        label="Buildings"
-        name="buildingIds"
-        options={buildingOptions}
         required
       />
     </Form>
