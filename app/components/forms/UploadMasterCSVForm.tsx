@@ -11,16 +11,18 @@ export default function UploadMasterCSVForm() {
     return (
       <div className="space-y-5">
         <h2 className="font-bold text-xl">Upload Master CSV</h2>
-        <p>{data.errors.length} errors occured</p>
-        <ul className="space-y-3 list-disc ml-3">
-          {data.errors.map((errors) => (
-            <>
-              {Object.values(errors).map((error, index) => (
-                <li key={index}>{error}</li>
+        {data.errors.map((error) => (
+          <div className="space-y-3">
+            <p className="font-bold">Formatting errors on {error.rowNumber}</p>
+            <ul className="list-disc ml-5 space-y-2">
+              {Object.keys(error.errors).map((key) => (
+                <li>
+                  {key}: {(error as any).errors[key].join(". ")}
+                </li>
               ))}
-            </>
-          ))}
-        </ul>
+            </ul>
+          </div>
+        ))}
       </div>
     );
   }

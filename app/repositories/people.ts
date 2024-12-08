@@ -21,7 +21,7 @@ export async function readResidents() {
         sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
           "fullName"
         ),
-      email: residentTable.emailAddress,
+      emailAddress: residentTable.emailAddress,
       phone: residentTable.phoneNumber,
       mailbox: residentTable.mailbox,
       hometown:
@@ -39,7 +39,7 @@ export async function readResidents() {
       gender: residentTable.gender,
       studentId: residentTable.studentId,
       city: residentTable.city,
-      state: residentTable.state
+      state: residentTable.state,
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
@@ -60,7 +60,7 @@ export async function readRDs() {
         sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
           "fullName"
         ),
-      email: staffTable.emailAddress,
+      emailAddress: staffTable.emailAddress,
       mailbox: staffTable.mailbox,
       buildings:
         sql<string>`STRING_AGG(${buildingTable.name}, ', ' ORDER BY ${buildingTable.name})`.as(
@@ -78,6 +78,9 @@ export async function readRAs() {
   const ras = await db
     .select({
       id: zoneTable.id,
+      residentId: zoneTable.id,
+      alias: zoneTable.alias,
+      staffId: zoneTable.staffId,
       firstName: residentTable.firstName,
       lastName: residentTable.lastName,
       fullName:
@@ -121,6 +124,8 @@ export async function readARDs() {
       id: assistantStaffTable.id,
       firstName: residentTable.firstName,
       lastName: residentTable.lastName,
+      residentId: residentTable.id,
+      staffId: staffTable.id,
       fullName:
         sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
           "fullName"
@@ -143,11 +148,11 @@ export async function readARDs() {
       ),
     })
     .from(assistantStaffTable)
-    .leftJoin(
+    .innerJoin(
       residentTable,
       eq(assistantStaffTable.residentId, residentTable.id)
     )
-    .leftJoin(staffTable, eq(assistantStaffTable.staffId, staffTable.id))
+    .innerJoin(staffTable, eq(assistantStaffTable.staffId, staffTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id));
 

@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import { eq } from "drizzle-orm";
+import { IARD, IRA, IRD, IResident } from "~/models/people";
 import { MasterCSV } from "~/schemas/masterCSV";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
@@ -10,80 +11,121 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
-type Values = Record<string, FormDataEntryValue>;
+type Values = { [key: string]: any };
 
 export async function createResident(values: Values) {
   try {
-    const residentData = {
-      firstName: values["firstName"],
-      lastName: values["lastName"],
-      emailAddress: values["emailAddress"],
-      city: values["city"],
-      state: values["state"],
-      phoneNumber: values["phoneNumber"],
-      mailbox: values["mailbox"],
-      class: values["class"],
-      gender: values["gender"],
-      studentId: Number(values["studentId"])
-    };
-    await db
-      .insert(residentTable)
-      .values(residentData)
+    await db.insert(residentTable).values(values as IResident);
   } catch (error) {
-    console.log(values);
-    console.log(error)
+    console.error("Error:", error);
+    console.log("Resident:", values);
   }
-  
 }
 
 export async function updateResident(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const resident = values as IResident;
+  try {
+    await db
+      .update(residentTable)
+      .set(resident)
+      .where(eq(residentTable.id, resident.id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("Resident:", resident);
+  }
 }
 
 export async function createRD(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const rd = values as IRD;
+  try {
+    await db.insert(staffTable).values(rd);
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RD:", rd);
+  }
 }
 
 export async function updateRD(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const rd = values as IRD;
+  try {
+    await db.update(staffTable).set(rd).where(eq(staffTable.id, rd.id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RD:", rd);
+  }
 }
 
 export async function deleteRD(values: Values) {
-  await db.delete(staffTable).where(eq(staffTable.id, Number(values["id"])));
+  const id = Number(values["id"]);
+  try {
+    await db.delete(staffTable).where(eq(staffTable.id, id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RD id:", id);
+  }
 }
 
 export async function deleteResident(values: Values) {
-  await db
-    .delete(residentTable)
-    .where(eq(residentTable.id, Number(values["id"])));
+  const id = Number(values["id"]);
+  try {
+    await db.delete(residentTable).where(eq(residentTable.id, id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("Resident id:", id);
+  }
 }
 
 export async function createRA(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const ra = values as IRA;
+  try {
+    await db.insert(zoneTable).values(ra);
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RA:", ra);
+  }
 }
 
 export async function deleteRA(values: Values) {
-  await db.delete(zoneTable).where(eq(zoneTable.id, Number(values["id"])));
+  const id = Number(values["id"]);
+  try {
+    await db.delete(zoneTable).where(eq(zoneTable.id, id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RA id:", id);
+  }
 }
 
 export async function createARD(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const ard = values as IARD;
+  try {
+    await db.insert(assistantStaffTable).values(ard);
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("ARD:", ard);
+  }
 }
 
 export async function updateARD(values: Values) {
-  console.log(values);
-  throw new Error("Not yet implemented");
+  const ard = values as IARD;
+  try {
+    await db
+      .update(assistantStaffTable)
+      .set(ard)
+      .where(eq(assistantStaffTable.id, ard.id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("ARD:", ard);
+  }
 }
 
 export async function deleteARD(values: Values) {
-  await db
-    .delete(assistantStaffTable)
-    .where(eq(assistantStaffTable.id, Number(values["id"])));
+  const id = Number(values["id"]);
+  try {
+    await db.delete(assistantStaffTable).where(eq(assistantStaffTable.id, id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("ARD ID:", id);
+  }
 }
 
 export async function uploadMasterCSV(values: Values) {

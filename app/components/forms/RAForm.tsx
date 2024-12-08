@@ -20,7 +20,7 @@ export default function RAForm(props: RAFormProps) {
       <Select
         label="Resident"
         name="resident"
-        explanation="Select someone to promote to RA"
+        explanation="Select someone to promote to RA."
         options={options}
       />
     </Form>

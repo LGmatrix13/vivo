@@ -8,7 +8,11 @@ import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { useToastContext } from "~/components/common/Toast";
-import { readARDs } from "~/repositories/people";
+import {
+  readARDs,
+  readRDsDropdown,
+  readResidentsDropdown,
+} from "~/repositories/people";
 import { IARD } from "~/models/people";
 import {
   DrawerProvider,
@@ -20,8 +24,15 @@ import { createARD, updateARD } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 
 export async function loader() {
+  const parallelized = await Promise.all([
+    readARDs(),
+    readRDsDropdown(),
+    readResidentsDropdown(),
+  ]);
   return json({
-    ards: await readARDs(),
+    ards: parallelized[0],
+    rdsDropdown: parallelized[1],
+    raDropdown: parallelized[2],
   });
 }
 
@@ -73,7 +84,10 @@ export default function AdminPeopleARDsPage() {
           </DrawerProvider>
           <DrawerProvider>
             <DrawerContent>
-              <ARDForm />
+              <ARDForm
+                residentDropdown={data.raDropdown}
+                rdDropdown={data.rdsDropdown}
+              />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add ARD</IconButton>
@@ -112,6 +126,7 @@ export default function AdminPeopleARDsPage() {
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
+        EditComponent={({ row }) => <ARDForm rdDropdown={data.rdsDropdown} />}
       />
     </section>
   );
