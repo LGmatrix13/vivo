@@ -142,15 +142,31 @@ export async function uploadMasterCSV(values: Values) {
   const errors = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    const result = MasterCSV.safeParse(row);
+    const formattedRow = {
+      id: row["ID"],
+      firstName: row["First Name"],
+      lastName: row["Last Name"],
+      building: row["Building"],
+      suite: row["Suite"],
+      room: row["Room"],
+      roomType: row["Room Type"],
+      zone: row["Zone"],
+      ra: row["RA"],
+      city: row["City"],
+      state: row["State"],
+      phone: row["Phone"],
+      email: row["Email"],
+      mailbox: row["Mailbox"],
+      class: row["Class"],
+      gender: row["Gender"],
+    };
+    const result = MasterCSV.safeParse(formattedRow);
 
     if (!result.success) {
-      const rowErrors = result.error.errors.map((err) => ({
+      errors.push({
         rowNumber: i + 1,
-        path: err.path.join("."),
-        message: err.message,
-      }));
-      errors.push(...rowErrors);
+        errors: result.error.errors,
+      });
     }
   }
 

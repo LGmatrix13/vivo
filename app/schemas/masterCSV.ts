@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const MasterCSV = z.object({
-  ID: z.coerce.number({ message: "ID is required and must be a number." }),
+  id: z.coerce.number({ message: "ID is required and must be a number." }),
   firstName: z.string({ message: "First Name is required." }),
-  LastName: z.string({ message: "Last Name is required." }),
+  lastName: z.string({ message: "Last Name is required." }),
   building: z.string({ message: "Building is required." }),
   suite: z.coerce
     .boolean({ message: "Suite must be a true/false value." })
@@ -14,8 +14,8 @@ export const MasterCSV = z.object({
   ra: z.string({ message: "RA is required." }),
   city: z.string({ message: "City is required." }),
   state: z.string({ message: "State is required." }),
-  Phone: z.string({ message: "Phone is required." }),
-  Email: z
+  phone: z.string({ message: "Phone is required." }),
+  email: z
     .string({ message: "Email is required." })
     .email({ message: "Email is not formatted correctly." }),
   mailbox: z.coerce.number({

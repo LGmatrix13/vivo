@@ -15,10 +15,12 @@ export default function UploadMasterCSVForm() {
           <div className="space-y-3">
             <p className="font-bold">Formatting errors on {error.rowNumber}</p>
             <ul className="list-disc ml-5 space-y-2">
-              {Object.keys(error.errors).map((key) => (
-                <li>
-                  {key}: {(error as any).errors[key].join(". ")}
-                </li>
+              {data.errors.map((error) => (
+                <>
+                  {error.errors.map((error) => (
+                    <li>{error.message}</li>
+                  ))}
+                </>
               ))}
             </ul>
           </div>
