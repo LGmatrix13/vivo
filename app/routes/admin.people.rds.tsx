@@ -24,6 +24,7 @@ import {
   uploadMasterCSV,
 } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
+import DownloadButton from "~/components/common/DownloadButton";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -78,6 +79,9 @@ export default function AdminPeopleRDsPage() {
               <IconButton Icon={Upload}>Upload</IconButton>
             </DrawerButton>
           </DrawerProvider>
+          <DownloadButton file="template.csv" Icon={Download}>
+            Download Template
+          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <RDForm buildingsDropdown={data.buildingsDropdown} />

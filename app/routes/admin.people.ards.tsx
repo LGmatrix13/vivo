@@ -73,7 +73,7 @@ export default function AdminPeopleARDsPage() {
           placeholder="Search for an ARD..."
           handleSearch={handleSearch}
         />
-        <div className="ml-auto order-2 flex space-x-3">
+        <div className="ml-auto order-2 flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <UploadMasterCSVForm />
@@ -82,6 +82,9 @@ export default function AdminPeopleARDsPage() {
               <IconButton Icon={Upload}>Upload</IconButton>
             </DrawerButton>
           </DrawerProvider>
+          <DownloadButton file="template.csv" Icon={Download}>
+            Download Template
+          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <ARDForm

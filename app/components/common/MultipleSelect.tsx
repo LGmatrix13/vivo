@@ -1,6 +1,3 @@
-import { Dispatch } from "react";
-import { ChevronDown } from "./Icons";
-
 interface MultipleSelectProps {
   label: string;
   name: string;

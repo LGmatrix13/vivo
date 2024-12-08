@@ -82,6 +82,9 @@ export default function AdminPeopleRAsPage() {
               <IconButton Icon={Upload}>Upload</IconButton>
             </DrawerButton>
           </DrawerProvider>
+          <DownloadButton file="template.csv" Icon={Download}>
+            Download Template
+          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <RAForm

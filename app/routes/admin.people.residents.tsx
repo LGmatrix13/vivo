@@ -29,6 +29,7 @@ import {
   uploadMasterCSV,
 } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
+import DownloadButton from "~/components/common/DownloadButton";
 
 export async function loader() {
   return json({
@@ -84,6 +85,9 @@ export default function AdminPeopleResidentsPage() {
               <IconButton Icon={Upload}>Upload</IconButton>
             </DrawerButton>
           </DrawerProvider>
+          <DownloadButton file="template.csv" Icon={Download}>
+            Download Template
+          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <ResidentForm />
