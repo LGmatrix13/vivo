@@ -143,10 +143,9 @@ export async function uploadMasterCSV(values: Values) {
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
     const formattedRow = {
-      id: row["ID"],
+      studentId: row["ID"],
       firstName: row["First Name"],
       lastName: row["Last Name"],
-      building: row["Building"],
       suite: row["Suite"],
       room: row["Room"],
       roomType: row["Room Type"],
@@ -154,8 +153,8 @@ export async function uploadMasterCSV(values: Values) {
       ra: row["RA"],
       city: row["City"],
       state: row["State"],
-      phone: row["Phone"],
-      email: row["Email"],
+      phoneNumber: row["Phone"],
+      emailAddress: row["Email"],
       mailbox: row["Mailbox"],
       class: row["Class"],
       gender: row["Gender"],
@@ -167,6 +166,9 @@ export async function uploadMasterCSV(values: Values) {
         rowNumber: i + 1,
         errors: result.error.errors,
       });
+    }
+    else {
+      createResident(result.data);
     }
   }
 

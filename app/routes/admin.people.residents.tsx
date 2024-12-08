@@ -114,7 +114,7 @@ export default function AdminPeopleResidentsPage() {
           fullName: "Name",
           roomBuilding: "Room Number",
           ra: "RA",
-          email: "Email",
+          emailAddress: "Email",
           phone: "Phone Number",
           mailbox: "Mailbox Number",
           hometown: "Hometown",
