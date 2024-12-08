@@ -1,6 +1,7 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
 import { createRA, deleteRA, uploadMasterCSV } from "~/actions/people";
+import DownloadButton from "~/components/common/DownloadButton";
 import {
   DrawerButton,
   DrawerContent,

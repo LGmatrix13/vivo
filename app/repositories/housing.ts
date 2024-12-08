@@ -1,4 +1,5 @@
-import { sql, eq, asc } from "drizzle-orm";
+import { sql, eq, asc, count } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
@@ -28,22 +29,24 @@ export async function readBuildings() {
 }
 
 export async function readRooms() {
+  const raInfoTable = alias(residentTable, "raInfoTable");
+
   const rooms = await db
     .select({
       id: roomTable.id,
       building: buildingTable.name,
       buildingId: buildingTable.id,
-      raFirstName: residentTable.firstName,
-      raLastName: residentTable.lastName,
-      raFullName: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
+      raFirstName: raInfoTable.firstName,
+      raLastName: raInfoTable.lastName,
+      raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       roomNumber: roomTable.roomNumber,
       capacity: roomTable.capacity,
     })
     .from(roomTable)
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
     .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
-    .leftJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .groupBy(roomTable.id, buildingTable.id, residentTable.id)
+    .leftJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .groupBy(roomTable.id, buildingTable.id, raInfoTable.id)
     .orderBy(buildingTable.name, roomTable.roomNumber);
 
   return rooms;
