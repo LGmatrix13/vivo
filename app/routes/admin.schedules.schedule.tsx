@@ -1,3 +1,3 @@
 export default function AdminSchedulesSchedulePage() {
-  return <p className="text-center">Schedules page is not complete</p>;
+  return <html><title>Vivo: Schedules</title><p className="text-center">Schedules page is not complete</p></html>;
 }
