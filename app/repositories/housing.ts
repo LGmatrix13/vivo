@@ -16,6 +16,7 @@ export async function readBuildings() {
       rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
         "rd"
       ),
+      staffId: staffTable.id,
       latitude: buildingTable.latitude,
       longitude: buildingTable.longitude,
     })

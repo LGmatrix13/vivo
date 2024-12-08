@@ -39,6 +39,7 @@ export default function ARDForm(props: ARDFormProps) {
           label="Resident"
           name="residentId"
           options={residentOptions}
+          selected={ard?.residentId}
           explanation="Select a resident to promote to ARD."
         />
       )}
@@ -46,6 +47,7 @@ export default function ARDForm(props: ARDFormProps) {
         label="RD"
         name="staffId"
         options={rdOptions}
+        selected={ard?.staffId}
         explanation="The RD this ARD will report to."
       />
     </Form>

@@ -35,7 +35,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         label="RD"
         name="staffId"
         options={options}
-        selected={building?.rd}
+        selected={building?.staffId}
         required
       />
       <Input

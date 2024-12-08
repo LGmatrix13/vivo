@@ -16,15 +16,24 @@ import RAForm from "~/components/forms/RAForm";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
-import { readRAs, readResidentsDropdown } from "~/repositories/people";
+import {
+  readRAs,
+  readRDsDropdown,
+  readResidentsDropdown,
+} from "~/repositories/people";
 import { csv } from "~/utilties/csv";
 
 export async function loader() {
-  const parallelized = await Promise.all([readRAs(), readResidentsDropdown()]);
+  const parallelized = await Promise.all([
+    readRAs(),
+    readResidentsDropdown(),
+    readRDsDropdown(),
+  ]);
 
   return json({
     ras: parallelized[0],
     residentsDropdown: parallelized[1],
+    rdsDropdown: parallelized[2],
   });
 }
 
@@ -75,7 +84,10 @@ export default function AdminPeopleRAsPage() {
           </DrawerProvider>
           <DrawerProvider>
             <DrawerContent>
-              <RAForm residentDropdown={data.residentsDropdown} />
+              <RAForm
+                residentDropdown={data.residentsDropdown}
+                rdDropdown={data.rdsDropdown}
+              />
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus}>Add RA</IconButton>
@@ -113,6 +125,9 @@ export default function AdminPeopleRAsPage() {
         )}
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
+        )}
+        EditComponent={({ row }) => (
+          <RAForm ra={row} rdDropdown={data.rdsDropdown} />
         )}
       />
     </section>

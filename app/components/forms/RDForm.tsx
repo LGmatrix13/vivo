@@ -45,7 +45,7 @@ export default function RDForm(props: RDFormProps) {
         placeholder="Email Address"
         name="emailAddress"
         type="email"
-        defaultValue={rd?.email}
+        defaultValue={rd?.emailAddress}
         required
       />
       <Input

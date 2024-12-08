@@ -33,7 +33,7 @@ export default function Select(props: SelectProps) {
             <option
               key={index}
               value={`${option.value}`}
-              selected={option.key === selected}
+              selected={option.value === selected}
             >{`${option.key}`}</option>
           ))}
         </select>
