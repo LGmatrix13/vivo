@@ -60,7 +60,18 @@ export async function updateRD(values: Values) {
 export async function deleteRD(values: Values) {
   const id = Number(values["id"]);
   try {
-    await db.delete(staffTable).where(eq(staffTable.id, id));
+    const rasAssigned = await db
+      .select()
+      .from(zoneTable)
+      .where(eq(zoneTable.staffId, id));
+    if (rasAssigned.length) {
+      return json({
+        error:
+          "This RD has RAs assigned to them. Delete RAs assigned to them to delete this RD first.",
+      });
+    } else {
+      await db.delete(staffTable).where(eq(staffTable.id, id));
+    }
   } catch (error) {
     console.error("Error:", error);
     console.log("RD id:", id);

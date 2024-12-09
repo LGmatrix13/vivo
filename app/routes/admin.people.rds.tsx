@@ -48,8 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await updateRD(values);
       return redirect(request.url);
     case "delete":
-      await deleteRD(values);
-      return redirect(request.url);
+      return (await deleteRD(values)) || redirect(request.url);
   }
 }
 
