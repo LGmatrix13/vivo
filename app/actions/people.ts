@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { IARD, IRA, IRD, IResident } from "~/models/people";
 import { MasterCSV } from "~/schemas/masterCSV";
 import { db } from "~/utilties/connection.server";
@@ -169,6 +169,16 @@ export async function uploadMasterCSV(values: Values) {
     }
     else {
       createResident(result.data);
+    }
+    if (result.data?.ra === `${result.data?.lastName}, ${result.data?.firstName}`) {
+      var raData = await db
+        .select({
+          residentId: residentTable.id,
+          roomId: residentTable.roomId})
+        .from(residentTable)
+        .where(and(eq(residentTable.firstName, result.data.firstName), eq(residentTable.lastName, result.data.lastName)));
+      raData = raData.map(item => ({ ...item, alias: result.data?.zone }));
+      createRA(raData);
     }
   }
 

@@ -62,7 +62,7 @@ export default function AdminPeopleRAsPage() {
     firstName: "Firstname",
     lastName: "Lastname",
     building: "Building",
-    rd: "RD",
+    alias: "Hall"
   };
   const { handleSearch, filteredData } = useSearch(
     data.ras,
@@ -114,6 +114,7 @@ export default function AdminPeopleRAsPage() {
         rowKeys={{
           fullName: "Name",
           roomBuilding: "Room Number",
+          alias: "Hall",
           rd: "RD",
           email: "Email",
           phone: "Phone Number",
