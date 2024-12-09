@@ -34,6 +34,7 @@ export default function ARDForm(props: ARDFormProps) {
       <h2 className="font-bold text-xl">
         {ard ? `Edit ${ard.fullName}` : "Add ARD"}
       </h2>
+      {ard && <input type="hidden" name="id" value={ard.id} />}
       {residentOptions && (
         <Select
           label="Resident"

@@ -22,7 +22,7 @@ export default function BuildingForm(props: BuildingFormProps) {
       <h2 className="font-bold text-xl">
         {building ? `Edit ${building.name}` : "Add Building"}
       </h2>
-      {building && <input name="id" type="hidden" value={building?.id} />}
+      {building && <input name="id" type="hidden" value={building.id} />}
       <Input
         label="Name"
         placeholder="Name"

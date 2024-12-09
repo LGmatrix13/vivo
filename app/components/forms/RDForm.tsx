@@ -21,7 +21,7 @@ export default function RDForm(props: RDFormProps) {
       <h2 className="font-bold text-xl">
         {rd ? `Edit ${rd.fullName}` : "Add RD"}
       </h2>
-      {rd && <input name="id" type="hidden" value={rd?.id} />}
+      {rd && <input name="id" type="hidden" value={rd.id} />}
       <Input
         label="First Name"
         placeholder="First Name"

@@ -1,4 +1,4 @@
-import { sql, eq, asc, count } from "drizzle-orm";
+import { sql, eq, asc } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
 import {
@@ -41,12 +41,13 @@ export async function readRooms() {
       raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       roomNumber: roomTable.roomNumber,
       capacity: roomTable.capacity,
+      zoneId: zoneTable.id,
     })
     .from(roomTable)
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
     .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .leftJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .groupBy(roomTable.id, buildingTable.id, raInfoTable.id)
+    .groupBy(roomTable.id, buildingTable.id, raInfoTable.id, zoneTable.id)
     .orderBy(buildingTable.name, roomTable.roomNumber);
 
   return rooms;

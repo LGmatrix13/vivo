@@ -20,7 +20,7 @@ import {
   DrawerButton,
 } from "~/components/common/Drawer";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { createARD, updateARD } from "~/actions/people";
+import { createARD, deleteARD, updateARD } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
 
@@ -49,7 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await updateARD(values);
       return redirect(request.url);
     case "delete":
-      await updateARD(values);
+      await deleteARD(values);
       return redirect(request.url);
   }
 }
@@ -130,7 +130,9 @@ export default function AdminPeopleARDsPage() {
         DeleteComponent={({ row }) => (
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
-        EditComponent={({ row }) => <ARDForm rdDropdown={data.rdsDropdown} />}
+        EditComponent={({ row }) => (
+          <ARDForm rdDropdown={data.rdsDropdown} ard={row} />
+        )}
       />
     </section>
   );

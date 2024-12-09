@@ -110,7 +110,9 @@ export async function updateARD(values: Values) {
   try {
     await db
       .update(assistantStaffTable)
-      .set(ard)
+      .set({
+        staffId: ard.staffId,
+      })
       .where(eq(assistantStaffTable.id, ard.id));
   } catch (error) {
     console.error("Error:", error);
