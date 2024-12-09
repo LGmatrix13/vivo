@@ -63,7 +63,7 @@ export default function AdminPeopleResidentsPage() {
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
-    roomBuilding: "Room Number",
+    roomBuilding: "Room",
   };
   const { handleSearch, filteredData } = useSearch(
     data.residents,

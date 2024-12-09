@@ -84,8 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminRoomsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    building: "Building",
-    roomNumber: "Room #",
+    room: "Room",
     capacity: "Capacity",
     raFullName: "RA",
   };

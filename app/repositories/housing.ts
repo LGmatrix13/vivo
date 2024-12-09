@@ -40,6 +40,7 @@ export async function readRooms() {
       raLastName: raInfoTable.lastName,
       raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       roomNumber: roomTable.roomNumber,
+      room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       capacity: roomTable.capacity,
       zoneId: zoneTable.id,
     })

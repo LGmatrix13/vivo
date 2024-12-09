@@ -1,5 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
+import { eq } from "drizzle-orm";
 import { createRA, deleteRA, uploadMasterCSV } from "~/actions/people";
 import DownloadButton from "~/components/common/DownloadButton";
 import {
@@ -17,24 +18,29 @@ import RAForm from "~/components/forms/RAForm";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
+import { readBuildingsDropdown } from "~/repositories/housing";
 import {
   readRAs,
   readRDsDropdown,
   readResidentsDropdown,
 } from "~/repositories/people";
 import { csv } from "~/utilties/csv";
+import { residentTable, zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
     readRAs(),
-    readResidentsDropdown(),
-    readRDsDropdown(),
+    readResidentsDropdown(
+      zoneTable,
+      eq(residentTable.id, zoneTable.residentId)
+    ),
+    readBuildingsDropdown(),
   ]);
 
   return json({
     ras: parallelized[0],
     residentsDropdown: parallelized[1],
-    rdsDropdown: parallelized[2],
+    buildingsDropdown: parallelized[2],
   });
 }
 
@@ -52,8 +58,6 @@ export async function action({ request }: ActionFunctionArgs) {
       await deleteRA(values);
       return redirect(request.url);
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminPeopleRAsPage() {
@@ -62,7 +66,7 @@ export default function AdminPeopleRAsPage() {
     firstName: "Firstname",
     lastName: "Lastname",
     building: "Building",
-    alias: "Hall"
+    alias: "Hall",
   };
   const { handleSearch, filteredData } = useSearch(
     data.ras,
@@ -90,7 +94,7 @@ export default function AdminPeopleRAsPage() {
             <DrawerContent>
               <RAForm
                 residentDropdown={data.residentsDropdown}
-                rdDropdown={data.rdsDropdown}
+                buildingsDropdown={data.buildingsDropdown}
               />
             </DrawerContent>
             <DrawerButton>
@@ -132,7 +136,7 @@ export default function AdminPeopleRAsPage() {
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
         EditComponent={({ row }) => (
-          <RAForm ra={row} rdDropdown={data.rdsDropdown} />
+          <RAForm ra={row} buildingsDropdown={data.buildingsDropdown} />
         )}
       />
     </section>

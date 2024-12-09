@@ -1,10 +1,14 @@
 import { Loader } from "./Icons";
 
-export default function Loading() {
+interface LoadingProps {
+  title?: string;
+}
+
+export default function Loading(props: LoadingProps) {
   return (
     <div className="space-x-2 flex items-center justify-center">
       <Loader className="animate-spin" />
-      <span>Loading...</span>
+      <span>{props.title || "Loading..."}</span>
     </div>
   );
 }

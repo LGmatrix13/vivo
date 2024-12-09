@@ -3,9 +3,11 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
+  useNavigation,
   useOutletContext,
 } from "@remix-run/react";
 import { eq, sql } from "drizzle-orm";
+import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { db } from "~/utilties/connection.server";
 import {
@@ -66,8 +68,15 @@ export async function loader() {
     rds,
   });
 }
+
 export default function AdminPeopleLayout() {
   const data = useLoaderData<typeof loader>();
+  const { state } = useNavigation();
+
+  if (state !== "idle") {
+    return <Loading />;
+  }
+
   return (
     <>
       <SubHeader

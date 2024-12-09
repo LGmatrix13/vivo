@@ -1,5 +1,5 @@
-import { sql, eq, asc, not } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { sql, eq, asc, ne, notExists, SQL } from "drizzle-orm";
+import { alias, PgColumn, PgTable } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
 import {
   residentTable,
@@ -96,6 +96,7 @@ export async function readRAs() {
         ),
       class: residentTable.class,
       building: buildingTable.name,
+      buildingId: buildingTable.id,
       roomBuilding:
         sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
@@ -173,7 +174,7 @@ export async function readRDsDropdown() {
   return rds;
 }
 
-export async function readResidentsDropdown() {
+export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
   const rds = await db
     .select({
       id: residentTable.id,
@@ -183,6 +184,7 @@ export async function readResidentsDropdown() {
         ),
     })
     .from(residentTable)
+    .where(notExists(db.select().from(table).where(predicate)))
     .orderBy(asc(residentTable.lastName));
 
   return rds;

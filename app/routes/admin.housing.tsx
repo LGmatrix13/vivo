@@ -1,4 +1,11 @@
-import { MetaFunction, Outlet, useOutletContext } from "@remix-run/react";
+import {
+  MetaFunction,
+  Outlet,
+  useNavigation,
+  useOutletContext,
+} from "@remix-run/react";
+import { useState, useEffect } from "react";
+import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 
 export const meta: MetaFunction = () => {
@@ -10,6 +17,12 @@ export const meta: MetaFunction = () => {
 
 export default function AdminHousingLayout() {
   const context = useOutletContext();
+  const { state } = useNavigation();
+
+  if (state !== "idle") {
+    return <Loading />;
+  }
+
   return (
     <>
       <SubHeader

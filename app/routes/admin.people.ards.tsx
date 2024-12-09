@@ -23,12 +23,21 @@ import { ActionFunctionArgs } from "@remix-run/node";
 import { createARD, deleteARD, updateARD } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
+import { eq } from "drizzle-orm";
+import {
+  assistantStaffTable,
+  residentTable,
+  zoneTable,
+} from "~/utilties/schema.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
     readARDs(),
     readRDsDropdown(),
-    readResidentsDropdown(),
+    readResidentsDropdown(
+      assistantStaffTable,
+      eq(residentTable.id, assistantStaffTable.residentId)
+    ),
   ]);
   return json({
     ards: parallelized[0],
