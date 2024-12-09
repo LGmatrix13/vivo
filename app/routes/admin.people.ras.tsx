@@ -23,7 +23,6 @@ import RAForm from "~/components/forms/RAForm";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
-import { readBuildingsDropdown } from "~/repositories/housing";
 import {
   readRAs,
   readRDsDropdown,
@@ -63,9 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
       await createRA(values);
       return redirect(request.url);
     case "delete":
-      const error = await deleteRA(values);
-      if (!error) return redirect(request.url);
-      return error;
+      return (await deleteRA(values)) || redirect(request.url);
   }
 }
 
