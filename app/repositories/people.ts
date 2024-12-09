@@ -110,9 +110,9 @@ export async function readRAs() {
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .orderBy(
-      buildingTable.name,
       residentTable.lastName,
-      residentTable.firstName
+      residentTable.firstName,
+      buildingTable.name
     );
 
   return ras;
