@@ -194,7 +194,7 @@ export async function uploadMasterCSV(values: Values) {
         };
         const roomInfo = {
           roomNumber: roomNumber,
-          buildingId: (await db.select({id: buildingTable.id}).from(buildingTable).where(eq(buildingTable.name, buildingName)))[0].id,
+          buildingId: (await db.select({id: buildingTable.id}).from(buildingTable).where(eq(buildingTable.name, buildingName)))[0].id, //TODO: this could throw an error if building not found
           capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0
         };
         room = await db.insert(roomTable).values(roomInfo).returning({roomId: roomTable.id});
@@ -210,8 +210,12 @@ export async function uploadMasterCSV(values: Values) {
       var raData = await db
         .select({
           residentId: residentTable.id,
-          roomId: residentTable.roomId})
+          staffId: staffTable.id
+        })
         .from(residentTable)
+        .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+        .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+        .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
         .where(and(eq(residentTable.firstName, result.data.firstName), eq(residentTable.lastName, result.data.lastName)));
       raData = raData.map(item => ({ ...item, alias: result.data?.zone }));
       createRA(raData);
