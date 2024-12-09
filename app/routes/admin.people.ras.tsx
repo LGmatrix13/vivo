@@ -34,13 +34,13 @@ export async function loader() {
       zoneTable,
       eq(residentTable.id, zoneTable.residentId)
     ),
-    readBuildingsDropdown(),
+    readRDsDropdown(),
   ]);
 
   return json({
     ras: parallelized[0],
     residentsDropdown: parallelized[1],
-    buildingsDropdown: parallelized[2],
+    readRDsDropdown: parallelized[2],
   });
 }
 
@@ -94,7 +94,7 @@ export default function AdminPeopleRAsPage() {
             <DrawerContent>
               <RAForm
                 residentDropdown={data.residentsDropdown}
-                buildingsDropdown={data.buildingsDropdown}
+                rdsDropdown={data.readRDsDropdown}
               />
             </DrawerContent>
             <DrawerButton>
@@ -136,7 +136,7 @@ export default function AdminPeopleRAsPage() {
           <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
         )}
         EditComponent={({ row }) => (
-          <RAForm ra={row} buildingsDropdown={data.buildingsDropdown} />
+          <RAForm ra={row} rdsDropdown={data.readRDsDropdown} />
         )}
       />
     </section>

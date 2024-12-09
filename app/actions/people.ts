@@ -171,53 +171,72 @@ export async function uploadMasterCSV(values: Values) {
         rowNumber: i + 1,
         errors: result.error.errors,
       });
-    }
-    else {
-      const lastSpaceIndex = result.data.room.lastIndexOf(' ');
+    } else {
+      const lastSpaceIndex = result.data.room.lastIndexOf(" ");
       const buildingName = result.data.room.slice(0, lastSpaceIndex);
       const roomNumber = result.data.room.slice(lastSpaceIndex + 1);
-      
+
       let room = await db
-      .select({
-        roomId: roomTable.id
-      })
-      .from(roomTable)
-      .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
-      .where(and(eq(buildingTable.name, buildingName), eq(roomTable.roomNumber, roomNumber)));
+        .select({
+          roomId: roomTable.id,
+        })
+        .from(roomTable)
+        .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+        .where(
+          and(
+            eq(buildingTable.name, buildingName),
+            eq(roomTable.roomNumber, roomNumber)
+          )
+        );
 
       if (room.length == 0) {
         const stringToNumberMap: Record<string, number> = {
           single: 1,
           double: 2,
           triple: 3,
-          quad: 4
+          quad: 4,
         };
         const roomInfo = {
           roomNumber: roomNumber,
-          buildingId: (await db.select({id: buildingTable.id}).from(buildingTable).where(eq(buildingTable.name, buildingName)))[0].id, //TODO: this could throw an error if building not found
-          capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0
+          buildingId: (
+            await db
+              .select({ id: buildingTable.id })
+              .from(buildingTable)
+              .where(eq(buildingTable.name, buildingName))
+          )[0].id, //TODO: this could throw an error if building not found
+          capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0,
         };
-        room = await db.insert(roomTable).values(roomInfo).returning({roomId: roomTable.id});
+        room = await db
+          .insert(roomTable)
+          .values(roomInfo)
+          .returning({ roomId: roomTable.id });
       }
       const residentData = {
         ...result.data,
-        roomId: room[0].roomId
+        roomId: room[0].roomId,
       };
 
       createResident(residentData);
     }
-    if (result.data?.ra === `${result.data?.lastName}, ${result.data?.firstName}`) {
+    if (
+      result.data?.ra === `${result.data?.lastName}, ${result.data?.firstName}`
+    ) {
       var raData = await db
         .select({
           residentId: residentTable.id,
-          staffId: staffTable.id
+          staffId: staffTable.id,
         })
         .from(residentTable)
         .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
         .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
         .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-        .where(and(eq(residentTable.firstName, result.data.firstName), eq(residentTable.lastName, result.data.lastName)));
-      raData = raData.map(item => ({ ...item, alias: result.data?.zone }));
+        .where(
+          and(
+            eq(residentTable.firstName, result.data.firstName),
+            eq(residentTable.lastName, result.data.lastName)
+          )
+        );
+      raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
       createRA(raData);
     }
   }

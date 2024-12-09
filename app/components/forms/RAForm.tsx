@@ -1,5 +1,5 @@
 import Form from "../common/Form";
-import type { IRA, IResidentDropdown } from "~/models/people";
+import type { IRA, IRDDropdown, IResidentDropdown } from "~/models/people";
 import Select from "../common/Select";
 import Input from "../common/Input";
 import { IBuildingDropdown } from "~/models/housing";
@@ -7,20 +7,20 @@ import { IBuildingDropdown } from "~/models/housing";
 interface RAFormProps {
   ra?: IRA;
   residentDropdown?: IResidentDropdown[];
-  buildingsDropdown: IBuildingDropdown[];
+  rdsDropdown: IRDDropdown[];
 }
 
 export default function RAForm(props: RAFormProps) {
-  const { residentDropdown, buildingsDropdown, ra } = props;
+  const { residentDropdown, rdsDropdown, ra } = props;
   const residentOptions = residentDropdown?.map((option) => {
     return {
       key: option.resident,
       value: option.id,
     };
   });
-  const buildingOptions = buildingsDropdown.map((option) => {
+  const rdOptions = rdsDropdown.map((option) => {
     return {
-      key: option.name,
+      key: option.rd,
       value: option.id,
     };
   });
@@ -40,10 +40,10 @@ export default function RAForm(props: RAFormProps) {
         />
       )}
       <Select
-        label="Building"
-        name="buildingId"
-        options={buildingOptions}
-        selected={ra?.buildingId}
+        label="RD"
+        name="staffId"
+        options={rdOptions}
+        selected={ra?.staffId}
         required
       />
       <Input label="Zone" name="alias" type="text" value={ra?.alias} required />

@@ -1,10 +1,12 @@
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import WideButton from "../common/WideButton";
 import { useSubmit } from "@remix-run/react";
 import { uploadMasterCSV } from "~/actions/people";
+import Loading from "../common/Loading";
 
 export default function UploadMasterCSVForm() {
   const submit = useSubmit();
+  const { state } = useNavigation();
   const data = useActionData<typeof uploadMasterCSV>();
 
   if (data) {
@@ -25,6 +27,15 @@ export default function UploadMasterCSVForm() {
             </ul>
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (state !== "idle") {
+    return (
+      <div className="space-y-5">
+        <h2 className="font-bold text-xl">Upload Master CSV</h2>
+        <Loading title="Saving..." />
       </div>
     );
   }
