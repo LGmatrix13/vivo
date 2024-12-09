@@ -18,7 +18,7 @@ export default function BuildingForm(props: BuildingFormProps) {
     };
   });
   return (
-    <Form toast="Saved Building" button="Save Building" intent="create">
+    <Form button="Save Building" intent="create">
       <h2 className="font-bold text-xl">
         {building ? `Edit ${building.name}` : "Add Building"}
       </h2>
@@ -28,7 +28,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         placeholder="Name"
         name="name"
         type="text"
-        value={building?.name}
+        defaultValue={building?.name}
         required
       />
       <Select

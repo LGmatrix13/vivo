@@ -25,11 +25,7 @@ export default function RoomForm(props: RoomFormProps) {
     };
   });
   return (
-    <Form
-      toast="Saved Room"
-      button="Save Room"
-      intent={room ? "update" : "create"}
-    >
+    <Form button="Save Room" intent={room ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {room ? `Edit Room ${room.roomNumber}` : "Add Room"}
       </h2>

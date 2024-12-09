@@ -1,21 +1,15 @@
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
   json,
   MetaFunction,
   Outlet,
   useLoaderData,
   useNavigation,
-  useOutletContext,
 } from "@remix-run/react";
-import { eq, sql } from "drizzle-orm";
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
-import { db } from "~/utilties/connection.server";
-import {
-  buildingTable,
-  residentTable,
-  staffTable,
-  zoneTable,
-} from "~/utilties/schema.server";
+import { Toast } from "~/components/common/Toast";
+import { toasts } from "~/utilties/mutate.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,55 +18,35 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export interface AdminPeopleOutletContext {
-  buildings: {
-    id: number;
-    name: string;
-  }[];
-  ras: {
-    id: number;
-    name: string;
-  }[];
-  rds: {
-    id: number;
-    name: string;
-  }[];
-}
+export async function loader({ request }: LoaderFunctionArgs) {
+  const cookieHeader = await request.headers.get("Cookie");
+  const cookie = await toasts.parse(cookieHeader);
 
-export async function loader() {
-  const buildings = await db
-    .select({
-      id: buildingTable.id,
-      name: buildingTable.name,
-    })
-    .from(buildingTable);
+  if (cookie) {
+    const newCookie = await toasts.serialize("");
 
-  const ras = await db
-    .select({
-      id: zoneTable.id,
-      ra: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
-    })
-    .from(residentTable)
-    .innerJoin(zoneTable, eq(residentTable.id, zoneTable.residentId));
-
-  const rds = await db
-    .select({
-      id: staffTable.id,
-      rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`,
-    })
-    .from(staffTable);
+    return json(
+      {
+        toast: cookie,
+      },
+      {
+        headers: {
+          "Set-Cookie": newCookie,
+        },
+      }
+    );
+  }
 
   return json({
-    buildings,
-    ras,
-    rds,
+    toast: null,
   });
 }
 
 export default function AdminPeopleLayout() {
-  const data = useLoaderData<typeof loader>();
   const { state } = useNavigation();
+  const data = useLoaderData<typeof loader>();
 
+  console.log(data);
   if (state !== "idle") {
     return <Loading />;
   }
@@ -99,13 +73,10 @@ export default function AdminPeopleLayout() {
           },
         ]}
       />
-      <Outlet
-        context={{
-          buildings: data.buildings,
-          ras: data.ras,
-          rds: data.rds,
-        }}
-      />
+      <Outlet />
+      {data.toast && (
+        <Toast level={data.toast.level}>{data.toast.message}</Toast>
+      )}{" "}
     </>
   );
 }

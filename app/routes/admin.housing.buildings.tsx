@@ -14,7 +14,6 @@ import useSearch from "~/hooks/useSearch";
 import { db } from "~/utilties/connection.server";
 import { buildingTable } from "~/utilties/schema.server";
 import { csv } from "~/utilties/csv";
-import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
 import { readBuildings } from "~/repositories/housing";
@@ -66,7 +65,6 @@ export default function AdminBuldingsPage() {
   const data = useLoaderData<typeof loader>();
 
   const { handleSearch, filteredData } = useSearch(data.buildings, []);
-  const toast = useToastContext();
   return (
     <section className="space-y-5">
       <div className="flex">
@@ -86,7 +84,6 @@ export default function AdminBuldingsPage() {
               Icon={Download}
               onClick={() => {
                 csv.download(filteredData || data.buildings, "buildings");
-                toast.success("Buildings Exported");
               }}
             >
               Export

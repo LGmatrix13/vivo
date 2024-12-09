@@ -107,13 +107,18 @@ export async function deleteRA(values: Values) {
       .where(eq(roomTable.zoneId, id));
 
     if (roomsAssigned.length) {
-      return json({
-        error:
-          "This RA has rooms assigned to them. Delete rooms assigned to this RA first.",
-      });
+      return {
+        level: "failure",
+        message: "RA has rooms assigned to them",
+      };
     }
 
     await db.delete(zoneTable).where(eq(zoneTable.id, id));
+
+    return {
+      level: "success",
+      message: "RA Deleted",
+    };
   } catch (error) {
     console.error("Error:", error);
     console.log("RA id:", id);

@@ -5,7 +5,6 @@ import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
 import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
-import { useToastContext } from "~/components/common/Toast";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
 import { readRDs } from "~/repositories/people";
@@ -25,6 +24,7 @@ import {
 } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
+import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -40,15 +40,29 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (await uploadMasterCSV(values)) || redirect(request.url);
+      return (
+        (await uploadMasterCSV(values)) ||
+        mutate(request.url, {
+          message: "Upload Successful",
+        })
+      );
     case "create":
       await createRD(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "RD Updated",
+      });
     case "update":
       await updateRD(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "RD Updated",
+      });
     case "delete":
-      return (await deleteRD(values)) || redirect(request.url);
+      return (
+        (await deleteRD(values)) ||
+        mutate(request.url, {
+          message: "RD Deleted",
+        })
+      );
   }
 }
 
@@ -63,7 +77,6 @@ export default function AdminPeopleRDsPage() {
     data.rds,
     Object.keys(columnKeys)
   );
-  const toast = useToastContext();
 
   return (
     <section className="space-y-5">
@@ -93,7 +106,6 @@ export default function AdminPeopleRDsPage() {
             Icon={Download}
             onClick={() => {
               csv.download(filteredData || data.rds, "RDs");
-              toast.success("RDs Exported");
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}
@@ -106,7 +118,7 @@ export default function AdminPeopleRDsPage() {
         rowKeys={{
           fullName: "Name",
           buildings: "Building",
-          email: "Email",
+          emailAddress: "Email Address",
           mailbox: "Mailbox Number",
         }}
         InstructionComponent={() => (

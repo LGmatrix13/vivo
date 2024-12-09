@@ -9,7 +9,6 @@ import IconButton from "~/components/common/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import useSearch from "~/hooks/useSearch";
@@ -17,11 +16,11 @@ import { db } from "~/utilties/connection.server";
 import { residentTable, roomTable } from "~/utilties/schema.server";
 import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/csv";
-import { redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { readBuildingsDropdown, readRooms } from "~/repositories/housing";
 import { IRoom } from "~/models/housing";
 import { readRAsDropdown } from "~/repositories/people";
+import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
@@ -47,7 +46,10 @@ export async function action({ request }: ActionFunctionArgs) {
       if (createdRoom.success) {
         await db.insert(roomTable).values(createdRoom.data);
       }
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Room created",
+        level: "success",
+      });
     case "update":
       const updatedRoom = Room.safeParse(values);
 
@@ -57,28 +59,32 @@ export async function action({ request }: ActionFunctionArgs) {
           .set(updatedRoom.data)
           .where(eq(roomTable.id, updatedRoom.data.id!!));
       }
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Updated Room",
+        level: "success",
+      });
     case "delete":
       const id = Number(values["id"]);
       const peopleInRoom = await db
         .select({
-          fullName: sql<string>`concat(${residentTable.firstName} ${residentTable.lastName})`,
+          fullName: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
         })
         .from(residentTable)
-        .where(eq(residentTable.id, id));
+        .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
+        .where(eq(roomTable.id, id));
       if (peopleInRoom.length) {
-        return json({
-          error: `There are people assigned to this room: ${peopleInRoom
-            .map((_) => _.fullName)
-            .join(", ")}.`,
+        return mutate(request.url, {
+          message: "Room has residents assigned",
+          level: "failure",
         });
       }
 
       await db.delete(roomTable).where(eq(roomTable.id, id));
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Room deleted",
+        level: "success",
+      });
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminRoomsPage() {
@@ -92,7 +98,6 @@ export default function AdminRoomsPage() {
     data.rooms,
     Object.keys(columnKeys)
   );
-  const toast = useToastContext();
 
   return (
     <section className="space-y-5">
@@ -116,7 +121,6 @@ export default function AdminRoomsPage() {
               Icon={Download}
               onClick={() => {
                 csv.download(filteredData || data.rooms, "rooms");
-                toast.success("Rooms Exported");
               }}
             >
               {filteredData?.length ? "Export Subset" : "Export"}

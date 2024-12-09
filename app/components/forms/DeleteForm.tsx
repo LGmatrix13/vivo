@@ -1,5 +1,4 @@
-import { Form, useActionData, useSubmit } from "@remix-run/react";
-import { deleteRA } from "~/actions/people";
+import { Form, useNavigation, useSubmit } from "@remix-run/react";
 import WideButton from "../common/WideButton";
 
 interface DeleteFormProps {
@@ -10,18 +9,9 @@ interface DeleteFormProps {
 }
 
 export default function DeleteForm(props: DeleteFormProps) {
-  const { id, title, prompt, toast: toastMessage } = props;
+  const { id, title, prompt } = props;
   const submit = useSubmit();
-  const data = useActionData<typeof deleteRA>();
-
-  if (data) {
-    return (
-      <div className="space-y-5">
-        <h2 className="font-bold text-xl">{title}</h2>
-        <p>{data.error}</p>
-      </div>
-    );
-  }
+  const navigation = useNavigation();
 
   return (
     <Form
@@ -40,6 +30,7 @@ export default function DeleteForm(props: DeleteFormProps) {
           type: "submit",
           name: "intent",
           value: "delete",
+          disbaled: navigation.state === "submitting",
         }}
       >
         Confirm

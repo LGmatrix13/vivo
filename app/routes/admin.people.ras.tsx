@@ -17,7 +17,6 @@ import IconButton from "~/components/common/IconButton";
 import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
@@ -29,6 +28,7 @@ import {
   readResidentsDropdown,
 } from "~/repositories/people";
 import { csv } from "~/utilties/csv";
+import mutate from "~/utilties/mutate.server";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
@@ -54,15 +54,28 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (await uploadMasterCSV(values)) || redirect(request.url);
+      return (
+        (await uploadMasterCSV(values)) ||
+        mutate(request.url, {
+          message: "Upload Successful",
+          level: "success",
+        })
+      );
     case "update":
       await updateRA(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "RA Updated",
+        level: "success",
+      });
     case "create":
       await createRA(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "RA Created",
+        level: "success",
+      });
     case "delete":
-      return (await deleteRA(values)) || redirect(request.url);
+      const toast = await deleteRA(values);
+      return mutate(request.url, toast as any);
   }
 }
 
@@ -78,7 +91,6 @@ export default function AdminPeopleRAsPage() {
     data.ras,
     Object.keys(columnKeys)
   );
-  const toast = useToastContext();
 
   return (
     <section className="space-y-5">
@@ -111,7 +123,6 @@ export default function AdminPeopleRAsPage() {
             Icon={Download}
             onClick={() => {
               csv.download(filteredData || data.ras, "RAs");
-              toast.success("RAs Exported");
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}

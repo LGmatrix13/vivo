@@ -1,12 +1,10 @@
-import { Form as RemixForm, useSubmit } from "@remix-run/react";
+import { Form as RemixForm, useNavigation, useSubmit } from "@remix-run/react";
 import WideButton from "./WideButton";
-import { useToastContext } from "./Toast";
 import { useDrawerContext } from "./Drawer";
 import React from "react";
 
 interface FormProps {
   intent: string;
-  toast?: string;
   children: React.ReactNode;
   button: string;
   encType?:
@@ -16,8 +14,8 @@ interface FormProps {
 }
 
 export default function Form(props: FormProps) {
-  const { toast: toastMessage, children, button, encType, intent } = props;
-  const toast = useToastContext();
+  const { children, button, encType, intent } = props;
+  const navigation = useNavigation();
   const submit = useSubmit();
   const [, setOpen] = useDrawerContext();
   return (
@@ -25,7 +23,6 @@ export default function Form(props: FormProps) {
       method="post"
       onSubmit={(event) => {
         setOpen(false);
-        if (toastMessage) toast.success(toastMessage);
         submit(event.currentTarget);
       }}
       encType={encType}
@@ -37,6 +34,7 @@ export default function Form(props: FormProps) {
           type: "submit",
           name: "intent",
           value: intent,
+          disabled: navigation.state === "submitting",
         }}
       >
         {button}
