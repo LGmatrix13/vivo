@@ -28,7 +28,7 @@ export default function BuildingForm(props: BuildingFormProps) {
         placeholder="Name"
         name="name"
         type="text"
-        value={building?.name}
+        defaultValue={building?.name}
         required
       />
       <Select
