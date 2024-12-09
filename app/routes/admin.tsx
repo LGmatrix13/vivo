@@ -2,7 +2,6 @@ import { Outlet, redirect, useLoaderData } from "@remix-run/react";
 import AdminHeader from "~/components/common/AdminHeader";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
-import { ToastProvider } from "~/components/common/Toast";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get("Cookie");
@@ -28,11 +27,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function AdminLayout() {
   const data = useLoaderData<typeof loader>();
   return (
-    <ToastProvider>
+    <>
       <AdminHeader />
       <main className="max-w-screen-2xl mx-auto px-10 mb-7">
         <Outlet context={data} />
       </main>
-    </ToastProvider>
+    </>
   );
 }

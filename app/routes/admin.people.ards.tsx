@@ -7,7 +7,6 @@ import { csv } from "~/utilties/csv";
 import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
-import { useToastContext } from "~/components/common/Toast";
 import {
   readARDs,
   readRDsDropdown,
@@ -29,6 +28,7 @@ import {
   residentTable,
   zoneTable,
 } from "~/utilties/schema.server";
+import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
@@ -53,19 +53,27 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "create":
       await createARD(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "ARD Created",
+        level: "success",
+      });
     case "update":
       await updateARD(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "ARD Updated",
+        level: "success",
+      });
     case "delete":
       await deleteARD(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "ARD Deleted",
+        level: "success",
+      });
   }
 }
 
 export default function AdminPeopleARDsPage() {
   const data = useLoaderData<typeof loader>();
-  const toast = useToastContext();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
@@ -110,7 +118,6 @@ export default function AdminPeopleARDsPage() {
             Icon={Download}
             onClick={() => {
               csv.download(filteredData || data.ards, "ARDs");
-              toast.success("ARDs Exported");
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}

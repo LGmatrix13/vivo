@@ -17,7 +17,7 @@ export default function RDForm(props: RDFormProps) {
     };
   });
   return (
-    <Form toast="Saved RD" button="Save RD" intent={rd ? "update" : "create"}>
+    <Form button="Save RD" intent={rd ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {rd ? `Edit ${rd.fullName}` : "Add RD"}
       </h2>

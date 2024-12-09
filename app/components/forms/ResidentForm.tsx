@@ -10,11 +10,7 @@ interface ResidentFormProps {
 export default function ResidentForm(props: ResidentFormProps) {
   const { resident } = props;
   return (
-    <Form
-      toast="Saved Resident"
-      button="Save Resident"
-      intent={resident ? "update" : "create"}
-    >
+    <Form button="Save Resident" intent={resident ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {resident ? `Edit ${resident.fullName}` : "Add Resident"}
       </h2>

@@ -1,9 +1,4 @@
-import {
-  json,
-  redirect,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import {
   DrawerButton,
   DrawerContent,
@@ -13,12 +8,10 @@ import IconButton from "~/components/common/IconButton";
 import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import { useToastContext } from "~/components/common/Toast";
 import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
-import type { AdminPeopleOutletContext } from "./admin.people";
 import { readResidents } from "~/repositories/people";
 import { IResident } from "~/models/people";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -30,6 +23,7 @@ import {
 } from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
+import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   return json({
@@ -43,23 +37,32 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (await uploadMasterCSV(values)) || redirect(request.url);
+      return (
+        (await uploadMasterCSV(values)) ||
+        mutate(request.url, {
+          message: "Upload Successful",
+        })
+      );
     case "create":
       await createResident(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Resident created",
+      });
     case "update":
       await updateResident(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Resident Updated",
+      });
     case "delete":
       await deleteResident(values);
-      return redirect(request.url);
+      return mutate(request.url, {
+        message: "Resident Deleted",
+      });
   }
 }
 
 export default function AdminPeopleResidentsPage() {
   const data = useLoaderData<typeof loader>();
-  const toast = useToastContext();
-  const context = useOutletContext<AdminPeopleOutletContext>();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
@@ -100,7 +103,6 @@ export default function AdminPeopleResidentsPage() {
             Icon={Download}
             onClick={() => {
               csv.download(filteredData || data.residents, "Residents");
-              toast.success("Residents Exported");
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}

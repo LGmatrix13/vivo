@@ -26,11 +26,7 @@ export default function ARDForm(props: ARDFormProps) {
   });
 
   return (
-    <Form
-      toast="Saved ARD"
-      button="Save ARD"
-      intent={ard ? "update" : "create"}
-    >
+    <Form button="Save ARD" intent={ard ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {ard ? `Edit ${ard.fullName}` : "Add ARD"}
       </h2>

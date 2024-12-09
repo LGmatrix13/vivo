@@ -26,7 +26,7 @@ export default function RAForm(props: RAFormProps) {
   });
 
   return (
-    <Form toast="Saved RA" button="Save RA" intent={ra ? "update" : "create"}>
+    <Form button="Save RA" intent={ra ? "update" : "create"}>
       <h2 className="font-bold text-xl">{ra ? "Edit" : "Add"} RA</h2>
       {ra && <input name="id" type="hidden" value={ra.id} />}
       {residentOptions && (

@@ -3,7 +3,7 @@ interface ButtonProps {
   onClick?: () => void;
   children: React.ReactNode;
   options?: {
-    [key: string]: string;
+    [key: string]: any;
   };
 }
 
