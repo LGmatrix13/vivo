@@ -36,8 +36,14 @@ export default function Table<
     direction: "asc" | "desc";
   } | null>(null);
 
+  // Add an originalIndex to each row
+  const rowsWithIndex = rows.map((row, index) => ({
+    ...row,
+    originalIndex: index,
+  }));
+
   // Sort rows based on the sortConfig
-  const sortedRows = [...rows].sort((a, b) => {
+  const sortedRows = [...rowsWithIndex].sort((a, b) => {
     if (!sortConfig) return 0;
     const { key, direction } = sortConfig;
     const aValue = a[key];
@@ -103,14 +109,16 @@ export default function Table<
             {sortedRows.map((row, rowIndex) => (
               <tr
                 className={`${
-                  opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
+                  opened === row.originalIndex
+                    ? "bg-gray-50"
+                    : "hover:bg-gray-50"
                 } transition ease-in-out`}
                 key={rowIndex}
               >
                 {originalColumnKeys.map((originalColumnKey, colIndex) => (
                   <td
                     className="px-5 py-3 cursor-pointer"
-                    onClick={() => setOpened(rowIndex)}
+                    onClick={() => setOpened(row.originalIndex)}
                     key={colIndex}
                   >
                     {row[originalColumnKey] === null
