@@ -46,7 +46,13 @@ export default function RAForm(props: RAFormProps) {
         selected={ra?.staffId}
         required
       />
-      <Input label="Zone" name="alias" type="text" value={ra?.alias} required />
+      <Input
+        label="Zone"
+        name="alias"
+        type="text"
+        defaultValue={ra?.alias}
+        required
+      />
     </Form>
   );
 }

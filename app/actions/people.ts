@@ -1,6 +1,5 @@
 import { json } from "@remix-run/node";
 import { eq, and } from "drizzle-orm";
-import { string } from "zod";
 import { IARD, IRA, IRD, IResident } from "~/models/people";
 import { MasterCSV } from "~/schemas/masterCSV";
 import { db } from "~/utilties/connection.server";
@@ -91,10 +90,32 @@ export async function createRA(values: Values) {
 export async function deleteRA(values: Values) {
   const id = Number(values["id"]);
   try {
+    const roomsAssigned = await db
+      .select()
+      .from(roomTable)
+      .where(eq(roomTable.zoneId, id));
+
+    if (roomsAssigned.length) {
+      return json({
+        error:
+          "This RA has rooms assigned to them. Delete rooms assigned to this RA first.",
+      });
+    }
+
     await db.delete(zoneTable).where(eq(zoneTable.id, id));
   } catch (error) {
     console.error("Error:", error);
     console.log("RA id:", id);
+  }
+}
+
+export async function updateRA(values: Values) {
+  const ra = values as IRA;
+  try {
+    await db.update(zoneTable).set(ra).where(eq(zoneTable.id, ra.id));
+  } catch (error) {
+    console.error("Error:", error);
+    console.log("RA:", ra);
   }
 }
 

@@ -150,7 +150,8 @@ export default function AdminRoomsPage() {
           <DeleteForm
             id={row.id}
             title={`Delete ${row.building} ${row.roomNumber}`}
-            toast="Deleted Room"
+            prompt={`Are you sure you want to delete ${row.building} ${row.roomNumber}?`}
+            toast={`Deleted ${row.building} ${row.roomNumber}`}
           />
         )}
       />

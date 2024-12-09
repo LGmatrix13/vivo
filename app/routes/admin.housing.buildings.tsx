@@ -114,7 +114,12 @@ export default function AdminBuldingsPage() {
           <BuildingForm building={row} rds={data.rds} />
         )}
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={`Delete ${row.name}`} />
+          <DeleteForm
+            id={row.id}
+            title={`Delete ${row.name}`}
+            prompt={`Are you sure you want to delete ${row.name}?`}
+            toast={`Deleted ${row.name}`}
+          />
         )}
       />
     </section>

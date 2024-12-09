@@ -137,7 +137,12 @@ export default function AdminPeopleARDsPage() {
           </div>
         )}
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
+          <DeleteForm
+            id={row.id}
+            title={`Delete ${row.fullName}`}
+            prompt={`Are you sure you want to delete ${row.fullName}?`}
+            toast={`Deleted ${row.fullName}`}
+          />
         )}
         EditComponent={({ row }) => (
           <ARDForm rdDropdown={data.rdsDropdown} ard={row} />

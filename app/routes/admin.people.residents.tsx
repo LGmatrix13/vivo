@@ -128,7 +128,12 @@ export default function AdminPeopleResidentsPage() {
         )}
         EditComponent={({ row }) => <ResidentForm resident={row} />} //TODO
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
+          <DeleteForm
+            id={row.id}
+            title={`Delete ${row.fullName}`}
+            prompt={`Are you sure you want to delete ${row.fullName}?`}
+            toast={`Deleted ${row.fullName}`}
+          />
         )}
       />
     </section>

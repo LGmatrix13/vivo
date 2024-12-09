@@ -1,7 +1,12 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import { createRA, deleteRA, uploadMasterCSV } from "~/actions/people";
+import {
+  createRA,
+  deleteRA,
+  updateRA,
+  uploadMasterCSV,
+} from "~/actions/people";
 import DownloadButton from "~/components/common/DownloadButton";
 import {
   DrawerButton,
@@ -51,12 +56,16 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "upload":
       return (await uploadMasterCSV(values)) || redirect(request.url);
+    case "update":
+      await updateRA(values);
+      return redirect(request.url);
     case "create":
       await createRA(values);
       return redirect(request.url);
     case "delete":
-      await deleteRA(values);
-      return redirect(request.url);
+      const error = await deleteRA(values);
+      if (!error) return redirect(request.url);
+      return error;
   }
 }
 
@@ -133,7 +142,12 @@ export default function AdminPeopleRAsPage() {
           </div>
         )}
         DeleteComponent={({ row }) => (
-          <DeleteForm id={row.id} title={`Delete ${row.fullName}`} />
+          <DeleteForm
+            id={row.id}
+            title={`Delete ${row.fullName}`}
+            prompt={`Are you sure you want to delete ${row.fullName}?`}
+            toast={`Deleted ${row.fullName}`}
+          />
         )}
         EditComponent={({ row }) => (
           <RAForm ra={row} rdsDropdown={data.readRDsDropdown} />
