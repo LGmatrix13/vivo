@@ -180,21 +180,21 @@ export async function uploadMasterCSV(values: Values) {
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
     const formattedRow = {
-      studentId: row["ID"],
-      firstName: row["First Name"],
-      lastName: row["Last Name"],
-      suite: row["Suite"],
-      room: row["Room"],
-      roomType: row["Room Type"],
-      zone: row["Zone"],
-      ra: row["RA"],
-      city: row["City"],
-      state: row["State"],
-      phoneNumber: row["Phone"],
-      emailAddress: row["Email"],
-      mailbox: row["Mailbox"],
-      class: row["Class"],
-      gender: row["Gender"],
+      studentId: row["ID"].trim(),
+      firstName: row["First Name"].trim(),
+      lastName: row["Last Name"].trim(),
+      suite: row["Suite"].trim(),
+      room: row["Room"].trim(),
+      roomType: row["Room Type"].trim(),
+      zone: row["Zone"].trim(),
+      ra: row["RA"].trim(),
+      city: row["City"].trim(),
+      state: row["State"].trim(),
+      phoneNumber: row["Phone"].trim(),
+      emailAddress: row["Email"].trim(),
+      mailbox: row["Mailbox"].trim(),
+      class: row["Class"].trim(),
+      gender: row["Gender"].trim(),
     };
     const result = MasterCSV.safeParse(formattedRow);
 
@@ -204,9 +204,9 @@ export async function uploadMasterCSV(values: Values) {
         errors: result.error.errors,
       });
     } else {
-      const lastSpaceIndex = result.data.room.lastIndexOf(" ");
-      const buildingName = result.data.room.slice(0, lastSpaceIndex);
-      const roomNumber = result.data.room.slice(lastSpaceIndex + 1);
+      const roomIndex = result.data.room.search(/\b[a-zA-Z0-9\-]*\d[a-zA-Z0-9\-]*\b/)
+      const buildingName = result.data.room.slice(0, roomIndex).trim();
+      const roomNumber = result.data.room.slice(roomIndex).trim();
 
       let room = await db
         .select({
@@ -249,28 +249,79 @@ export async function uploadMasterCSV(values: Values) {
       };
 
       createResident(residentData);
+
+      if (result.data?.ra == `${result.data?.lastName}, ${result.data?.firstName}`) {
+        var raData = await db
+          .select({
+            residentId: residentTable.id,
+            staffId: staffTable.id,
+          })
+          .from(residentTable)
+          .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+          .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+          .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+          .where(
+            and(
+              eq(residentTable.firstName, result.data.firstName),
+              eq(residentTable.lastName, result.data.lastName)
+            )
+          );
+        raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
+        createRA(raData);
+      }
     }
-    if (
-      result.data?.ra === `${result.data?.lastName}, ${result.data?.firstName}`
-    ) {
-      var raData = await db
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    const formattedRow = {
+      studentId: row["ID"].trim(),
+      firstName: row["First Name"].trim(),
+      lastName: row["Last Name"].trim(),
+      suite: row["Suite"].trim(),
+      room: row["Room"].trim(),
+      roomType: row["Room Type"].trim(),
+      zone: row["Zone"].trim(),
+      ra: row["RA"].trim(),
+      city: row["City"].trim(),
+      state: row["State"].trim(),
+      phoneNumber: row["Phone"].trim(),
+      emailAddress: row["Email"].trim(),
+      mailbox: row["Mailbox"].trim(),
+      class: row["Class"].trim(),
+      gender: row["Gender"].trim(),
+    };
+    const result = MasterCSV.safeParse(formattedRow);
+
+    if (!result.success) {
+      errors.push({
+        rowNumber: i + 1,
+        errors: result.error.errors,
+      });
+    }
+    else {
+      const room = (await db
         .select({
-          residentId: residentTable.id,
-          staffId: staffTable.id,
+          roomId: residentTable.roomId,
         })
         .from(residentTable)
-        .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-        .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
-        .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
-        .where(
-          and(
-            eq(residentTable.firstName, result.data.firstName),
-            eq(residentTable.lastName, result.data.lastName)
-          )
-        );
-      raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
-      createRA(raData);
-    }
+        .where(eq(residentTable.studentId, result.data.studentId))
+      )[0];
+
+      var zone = (await db
+        .select({
+          zoneId: zoneTable.id
+        })
+        .from(zoneTable)
+        .where(eq(zoneTable.alias, result.data.zone))
+      )[0];
+      
+      await db.update(roomTable)
+      .set({
+        zoneId: zone.zoneId
+      })
+      .where(eq(roomTable.id, room.roomId || -1));
+    };
   }
 
   if (errors.length) {
