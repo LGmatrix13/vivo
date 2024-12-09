@@ -248,10 +248,10 @@ export async function uploadMasterCSV(values: Values) {
         roomId: room[0].roomId,
       };
 
-      createResident(residentData);
+      await createResident(residentData);
 
-      if (result.data?.ra == `${result.data?.lastName}, ${result.data?.firstName}`) {
-        var raData = await db
+      if (result.data?.ra.split(", ")[1] === result.data?.firstName && result.data?.ra.split(", ")[0] === result.data?.lastName) {
+        var ra = await db
           .select({
             residentId: residentTable.id,
             staffId: staffTable.id,
@@ -266,8 +266,8 @@ export async function uploadMasterCSV(values: Values) {
               eq(residentTable.lastName, result.data.lastName)
             )
           );
-        raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
-        createRA(raData);
+        const raData = ra.map((item) => ({ ...item, alias: result.data?.zone }));
+        await createRA(raData);
       }
     }
   }
