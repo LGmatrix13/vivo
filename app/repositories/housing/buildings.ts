@@ -2,7 +2,7 @@ import { sql, eq, asc } from "drizzle-orm";
 import { Building } from "~/schemas/building";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
-import { buildingTable, staffTable } from "~/utilties/schema.server";
+import { buildingTable, roomTable, staffTable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
@@ -50,10 +50,22 @@ export async function createBuilding(values: Values, request: Request) {
 }
 
 export async function deleteBuilding(values: Values, request: Request) {
+  const id = Number(values["id"]);
+  const assignedRooms = await db
+    .select()
+    .from(roomTable)
+    .where(eq(roomTable.buildingId, id));
+
+  if (assignedRooms.length) {
+    return mutate(request.url, {
+      message: "Rooms assigned to building",
+      level: "failure",
+    });
+  }
+
   await db
     .delete(buildingTable)
     .where(eq(buildingTable.id, Number(values["id"])));
-
   return mutate(request.url, {
     message: "Building Deleted",
     level: "success",
