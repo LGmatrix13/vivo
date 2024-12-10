@@ -30,15 +30,6 @@ export default function UploadMasterCSVForm() {
     );
   }
 
-  if (state !== "idle") {
-    return (
-      <div className="space-y-5">
-        <h2 className="font-bold text-xl">Upload Master CSV</h2>
-        <Loading title="Saving..." />
-      </div>
-    );
-  }
-
   return (
     <fetcher.Form
       method="post"
@@ -57,13 +48,18 @@ export default function UploadMasterCSVForm() {
         required
       />
       <WideButton
+        disabled={fetcher.state !== "idle"}
         options={{
           type: "submit",
           name: "intent",
           value: "upload",
         }}
       >
-        Continue
+        {fetcher.state !== "idle" ? (
+          <Loading title="Submitting..." />
+        ) : (
+          "Continue"
+        )}
       </WideButton>
     </fetcher.Form>
   );
