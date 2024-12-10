@@ -104,7 +104,7 @@ export async function deleteRA(values: Values, request: Request) {
 
     if (roomsAssigned.length) {
       return mutate(request.url, {
-        message: "Resident is assigned to a room",
+        message: "Residents are assigned to this RA",
         level: "failure",
       });
     }
@@ -112,7 +112,7 @@ export async function deleteRA(values: Values, request: Request) {
     await db.delete(zoneTable).where(eq(zoneTable.id, id));
 
     return mutate(request.url, {
-      message: "Resident is assigned to a room",
+      message: "RA Deleted",
       level: "failure",
     });
   } catch (error) {
