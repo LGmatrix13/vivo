@@ -1,12 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import {
-  createRA,
-  deleteRA,
-  updateRA,
-  uploadMasterCSV,
-} from "~/actions/people";
 import DownloadButton from "~/components/common/DownloadButton";
 import {
   DrawerButton,
@@ -23,12 +17,15 @@ import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import {
+  createRA,
+  deleteRA,
   readRAs,
   readRDsDropdown,
   readResidentsDropdown,
+  updateRA,
+  uploadMasterCSV,
 } from "~/repositories/people";
 import { csv } from "~/utilties/csv";
-import mutate from "~/utilties/mutate.server";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
@@ -54,28 +51,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (
-        (await uploadMasterCSV(values)) ||
-        mutate(request.url, {
-          message: "Upload Successful",
-          level: "success",
-        })
-      );
+      return await uploadMasterCSV(values, request);
     case "update":
-      await updateRA(values);
-      return mutate(request.url, {
-        message: "RA Updated",
-        level: "success",
-      });
+      return await updateRA(values, request);
     case "create":
-      await createRA(values);
-      return mutate(request.url, {
-        message: "RA Created",
-        level: "success",
-      });
+      return await createRA(values, request);
     case "delete":
-      const toast = await deleteRA(values);
-      return mutate(request.url, toast as any);
+      return await deleteRA(values, request);
   }
 }
 

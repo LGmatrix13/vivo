@@ -1,6 +1,5 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect, useLoaderData } from "@remix-run/react";
-import { eq } from "drizzle-orm";
+import { json, useLoaderData } from "@remix-run/react";
 import {
   DrawerProvider,
   DrawerButton,
@@ -11,15 +10,17 @@ import { Download, HomeSearch, Plus } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/connection.server";
-import { buildingTable } from "~/utilties/schema.server";
 import { csv } from "~/utilties/csv";
 import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
-import { readBuildings } from "~/repositories/housing";
+import {
+  createBuilding,
+  deleteBuilding,
+  readBuildings,
+  updateBuilding,
+} from "~/repositories/housing";
 import { readRDsDropdown } from "~/repositories/people";
 import type { IBuilding } from "~/models/housing";
-import { Building } from "~/schemas/building";
 
 export async function loader() {
   const parallelized = await Promise.all([readBuildings(), readRDsDropdown()]);
@@ -35,36 +36,18 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      const createdBuilding = Building.safeParse(values);
-
-      if (createdBuilding.success) {
-        await db.insert(buildingTable).values(createdBuilding.data);
-      }
-      break;
+      return await createBuilding(values, request);
     case "delete":
-      await db
-        .delete(buildingTable)
-        .where(eq(buildingTable.id, Number(values["id"])));
-      break;
+      return await deleteBuilding(values, request);
     case "update":
-      const updatedBuilding = Building.safeParse(values);
-
-      if (updatedBuilding.success) {
-        await db
-          .update(buildingTable)
-          .set(updatedBuilding.data)
-          .where(eq(buildingTable.id, updatedBuilding.data.id!!));
-      }
-      break;
+      return await updateBuilding(values, request);
   }
-
-  return redirect(request.url);
 }
 
 export default function AdminBuldingsPage() {
   const data = useLoaderData<typeof loader>();
-
   const { handleSearch, filteredData } = useSearch(data.buildings, []);
+
   return (
     <section className="space-y-5">
       <div className="flex">

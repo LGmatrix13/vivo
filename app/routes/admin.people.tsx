@@ -76,7 +76,7 @@ export default function AdminPeopleLayout() {
       <Outlet />
       {data.toast && (
         <Toast level={data.toast.level}>{data.toast.message}</Toast>
-      )}{" "}
+      )}
     </>
   );
 }

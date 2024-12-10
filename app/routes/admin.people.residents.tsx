@@ -12,18 +12,17 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
-import { readResidents } from "~/repositories/people";
-import { IResident } from "~/models/people";
-import { ActionFunctionArgs } from "@remix-run/node";
 import {
   createResident,
   deleteResident,
+  readResidents,
   updateResident,
   uploadMasterCSV,
-} from "~/actions/people";
+} from "~/repositories/people";
+import { IResident } from "~/models/people";
+import { ActionFunctionArgs } from "@remix-run/node";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
-import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   return json({
@@ -37,27 +36,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (
-        (await uploadMasterCSV(values)) ||
-        mutate(request.url, {
-          message: "Upload Successful",
-        })
-      );
+      return await uploadMasterCSV(values, request);
     case "create":
-      await createResident(values);
-      return mutate(request.url, {
-        message: "Resident created",
-      });
+      return await createResident(values, request);
     case "update":
-      await updateResident(values);
-      return mutate(request.url, {
-        message: "Resident Updated",
-      });
+      return await updateResident(values, request);
     case "delete":
-      await deleteResident(values);
-      return mutate(request.url, {
-        message: "Resident Deleted",
-      });
+      return await deleteResident(values, request);
   }
 }
 

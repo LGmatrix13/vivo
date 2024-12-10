@@ -8,9 +8,13 @@ import ARDForm from "~/components/forms/ARDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import {
+  createARD,
+  deleteARD,
   readARDs,
   readRDsDropdown,
   readResidentsDropdown,
+  updateARD,
+  uploadMasterCSV,
 } from "~/repositories/people";
 import { IARD } from "~/models/people";
 import {
@@ -19,7 +23,7 @@ import {
   DrawerButton,
 } from "~/components/common/Drawer";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { createARD, deleteARD, updateARD } from "~/actions/people";
+
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
 import { eq } from "drizzle-orm";
@@ -51,24 +55,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
+    case "upload":
+      return await uploadMasterCSV(values, request);
     case "create":
-      await createARD(values);
-      return mutate(request.url, {
-        message: "ARD Created",
-        level: "success",
-      });
+      return await createARD(values, request);
     case "update":
-      await updateARD(values);
-      return mutate(request.url, {
-        message: "ARD Updated",
-        level: "success",
-      });
+      return await updateARD(values, request);
     case "delete":
-      await deleteARD(values);
-      return mutate(request.url, {
-        message: "ARD Deleted",
-        level: "success",
-      });
+      return await deleteARD(values, request);
   }
 }
 

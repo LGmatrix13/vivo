@@ -1,4 +1,4 @@
-import { json, redirect, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -7,7 +7,13 @@ import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
-import { readRDs } from "~/repositories/people";
+import {
+  createRD,
+  deleteRD,
+  readRDs,
+  updateRD,
+  uploadMasterCSV,
+} from "~/repositories/people";
 import { IRD } from "~/models/people";
 import {
   DrawerProvider,
@@ -16,15 +22,8 @@ import {
 } from "~/components/common/Drawer";
 import { readBuildingsDropdown } from "~/repositories/housing";
 import { ActionFunctionArgs } from "@remix-run/node";
-import {
-  createRD,
-  deleteRD,
-  updateRD,
-  uploadMasterCSV,
-} from "~/actions/people";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
-import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
@@ -40,29 +39,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
-      return (
-        (await uploadMasterCSV(values)) ||
-        mutate(request.url, {
-          message: "Upload Successful",
-        })
-      );
+      return await uploadMasterCSV(values, request);
     case "create":
-      await createRD(values);
-      return mutate(request.url, {
-        message: "RD Updated",
-      });
+      return await createRD(values, request);
     case "update":
-      await updateRD(values);
-      return mutate(request.url, {
-        message: "RD Updated",
-      });
+      return await updateRD(values, request);
     case "delete":
-      return (
-        (await deleteRD(values)) ||
-        mutate(request.url, {
-          message: "RD Deleted",
-        })
-      );
+      return await deleteRD(values, request);
   }
 }
 

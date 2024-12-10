@@ -18,7 +18,7 @@ export default function BuildingForm(props: BuildingFormProps) {
     };
   });
   return (
-    <Form button="Save Building" intent="create">
+    <Form button="Save Building" intent={building ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {building ? `Edit ${building.name}` : "Add Building"}
       </h2>

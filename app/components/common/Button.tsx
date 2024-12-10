@@ -12,7 +12,7 @@ export default function Button(props: ButtonProps) {
 
   return (
     <button
-      className={`w-fit py-2 px-3 rounded-lg bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition ease-in-out ${
+      className={`w-fit py-2 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition ease-in-out ${
         className || ""
       }`}
       onClick={onClick}

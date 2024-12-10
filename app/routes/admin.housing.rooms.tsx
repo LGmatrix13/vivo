@@ -17,10 +17,15 @@ import { residentTable, roomTable } from "~/utilties/schema.server";
 import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { readBuildingsDropdown, readRooms } from "~/repositories/housing";
+import {
+  createRoom,
+  deleteRoom,
+  readBuildingsDropdown,
+  readRooms,
+  updateRoom,
+} from "~/repositories/housing";
 import { IRoom } from "~/models/housing";
 import { readRAsDropdown } from "~/repositories/people";
-import mutate from "~/utilties/mutate.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
@@ -41,49 +46,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      const createdRoom = Room.safeParse(values);
-
-      if (createdRoom.success) {
-        await db.insert(roomTable).values(createdRoom.data);
-      }
-      return mutate(request.url, {
-        message: "Room created",
-        level: "success",
-      });
+      return await createRoom(values, request);
     case "update":
-      const updatedRoom = Room.safeParse(values);
-
-      if (updatedRoom.success) {
-        await db
-          .update(roomTable)
-          .set(updatedRoom.data)
-          .where(eq(roomTable.id, updatedRoom.data.id!!));
-      }
-      return mutate(request.url, {
-        message: "Updated Room",
-        level: "success",
-      });
+      return await updateRoom(values, request);
     case "delete":
-      const id = Number(values["id"]);
-      const peopleInRoom = await db
-        .select({
-          fullName: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
-        })
-        .from(residentTable)
-        .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-        .where(eq(roomTable.id, id));
-      if (peopleInRoom.length) {
-        return mutate(request.url, {
-          message: "Room has residents assigned",
-          level: "failure",
-        });
-      }
-
-      await db.delete(roomTable).where(eq(roomTable.id, id));
-      return mutate(request.url, {
-        message: "Room deleted",
-        level: "success",
-      });
+      return await deleteRoom(values, request);
   }
 }
 
