@@ -1,8 +1,8 @@
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import WideButton from "../common/WideButton";
 import { useSubmit } from "@remix-run/react";
-import { uploadMasterCSV } from "~/actions/people";
 import Loading from "../common/Loading";
+import { uploadMasterCSV } from "~/repositories/people/ras";
 
 export default function UploadMasterCSVForm() {
   const submit = useSubmit();
