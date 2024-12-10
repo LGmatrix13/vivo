@@ -21,7 +21,7 @@ export function Toast(props: ToastProps) {
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setShow(true);
-    }, 100);
+    }, 5);
     const timer2 = setTimeout(() => {
       setShow(false);
     }, 3500);

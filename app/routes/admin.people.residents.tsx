@@ -23,10 +23,12 @@ import {
   updateResident,
   deleteResident,
 } from "~/repositories/people/residents";
+import { delay } from "~/utilties/delay.server";
 
 export async function loader() {
+  const parallelized = await Promise.all([readResidents(), delay(100)]);
   return json({
-    residents: await readResidents(),
+    residents: await parallelized[0],
   });
 }
 

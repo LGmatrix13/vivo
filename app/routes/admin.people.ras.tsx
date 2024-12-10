@@ -26,6 +26,7 @@ import {
 import { readRDsDropdown } from "~/repositories/people/rds";
 import { readResidentsDropdown } from "~/repositories/people/residents";
 import { csv } from "~/utilties/csv";
+import { delay } from "~/utilties/delay.server";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 
 export async function loader() {
@@ -36,6 +37,7 @@ export async function loader() {
       eq(residentTable.id, zoneTable.residentId)
     ),
     readRDsDropdown(),
+    delay(200),
   ]);
 
   return json({

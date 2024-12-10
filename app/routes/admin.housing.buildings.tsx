@@ -21,9 +21,14 @@ import {
 } from "~/repositories/housing/buildings";
 import { readRDsDropdown } from "~/repositories/people/rds";
 import type { IBuilding } from "~/models/housing";
+import { delay } from "~/utilties/delay.server";
 
 export async function loader() {
-  const parallelized = await Promise.all([readBuildings(), readRDsDropdown()]);
+  const parallelized = await Promise.all([
+    readBuildings(),
+    readRDsDropdown(),
+    delay(100),
+  ]);
   return json({
     buildings: parallelized[0],
     rds: parallelized[1],

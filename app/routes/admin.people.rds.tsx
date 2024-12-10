@@ -25,9 +25,14 @@ import {
   updateRD,
   deleteRD,
 } from "~/repositories/people/rds";
+import { delay } from "~/utilties/delay.server";
 
 export async function loader() {
-  const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);
+  const parallelized = await Promise.all([
+    readRDs(),
+    readBuildingsDropdown(),
+    delay(100),
+  ]);
   return json({
     rds: parallelized[0],
     buildingsDropdown: parallelized[1],

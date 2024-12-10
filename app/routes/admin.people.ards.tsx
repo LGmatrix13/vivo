@@ -24,15 +24,11 @@ import { ActionFunctionArgs } from "@remix-run/node";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
 import { eq } from "drizzle-orm";
-import {
-  assistantStaffTable,
-  residentTable,
-  zoneTable,
-} from "~/utilties/schema.server";
-import mutate from "~/utilties/mutate.server";
+import { assistantStaffTable, residentTable } from "~/utilties/schema.server";
 import { readRDsDropdown } from "~/repositories/people/rds";
 import { uploadMasterCSV } from "~/repositories/people/ras";
 import { readResidentsDropdown } from "~/repositories/people/residents";
+import { delay } from "~/utilties/delay.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
@@ -42,6 +38,7 @@ export async function loader() {
       assistantStaffTable,
       eq(residentTable.id, assistantStaffTable.residentId)
     ),
+    delay(100),
   ]);
   return json({
     ards: parallelized[0],

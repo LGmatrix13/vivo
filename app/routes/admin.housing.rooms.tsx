@@ -22,12 +22,14 @@ import {
 } from "~/repositories/housing/rooms";
 import { readBuildingsDropdown } from "~/repositories/housing/buildings";
 import { readRAsDropdown } from "~/repositories/people/ras";
+import { delay } from "~/utilties/delay.server";
 
 export async function loader() {
   const parallelized = await Promise.all([
     readRooms(),
     readBuildingsDropdown(),
     readRAsDropdown(),
+    delay(100),
   ]);
   return json({
     rooms: parallelized[0],
