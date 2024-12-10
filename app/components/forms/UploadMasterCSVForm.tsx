@@ -1,16 +1,14 @@
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { useFetcher, useNavigation } from "@remix-run/react";
 import WideButton from "../common/WideButton";
-import { useSubmit } from "@remix-run/react";
 import Loading from "../common/Loading";
 import { uploadMasterCSV } from "~/repositories/people/ras";
 
 export default function UploadMasterCSVForm() {
-  const submit = useSubmit();
+  const fetcher = useFetcher<typeof uploadMasterCSV>();
   const { state } = useNavigation();
-  const data = useActionData<typeof uploadMasterCSV>();
+  const data = fetcher.data;
 
   if (data) {
-    console.log(data);
     return (
       <div className="space-y-5">
         <h2 className="font-bold text-xl">Upload Master CSV</h2>
@@ -42,7 +40,11 @@ export default function UploadMasterCSVForm() {
   }
 
   return (
-    <Form method="post" encType="multipart/form-data" className="space-y-5">
+    <fetcher.Form
+      method="post"
+      encType="multipart/form-data"
+      className="space-y-5"
+    >
       <h2 className="font-bold text-xl">Upload Master CSV</h2>
       <label htmlFor="file" className="sr-only">
         Choose File
@@ -63,6 +65,6 @@ export default function UploadMasterCSVForm() {
       >
         Continue
       </WideButton>
-    </Form>
+    </fetcher.Form>
   );
 }
