@@ -7,7 +7,7 @@ function download(
   const header = headers.join(",");
   const lines = data.map((row) =>
     Object.keys(columns)
-      .map((col) => (col in row ? row[col] : ""))
+      .map((col) => `"${col in row ? row[col] : ""}"`)
       .join(",")
   );
   const content = header + "\n" + lines.join("\n");
