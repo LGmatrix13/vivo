@@ -28,12 +28,12 @@ export default function Select(props: SelectProps) {
         <select
           className="w-full p-3 rounded-lg focus:ring-blue-600 appearance-none h-12"
           {...props}
+          defaultValue={selected}
         >
           {options.map((option, index) => (
             <option
               key={index}
               value={`${option.value}`}
-              selected={option.value === selected}
             >{`${option.key}`}</option>
           ))}
         </select>

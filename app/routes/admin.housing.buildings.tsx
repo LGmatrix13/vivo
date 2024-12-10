@@ -52,6 +52,10 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminBuldingsPage() {
   const data = useLoaderData<typeof loader>();
   const { handleSearch, filteredData } = useSearch(data.buildings, []);
+  const rowKeys = {
+    name: "Name",
+    rd: "RD",
+  };
 
   return (
     <section className="space-y-5">
@@ -71,7 +75,11 @@ export default function AdminBuldingsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv.download(filteredData || data.buildings, "buildings");
+                csv.download(
+                  filteredData || data.buildings,
+                  "buildings",
+                  rowKeys
+                );
               }}
             >
               Export
@@ -85,10 +93,7 @@ export default function AdminBuldingsPage() {
           rd: "RD",
         }}
         rows={filteredData || data.buildings}
-        rowKeys={{
-          name: "Name",
-          rd: "RD",
-        }}
+        rowKeys={rowKeys}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
             <HomeSearch className="w-7 h-7" />

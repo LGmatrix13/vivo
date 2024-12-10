@@ -37,7 +37,7 @@ export async function loader() {
       eq(residentTable.id, zoneTable.residentId)
     ),
     readRDsDropdown(),
-    delay(200),
+    delay(100),
   ]);
 
   return json({
@@ -70,6 +70,17 @@ export default function AdminPeopleRAsPage() {
     lastName: "Lastname",
     building: "Building",
     alias: "Hall",
+  };
+  const rowKeys = {
+    fullName: "Name",
+    roomBuilding: "Room Number",
+    alias: "Hall",
+    rd: "RD",
+    email: "Email",
+    phone: "Phone Number",
+    mailbox: "Mailbox Number",
+    hometown: "Hometown",
+    class: "Class",
   };
   const { handleSearch, filteredData } = useSearch(
     data.ras,
@@ -106,7 +117,7 @@ export default function AdminPeopleRAsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.ras, "RAs");
+              csv.download(filteredData || data.ras, "RAs", rowKeys);
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}
@@ -116,17 +127,7 @@ export default function AdminPeopleRAsPage() {
       <Table<IRA>
         columnKeys={columnKeys}
         rows={filteredData || data.ras}
-        rowKeys={{
-          fullName: "Name",
-          roomBuilding: "Room Number",
-          alias: "Hall",
-          rd: "RD",
-          email: "Email",
-          phone: "Phone Number",
-          mailbox: "Mailbox Number",
-          hometown: "Hometown",
-          class: "Class",
-        }}
+        rowKeys={rowKeys}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
             <UserSearch className="w-7 h-7" />

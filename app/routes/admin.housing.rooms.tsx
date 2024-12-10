@@ -59,6 +59,12 @@ export default function AdminRoomsPage() {
     capacity: "Capacity",
     raFullName: "RA",
   };
+  const rowKeys = {
+    building: "Building",
+    roomNumber: "Room #",
+    raFullName: "RA",
+    capacity: "Capacity",
+  };
   const { handleSearch, filteredData } = useSearch(
     data.rooms,
     Object.keys(columnKeys)
@@ -85,7 +91,7 @@ export default function AdminRoomsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv.download(filteredData || data.rooms, "rooms");
+                csv.download(filteredData || data.rooms, "rooms", rowKeys);
               }}
             >
               {filteredData?.length ? "Export Subset" : "Export"}
@@ -96,12 +102,7 @@ export default function AdminRoomsPage() {
       <Table<IRoom>
         columnKeys={columnKeys}
         rows={filteredData || data.rooms}
-        rowKeys={{
-          building: "Building",
-          roomNumber: "Room #",
-          raFullName: "RA",
-          capacity: "Capacity",
-        }}
+        rowKeys={rowKeys}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
             <HomeSearch className="w-7 h-7" />

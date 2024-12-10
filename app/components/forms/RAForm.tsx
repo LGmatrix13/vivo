@@ -25,6 +25,7 @@ export default function RAForm(props: RAFormProps) {
     };
   });
 
+  console.log(ra);
   return (
     <Form button="Save RA" intent={ra ? "update" : "create"}>
       <h2 className="font-bold text-xl">{ra ? "Edit" : "Add"} RA</h2>

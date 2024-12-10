@@ -55,6 +55,16 @@ export default function AdminPeopleResidentsPage() {
     lastName: "Lastname",
     roomBuilding: "Room",
   };
+  const rowKeys = {
+    fullName: "Name",
+    roomBuilding: "Room Number",
+    ra: "RA",
+    emailAddress: "Email",
+    phone: "Phone Number",
+    mailbox: "Mailbox Number",
+    hometown: "Hometown",
+    class: "Class",
+  };
   const { handleSearch, filteredData } = useSearch(
     data.residents,
     Object.keys(columnKeys)
@@ -89,7 +99,11 @@ export default function AdminPeopleResidentsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.residents, "Residents");
+              csv.download(
+                filteredData || data.residents,
+                "Residents",
+                rowKeys
+              );
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}

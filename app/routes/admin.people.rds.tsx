@@ -62,6 +62,12 @@ export default function AdminPeopleRDsPage() {
     lastName: "Lastname",
     buildings: "Building",
   };
+  const rowKeys = {
+    fullName: "Name",
+    buildings: "Building",
+    emailAddress: "Email Address",
+    mailbox: "Mailbox Number",
+  };
   const { handleSearch, filteredData } = useSearch(
     data.rds,
     Object.keys(columnKeys)
@@ -94,7 +100,7 @@ export default function AdminPeopleRDsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.rds, "RDs");
+              csv.download(filteredData || data.rds, "RDs", rowKeys);
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}
@@ -104,12 +110,7 @@ export default function AdminPeopleRDsPage() {
       <Table<IRD>
         columnKeys={columnKeys}
         rows={filteredData || data.rds}
-        rowKeys={{
-          fullName: "Name",
-          buildings: "Building",
-          emailAddress: "Email Address",
-          mailbox: "Mailbox Number",
-        }}
+        rowKeys={rowKeys}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
             <UserSearch className="w-7 h-7" />

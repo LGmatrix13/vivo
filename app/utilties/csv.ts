@@ -1,7 +1,15 @@
-function download(data: Record<string, any>[], filename: string) {
-  const headers = Object.keys(data[0]);
+function download(
+  data: Record<string, any>[],
+  filename: string,
+  columns: Record<string, string>
+) {
+  const headers = Object.values(columns);
   const header = headers.join(",");
-  const lines = data.map((row) => Object.values(row).join(","));
+  const lines = data.map((row) =>
+    Object.keys(columns)
+      .map((col) => (col in row ? row[col] : ""))
+      .join(",")
+  );
   const content = header + "\n" + lines.join("\n");
   const blob = new Blob([content], { type: "text/csv" });
   const blobUrl = URL.createObjectURL(blob);
@@ -62,7 +70,6 @@ function parse(content: string) {
 
   return jsonObjects;
 }
-
 
 export const csv = {
   parse,

@@ -50,7 +50,7 @@ export async function readRAs() {
     .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
-    .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+    .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .orderBy(
       residentTable.lastName,
       residentTable.firstName,

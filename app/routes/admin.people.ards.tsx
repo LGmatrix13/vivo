@@ -1,4 +1,4 @@
-import { json, redirect, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
@@ -71,6 +71,16 @@ export default function AdminPeopleARDsPage() {
     building: "Building",
     rd: "RD",
   };
+  const rowKeys = {
+    fullName: "Name",
+    roomBuilding: "Room Number",
+    rd: "RD",
+    email: "Email",
+    phone: "Phone Number",
+    mailbox: "Mailbox Number",
+    hometown: "Hometown",
+    class: "Class",
+  };
   const { handleSearch, filteredData } = useSearch(
     data.ards,
     Object.keys(columnKeys)
@@ -108,7 +118,7 @@ export default function AdminPeopleARDsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.ards, "ARDs");
+              csv.download(filteredData || data.ards, "ARDs", rowKeys);
             }}
           >
             {filteredData?.length ? "Export Subset" : "Export"}
@@ -118,16 +128,7 @@ export default function AdminPeopleARDsPage() {
       <Table<IARD>
         columnKeys={columnKeys}
         rows={filteredData || data.ards}
-        rowKeys={{
-          fullName: "Name",
-          roomBuilding: "Room Number",
-          rd: "RD",
-          email: "Email",
-          phone: "Phone Number",
-          mailbox: "Mailbox Number",
-          hometown: "Hometown",
-          class: "Class",
-        }}
+        rowKeys={rowKeys}
         InstructionComponent={() => (
           <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
             <UserSearch className="w-7 h-7" />
