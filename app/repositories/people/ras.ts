@@ -277,12 +277,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
     };
     const result = MasterCSV.safeParse(formattedRow);
 
-    if (!result.success) {
-      errors.push({
-        rowNumber: i + 1,
-        errors: result.error.errors,
-      });
-    } else {
+    if (result.success) {
       const room = (
         await db
           .select({

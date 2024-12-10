@@ -10,12 +10,13 @@ export default function UploadMasterCSVForm() {
   const data = useActionData<typeof uploadMasterCSV>();
 
   if (data) {
+    console.log(data);
     return (
       <div className="space-y-5">
         <h2 className="font-bold text-xl">Upload Master CSV</h2>
         {data.errors.map((error) => (
           <div className="space-y-3">
-            <p className="font-bold">Formatting errors on {error.rowNumber}</p>
+            <p className="font-bold">Errors on Row {error.rowNumber}</p>
             <ul className="list-disc ml-5 space-y-2">
               {data.errors.map((error) => (
                 <>
@@ -41,14 +42,7 @@ export default function UploadMasterCSVForm() {
   }
 
   return (
-    <Form
-      method="post"
-      encType="multipart/form-data"
-      className="space-y-5"
-      onSubmit={(event) => {
-        submit(event.currentTarget);
-      }}
-    >
+    <Form method="post" encType="multipart/form-data" className="space-y-5">
       <h2 className="font-bold text-xl">Upload Master CSV</h2>
       <label htmlFor="file" className="sr-only">
         Choose File
