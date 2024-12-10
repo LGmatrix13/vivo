@@ -50,6 +50,7 @@ export default function RAForm(props: RAFormProps) {
         label="Zone"
         name="alias"
         type="text"
+        placeholder="Zone"
         defaultValue={ra?.alias}
         required
       />

@@ -11,11 +11,8 @@ import {
   createARD,
   deleteARD,
   readARDs,
-  readRDsDropdown,
-  readResidentsDropdown,
   updateARD,
-  uploadMasterCSV,
-} from "~/repositories/people";
+} from "~/repositories/people/ards";
 import { IARD } from "~/models/people";
 import {
   DrawerProvider,
@@ -33,6 +30,9 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 import mutate from "~/utilties/mutate.server";
+import { readRDsDropdown } from "~/repositories/people/rds";
+import { uploadMasterCSV } from "~/repositories/people/ras";
+import { readResidentsDropdown } from "~/repositories/people/residents";
 
 export async function loader() {
   const parallelized = await Promise.all([

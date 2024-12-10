@@ -1,5 +1,4 @@
 import { json, useLoaderData } from "@remix-run/react";
-import { eq, sql } from "drizzle-orm";
 import {
   DrawerProvider,
   DrawerButton,
@@ -12,20 +11,17 @@ import Table from "~/components/common/Table";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import useSearch from "~/hooks/useSearch";
-import { db } from "~/utilties/connection.server";
-import { residentTable, roomTable } from "~/utilties/schema.server";
-import { Room } from "~/schemas/room";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { IRoom } from "~/models/housing";
 import {
   createRoom,
   deleteRoom,
-  readBuildingsDropdown,
   readRooms,
   updateRoom,
-} from "~/repositories/housing";
-import { IRoom } from "~/models/housing";
-import { readRAsDropdown } from "~/repositories/people";
+} from "~/repositories/housing/rooms";
+import { readBuildingsDropdown } from "~/repositories/housing/buildings";
+import { readRAsDropdown } from "~/repositories/people/ras";
 
 export async function loader() {
   const parallelized = await Promise.all([

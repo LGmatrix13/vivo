@@ -7,23 +7,24 @@ import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
-import {
-  createRD,
-  deleteRD,
-  readRDs,
-  updateRD,
-  uploadMasterCSV,
-} from "~/repositories/people";
+
 import { IRD } from "~/models/people";
 import {
   DrawerProvider,
   DrawerContent,
   DrawerButton,
 } from "~/components/common/Drawer";
-import { readBuildingsDropdown } from "~/repositories/housing";
 import { ActionFunctionArgs } from "@remix-run/node";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
+import { readBuildingsDropdown } from "~/repositories/housing/buildings";
+import { uploadMasterCSV } from "~/repositories/people/ras";
+import {
+  readRDs,
+  createRD,
+  updateRD,
+  deleteRD,
+} from "~/repositories/people/rds";
 
 export async function loader() {
   const parallelized = await Promise.all([readRDs(), readBuildingsDropdown()]);

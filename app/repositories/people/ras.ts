@@ -1,104 +1,100 @@
 import { json } from "@remix-run/node";
-import { eq, and } from "drizzle-orm";
-import { IARD, IRA, IRD, IResident } from "~/models/people";
+import { sql, eq, asc, and } from "drizzle-orm";
+import { IRA } from "~/models/people";
 import { MasterCSV } from "~/schemas/masterCSV";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
+import mutate from "~/utilties/mutate.server";
 import {
-  assistantStaffTable,
-  buildingTable,
+  zoneTable,
   residentTable,
+  buildingTable,
   roomTable,
   staffTable,
-  zoneTable,
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createResident(values: Values) {
-  try {
-    await db.insert(residentTable).values(values as IResident);
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident:", values);
-  }
+export async function readRAs() {
+  const ras = await db
+    .select({
+      id: zoneTable.id,
+      residentId: zoneTable.id,
+      alias: zoneTable.alias,
+      staffId: zoneTable.staffId,
+      firstName: residentTable.firstName,
+      lastName: residentTable.lastName,
+      fullName:
+        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+          "fullName"
+        ),
+      email: residentTable.emailAddress,
+      phone: residentTable.phoneNumber,
+      mailbox: residentTable.mailbox,
+      hometown:
+        sql<string>`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
+          "hometown"
+        ),
+      class: residentTable.class,
+      building: buildingTable.name,
+      buildingId: buildingTable.id,
+      roomBuilding:
+        sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
+          "roomBuilding"
+        ),
+      rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
+    })
+    .from(zoneTable)
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+    .orderBy(
+      residentTable.lastName,
+      residentTable.firstName,
+      buildingTable.name
+    );
+
+  return ras;
 }
 
-export async function updateResident(values: Values) {
-  const resident = values as IResident;
-  try {
-    await db
-      .update(residentTable)
-      .set(resident)
-      .where(eq(residentTable.id, resident.id));
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident:", resident);
-  }
+export async function readRAsDropdown() {
+  const ras = await db
+    .select({
+      id: zoneTable.id,
+      name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+        "rd"
+      ),
+    })
+    .from(residentTable)
+    .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .orderBy(asc(residentTable.lastName));
+
+  return ras;
 }
 
-export async function createRD(values: Values) {
-  const rd = values as IRD;
-  try {
-    await db.insert(staffTable).values(rd);
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD:", rd);
-  }
-}
-
-export async function updateRD(values: Values) {
-  const rd = values as IRD;
-  try {
-    await db.update(staffTable).set(rd).where(eq(staffTable.id, rd.id));
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD:", rd);
-  }
-}
-
-export async function deleteRD(values: Values) {
-  const id = Number(values["id"]);
-  try {
-    const rasAssigned = await db
-      .select()
-      .from(zoneTable)
-      .where(eq(zoneTable.staffId, id));
-    if (rasAssigned.length) {
-      return json({
-        error:
-          "This RD has RAs assigned to them. Delete RAs assigned to them to delete this RD first.",
-      });
-    } else {
-      await db.delete(staffTable).where(eq(staffTable.id, id));
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD id:", id);
-  }
-}
-
-export async function deleteResident(values: Values) {
-  const id = Number(values["id"]);
-  try {
-    await db.delete(residentTable).where(eq(residentTable.id, id));
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident id:", id);
-  }
-}
-
-export async function createRA(values: Values) {
+export async function createRA(values: Values, request: Request) {
   const ra = values as IRA;
   try {
     await db.insert(zoneTable).values(ra);
+    return mutate(request.url, {
+      message: "Resident Created",
+      level: "success",
+    });
   } catch (error) {
     console.error("Error:", error);
     console.log("RA:", ra);
   }
+
+  return mutate(request.url, {
+    message: "System error occured",
+    level: "failure",
+  });
 }
 
-export async function deleteRA(values: Values) {
+export async function deleteRA(values: Values, request: Request) {
   const id = Number(values["id"]);
   try {
     const roomsAssigned = await db
@@ -107,70 +103,49 @@ export async function deleteRA(values: Values) {
       .where(eq(roomTable.zoneId, id));
 
     if (roomsAssigned.length) {
-      return {
+      return mutate(request.url, {
+        message: "Resident is assigned to a room",
         level: "failure",
-        message: "RA has rooms assigned to them",
-      };
+      });
     }
 
     await db.delete(zoneTable).where(eq(zoneTable.id, id));
 
-    return {
-      level: "success",
-      message: "RA Deleted",
-    };
+    return mutate(request.url, {
+      message: "Resident is assigned to a room",
+      level: "failure",
+    });
   } catch (error) {
     console.error("Error:", error);
     console.log("RA id:", id);
   }
+
+  return mutate(request.url, {
+    message: "System error occured",
+    level: "failure",
+  });
 }
 
-export async function updateRA(values: Values) {
+export async function updateRA(values: Values, request: Request) {
   const ra = values as IRA;
   try {
     await db.update(zoneTable).set(ra).where(eq(zoneTable.id, ra.id));
+    return mutate(request.url, {
+      message: "RA Updated",
+      level: "success",
+    });
   } catch (error) {
     console.error("Error:", error);
     console.log("RA:", ra);
   }
+
+  return mutate(request.url, {
+    message: "System error occured",
+    level: "failure",
+  });
 }
 
-export async function createARD(values: Values) {
-  const ard = values as IARD;
-  try {
-    await db.insert(assistantStaffTable).values(ard);
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD:", ard);
-  }
-}
-
-export async function updateARD(values: Values) {
-  const ard = values as IARD;
-  try {
-    await db
-      .update(assistantStaffTable)
-      .set({
-        staffId: ard.staffId,
-      })
-      .where(eq(assistantStaffTable.id, ard.id));
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD:", ard);
-  }
-}
-
-export async function deleteARD(values: Values) {
-  const id = Number(values["id"]);
-  try {
-    await db.delete(assistantStaffTable).where(eq(assistantStaffTable.id, id));
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD ID:", id);
-  }
-}
-
-export async function uploadMasterCSV(values: Values) {
+export async function uploadMasterCSV(values: Values, request: Request) {
   const file = values["file"] as File;
 
   if (!(file instanceof File)) {
@@ -209,7 +184,9 @@ export async function uploadMasterCSV(values: Values) {
         errors: result.error.errors,
       });
     } else {
-      const roomIndex = result.data.room.search(/\b[a-zA-Z0-9\-]*\d[a-zA-Z0-9\-]*\b/)
+      const roomIndex = result.data.room.search(
+        /\b[a-zA-Z0-9\-]*\d[a-zA-Z0-9\-]*\b/
+      );
       const buildingName = result.data.room.slice(0, roomIndex).trim();
       const roomNumber = result.data.room.slice(roomIndex).trim();
 
@@ -253,10 +230,12 @@ export async function uploadMasterCSV(values: Values) {
         roomId: room[0].roomId,
       };
 
-      await createResident(residentData);
+      await db.insert(residentTable).values(residentData);
 
-      if (result.data?.ra.split(", ")[1] === result.data?.firstName && result.data?.ra.split(", ")[0] === result.data?.lastName) {
-        var ra = await db
+      if (
+        result.data?.ra == `${result.data?.lastName}, ${result.data?.firstName}`
+      ) {
+        var raData = await db
           .select({
             residentId: residentTable.id,
             staffId: staffTable.id,
@@ -271,8 +250,8 @@ export async function uploadMasterCSV(values: Values) {
               eq(residentTable.lastName, result.data.lastName)
             )
           );
-        const raData = ra.map((item) => ({ ...item, alias: result.data?.zone }));
-        await createRA(raData);
+        raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
+        await db.insert(zoneTable).values(raData);
       }
     }
   }
@@ -303,30 +282,32 @@ export async function uploadMasterCSV(values: Values) {
         rowNumber: i + 1,
         errors: result.error.errors,
       });
-    }
-    else {
-      const room = (await db
-        .select({
-          roomId: residentTable.roomId,
-        })
-        .from(residentTable)
-        .where(eq(residentTable.studentId, result.data.studentId))
+    } else {
+      const room = (
+        await db
+          .select({
+            roomId: residentTable.roomId,
+          })
+          .from(residentTable)
+          .where(eq(residentTable.studentId, result.data.studentId))
       )[0];
 
-      var zone = (await db
-        .select({
-          zoneId: zoneTable.id
-        })
-        .from(zoneTable)
-        .where(eq(zoneTable.alias, result.data.zone))
+      var zone = (
+        await db
+          .select({
+            zoneId: zoneTable.id,
+          })
+          .from(zoneTable)
+          .where(eq(zoneTable.alias, result.data.zone))
       )[0];
-      
-      await db.update(roomTable)
-      .set({
-        zoneId: zone.zoneId
-      })
-      .where(eq(roomTable.id, room.roomId || -1));
-    };
+
+      await db
+        .update(roomTable)
+        .set({
+          zoneId: zone.zoneId,
+        })
+        .where(eq(roomTable.id, room.roomId || -1));
+    }
   }
 
   if (errors.length) {
@@ -334,4 +315,9 @@ export async function uploadMasterCSV(values: Values) {
       errors,
     });
   }
+
+  return mutate(request.url, {
+    message: "Upload Successful",
+    level: "success",
+  });
 }

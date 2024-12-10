@@ -18,8 +18,8 @@ import {
   deleteBuilding,
   readBuildings,
   updateBuilding,
-} from "~/repositories/housing";
-import { readRDsDropdown } from "~/repositories/people";
+} from "~/repositories/housing/buildings";
+import { readRDsDropdown } from "~/repositories/people/rds";
 import type { IBuilding } from "~/models/housing";
 
 export async function loader() {

@@ -17,14 +17,14 @@ import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import useSearch from "~/hooks/useSearch";
 import { IRA } from "~/models/people";
 import {
+  readRAs,
+  uploadMasterCSV,
+  updateRA,
   createRA,
   deleteRA,
-  readRAs,
-  readRDsDropdown,
-  readResidentsDropdown,
-  updateRA,
-  uploadMasterCSV,
-} from "~/repositories/people";
+} from "~/repositories/people/ras";
+import { readRDsDropdown } from "~/repositories/people/rds";
+import { readResidentsDropdown } from "~/repositories/people/residents";
 import { csv } from "~/utilties/csv";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 

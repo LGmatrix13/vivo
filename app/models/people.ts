@@ -1,12 +1,10 @@
+import { readARDs } from "~/repositories/people/ards";
+import { readRAs, readRAsDropdown } from "~/repositories/people/ras";
+import { readRDs, readRDsDropdown } from "~/repositories/people/rds";
 import {
-  readARDs,
-  readRAs,
-  readRAsDropdown,
-  readRDs,
-  readRDsDropdown,
-  readResidents,
   readResidentsDropdown,
-} from "~/repositories/people";
+  readResidents,
+} from "~/repositories/people/residents";
 
 export type IRD = Awaited<ReturnType<typeof readRDs>>[number];
 export type IRA = Awaited<ReturnType<typeof readRAs>>[number];

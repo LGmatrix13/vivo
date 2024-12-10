@@ -12,17 +12,17 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import ResidentForm from "~/components/forms/ResidentForm";
 import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
-import {
-  createResident,
-  deleteResident,
-  readResidents,
-  updateResident,
-  uploadMasterCSV,
-} from "~/repositories/people";
 import { IResident } from "~/models/people";
 import { ActionFunctionArgs } from "@remix-run/node";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import DownloadButton from "~/components/common/DownloadButton";
+import { uploadMasterCSV } from "~/repositories/people/ras";
+import {
+  readResidents,
+  createResident,
+  updateResident,
+  deleteResident,
+} from "~/repositories/people/residents";
 
 export async function loader() {
   return json({
