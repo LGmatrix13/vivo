@@ -233,9 +233,9 @@ export async function uploadMasterCSV(values: Values, request: Request) {
       await db.insert(residentTable).values(residentData);
 
       if (
-        result.data?.ra == `${result.data?.lastName}, ${result.data?.firstName}`
+        result.data.ra == `${result.data.lastName}, ${result.data.firstName}`
       ) {
-        var raData = await db
+        const ras = await db
           .select({
             residentId: residentTable.id,
             staffId: staffTable.id,
@@ -250,8 +250,11 @@ export async function uploadMasterCSV(values: Values, request: Request) {
               eq(residentTable.lastName, result.data.lastName)
             )
           );
-        raData = raData.map((item) => ({ ...item, alias: result.data?.zone }));
-        await db.insert(zoneTable).values(raData);
+        const rasWithAlias = ras.map((item) => ({
+          ...item,
+          alias: result.data.zone,
+        }));
+        await db.insert(zoneTable).values(rasWithAlias);
       }
     }
   }

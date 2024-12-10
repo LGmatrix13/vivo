@@ -19,11 +19,7 @@ export const MasterCSV = z.object({
   emailAddress: z
     .string({ message: "Email is required." })
     .email({ message: "Email is not formatted correctly." }),
-  mailbox: z.coerce
-    .number({
-      message: "Mailbox is required and must be a number.",
-    })
-    .optional(),
+  mailbox: z.string().optional(),
   class: z.string({ message: "Class is required." }),
   gender: z
     .string({ message: "Gender is required." })
