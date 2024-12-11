@@ -5,7 +5,7 @@ import {
   DrawerProvider,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
 import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import DeleteForm from "~/components/forms/DeleteForm";
