@@ -37,8 +37,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
-    case "upload":
-      return await uploadMasterCSV(values, request);
     case "create":
       return await createResident(values, request);
     case "update":

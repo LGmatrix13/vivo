@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   json,
   MetaFunction,
@@ -18,6 +18,8 @@ import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
+import { createARD, updateARD, deleteARD } from "~/repositories/people/ards";
+import { uploadMasterCSV } from "~/repositories/people/ras";
 import { toasts } from "~/utilties/mutate.server";
 
 export const meta: MetaFunction = () => {
@@ -49,6 +51,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     toast: null,
   });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "upload":
+      return await uploadMasterCSV(values, request);
+  }
 }
 
 export default function AdminPeopleLayout() {
