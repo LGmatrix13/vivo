@@ -14,9 +14,6 @@ import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
 import { IResident } from "~/models/people";
 import { ActionFunctionArgs } from "@remix-run/node";
-import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
-import DownloadButton from "~/components/common/DownloadButton";
-import { uploadMasterCSV } from "~/repositories/people/ras";
 import {
   readResidents,
   createResident,
