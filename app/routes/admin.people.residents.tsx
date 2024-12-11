@@ -79,17 +79,6 @@ export default function AdminPeopleResidentsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadMasterCSVForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Upload}>Upload</IconButton>
-            </DrawerButton>
-          </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
-          <DrawerProvider>
-            <DrawerContent>
               <ResidentForm />
             </DrawerContent>
             <DrawerButton>

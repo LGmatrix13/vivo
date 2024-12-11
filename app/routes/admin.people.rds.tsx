@@ -80,17 +80,6 @@ export default function AdminPeopleRDsPage() {
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadMasterCSVForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Upload}>Upload</IconButton>
-            </DrawerButton>
-          </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
-          <DrawerProvider>
-            <DrawerContent>
               <RDForm buildingsDropdown={data.buildingsDropdown} />
             </DrawerContent>
             <DrawerButton>

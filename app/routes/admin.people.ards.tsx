@@ -95,17 +95,6 @@ export default function AdminPeopleARDsPage() {
         <div className="ml-auto order-2 flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <UploadMasterCSVForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Upload}>Upload</IconButton>
-            </DrawerButton>
-          </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
-          <DrawerProvider>
-            <DrawerContent>
               <ARDForm
                 residentDropdown={data.raDropdown}
                 rdDropdown={data.rdsDropdown}

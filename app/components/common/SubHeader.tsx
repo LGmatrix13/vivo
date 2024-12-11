@@ -13,7 +13,7 @@ export default function SubHeader(props: SubHeaderProps) {
   const { pages } = props;
 
   function isActivePage(path: string) {
-    return currentPath === path ? "bg-gray-50 border cursor-default" : "border";
+    return currentPath === path ? "bg-blue-600 text-white border cursor-default" : "border";
   }
 
   return (
@@ -23,7 +23,7 @@ export default function SubHeader(props: SubHeaderProps) {
           <button
             className={`${isActivePage(
               page.path
-            )} px-3 py-1 rounded-lg hover:bg-gray-50 transition ease-in-out`}
+            )} px-3 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition ease-in-out`}
           >
             {page.name}
           </button>

@@ -6,9 +6,14 @@ import {
   useLoaderData,
   useNavigation,
 } from "@remix-run/react";
+import DownloadButton from "~/components/common/DownloadButton";
+import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import IconButton from "~/components/common/IconButton";
+import { Download, Upload } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
+import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import { toasts } from "~/utilties/mutate.server";
 
 export const meta: MetaFunction = () => {
@@ -53,6 +58,7 @@ export default function AdminPeopleLayout() {
 
   return (
     <>
+    <div className="flex">
       <SubHeader
         pages={[
           {
@@ -73,6 +79,20 @@ export default function AdminPeopleLayout() {
           },
         ]}
       />
+        <div className="ml-auto order-1 flex space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <UploadMasterCSVForm />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Upload}>Upload from CSV</IconButton>
+            </DrawerButton>
+          </DrawerProvider>
+          <DownloadButton file="template.csv" Icon={Download}>
+            Download Template
+          </DownloadButton>
+        </div>
+      </div>
       <Outlet />
       {data.toast && (
         <Toast level={data.toast.level}>{data.toast.message}</Toast>
