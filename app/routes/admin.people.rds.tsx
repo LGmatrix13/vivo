@@ -58,8 +58,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminPeopleRDsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First Name",
+    lastName: "Last Name",
     buildings: "Building",
   };
   const rowKeys = {
@@ -78,17 +78,6 @@ export default function AdminPeopleRDsPage() {
       <div className="flex">
         <Search placeholder="Search for an RD..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
-          <DrawerProvider>
-            <DrawerContent>
-              <UploadMasterCSVForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Upload}>Upload</IconButton>
-            </DrawerButton>
-          </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <RDForm buildingsDropdown={data.buildingsDropdown} />

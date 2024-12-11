@@ -55,6 +55,7 @@ export default function AdminBuldingsPage() {
   const rowKeys = {
     name: "Name",
     rd: "RD",
+    numRooms: "# of Rooms"
   };
 
   return (
@@ -91,6 +92,7 @@ export default function AdminBuldingsPage() {
         columnKeys={{
           name: "Name",
           rd: "RD",
+          numRooms: "# of Rooms"
         }}
         rows={filteredData || data.buildings}
         rowKeys={rowKeys}

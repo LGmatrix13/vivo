@@ -66,8 +66,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminPeopleRAsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First Name",
+    lastName: "Last Name",
     building: "Building",
     alias: "Hall",
   };
@@ -92,17 +92,6 @@ export default function AdminPeopleRAsPage() {
       <div className="flex">
         <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
         <div className="ml-auto order-2 flex space-x-3">
-          <DrawerProvider>
-            <DrawerContent>
-              <UploadMasterCSVForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Upload}>Upload</IconButton>
-            </DrawerButton>
-          </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
           <DrawerProvider>
             <DrawerContent>
               <RAForm
