@@ -100,7 +100,9 @@ export default function AdminPeopleRAsPage() {
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add RA</IconButton>
+              <IconButton Icon={Plus} secondary>
+                Add RA
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
@@ -108,6 +110,7 @@ export default function AdminPeopleRAsPage() {
             onClick={() => {
               csv.download(filteredData || data.ras, "RAs", rowKeys);
             }}
+            secondary
           >
             {filteredData?.length ? "Export Subset" : "Export"}
           </IconButton>

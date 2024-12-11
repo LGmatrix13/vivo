@@ -55,7 +55,7 @@ export default function AdminBuldingsPage() {
   const rowKeys = {
     name: "Name",
     rd: "RD",
-    numRooms: "# of Rooms"
+    numRooms: "# of Rooms",
   };
 
   return (
@@ -71,7 +71,9 @@ export default function AdminBuldingsPage() {
               <BuildingForm rds={data.rds} />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Building</IconButton>
+              <IconButton Icon={Plus} secondary>
+                Add Building
+              </IconButton>
             </DrawerButton>
             <IconButton
               Icon={Download}
@@ -82,6 +84,7 @@ export default function AdminBuldingsPage() {
                   rowKeys
                 );
               }}
+              secondary
             >
               Export
             </IconButton>
@@ -92,7 +95,7 @@ export default function AdminBuldingsPage() {
         columnKeys={{
           name: "Name",
           rd: "RD",
-          numRooms: "# of Rooms"
+          numRooms: "# of Rooms",
         }}
         rows={filteredData || data.buildings}
         rowKeys={rowKeys}

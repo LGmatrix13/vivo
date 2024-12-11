@@ -1,4 +1,4 @@
-interface ButtonProps {
+interface SecondaryButtonProps {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
@@ -7,12 +7,12 @@ interface ButtonProps {
   };
 }
 
-export default function Button(props: ButtonProps) {
+export default function SecondaryButton(props: SecondaryButtonProps) {
   const { onClick, children, options, className } = props;
 
   return (
     <button
-      className={`w-fit py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition ease-in-out ${
+      className={`w-fit py-2 px-3 rounded-lg border text-black hover:bg-gray-50 transition ease-in-out ${
         className || ""
       }`}
       onClick={onClick}

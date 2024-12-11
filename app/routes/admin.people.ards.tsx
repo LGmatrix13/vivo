@@ -101,7 +101,9 @@ export default function AdminPeopleARDsPage() {
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add ARD</IconButton>
+              <IconButton Icon={Plus} secondary>
+                Add ARD
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
@@ -109,6 +111,7 @@ export default function AdminPeopleARDsPage() {
             onClick={() => {
               csv.download(filteredData || data.ards, "ARDs", rowKeys);
             }}
+            secondary
           >
             {filteredData?.length ? "Export Subset" : "Export"}
           </IconButton>

@@ -83,7 +83,9 @@ export default function AdminPeopleRDsPage() {
               <RDForm buildingsDropdown={data.buildingsDropdown} />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add RD</IconButton>
+              <IconButton Icon={Plus} secondary>
+                Add RD
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
@@ -91,6 +93,7 @@ export default function AdminPeopleRDsPage() {
             onClick={() => {
               csv.download(filteredData || data.rds, "RDs", rowKeys);
             }}
+            secondary
           >
             {filteredData?.length ? "Export Subset" : "Export"}
           </IconButton>

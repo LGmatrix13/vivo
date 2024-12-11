@@ -82,7 +82,9 @@ export default function AdminPeopleResidentsPage() {
               <ResidentForm />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Resident</IconButton>
+              <IconButton Icon={Plus} secondary>
+                Add Resident
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
@@ -94,6 +96,7 @@ export default function AdminPeopleResidentsPage() {
                 rowKeys
               );
             }}
+            secondary
           >
             {filteredData?.length ? "Export Subset" : "Export"}
           </IconButton>

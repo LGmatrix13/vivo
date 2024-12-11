@@ -54,18 +54,20 @@ export default function AdminHousingLayout() {
 
   return (
     <>
-      <SubHeader
-        pages={[
-          {
-            name: "Buildings",
-            path: "/admin/housing/buildings",
-          },
-          {
-            name: "Rooms",
-            path: "/admin/housing/rooms",
-          },
-        ]}
-      />
+      <div className="mb-5">
+        <SubHeader
+          pages={[
+            {
+              name: "Buildings",
+              path: "/admin/housing/buildings",
+            },
+            {
+              name: "Rooms",
+              path: "/admin/housing/rooms",
+            },
+          ]}
+        />
+      </div>
       <Outlet context={context} />
       {data.toast && (
         <Toast level={data.toast.level}>{data.toast.message}</Toast>

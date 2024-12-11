@@ -13,17 +13,19 @@ export default function SubHeader(props: SubHeaderProps) {
   const { pages } = props;
 
   function isActivePage(path: string) {
-    return currentPath === path ? "bg-blue-600 text-white border cursor-default" : "border";
+    return currentPath === path
+      ? "bg-blue-600 border border-blue-600 text-white cursor-default"
+      : "border";
   }
 
   return (
-    <div className="flex flex-row space-x-3 mb-7">
+    <div className="flex flex-row space-x-3">
       {pages.map((page, index) => (
         <Link to={page.path} key={index} prefetch="intent">
           <button
             className={`${isActivePage(
               page.path
-            )} px-3 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition ease-in-out`}
+            )} px-3 py-1 rounded-lg hover:bg-blue-600 hover:border-blue-600 hover:text-white transition ease-in-out`}
           >
             {page.name}
           </button>

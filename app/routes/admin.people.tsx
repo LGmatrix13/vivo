@@ -7,7 +7,11 @@ import {
   useNavigation,
 } from "@remix-run/react";
 import DownloadButton from "~/components/common/DownloadButton";
-import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
 import { Download, Upload } from "~/components/common/Icons";
 import Loading from "~/components/common/Loading";
@@ -58,27 +62,27 @@ export default function AdminPeopleLayout() {
 
   return (
     <>
-    <div className="flex">
-      <SubHeader
-        pages={[
-          {
-            name: "Residents",
-            path: "/admin/people/residents",
-          },
-          {
-            name: "RAs",
-            path: "/admin/people/ras",
-          },
-          {
-            name: "ARDs",
-            path: "/admin/people/ards",
-          },
-          {
-            name: "RDs",
-            path: "/admin/people/rds",
-          },
-        ]}
-      />
+      <div className="flex mb-5">
+        <SubHeader
+          pages={[
+            {
+              name: "Residents",
+              path: "/admin/people/residents",
+            },
+            {
+              name: "RAs",
+              path: "/admin/people/ras",
+            },
+            {
+              name: "ARDs",
+              path: "/admin/people/ards",
+            },
+            {
+              name: "RDs",
+              path: "/admin/people/rds",
+            },
+          ]}
+        />
         <div className="ml-auto order-1 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>

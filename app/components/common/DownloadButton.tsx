@@ -11,7 +11,7 @@ export default function DownloadButton(props: DownloadButtonProps) {
   return (
     <a
       href={`/${file}`}
-      className={`flex items-center space-x-2 w-fit py-2 px-3 rounded-lg bg-white text-blue-600 hover:bg-blue-600 hover:text-white transition ease-in-out`}
+      className={`flex items-center space-x-2 w-fit py-2 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition ease-in-out`}
     >
       <Icon />
       <span>{children}</span>
