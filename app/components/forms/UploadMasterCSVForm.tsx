@@ -1,11 +1,10 @@
-import { useFetcher, useNavigation } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import WideButton from "../common/WideButton";
 import Loading from "../common/Loading";
 import { uploadMasterCSV } from "~/repositories/people/ras";
 
 export default function UploadMasterCSVForm() {
   const fetcher = useFetcher<typeof uploadMasterCSV>();
-  const { state } = useNavigation();
   const data = fetcher.data;
 
   if (data) {
