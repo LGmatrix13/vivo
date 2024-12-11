@@ -1,8 +1,8 @@
-import { sql, eq, asc } from "drizzle-orm";
+import { sql, eq, asc, count } from "drizzle-orm";
 import { Building } from "~/schemas/building";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
-import { buildingTable, roomTable, staffTable } from "~/utilties/schema.server";
+import { buildingTable, residentTable, roomTable, staffTable, zoneTable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
@@ -17,9 +17,12 @@ export async function readBuildings() {
       staffId: staffTable.id,
       latitude: buildingTable.latitude,
       longitude: buildingTable.longitude,
+      numRooms: count(roomTable.id).as("numRooms")
     })
     .from(buildingTable)
-    .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+    .leftJoin(roomTable, eq(roomTable.buildingId, buildingTable.id))
+    .leftJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+    .groupBy(buildingTable.id, staffTable.id)
     .orderBy(buildingTable.name);
 
   return buildings;
