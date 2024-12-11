@@ -66,8 +66,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AdminPeopleRAsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First Name",
+    lastName: "Last Name",
     building: "Building",
     alias: "Hall",
   };
