@@ -71,9 +71,7 @@ export default function AdminBuldingsPage() {
               <BuildingForm rds={data.rds} />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus} secondary>
-                Add Building
-              </IconButton>
+              <IconButton Icon={Plus}>Add Building</IconButton>
             </DrawerButton>
             <IconButton
               Icon={Download}
@@ -84,7 +82,6 @@ export default function AdminBuldingsPage() {
                   rowKeys
                 );
               }}
-              secondary
             >
               Export
             </IconButton>

@@ -86,16 +86,13 @@ export default function AdminRoomsPage() {
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus} secondary>
-                Add Room
-              </IconButton>
+              <IconButton Icon={Plus}>Add Room</IconButton>
             </DrawerButton>
             <IconButton
               Icon={Download}
               onClick={() => {
                 csv.download(filteredData || data.rooms, "rooms", rowKeys);
               }}
-              secondary
             >
               {filteredData?.length ? "Export Subset" : "Export"}
             </IconButton>

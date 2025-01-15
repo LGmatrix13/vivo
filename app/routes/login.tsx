@@ -14,7 +14,7 @@ export async function action() {
   };
   const jwt = await auth.signJWT(user as IUser);
 
-  return redirect("/admin", {
+  return redirect("/staff", {
     headers: {
       "Set-Cookie": await auth.cookie.serialize(jwt, {
         expires: new Date(Date.now() + 60 * 60 * 24 * 1000),

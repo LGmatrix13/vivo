@@ -2,7 +2,7 @@ interface WideButtonProps {
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
-  disabled: boolean;
+  disabled?: boolean;
   options?: {
     [key: string]: any;
   };
@@ -13,9 +13,9 @@ export default function WideButton(props: WideButtonProps) {
 
   return (
     <button
-      className={`w-full p-3 rounded-lg bg-blue-600 text-white ${
-        disabled ? "hover:bg-blue-700" : ""
-      } transition ease-in-out ${className || ""}`}
+      className={`w-full px-3 h-12 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition ease-in-out ${
+        className || ""
+      }`}
       onClick={onClick}
       {...options}
     >

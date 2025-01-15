@@ -5,7 +5,6 @@ import {
   useLoaderData,
   useNavigation,
   useOutletContext,
-  useSearchParams,
 } from "@remix-run/react";
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
@@ -59,11 +58,11 @@ export default function AdminHousingLayout() {
           pages={[
             {
               name: "Buildings",
-              path: "/admin/housing/buildings",
+              path: "/staff/housing/buildings",
             },
             {
               name: "Rooms",
-              path: "/admin/housing/rooms",
+              path: "/staff/housing/rooms",
             },
           ]}
         />

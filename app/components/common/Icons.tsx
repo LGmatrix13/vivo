@@ -1,3 +1,5 @@
+import IconButton from "./IconButton";
+
 interface IconProps {
   className?: string;
 }
@@ -8,7 +10,7 @@ export function ArrowsSort(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
@@ -29,7 +31,7 @@ export function SortAscending(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
@@ -51,7 +53,7 @@ export function SortDescending(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -77,7 +79,7 @@ export function Search(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
@@ -98,7 +100,7 @@ export function Download(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
@@ -121,7 +123,7 @@ export function FilePlus(props: IconProps) {
       width="20"
       height="20"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       strokeWidth="1.5"
       stroke="currentColor"
       fill="none"
@@ -144,7 +146,7 @@ export function FileSearch(props: IconProps) {
       width="20"
       height="20"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       strokeWidth="1.5"
       stroke="currentColor"
       fill="none"
@@ -163,7 +165,7 @@ export function User(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -184,7 +186,7 @@ export function File(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -205,7 +207,7 @@ export function Chart(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -249,7 +251,7 @@ export function Link(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       width="20"
       height="20"
       viewBox="0 0 24 24"
@@ -271,7 +273,7 @@ export function Home(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -292,7 +294,7 @@ export function HomeSearch(props: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -315,7 +317,7 @@ export function Calendar(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -404,7 +406,7 @@ export function Users(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -426,7 +428,7 @@ export function Plus(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -446,7 +448,7 @@ export function Loader(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -472,7 +474,7 @@ export function ArrowNarrowUp(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -492,7 +494,7 @@ export function ArrowNarrowDown(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -513,7 +515,7 @@ export function ArrowsDownUp(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -535,7 +537,7 @@ export function Office(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -554,7 +556,7 @@ export function Close(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -574,7 +576,7 @@ export function Door(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -595,7 +597,7 @@ export function Trash(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -618,7 +620,7 @@ export function Check(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -637,7 +639,7 @@ export function UserSearch(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -659,7 +661,7 @@ export function Upload(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -680,7 +682,7 @@ export function ChevronDown(props: IconProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className={`w-5 h-5 ${props.className || ""}`}
+      className={`${props.className || "w-5 h-5"}`}
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -690,6 +692,207 @@ export function ChevronDown(props: IconProps) {
       strokeWidth="1.5"
     >
       <path d="M6 9l6 6l6 -6"></path>
+    </svg>
+  );
+}
+
+export function ChevronRight(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M9 6l6 6l-6 6" />
+    </svg>
+  );
+}
+
+export function ChevronLeft(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M15 6l-6 6l6 6" />
+    </svg>
+  );
+}
+
+export function MessageChatbot(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M18 3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-4.724l-4.762 2.857a1 1 0 0 1 -1.508 -.743l-.006 -.114v-2h-1a4 4 0 0 1 -3.995 -3.8l-.005 -.2v-8a4 4 0 0 1 4 -4zm-2.8 9.286a1 1 0 0 0 -1.414 .014a2.5 2.5 0 0 1 -3.572 0a1 1 0 0 0 -1.428 1.4a4.5 4.5 0 0 0 6.428 0a1 1 0 0 0 -.014 -1.414m-5.69 -4.286h-.01a1 1 0 1 0 0 2h.01a1 1 0 0 0 0 -2m5 0h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2" />
+    </svg>
+  );
+}
+
+export function Phone(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      className={`${props.className || "w-5 h-5"}`}
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M9 3a1 1 0 0 1 .877 .519l.051 .11l2 5a1 1 0 0 1 -.313 1.16l-.1 .068l-1.674 1.004l.063 .103a10 10 0 0 0 3.132 3.132l.102 .062l1.005 -1.672a1 1 0 0 1 1.113 -.453l.115 .039l5 2a1 1 0 0 1 .622 .807l.007 .121v4c0 1.657 -1.343 3 -3.06 2.998c-8.579 -.521 -15.418 -7.36 -15.94 -15.998a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" />
+    </svg>
+  );
+}
+
+export function Mail(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      className={`${props.className || "w-5 h-5"}`}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M22 7.535v9.465a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-9.465l9.445 6.297l.116 .066a1 1 0 0 0 .878 0l.116 -.066l9.445 -6.297z" />
+      <path d="M19 4c1.08 0 2.027 .57 2.555 1.427l-9.555 6.37l-9.555 -6.37a2.999 2.999 0 0 1 2.354 -1.42l.201 -.007h14z" />
+    </svg>
+  );
+}
+
+export function CalendarEvent(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+      <path d="M16 3l0 4" />
+      <path d="M8 3l0 4" />
+      <path d="M4 11l16 0" />
+      <path d="M8 15h2v2h-2z" />
+    </svg>
+  );
+}
+
+export function Logout(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+      <path d="M9 12h12l-3 -3" />
+      <path d="M18 15l3 -3" />
+    </svg>
+  );
+}
+
+export function InputSearch(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M20 11v-2a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v5a2 2 0 0 0 2 2h5" />
+      <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+      <path d="M20.2 20.2l1.8 1.8" />
+    </svg>
+  );
+}
+
+export function Clock(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+      <path d="M12 7v5l3 3" />
+    </svg>
+  );
+}
+
+export function ClockSearch(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${props.className || "w-5 h-5"}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M20.993 11.646a9 9 0 1 0 -9.318 9.348" />
+      <path d="M12 7v5l1 1" />
+      <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+      <path d="M20.2 20.2l1.8 1.8" />
     </svg>
   );
 }
