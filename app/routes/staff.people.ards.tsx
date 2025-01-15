@@ -1,4 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { csv } from "~/utilties/csv";
@@ -25,6 +25,7 @@ import { readResidentsDropdown } from "~/repositories/people/residents";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
+import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader() {
   const [ards, rdsDropdown, raDropdown] = await Promise.all([
@@ -58,6 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function StaffAdminPeopleARDsPage() {
+  const context = useOutletContext<IBuildingDropdown[]>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
     firstName: "Firstname",
@@ -75,6 +77,18 @@ export default function StaffAdminPeopleARDsPage() {
     hometown: "Hometown",
     class: "Class",
   };
+  const buildingOptions = [
+    {
+      value: 0,
+      key: "All",
+    },
+    ...context.map((building) => {
+      return {
+        value: building.id,
+        key: building.name,
+      };
+    }),
+  ];
 
   return (
     <Table<IARD>
@@ -83,6 +97,11 @@ export default function StaffAdminPeopleARDsPage() {
       rowKeys={rowKeys}
       search={{
         placeholder: "Search for an ARD...",
+      }}
+      filter={{
+        selected: "All",
+        key: "buildingId",
+        options: buildingOptions,
       }}
       InstructionComponent={() => (
         <Instruction Icon={UserSearch} title="First Select an ARD" />

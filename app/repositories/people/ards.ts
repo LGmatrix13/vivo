@@ -40,6 +40,7 @@ export async function readARDs() {
       rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
         "rd"
       ),
+      buildingId: buildingTable.id,
     })
     .from(assistantStaffTable)
     .innerJoin(

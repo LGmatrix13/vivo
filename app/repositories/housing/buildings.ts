@@ -2,7 +2,13 @@ import { sql, eq, asc, count } from "drizzle-orm";
 import { Building } from "~/schemas/building";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
-import { buildingTable, residentTable, roomTable, staffTable, zoneTable } from "~/utilties/schema.server";
+import {
+  buildingTable,
+  residentTable,
+  roomTable,
+  staffTable,
+  zoneTable,
+} from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
@@ -17,7 +23,7 @@ export async function readBuildings() {
       staffId: staffTable.id,
       latitude: buildingTable.latitude,
       longitude: buildingTable.longitude,
-      numRooms: count(roomTable.id).as("numRooms")
+      numRooms: count(roomTable.id).as("numRooms"),
     })
     .from(buildingTable)
     .leftJoin(roomTable, eq(roomTable.buildingId, buildingTable.id))
@@ -28,13 +34,26 @@ export async function readBuildings() {
   return buildings;
 }
 
-export async function readBuildingsDropdown() {
+export async function readBuildingsDropdownAsAdmin() {
   const buildings = await db
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
     })
     .from(buildingTable)
+    .orderBy(asc(buildingTable.name));
+  return buildings;
+}
+
+export async function readBuildingsDropdownAsRD(id: number) {
+  const buildings = await db
+    .select({
+      id: buildingTable.id,
+      name: buildingTable.name,
+    })
+    .from(buildingTable)
+    .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
+    .where(eq(buildingTable.id, id))
     .orderBy(asc(buildingTable.name));
   return buildings;
 }

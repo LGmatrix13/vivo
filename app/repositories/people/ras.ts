@@ -15,7 +15,7 @@ import {
 
 type Values = { [key: string]: any };
 
-export async function readRAs() {
+export async function readRAsAsAdmin() {
   const ras = await db
     .select({
       id: zoneTable.id,
@@ -60,16 +60,84 @@ export async function readRAs() {
   return ras;
 }
 
-export async function readRAsDropdown() {
+export async function readRAsAsRD(id: number) {
+  const ras = await db
+    .select({
+      id: zoneTable.id,
+      residentId: zoneTable.id,
+      alias: zoneTable.alias,
+      staffId: zoneTable.staffId,
+      firstName: residentTable.firstName,
+      lastName: residentTable.lastName,
+      fullName:
+        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+          "fullName"
+        ),
+      email: residentTable.emailAddress,
+      phone: residentTable.phoneNumber,
+      mailbox: residentTable.mailbox,
+      hometown:
+        sql<string>`concat(${residentTable.city}, ', ', ${residentTable.state})`.as(
+          "hometown"
+        ),
+      class: residentTable.class,
+      building: buildingTable.name,
+      buildingId: buildingTable.id,
+      roomBuilding:
+        sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
+          "roomBuilding"
+        ),
+      rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
+        "rd"
+      ),
+    })
+    .from(zoneTable)
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
+    .where(eq(staffTable.id, id))
+    .orderBy(
+      residentTable.lastName,
+      residentTable.firstName,
+      buildingTable.name
+    );
+
+  return ras;
+}
+
+export async function readRAsDropdownAsAdmin() {
   const ras = await db
     .select({
       id: zoneTable.id,
       name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
         "rd"
       ),
+      buildingId: buildingTable.id,
     })
     .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .innerJoin(staffTable, eq(staffTable.id, zoneTable.staffId))
+    .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
+    .orderBy(asc(residentTable.lastName));
+
+  return ras;
+}
+
+export async function readRAsDropdownAsRD(id: number) {
+  const ras = await db
+    .select({
+      id: zoneTable.id,
+      name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+        "rd"
+      ),
+      buildingId: buildingTable.id,
+    })
+    .from(residentTable)
+    .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
+    .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
+    .where(eq(staffTable.id, id))
     .orderBy(asc(residentTable.lastName));
 
   return ras;

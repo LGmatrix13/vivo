@@ -1,41 +1,27 @@
-import { Outlet, redirect, useNavigation } from "@remix-run/react";
+import { json, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
-import Loading from "~/components/common/Loading";
 import {
-  Chart,
-  Clock,
-  Door,
-  Home,
-  Users,
   File,
+  Chart,
+  Door,
+  Users,
+  Home,
+  Clock,
 } from "~/components/common/Icons";
+import Loading from "~/components/common/Loading";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = await auth.cookie.parse(cookieHeader);
-  if (!cookie) {
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await auth.cookie.serialize(""),
-      },
-    });
-  }
-  const decodedJwt = await auth.decodeJWT(cookie, "admin");
-  if (!decodedJwt) {
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await auth.cookie.serialize(""),
-      },
-    });
-  }
-  return decodedJwt;
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  return json({
+    user,
+  });
 }
 
 export default function StaffLayout() {
-  // todo: do a auth check to what role (admin or rd)
-  const admin = true;
+  const data = useLoaderData<typeof loader>();
+  const admin = data.user.role === "admin";
   const { state } = useNavigation();
 
   const routes = [
@@ -77,7 +63,7 @@ export default function StaffLayout() {
     },
   ];
   const settings = {
-    user: null,
+    user: data.user,
     path: "/staff/settings",
   };
   return (
@@ -85,18 +71,10 @@ export default function StaffLayout() {
       <Header
         root="/staff/shifts/on-duty"
         routes={routes}
-        settings={{
-          user: {
-            id: 1,
-            name: "Ethan",
-            email: "ethankesterholt21@gcc.edu",
-            role: "admin",
-          },
-          path: "/staff/settings",
-        }}
+        settings={settings}
       />
       <main className="max-w-screen-2xl mx-auto px-10 mb-7">
-        {state !== "idle" ? <Loading /> : <Outlet />}
+        {state !== "idle" ? <Loading /> : <Outlet context={data} />}
       </main>
     </>
   );

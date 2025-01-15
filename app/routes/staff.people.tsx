@@ -8,7 +8,11 @@ import {
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import { IUser } from "~/models/user";
-import { readBuildingsDropdown } from "~/repositories/housing/buildings";
+import {
+  readBuildingsDropdownAsAdmin,
+  readBuildingsDropdownAsRD,
+} from "~/repositories/housing/buildings";
+import { auth } from "~/utilties/auth.server";
 import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
@@ -19,13 +23,21 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const buildingsDropdown = await readBuildingsDropdown();
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
+  const buildingsDropdown = admin
+    ? await readBuildingsDropdownAsAdmin()
+    : await readBuildingsDropdownAsRD(user.id);
   return toast(request, {
     buildingsDropdown,
   });
 }
 
-export default function StaffAdminPeopleLayout() {
+export default function StaffPeopleLayout() {
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
+  const admin = context.user.role === "admin";
   const data = useLoaderData<typeof loader>();
   const rdPages = [
     {
@@ -55,7 +67,7 @@ export default function StaffAdminPeopleLayout() {
 
   return (
     <>
-      <SubHeader pages={adminPages} />
+      <SubHeader pages={admin ? adminPages : rdPages} />
       <Outlet context={data.extra.buildingsDropdown} />
       {data.toast && (
         <Toast level={data.toast.level}>{data.toast.message}</Toast>

@@ -8,11 +8,12 @@ import {
   roomTable,
   buildingTable,
   zoneTable,
+  staffTable,
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function readRooms() {
+export async function readRoomsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const rooms = await db
@@ -32,6 +33,34 @@ export async function readRooms() {
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
     .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .leftJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .groupBy(roomTable.id, buildingTable.id, raInfoTable.id, zoneTable.id)
+    .orderBy(buildingTable.name, roomTable.roomNumber);
+
+  return rooms;
+}
+
+export async function readRoomsAsRD(id: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
+
+  const rooms = await db
+    .select({
+      id: roomTable.id,
+      building: buildingTable.name,
+      buildingId: buildingTable.id,
+      raFirstName: raInfoTable.firstName,
+      raLastName: raInfoTable.lastName,
+      raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
+      roomNumber: roomTable.roomNumber,
+      room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      capacity: roomTable.capacity,
+      zoneId: zoneTable.id,
+    })
+    .from(roomTable)
+    .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+    .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
+    .leftJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(staffTable, eq(staffTable.id, buildingTable.staffId))
+    .where(eq(staffTable.id, id))
     .groupBy(roomTable.id, buildingTable.id, raInfoTable.id, zoneTable.id)
     .orderBy(buildingTable.name, roomTable.roomNumber);
 
