@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       lastName: userInfo.surname,
       email: userInfo.mail,
       role: "admin",
-      avatar: ""
+      avatar: "",
     });
 
     return redirect("/admin", {

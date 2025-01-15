@@ -48,7 +48,7 @@ export default function Header(props: HeaderProps) {
                 </button>
               </Link>
             ))}
-            {/* <Link to={settings.path}>
+            <Link to={settings.path}>
               <button
                 className={`${isActivePage(
                   settings.path
@@ -61,7 +61,7 @@ export default function Header(props: HeaderProps) {
                 />
                 <span className="font-bold">{settings.user.firstName}</span>
               </button>
-            </Link> */}
+            </Link>
           </div>
         </div>
       </nav>

@@ -18,7 +18,8 @@ import {
   updateRA,
   createRA,
   deleteRA,
-  readRAs,
+  readRAsAsAdmin,
+  readRAsAsRD,
 } from "~/repositories/people/ras";
 import { readRDsDropdown } from "~/repositories/people/rds";
 import { readResidentsDropdown } from "~/repositories/people/residents";
@@ -28,8 +29,11 @@ import { delay } from "~/utilties/delay.server";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
+
   const [ras, residentsDropdown, rdsDropdown] = await Promise.all([
-    readRAs(),
+    admin ? readRAsAsAdmin() : readRAsAsRD(user.id),
     readResidentsDropdown(
       zoneTable,
       eq(residentTable.id, zoneTable.residentId)
@@ -46,6 +50,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 

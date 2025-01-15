@@ -16,7 +16,8 @@ import {
   createResident,
   updateResident,
   deleteResident,
-  readResidents,
+  readResidentsAsAdmin,
+  readResidentsAsRD,
 } from "~/repositories/people/residents";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
@@ -24,13 +25,20 @@ import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const [residents] = await Promise.all([readResidents(), delay(100)]);
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
+  const [residents] = await Promise.all([
+    admin ? readResidentsAsAdmin() : readResidentsAsRD(user.id),
+    delay(100),
+  ]);
   return json({
     residents,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 

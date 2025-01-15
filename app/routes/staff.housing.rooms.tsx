@@ -15,19 +15,29 @@ import { IRoom } from "~/models/housing";
 import {
   createRoom,
   deleteRoom,
-  readRooms,
+  readRoomsAsAdmin,
+  readRoomsAsRD,
   updateRoom,
 } from "~/repositories/housing/rooms";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import { readBuildingsDropdown } from "~/repositories/housing/buildings";
-import { readRAsDropdown } from "~/repositories/people/ras";
+import { auth } from "~/utilties/auth.server";
+import {
+  readRAsDropdownAsAdmin,
+  readRAsDropdownAsRD,
+} from "~/repositories/people/ras";
+import {
+  readBuildingsDropdownAsAdmin,
+  readBuildingsDropdownAsRD,
+} from "~/repositories/housing/buildings";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const [rooms, buildingsDropdown, rasDropdown] = await Promise.all([
-    readRooms(),
-    readBuildingsDropdown(),
-    readRAsDropdown(),
+    admin ? readRoomsAsAdmin() : readRoomsAsRD(user.id),
+    admin ? readBuildingsDropdownAsAdmin() : readBuildingsDropdownAsRD(user.id),
+    admin ? readRAsDropdownAsAdmin() : readRAsDropdownAsRD(user.id),
     delay(100),
   ]);
   return json({
@@ -38,6 +48,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -51,7 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffAdminHousingRoomsPage() {
+export default function StaffHousingRoomsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
     room: "Room",

@@ -1,14 +1,18 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import {
   MetaFunction,
   Outlet,
   useLoaderData,
-  useNavigation,
   useOutletContext,
 } from "@remix-run/react";
-import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
+import { IUser } from "~/models/user";
+import {
+  readBuildingsDropdownAsAdmin,
+  readBuildingsDropdownAsRD,
+} from "~/repositories/housing/buildings";
+import { auth } from "~/utilties/auth.server";
 import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
@@ -19,35 +23,37 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  return toast(request, {});
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
+  const buildingsDropdown = admin
+    ? await readBuildingsDropdownAsAdmin()
+    : await readBuildingsDropdownAsRD(user.id);
+  return toast(request, {
+    buildingsDropdown,
+  });
 }
 
-export default function AdminHousingLayout() {
-  const context = useOutletContext();
+export default function StaffHousingLayout() {
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
+  const admin = context.user.role === "admin";
   const data = useLoaderData<typeof loader>();
-  const { state } = useNavigation();
-
-  if (state !== "idle") {
-    return <Loading />;
-  }
+  const adminPages = [
+    {
+      name: "Rooms",
+      path: "/staff/housing/rooms",
+    },
+    {
+      name: "Buildings",
+      path: "/staff/housing/buildings",
+    },
+  ];
 
   return (
     <>
-      <div className="mb-5">
-        <SubHeader
-          pages={[
-            {
-              name: "Buildings",
-              path: "/staff/housing/buildings",
-            },
-            {
-              name: "Rooms",
-              path: "/staff/housing/rooms",
-            },
-          ]}
-        />
-      </div>
-      <Outlet context={context} />
+      {admin && <SubHeader pages={adminPages} />}
+      <Outlet />
       {data.toast && (
         <Toast level={data.toast.level}>{data.toast.message}</Toast>
       )}
