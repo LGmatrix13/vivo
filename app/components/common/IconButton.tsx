@@ -1,28 +1,27 @@
 import Button from "./Button";
-import SecondaryButton from "./SecondaryButton";
 
 interface IconButtonProps {
   Icon: (props: any) => React.ReactElement;
+  className?: string;
   onClick?: () => void;
   children: React.ReactNode;
   options?: {
     [key: string]: string;
   };
-  secondary?: boolean;
 }
 
 export default function IconButton(props: IconButtonProps) {
-  const { Icon, children, onClick, options, secondary } = props;
-  const Component = secondary ? SecondaryButton : Button;
+  const { Icon, children, onClick, options, className } = props;
 
   return (
-    <Component
-      className="flex items-center space-x-2"
+    <Button
+      className={`flex items-center space-x-2 ${className || ""}`}
       onClick={onClick}
       options={options}
+  
     >
-      <Icon className="w-5 h-5" />
+      <Icon />
       <span>{children}</span>
-    </Component>
+    </Button>
   );
 }

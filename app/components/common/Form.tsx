@@ -34,8 +34,8 @@ export default function Form(props: FormProps) {
           type: "submit",
           name: "intent",
           value: intent,
-          disabled: navigation.state === "submitting",
         }}
+        disabled={navigation.state === "submitting"}
       >
         {button}
       </WideButton>

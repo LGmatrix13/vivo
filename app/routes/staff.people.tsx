@@ -6,7 +6,6 @@ import {
   useLoaderData,
   useNavigation,
 } from "@remix-run/react";
-import DownloadButton from "~/components/common/DownloadButton";
 import {
   DrawerButton,
   DrawerContent,
@@ -20,6 +19,7 @@ import { Toast } from "~/components/common/Toast";
 import UploadMasterCSVForm from "~/components/forms/UploadMasterCSVForm";
 import { createARD, updateARD, deleteARD } from "~/repositories/people/ards";
 import { uploadMasterCSV } from "~/repositories/people/ras";
+import { csv } from "~/utilties/csv";
 import { toasts } from "~/utilties/mutate.server";
 
 export const meta: MetaFunction = () => {
@@ -79,19 +79,19 @@ export default function AdminPeopleLayout() {
           pages={[
             {
               name: "Residents",
-              path: "/admin/people/residents",
+              path: "/staff/people/residents",
             },
             {
               name: "RAs",
-              path: "/admin/people/ras",
+              path: "/staff/people/ras",
             },
             {
               name: "ARDs",
-              path: "/admin/people/ards",
+              path: "/staff/people/ards",
             },
             {
               name: "RDs",
-              path: "/admin/people/rds",
+              path: "/staff/people/rds",
             },
           ]}
         />
@@ -104,9 +104,9 @@ export default function AdminPeopleLayout() {
               <IconButton Icon={Upload}>Upload from CSV</IconButton>
             </DrawerButton>
           </DrawerProvider>
-          <DownloadButton file="template.csv" Icon={Download}>
-            Download Template
-          </DownloadButton>
+          <a href="/template.csv">
+            <IconButton Icon={Download}>Download Template</IconButton>
+          </a>
         </div>
       </div>
       <Outlet />

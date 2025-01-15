@@ -33,11 +33,10 @@ export function Toast(props: ToastProps) {
 
   return (
     <div
-      className={`${background} fixed bottom-5 left-5 p-3 rounded-lg text-white transition-all ease-in-out min-w-56 duration-300 flex items-center space-x-2 ${
+      className={`${background} fixed bottom-5 left-5 p-3 rounded-lg text-white transition-all ease-in-out w-fit duration-300 flex items-center space-x-2 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
-      {level === "success" && <Check className="w-5 h-5" />}
       <span>{children}</span>
     </div>
   );

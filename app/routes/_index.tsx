@@ -8,5 +8,5 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader() {
-  return redirect("/admin/schedules/schedule");
+  return redirect("/staff/schedules/schedule");
 }
