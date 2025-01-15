@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import {
   DrawerProvider,
@@ -7,31 +7,31 @@ import {
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/common/Icons";
-import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
 import DeleteForm from "~/components/forms/DeleteForm";
 import BuildingForm from "~/components/forms/BuildingForm";
 import {
   createBuilding,
   deleteBuilding,
-  readBuildings,
+  readBuildings as readAdminBuildings,
   updateBuilding,
 } from "~/repositories/housing/buildings";
-import { readRDsDropdown } from "~/repositories/people/rds";
+import { readRDsDropdown as readAdminRDsDropdown } from "~/repositories/people/rds";
 import type { IBuilding } from "~/models/housing";
 import { delay } from "~/utilties/delay.server";
+import Instruction from "~/components/common/Instruction";
+import { auth } from "~/utilties/auth.server";
 
-export async function loader() {
-  const parallelized = await Promise.all([
-    readBuildings(),
-    readRDsDropdown(),
+export async function loader({ request }: LoaderFunctionArgs) {
+  const [buildings, rds] = await Promise.all([
+    readAdminBuildings(),
+    readAdminRDsDropdown(),
     delay(100),
   ]);
   return json({
-    buildings: parallelized[0],
-    rds: parallelized[1],
+    buildings,
+    rds,
   });
 }
 
@@ -49,22 +49,40 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function AdminBuldingsPage() {
+export default function StaffAdminHousingBuildingsPage() {
   const data = useLoaderData<typeof loader>();
-  const { handleSearch, filteredData } = useSearch(data.buildings, []);
   const rowKeys = {
     name: "Name",
     rd: "RD",
-    numRooms: "# of Rooms",
+  };
+  const columnKeys = {
+    name: "Name",
+    rd: "RD",
   };
 
   return (
-    <section className="space-y-5">
-      <div className="flex">
-        <Search
-          placeholder="Search for a building..."
-          handleSearch={handleSearch}
+    <Table<IBuilding>
+      columnKeys={columnKeys}
+      rows={data.buildings}
+      search={{
+        placeholder: "Search for a building...",
+      }}
+      rowKeys={rowKeys}
+      InstructionComponent={() => (
+        <Instruction Icon={HomeSearch} title="First Select a Building" />
+      )}
+      EditComponent={({ row }) => (
+        <BuildingForm building={row} rds={data.rds} />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title={`Delete ${row.name}`}
+          prompt={`Are you sure you want to delete ${row.name}?`}
+          toast={`Deleted ${row.name}`}
         />
+      )}
+      ActionButtons={() => (
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -76,44 +94,14 @@ export default function AdminBuldingsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv.download(
-                  filteredData || data.buildings,
-                  "buildings",
-                  rowKeys
-                );
+                csv.download(data.buildings, "buildings", rowKeys);
               }}
             >
-              Export
+              Export Buildings
             </IconButton>
           </DrawerProvider>
         </div>
-      </div>
-      <Table<IBuilding>
-        columnKeys={{
-          name: "Name",
-          rd: "RD",
-          numRooms: "# of Rooms",
-        }}
-        rows={filteredData || data.buildings}
-        rowKeys={rowKeys}
-        InstructionComponent={() => (
-          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-            <HomeSearch className="w-7 h-7" />
-            <h2 className="text-xl font-bold">First Open a Building</h2>
-          </div>
-        )}
-        EditComponent={({ row }) => (
-          <BuildingForm building={row} rds={data.rds} />
-        )}
-        DeleteComponent={({ row }) => (
-          <DeleteForm
-            id={row.id}
-            title={`Delete ${row.name}`}
-            prompt={`Are you sure you want to delete ${row.name}?`}
-            toast={`Deleted ${row.name}`}
-          />
-        )}
-      />
-    </section>
+      )}
+    />
   );
 }

@@ -5,17 +5,11 @@ import { IBuildingDropdown } from "~/models/housing";
 
 interface RDFormProps {
   rd?: IRD;
-  buildingsDropdown: IBuildingDropdown[];
 }
 
 export default function RDForm(props: RDFormProps) {
-  const { rd, buildingsDropdown } = props;
-  const buildingOptions = buildingsDropdown.map((option) => {
-    return {
-      key: option.name,
-      value: option.id,
-    };
-  });
+  const { rd } = props;
+
   return (
     <Form button="Save RD" intent={rd ? "update" : "create"}>
       <h2 className="font-bold text-xl">

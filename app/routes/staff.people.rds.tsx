@@ -1,13 +1,10 @@
 import { json, useLoaderData } from "@remix-run/react";
 import { Download, Plus, UserSearch } from "~/components/common/Icons";
-import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
-import useSearch from "~/hooks/useSearch";
 import RDForm from "~/components/forms/RDForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
-
 import { IRD } from "~/models/people";
 import {
   DrawerProvider,
@@ -15,7 +12,6 @@ import {
   DrawerButton,
 } from "~/components/common/Drawer";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { readBuildingsDropdown } from "~/repositories/housing/buildings";
 import {
   readRDs,
   createRD,
@@ -23,16 +19,13 @@ import {
   deleteRD,
 } from "~/repositories/people/rds";
 import { delay } from "~/utilties/delay.server";
+import Instruction from "~/components/common/Instruction";
+import { auth } from "~/utilties/auth.server";
 
-export async function loader() {
-  const parallelized = await Promise.all([
-    readRDs(),
-    readBuildingsDropdown(),
-    delay(100),
-  ]);
+export async function loader({ request }: ActionFunctionArgs) {
+  const [rds] = await Promise.all([readRDs(), delay(100)]);
   return json({
-    rds: parallelized[0],
-    buildingsDropdown: parallelized[1],
+    rds,
   });
 }
 
@@ -50,72 +43,59 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function AdminPeopleRDsPage() {
+export default function StaffAdminPeopleRDsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "First Name",
-    lastName: "Last Name",
+    firstName: "Firstname",
+    lastName: "Lastname",
     buildings: "Building",
   };
   const rowKeys = {
-    fullName: "Name",
-    buildings: "Building",
+    ...columnKeys,
     emailAddress: "Email Address",
     mailbox: "Mailbox Number",
   };
-  const { handleSearch, filteredData } = useSearch(
-    data.rds,
-    Object.keys(columnKeys)
-  );
 
   return (
-    <section className="space-y-5">
-      <div className="flex">
-        <Search placeholder="Search for an RD..." handleSearch={handleSearch} />
+    <Table<IRD>
+      rows={data.rds}
+      columnKeys={columnKeys}
+      rowKeys={rowKeys}
+      InstructionComponent={() => (
+        <Instruction Icon={UserSearch} title="First Select an RD" />
+      )}
+      search={{
+        placeholder: "Search for an RD...",
+      }}
+      EditComponent={({ row }) => <RDForm rd={row} />}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title={`Delete ${row.fullName}`}
+          prompt={`Are you sure you want to delete ${row.fullName}?`}
+          toast={`Deleted ${row.fullName}`}
+        />
+      )}
+      ActionButtons={() => (
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <RDForm buildingsDropdown={data.buildingsDropdown} />
+              <RDForm />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus} secondary>
-                Add RD
-              </IconButton>
+              <IconButton Icon={Plus}>Add RD</IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.rds, "RDs", rowKeys);
+              csv.download(data.rds, "RDs", rowKeys);
             }}
-            secondary
           >
-            {filteredData?.length ? "Export Subset" : "Export"}
+            Export RDs
           </IconButton>
         </div>
-      </div>
-      <Table<IRD>
-        columnKeys={columnKeys}
-        rows={filteredData || data.rds}
-        rowKeys={rowKeys}
-        InstructionComponent={() => (
-          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-            <UserSearch className="w-7 h-7" />
-            <h2 className="text-xl font-bold">First Select an RD</h2>
-          </div>
-        )}
-        EditComponent={({ row }) => (
-          <RDForm rd={row} buildingsDropdown={data.buildingsDropdown} />
-        )}
-        DeleteComponent={({ row }) => (
-          <DeleteForm
-            id={row.id}
-            title={`Delete ${row.fullName}`}
-            prompt={`Are you sure you want to delete ${row.fullName}?`}
-            toast={`Deleted ${row.fullName}`}
-          />
-        )}
-      />
-    </section>
+      )}
+    />
   );
 }

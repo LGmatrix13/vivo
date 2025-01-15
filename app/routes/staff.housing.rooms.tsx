@@ -6,13 +6,11 @@ import {
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
 import { Download, HomeSearch, Plus } from "~/components/common/Icons";
-import Search from "~/components/common/Search";
 import Table from "~/components/common/Table";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
-import useSearch from "~/hooks/useSearch";
 import { csv } from "~/utilties/csv";
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { IRoom } from "~/models/housing";
 import {
   createRoom,
@@ -20,21 +18,22 @@ import {
   readRooms,
   updateRoom,
 } from "~/repositories/housing/rooms";
+import { delay } from "~/utilties/delay.server";
+import Instruction from "~/components/common/Instruction";
 import { readBuildingsDropdown } from "~/repositories/housing/buildings";
 import { readRAsDropdown } from "~/repositories/people/ras";
-import { delay } from "~/utilties/delay.server";
 
-export async function loader() {
-  const parallelized = await Promise.all([
+export async function loader({ request }: LoaderFunctionArgs) {
+  const [rooms, buildingsDropdown, rasDropdown] = await Promise.all([
     readRooms(),
     readBuildingsDropdown(),
     readRAsDropdown(),
     delay(100),
   ]);
   return json({
-    rooms: parallelized[0],
-    buildingsDropdown: parallelized[1],
-    rasDropdown: parallelized[2],
+    rooms,
+    buildingsDropdown,
+    rasDropdown,
   });
 }
 
@@ -52,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function AdminRoomsPage() {
+export default function StaffAdminHousingRoomsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
     room: "Room",
@@ -65,18 +64,34 @@ export default function AdminRoomsPage() {
     raFullName: "RA",
     capacity: "Capacity",
   };
-  const { handleSearch, filteredData } = useSearch(
-    data.rooms,
-    Object.keys(columnKeys)
-  );
 
   return (
-    <section className="space-y-5">
-      <div className="flex">
-        <Search
-          placeholder="Search for a Room..."
-          handleSearch={handleSearch}
+    <Table<IRoom>
+      columnKeys={columnKeys}
+      rows={data.rooms}
+      rowKeys={rowKeys}
+      search={{
+        placeholder: "Search for a room...",
+      }}
+      InstructionComponent={() => (
+        <Instruction Icon={HomeSearch} title="First Select a Room" />
+      )}
+      EditComponent={({ row }) => (
+        <RoomForm
+          room={row}
+          buildingsDropdown={data.buildingsDropdown}
+          rasDropdown={data.rasDropdown}
         />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title={`Delete ${row.building} ${row.roomNumber}`}
+          prompt={`Are you sure you want to delete ${row.building} ${row.roomNumber}?`}
+          toast={`Deleted ${row.building} ${row.roomNumber}`}
+        />
+      )}
+      ActionButtons={() => (
         <div className="ml-auto order-2 flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -91,40 +106,14 @@ export default function AdminRoomsPage() {
             <IconButton
               Icon={Download}
               onClick={() => {
-                csv.download(filteredData || data.rooms, "rooms", rowKeys);
+                csv.download(data.rooms, "rooms", rowKeys);
               }}
             >
-              {filteredData?.length ? "Export Subset" : "Export"}
+              Export Rooms
             </IconButton>
           </DrawerProvider>
         </div>
-      </div>
-      <Table<IRoom>
-        columnKeys={columnKeys}
-        rows={filteredData || data.rooms}
-        rowKeys={rowKeys}
-        InstructionComponent={() => (
-          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-            <HomeSearch className="w-7 h-7" />
-            <h2 className="text-xl font-bold">First Open a Room</h2>
-          </div>
-        )}
-        EditComponent={({ row }) => (
-          <RoomForm
-            room={row}
-            buildingsDropdown={data.buildingsDropdown}
-            rasDropdown={data.rasDropdown}
-          />
-        )}
-        DeleteComponent={({ row }) => (
-          <DeleteForm
-            id={row.id}
-            title={`Delete ${row.building} ${row.roomNumber}`}
-            prompt={`Are you sure you want to delete ${row.building} ${row.roomNumber}?`}
-            toast={`Deleted ${row.building} ${row.roomNumber}`}
-          />
-        )}
-      />
-    </section>
+      )}
+    />
   );
 }

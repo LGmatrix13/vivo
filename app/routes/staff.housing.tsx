@@ -9,7 +9,7 @@ import {
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
-import { toasts } from "~/utilties/mutate.server";
+import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,27 +19,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const cookieHeader = await request.headers.get("Cookie");
-  const cookie = await toasts.parse(cookieHeader);
-
-  if (cookie) {
-    const newCookie = await toasts.serialize("");
-
-    return json(
-      {
-        toast: cookie,
-      },
-      {
-        headers: {
-          "Set-Cookie": newCookie,
-        },
-      }
-    );
-  }
-
-  return json({
-    toast: null,
-  });
+  return toast(request, {});
 }
 
 export default function AdminHousingLayout() {

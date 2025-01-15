@@ -1,5 +1,5 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import {
   DrawerButton,
@@ -7,27 +7,28 @@ import {
   DrawerProvider,
 } from "~/components/common/Drawer";
 import IconButton from "~/components/common/IconButton";
-import { Download, Plus, Upload, UserSearch } from "~/components/common/Icons";
-import Search from "~/components/common/Search";
+import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import Instruction from "~/components/common/Instruction";
 import Table from "~/components/common/Table";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
-import useSearch from "~/hooks/useSearch";
+import { IBuildingDropdown } from "~/models/housing";
 import { IRA } from "~/models/people";
 import {
-  readRAs,
   updateRA,
   createRA,
   deleteRA,
+  readRAs,
 } from "~/repositories/people/ras";
 import { readRDsDropdown } from "~/repositories/people/rds";
 import { readResidentsDropdown } from "~/repositories/people/residents";
+import { auth } from "~/utilties/auth.server";
 import { csv } from "~/utilties/csv";
 import { delay } from "~/utilties/delay.server";
 import { residentTable, zoneTable } from "~/utilties/schema.server";
 
-export async function loader() {
-  const parallelized = await Promise.all([
+export async function loader({ request }: LoaderFunctionArgs) {
+  const [ras, residentsDropdown, rdsDropdown] = await Promise.all([
     readRAs(),
     readResidentsDropdown(
       zoneTable,
@@ -38,9 +39,9 @@ export async function loader() {
   ]);
 
   return json({
-    ras: parallelized[0],
-    residentsDropdown: parallelized[1],
-    readRDsDropdown: parallelized[2],
+    ras,
+    residentsDropdown,
+    rdsDropdown,
   });
 }
 
@@ -58,11 +59,12 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function AdminPeopleRAsPage() {
+export default function StaffAdminPeopleRAsPage() {
   const data = useLoaderData<typeof loader>();
+  const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
-    firstName: "First Name",
-    lastName: "Last Name",
+    firstName: "Firstname",
+    lastName: "Lastname",
     building: "Building",
     alias: "Hall",
   };
@@ -77,21 +79,53 @@ export default function AdminPeopleRAsPage() {
     hometown: "Hometown",
     class: "Class",
   };
-  const { handleSearch, filteredData } = useSearch(
-    data.ras,
-    Object.keys(columnKeys)
-  );
+  const buildingOptions = [
+    {
+      value: 0,
+      key: "All",
+    },
+    ...context.map((building) => {
+      return {
+        value: building.id,
+        key: building.name,
+      };
+    }),
+  ];
 
   return (
-    <section className="space-y-5">
-      <div className="flex">
-        <Search placeholder="Search for an RA..." handleSearch={handleSearch} />
-        <div className="ml-auto order-2 flex space-x-3">
+    <Table<IRA>
+      columnKeys={columnKeys}
+      rows={data.ras}
+      rowKeys={rowKeys}
+      search={{
+        placeholder: "Search for an RA...",
+      }}
+      filter={{
+        selected: "All",
+        key: "buildingId",
+        options: buildingOptions,
+      }}
+      InstructionComponent={() => (
+        <Instruction Icon={UserSearch} title="First Select an RA" />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title={`Delete ${row.fullName}`}
+          prompt={`Are you sure you want to delete ${row.fullName}?`}
+          toast={`Deleted ${row.fullName}`}
+        />
+      )}
+      EditComponent={({ row }) => (
+        <RAForm ra={row} rdsDropdown={data.rdsDropdown} />
+      )}
+      ActionButtons={() => (
+        <div className="ml-auto order-2 flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <RAForm
                 residentDropdown={data.residentsDropdown}
-                rdsDropdown={data.readRDsDropdown}
+                rdsDropdown={data.rdsDropdown}
               />
             </DrawerContent>
             <DrawerButton>
@@ -101,35 +135,13 @@ export default function AdminPeopleRAsPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(filteredData || data.ras, "RAs", rowKeys);
+              csv.download(data.ras, "RAs", rowKeys);
             }}
           >
-            {filteredData?.length ? "Export Subset" : "Export"}
+            Export RAs
           </IconButton>
         </div>
-      </div>
-      <Table<IRA>
-        columnKeys={columnKeys}
-        rows={filteredData || data.ras}
-        rowKeys={rowKeys}
-        InstructionComponent={() => (
-          <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-            <UserSearch className="w-7 h-7" />
-            <h2 className="text-xl font-bold">First Select an RA</h2>
-          </div>
-        )}
-        DeleteComponent={({ row }) => (
-          <DeleteForm
-            id={row.id}
-            title={`Delete ${row.fullName}`}
-            prompt={`Are you sure you want to delete ${row.fullName}?`}
-            toast={`Deleted ${row.fullName}`}
-          />
-        )}
-        EditComponent={({ row }) => (
-          <RAForm ra={row} rdsDropdown={data.readRDsDropdown} />
-        )}
-      />
-    </section>
+      )}
+    />
   );
 }

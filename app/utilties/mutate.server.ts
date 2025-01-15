@@ -1,17 +1,12 @@
 import { redirect } from "@remix-run/node";
-import { createCookie } from "@remix-run/node";
-
-export const toasts = createCookie("toast", {
-  maxAge: 60,
-});
+import { toastCookie } from "./toast.server";
 
 export default async function mutate(
   url: string,
   toast?: { message: string; level: "success" | "failure" }
 ) {
   if (toast) {
-    console.log(toast);
-    const cookie = await toasts.serialize(toast);
+    const cookie = await toastCookie.serialize(toast);
     return redirect(`${url}`, {
       headers: {
         "Set-Cookie": cookie,
