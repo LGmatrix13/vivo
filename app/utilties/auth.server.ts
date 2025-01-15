@@ -1,4 +1,4 @@
-import { createCookie } from "@remix-run/node";
+import { createCookie, redirect } from "@remix-run/node";
 import { SignJWT, jwtVerify } from "jose";
 import { Role } from "~/models/role";
 import { IUser } from "~/models/user";
@@ -6,11 +6,18 @@ import { IUser } from "~/models/user";
 const SECRET_KEY = new TextEncoder().encode(process.env.AUTHENTICATION_SECRET);
 const ISSUER = "vivo.gcc.edu";
 
-const cookie = createCookie("jwt", {
+const jwtCookie = createCookie("jwt", {
   secrets: [process.env.COOKIE_SECRET as string],
+  maxAge: 86400, // one day
 });
 
-async function signJWT(user: IUser) {
+const loginRedirect = redirect("/auth/login", {
+  headers: {
+    "Set-Cookie": await jwtCookie.serialize(""),
+  },
+});
+
+async function signJwt(user: IUser) {
   const signedJwt = await new SignJWT({ ...user })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -21,12 +28,19 @@ async function signJWT(user: IUser) {
   return signedJwt;
 }
 
-async function decodeJWT(jwt: string, role: Role) {
+async function safeReadUser(request: Request) {
   try {
+    const cookieHeader = request.headers.get("Cookie");
+    const jwt = await jwtCookie.parse(cookieHeader);
+
+    if (!jwt) {
+      return null;
+    }
+
     const { payload } = await jwtVerify(jwt, SECRET_KEY, {
       issuer: ISSUER,
-      audience: role,
     });
+
     return payload as unknown as IUser;
   } catch (cause) {
     console.log((cause as Error).message);
@@ -34,8 +48,83 @@ async function decodeJWT(jwt: string, role: Role) {
   }
 }
 
+async function safeAuthorized(request: Request, roles: Role[]) {
+  const user = await safeReadUser(request);
+
+  if (user === null) {
+    return false;
+  } else if (!roles.includes(user.role)) {
+    return false;
+  }
+
+  return true;
+}
+
+async function rejectUnauthorized(request: Request, roles: Role[]) {
+  const authorized = await safeAuthorized(request, roles);
+
+  if (!authorized) {
+    throw loginRedirect;
+  }
+}
+
+function redirectRole(role: Role, headers?: HeadersInit) {
+  switch (role) {
+    case "admin":
+    case "rd":
+      return redirect("/staff/shifts/on-duty", {
+        headers,
+      });
+    case "ra":
+      return redirect("/ra/shifts/on-duty", {
+        headers,
+      });
+    case "resident":
+      return redirect("/resident/on-duty", {
+        headers,
+      });
+  }
+}
+
+async function rejectAuthorized(request: Request) {
+  const user = await safeReadUser(request);
+
+  if (user) {
+    throw redirectRole(user.role);
+  }
+}
+
+async function readUser(request: Request, roles: Role[]) {
+  const user = await safeReadUser(request);
+
+  if (user === null) {
+    throw loginRedirect;
+  } else if (!roles.includes(user.role)) {
+    throw redirectRole(user.role);
+  }
+
+  return user;
+}
+
+async function login(user: IUser) {
+  const jwt = await signJwt(user);
+  return redirectRole(user.role, {
+    "Set-Cookie": await auth.jwtCookie.serialize(jwt),
+  });
+}
+
+async function logout() {
+  return loginRedirect;
+}
+
 export const auth = {
-  signJWT,
-  decodeJWT,
-  cookie,
+  jwtCookie,
+  signJwt,
+  safeReadUser,
+  rejectUnauthorized,
+  rejectAuthorized,
+  safeAuthorized,
+  readUser,
+  login,
+  logout,
 };
