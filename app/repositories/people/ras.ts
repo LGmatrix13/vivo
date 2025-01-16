@@ -1,7 +1,8 @@
 import { json } from "@remix-run/node";
 import { sql, eq, asc, and } from "drizzle-orm";
 //import { IRA } from "~/models/people";
-import { MasterCSV } from "~/schemas/masterCSV";
+import { MasterCSV } from "~/schemas/people/masterCSV";
+import { CreatedRA, RA } from "~/schemas/people/ra";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
 import mutate from "~/utilties/mutate.server";
@@ -16,7 +17,7 @@ import {
 type Values = { [key: string]: any };
 
 export async function readRAsAsAdmin() {
-  const ras = await db
+  const ras = await db.client
     .select({
       id: zoneTable.id,
       residentId: zoneTable.id,
@@ -61,7 +62,7 @@ export async function readRAsAsAdmin() {
 }
 
 export async function readRAsAsRD(id: number) {
-  const ras = await db
+  const ras = await db.client
     .select({
       id: zoneTable.id,
       residentId: zoneTable.id,
@@ -107,7 +108,7 @@ export async function readRAsAsRD(id: number) {
 }
 
 export async function readRAsDropdownAsAdmin() {
-  const ras = await db
+  const ras = await db.client
     .select({
       id: zoneTable.id,
       name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
@@ -125,7 +126,7 @@ export async function readRAsDropdownAsAdmin() {
 }
 
 export async function readRAsDropdownAsRD(id: number) {
-  const ras = await db
+  const ras = await db.client
     .select({
       id: zoneTable.id,
       name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
@@ -144,73 +145,46 @@ export async function readRAsDropdownAsRD(id: number) {
 }
 
 export async function createRA(values: Values, request: Request) {
-  const ra = values as IRA;
-  try {
-    await db.insert(zoneTable).values(ra);
-    return mutate(request.url, {
-      message: "Resident Created",
-      level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RA:", ra);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
+  return db.insert(request, zoneTable, CreatedRA, values, {
+    message: "Resident Created",
+    level: "success",
   });
 }
 
 export async function deleteRA(values: Values, request: Request) {
   const id = Number(values["id"]);
-  try {
-    const roomsAssigned = await db
-      .select()
-      .from(roomTable)
-      .where(eq(roomTable.zoneId, id));
+  const roomsAssigned = await db.client
+    .select()
+    .from(roomTable)
+    .where(eq(roomTable.zoneId, id));
 
-    if (roomsAssigned.length) {
-      return mutate(request.url, {
-        message: "Residents are assigned to this RA",
-        level: "failure",
-      });
-    }
-
-    await db.delete(zoneTable).where(eq(zoneTable.id, id));
-
+  if (roomsAssigned.length) {
     return mutate(request.url, {
-      message: "RA Deleted",
+      message: "Residents are assigned to this RA",
       level: "failure",
     });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RA id:", id);
   }
 
+  await db.client.delete(zoneTable).where(eq(zoneTable.id, id));
+
   return mutate(request.url, {
-    message: "System error occured",
+    message: "RA Deleted",
     level: "failure",
   });
 }
 
 export async function updateRA(values: Values, request: Request) {
-  const ra = values as IRA;
-  try {
-    await db.update(zoneTable).set(ra).where(eq(zoneTable.id, ra.id));
-    return mutate(request.url, {
+  return db.update(
+    request,
+    zoneTable,
+    RA,
+    values,
+    (values) => eq(zoneTable.id, values.id),
+    {
       message: "RA Updated",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RA:", ra);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
+    }
+  );
 }
 
 export async function uploadMasterCSV(values: Values, request: Request) {
@@ -224,7 +198,11 @@ export async function uploadMasterCSV(values: Values, request: Request) {
   const content = new TextDecoder("utf-8").decode(arrayBuffer);
   const data = csv.parse(content);
 
-  const errors = [];
+  const errors: {
+    rowNumber: number;
+    error: string;
+  }[] = [];
+  const erroredRows: Record<string, string>[] = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
     const formattedRow = {
@@ -247,10 +225,13 @@ export async function uploadMasterCSV(values: Values, request: Request) {
     const result = MasterCSV.safeParse(formattedRow);
 
     if (!result.success) {
-      errors.push({
-        rowNumber: i + 1,
-        errors: result.error.errors,
+      result.error.errors.forEach((error) => {
+        errors.push({
+          rowNumber: i + 1,
+          error: error.message,
+        });
       });
+      erroredRows.push(row);
     } else {
       const roomIndex = result.data.room.search(
         /\b[a-zA-Z0-9\-]*\d[a-zA-Z0-9\-]*\b/
@@ -258,7 +239,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
       const buildingName = result.data.room.slice(0, roomIndex).trim();
       const roomNumber = result.data.room.slice(roomIndex).trim();
 
-      let room = await db
+      let room = await db.client
         .select({
           roomId: roomTable.id,
         })
@@ -281,14 +262,14 @@ export async function uploadMasterCSV(values: Values, request: Request) {
         const roomInfo = {
           roomNumber: roomNumber,
           buildingId: (
-            await db
+            await db.client
               .select({ id: buildingTable.id })
               .from(buildingTable)
               .where(eq(buildingTable.name, buildingName))
           )[0].id, //TODO: this could throw an error if building not found
           capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0,
         };
-        room = await db
+        room = await db.client
           .insert(roomTable)
           .values(roomInfo)
           .returning({ roomId: roomTable.id });
@@ -298,12 +279,12 @@ export async function uploadMasterCSV(values: Values, request: Request) {
         roomId: room[0].roomId,
       };
 
-      await db.insert(residentTable).values(residentData);
+      await db.client.insert(residentTable).values(residentData);
 
       if (
         result.data.ra == `${result.data.lastName}, ${result.data.firstName}`
       ) {
-        const ras = await db
+        const ras = await db.client
           .select({
             residentId: residentTable.id,
             staffId: staffTable.id,
@@ -322,7 +303,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           ...item,
           alias: result.data.zone,
         }));
-        await db.insert(zoneTable).values(rasWithAlias);
+        await db.client.insert(zoneTable).values(rasWithAlias);
       }
     }
   }
@@ -350,7 +331,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
 
     if (result.success) {
       const room = (
-        await db
+        await db.client
           .select({
             roomId: residentTable.roomId,
           })
@@ -358,8 +339,8 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           .where(eq(residentTable.studentId, result.data.studentId))
       )[0];
 
-      var zone = (
-        await db
+      const zone = (
+        await db.client
           .select({
             zoneId: zoneTable.id,
           })
@@ -367,7 +348,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           .where(eq(zoneTable.alias, result.data.zone))
       )[0];
 
-      await db
+      await db.client
         .update(roomTable)
         .set({
           zoneId: zone.zoneId,
@@ -379,10 +360,11 @@ export async function uploadMasterCSV(values: Values, request: Request) {
   if (errors.length) {
     return json({
       errors,
+      erroredRows,
     });
   }
 
-  return mutate(request.url, {
+  return mutate("/staff/admin/people/residents", {
     message: "Upload Successful",
     level: "success",
   });
