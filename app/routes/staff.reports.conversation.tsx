@@ -50,10 +50,12 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
-  const formattedRows = data.conversation.map((conversation: { highPriority: any; }) => ({
-    ...conversation,
-    highPriority: conversation.highPriority ? "Yes" : "No",
-  }));
+  const formattedRows = data.conversation.map(
+    (conversation: { highPriority: any }) => ({
+      ...conversation,
+      highPriority: conversation.highPriority ? "Yes" : "No",
+    })
+  );
 
   const columnKeys = {
     submitted: "Date",

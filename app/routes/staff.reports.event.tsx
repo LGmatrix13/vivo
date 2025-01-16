@@ -1,22 +1,22 @@
 import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 
-import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
-import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
+import { auth } from "~/utilties/auth.server";
+import { IBuildingDropdown } from "~/models/housing";
+import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import {
   createEvent,
   readEventReportsAdmin,
   readEventReportsRD,
   updateEvent,
 } from "~/repositories/reports/event";
+import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
-import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
-import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
+import IconButton from "~/components/common/IconButton";
+import { csv } from "~/utilties/csv";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);

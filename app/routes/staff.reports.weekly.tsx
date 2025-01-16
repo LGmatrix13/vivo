@@ -17,7 +17,6 @@ import {
 } from "~/repositories/reports/weekly";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IWeeklyReport } from "~/models/reports";
-import { useState } from "react";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -103,7 +102,7 @@ export default function StaffReportsWeeklyPage() {
               csv.download(rows, "Weeklys", rowKeys);
             }}
           >
-            Export Weekly
+            Download Weeklys
           </IconButton>
         </div>
       )}
