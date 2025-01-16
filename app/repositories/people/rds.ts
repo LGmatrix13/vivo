@@ -1,5 +1,6 @@
 import { sql, eq, asc } from "drizzle-orm";
 import { IRD } from "~/models/people";
+import { RD } from "~/schemas/people/rd";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { staffTable, buildingTable, zoneTable } from "~/utilties/schema.server";
@@ -7,7 +8,7 @@ import { staffTable, buildingTable, zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
 export async function readRDs() {
-  const rds = await db
+  const rds = await db.client
     .select({
       id: staffTable.id,
       firstName: staffTable.firstName,
@@ -31,7 +32,7 @@ export async function readRDs() {
 }
 
 export async function readRDsDropdown() {
-  const rds = await db
+  const rds = await db.client
     .select({
       id: staffTable.id,
       rd: sql<string>`concat(${staffTable.firstName}, ' ', ${staffTable.lastName})`.as(
@@ -45,70 +46,44 @@ export async function readRDsDropdown() {
 }
 
 export async function createRD(values: Values, request: Request) {
-  const rd = values as IRD;
-  try {
-    await db.insert(staffTable).values(rd);
-    return mutate(request.url, {
-      message: "RD Created",
-      level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD:", rd);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
+  return db.insert(request, staffTable, RD, values, {
+    message: "RD Created",
+    level: "success",
   });
 }
 
 export async function updateRD(values: Values, request: Request) {
-  const rd = values as IRD;
-  try {
-    await db.update(staffTable).set(rd).where(eq(staffTable.id, rd.id));
-    return mutate(request.url, {
-      message: "RD Updated",
+  return db.update(
+    request,
+    staffTable,
+    RD,
+    values,
+    (values) => eq(staffTable.id, values.id),
+    {
+      message: "RD Created",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD:", rd);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
+    }
+  );
 }
 
 export async function deleteRD(values: Values, request: Request) {
   const id = Number(values["id"]);
-  try {
-    const rasAssigned = await db
-      .select()
-      .from(zoneTable)
-      .where(eq(zoneTable.staffId, id));
-    if (rasAssigned.length) {
-      return mutate(request.url, {
-        message: "RD has assigned RAs",
-        level: "failure",
-      });
-    }
+  const rasAssigned = await db.client
+    .select()
+    .from(zoneTable)
+    .where(eq(zoneTable.staffId, id));
 
-    await db.delete(staffTable).where(eq(staffTable.id, id));
-
+  if (rasAssigned.length) {
     return mutate(request.url, {
-      message: "RD Deleted",
-      level: "success",
+      message: "RD has assigned RAs",
+      level: "failure",
     });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("RD id:", id);
   }
 
+  await db.client.delete(staffTable).where(eq(staffTable.id, id));
+
   return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
+    message: "RD Deleted",
+    level: "success",
   });
 }

@@ -1,6 +1,7 @@
 import { sql, eq, asc, notExists, SQL } from "drizzle-orm";
 import { alias, PgTable } from "drizzle-orm/pg-core";
 import { IResident } from "~/models/people";
+import { RD } from "~/schemas/people/rd";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -14,7 +15,7 @@ import {
 type Values = { [key: string]: any };
 
 export async function readResidentsDropdownAsRA(zoneId: number) {
-  const residents = await db
+  const residents = await db.client
     .select({
       id: residentTable.id,
       name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
@@ -29,7 +30,7 @@ export async function readResidentsDropdownAsRA(zoneId: number) {
 
 export async function readResidentsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
-  const residents = await db
+  const residents = await db.client
     .select({
       id: residentTable.id,
       firstName: residentTable.firstName,
@@ -70,7 +71,7 @@ export async function readResidentsAsAdmin() {
 
 export async function readResidentsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
-  const residents = await db
+  const residents = await db.client
     .select({
       id: residentTable.id,
       firstName: residentTable.firstName,
@@ -112,7 +113,7 @@ export async function readResidentsAsRD(id: number) {
 }
 export async function readResidents() {
   const raInfoTable = alias(residentTable, "raInfoTable");
-  const residents = await db
+  const residents = await db.client
     .select({
       id: residentTable.id,
       firstName: residentTable.firstName,
@@ -151,7 +152,7 @@ export async function readResidents() {
 }
 
 export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
-  const rds = await db
+  const rds = await db.client
     .select({
       id: residentTable.id,
       resident:
@@ -160,67 +161,42 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
         ),
     })
     .from(residentTable)
-    .where(notExists(db.select().from(table).where(predicate)))
+    .where(notExists(db.client.select().from(table).where(predicate)))
     .orderBy(asc(residentTable.lastName));
 
   return rds;
 }
 
 export async function createResident(values: Values, request: Request) {
-  try {
-    await db.insert(residentTable).values(values as IResident);
-    return mutate(request.url, {
-      message: "Resident Created",
-      level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident:", values);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
+  return db.insert(request, residentTable, RD, values, {
+    message: "Created Resident",
+    level: "success",
   });
 }
 
 export async function updateResident(values: Values, request: Request) {
-  const resident = values as IResident;
-  try {
-    await db
-      .update(residentTable)
-      .set(resident)
-      .where(eq(residentTable.id, resident.id));
-    return mutate(request.url, {
-      message: "Resident Updated",
+  return db.update(
+    request,
+    residentTable,
+    RD,
+    values,
+    (values) => eq(residentTable.id, values.id),
+    {
+      message: "Updated Resident",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident:", resident);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
+    }
+  );
 }
 
 export async function deleteResident(values: Values, request: Request) {
-  const id = Number(values["id"]);
-  try {
-    await db.delete(residentTable).where(eq(residentTable.id, id));
-    return mutate(request.url, {
-      message: "Resident Deleted",
+  return db.delete(
+    request,
+    residentTable,
+    values,
+    (id) => eq(residentTable.id, id),
+    {
+      message: "Deleted Resident",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("Resident id:", id);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
+    }
+  );
 }

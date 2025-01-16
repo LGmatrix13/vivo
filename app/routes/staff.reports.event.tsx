@@ -1,19 +1,36 @@
 import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 
-import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
-import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
+import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
+import {
+  createEvent,
+  readEventReportsAdmin,
+  readEventReportsRD,
+  updateEvent,
+} from "~/repositories/reports/event";
+import { delay } from "~/utilties/delay.server";
+import { IEventReport } from "~/models/reports";
+import IconButton from "~/components/common/IconButton";
+import { csv } from "~/utilties/csv";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
+  const [events, ras] = await Promise.all([
+    admin ? readEventReportsAdmin() : readEventReportsRD(user.id),
+    admin ? readRAsAsAdmin() : readRAsAsRD(user.id),
+    delay(100),
+  ]);
 
-  return json({});
+  return json({
+    events,
+    ras,
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -24,7 +41,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
+      return await createEvent(values, request);
     case "update":
+      return await updateEvent(values, request);
   }
 }
 
@@ -54,9 +73,9 @@ export default function StaffReportsEventPage() {
   ];
 
   return (
-    <Table
+    <Table<IEventReport>
       columnKeys={columnKeys}
-      rows={[]}
+      rows={data.events}
       search={{
         placeholder: "Search for an event...",
       }}
@@ -68,6 +87,18 @@ export default function StaffReportsEventPage() {
       rowKeys={rowKeys}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an Event" />
+      )}
+      ActionButtons={({ rows }) => (
+        <div className="ml-auto order-2 flex space-x-3 h-12">
+          <IconButton
+            Icon={Download}
+            onClick={() => {
+              csv.download(rows, "Events", rowKeys);
+            }}
+          >
+            Export Events
+          </IconButton>
+        </div>
       )}
     />
   );

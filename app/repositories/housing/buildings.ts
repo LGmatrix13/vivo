@@ -1,5 +1,5 @@
 import { sql, eq, asc, count } from "drizzle-orm";
-import { Building } from "~/schemas/building";
+import { Building, CreatedBuiling } from "~/schemas/housing/building";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -13,7 +13,7 @@ import {
 type Values = { [key: string]: any };
 
 export async function readBuildings() {
-  const buildings = await db
+  const buildings = await db.client
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
@@ -35,7 +35,7 @@ export async function readBuildings() {
 }
 
 export async function readBuildingsDropdownAsAdmin() {
-  const buildings = await db
+  const buildings = await db.client
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
@@ -46,7 +46,7 @@ export async function readBuildingsDropdownAsAdmin() {
 }
 
 export async function readBuildingsDropdownAsRD(id: number) {
-  const buildings = await db
+  const buildings = await db.client
     .select({
       id: buildingTable.id,
       name: buildingTable.name,
@@ -59,21 +59,15 @@ export async function readBuildingsDropdownAsRD(id: number) {
 }
 
 export async function createBuilding(values: Values, request: Request) {
-  const createdBuilding = Building.safeParse(values);
-
-  if (createdBuilding.success) {
-    await db.insert(buildingTable).values(createdBuilding.data);
-
-    return mutate(request.url, {
-      message: "Buidling Created",
-      level: "success",
-    });
-  }
+  return db.insert(request, buildingTable, CreatedBuiling, values, {
+    message: "Created Building",
+    level: "success",
+  });
 }
 
 export async function deleteBuilding(values: Values, request: Request) {
   const id = Number(values["id"]);
-  const assignedRooms = await db
+  const assignedRooms = await db.client
     .select()
     .from(roomTable)
     .where(eq(roomTable.buildingId, id));
@@ -85,7 +79,7 @@ export async function deleteBuilding(values: Values, request: Request) {
     });
   }
 
-  await db
+  await db.client
     .delete(buildingTable)
     .where(eq(buildingTable.id, Number(values["id"])));
   return mutate(request.url, {
@@ -95,22 +89,15 @@ export async function deleteBuilding(values: Values, request: Request) {
 }
 
 export async function updateBuilding(values: Values, request: Request) {
-  const updatedBuilding = Building.safeParse(values);
-
-  if (updatedBuilding.success) {
-    await db
-      .update(buildingTable)
-      .set(updatedBuilding.data)
-      .where(eq(buildingTable.id, updatedBuilding.data.id!!));
-
-    return mutate(request.url, {
+  return db.update(
+    request,
+    buildingTable,
+    Building,
+    values,
+    (values) => eq(buildingTable.id, values.id),
+    {
       message: "Building Updated",
       level: "success",
-    });
-  }
-
-  return mutate(request.url, {
-    message: "Building Updated failed",
-    level: "failure",
-  });
+    }
+  );
 }

@@ -1,6 +1,6 @@
 import { sql, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { Room } from "~/schemas/room";
+import { CreatedRoom, Room } from "~/schemas/housing/room";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -16,7 +16,7 @@ type Values = { [key: string]: any };
 export async function readRoomsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
-  const rooms = await db
+  const rooms = await db.client
     .select({
       id: roomTable.id,
       building: buildingTable.name,
@@ -42,7 +42,7 @@ export async function readRoomsAsAdmin() {
 export async function readRoomsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
-  const rooms = await db
+  const rooms = await db.client
     .select({
       id: roomTable.id,
       building: buildingTable.name,
@@ -69,7 +69,7 @@ export async function readRoomsAsRD(id: number) {
 
 export async function deleteRoom(values: Values, request: Request) {
   const id = Number(values["id"]);
-  const peopleInRoom = await db
+  const peopleInRoom = await db.client
     .select({
       fullName: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })
@@ -84,7 +84,7 @@ export async function deleteRoom(values: Values, request: Request) {
     });
   }
 
-  await db.delete(roomTable).where(eq(roomTable.id, id));
+  await db.client.delete(roomTable).where(eq(roomTable.id, id));
   return mutate(request.url, {
     message: "Room deleted",
     level: "success",
@@ -92,33 +92,22 @@ export async function deleteRoom(values: Values, request: Request) {
 }
 
 export async function updateRoom(values: Values, request: Request) {
-  const updatedRoom = Room.safeParse(values);
-
-  if (updatedRoom.success) {
-    await db
-      .update(roomTable)
-      .set(updatedRoom.data)
-      .where(eq(roomTable.id, updatedRoom.data.id!!));
-  }
-  return mutate(request.url, {
-    message: "Updated Room",
-    level: "success",
-  });
+  return db.update(
+    request,
+    roomTable,
+    Room,
+    values,
+    (values) => eq(roomTable.id, values.id),
+    {
+      message: "Updated Room",
+      level: "success",
+    }
+  );
 }
 
 export async function createRoom(values: Values, request: Request) {
-  const createdRoom = Room.safeParse(values);
-
-  if (createdRoom.success) {
-    await db.insert(roomTable).values(createdRoom.data);
-    return mutate(request.url, {
-      message: "Room Created",
-      level: "success",
-    });
-  }
-
-  return mutate(request.url, {
-    message: "Room could not be created",
-    level: "failure",
+  return db.insert(request, roomTable, CreatedRoom, values, {
+    message: "Created Room",
+    level: "success",
   });
 }

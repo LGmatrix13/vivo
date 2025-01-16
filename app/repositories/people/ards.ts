@@ -1,7 +1,6 @@
 import { sql, eq } from "drizzle-orm";
-import { IARD } from "~/models/people";
+import { ARD, CreatedARD } from "~/schemas/people/ard";
 import { db } from "~/utilties/connection.server";
-import mutate from "~/utilties/mutate.server";
 import {
   assistantStaffTable,
   residentTable,
@@ -13,7 +12,7 @@ import {
 type Values = { [key: string]: any };
 
 export async function readARDs() {
-  const ards = await db
+  const ards = await db.client
     .select({
       id: assistantStaffTable.id,
       firstName: residentTable.firstName,
@@ -55,63 +54,35 @@ export async function readARDs() {
 }
 
 export async function createARD(values: Values, request: Request) {
-  const ard = values as IARD;
-  try {
-    await db.insert(assistantStaffTable).values(ard);
-    return mutate(request.url, {
-      message: "ARD Created",
-      level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD:", ard);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
+  return db.insert(request, assistantStaffTable, CreatedARD, values, {
+    message: "ARD Created",
     level: "success",
   });
 }
 
 export async function updateARD(values: Values, request: Request) {
-  const ard = values as IARD;
-  try {
-    await db
-      .update(assistantStaffTable)
-      .set({
-        staffId: ard.staffId,
-      })
-      .where(eq(assistantStaffTable.id, ard.id));
-    return mutate(request.url, {
+  return db.update(
+    request,
+    assistantStaffTable,
+    ARD,
+    values,
+    (values) => eq(assistantStaffTable.id, values.id),
+    {
       message: "ARD Updated",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD:", ard);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "success",
-  });
+    }
+  );
 }
 
 export async function deleteARD(values: Values, request: Request) {
-  const id = Number(values["id"]);
-  try {
-    await db.delete(assistantStaffTable).where(eq(assistantStaffTable.id, id));
-    return mutate(request.url, {
+  return db.delete(
+    request,
+    assistantStaffTable,
+    values,
+    (id) => eq(assistantStaffTable.id, id),
+    {
       message: "ARD Deleted",
       level: "success",
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    console.log("ARD ID:", id);
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "success",
-  });
+    }
+  );
 }
