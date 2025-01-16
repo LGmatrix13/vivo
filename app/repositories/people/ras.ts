@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import { sql, eq, asc, and } from "drizzle-orm";
-import { IRA } from "~/models/people";
+//import { IRA } from "~/models/people";
 import { MasterCSV } from "~/schemas/masterCSV";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
