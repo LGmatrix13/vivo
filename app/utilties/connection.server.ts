@@ -31,7 +31,7 @@ async function insert<T extends z.ZodTypeAny>(
 
   return mutate(request.url, {
     message: "System error occured",
-    level: "success",
+    level: "failure",
   });
 }
 
@@ -70,7 +70,7 @@ async function update<T extends z.ZodTypeAny>(
 
   return mutate(request.url, {
     message: "System error occured",
-    level: "success",
+    level: "failure",
   });
 }
 

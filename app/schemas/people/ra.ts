@@ -7,6 +7,10 @@ export const RA = z.object({
   staffId: z.coerce.number(),
 });
 
+export const UpdatedRA = RA.extend({
+  residentId: z.undefined(),
+});
+
 export const CreatedRA = RA.extend({
   id: z.undefined(),
 });

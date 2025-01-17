@@ -1,5 +1,5 @@
 import { sql, eq } from "drizzle-orm";
-import { ARD, CreatedARD } from "~/schemas/people/ard";
+import { ARD, CreatedARD, UpdatedARD } from "~/schemas/people/ard";
 import { db } from "~/utilties/connection.server";
 import {
   assistantStaffTable,
@@ -64,7 +64,7 @@ export async function updateARD(values: Values, request: Request) {
   return db.update(
     request,
     assistantStaffTable,
-    ARD,
+    UpdatedARD,
     values,
     (values) => eq(assistantStaffTable.id, values.id),
     {

@@ -23,6 +23,7 @@ export async function readRDs() {
         sql<string>`STRING_AGG(${buildingTable.name}, ', ' ORDER BY ${buildingTable.name})`.as(
           "buildings"
         ),
+      gender: staffTable.gender,
     })
     .from(staffTable)
     .leftJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
@@ -60,7 +61,7 @@ export async function updateRD(values: Values, request: Request) {
     values,
     (values) => eq(staffTable.id, values.id),
     {
-      message: "RD Created",
+      message: "RD Updated",
       level: "success",
     }
   );

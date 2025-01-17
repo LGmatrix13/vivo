@@ -1,7 +1,7 @@
 import Form from "../common/Form";
 import type { IRD } from "~/models/people";
 import Input from "../common/Input";
-import { IBuildingDropdown } from "~/models/housing";
+import Select from "../common/Select";
 
 interface RDFormProps {
   rd?: IRD;
@@ -9,6 +9,16 @@ interface RDFormProps {
 
 export default function RDForm(props: RDFormProps) {
   const { rd } = props;
+  const genderOptions = [
+    {
+      key: "Male",
+      value: "MALE",
+    },
+    {
+      key: "Female",
+      value: "FEMALE",
+    },
+  ];
 
   return (
     <Form button="Save RD" intent={rd ? "update" : "create"}>
@@ -46,6 +56,14 @@ export default function RDForm(props: RDFormProps) {
         name="mailbox"
         type="text"
         defaultValue={rd?.mailbox}
+        required
+      />
+      <Select
+        label="Gender"
+        placeholder="Gender"
+        name="gender"
+        selected={rd?.gender}
+        options={genderOptions}
         required
       />
     </Form>
