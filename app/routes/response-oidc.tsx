@@ -1,7 +1,7 @@
 import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { IGraphUser } from "~/models/graphUser";
 import { auth } from "~/utilties/auth.server";
-import { msal } from "~/utilties/msal.server";
+import { msal } from "~/utilties/msal";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
