@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 
-export default function StaffRCIsLayout() {
+export default function StaffAdminReportsLayout() {
   const data = useLoaderData<typeof loader>();
   const pages = [
     {
