@@ -1,6 +1,6 @@
 import { ConfidentialClientApplication } from "@azure/msal-node";
 
-export const msalConfig = {
+const msalConfig = {
   auth: {
     clientId: process.env.CLIENT_ID!,
     authority: `https://login.microsoftonline.com/${process.env.TENANT_ID}`,
