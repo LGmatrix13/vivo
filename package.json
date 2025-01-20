@@ -11,7 +11,9 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@azure/msal-browser": "^4.0.1",
     "@azure/msal-node": "^2.16.2",
+    "@azure/msal-react": "^3.0.1",
     "@fontsource-variable/golos-text": "^5.1.0",
     "@remix-run/node": "^2.13.1",
     "@remix-run/react": "^2.13.1",

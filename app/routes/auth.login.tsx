@@ -1,23 +1,26 @@
 import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
-import { Form, useLoaderData } from "@remix-run/react";
-import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
+import { ActionFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
-import { msal } from "~/utilties/msal";
+import { MsalProvider, useMsal } from "@azure/msal-react";
+import { msalConfig } from "~/utilties/msal";
+import { UnauthenticatedTemplate } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
 
 export async function loader({ request }: ActionFunctionArgs) {
   await auth.rejectAuthorized(request);
-  const url = await msal.getAuthCodeUrl({
-    redirectUri: "http://vivo.gcc.edu/response-oidc",
-  });
-
-  return {
-    url,
-  };
+  return null;
 }
 
 export default function LoginPage() {
-  const data = useLoaderData<typeof loader>();
+  const { instance } = useMsal();
+  function login() {
+    instance.loginPopup({
+      ...msalConfig,
+      scopes: ["User.Read"],
+      redirectUri: "https://vivo.gcc.edu/response-oidc",
+    });
+  }
   return (
     <main className="flex flex-row divide-x">
       <div className="flex items-center justify-center w-1/2 h-screen">
@@ -33,16 +36,15 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="w-1/2 h-screen flex flex-col items-center justify-center space-y-5">
-        <a href={data.url}>
-          <IconButton
-            Icon={Office}
-            options={{
-              type: "submit",
-            }}
-          >
-            Login with Microsoft
-          </IconButton>
-        </a>
+        <IconButton
+          onClick={() => login()}
+          Icon={Office}
+          options={{
+            type: "submit",
+          }}
+        >
+          Login with Microsoft
+        </IconButton>
       </div>
     </main>
   );
