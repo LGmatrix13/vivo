@@ -93,7 +93,7 @@ export const staffTable = pgTable("Staff", {
   lastName: varchar("last_name", { length: 225 }).notNull(),
   emailAddress: varchar("email_address", { length: 225 }).notNull(),
   mailbox: varchar("mailbox", { length: 225 }).notNull(),
-  gender: genderEnum("gender"),
+  gender: genderEnum("gender").notNull(),
 });
 
 export const adminTable = pgTable("Admin", {

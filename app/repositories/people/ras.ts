@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import { sql, eq, asc, and } from "drizzle-orm";
 //import { IRA } from "~/models/people";
 import { MasterCSV } from "~/schemas/people/masterCSV";
-import { CreatedRA, RA } from "~/schemas/people/ra";
+import { CreatedRA, RA, UpdatedRA } from "~/schemas/people/ra";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
 import mutate from "~/utilties/mutate.server";
@@ -177,7 +177,7 @@ export async function updateRA(values: Values, request: Request) {
   return db.update(
     request,
     zoneTable,
-    RA,
+    UpdatedRA,
     values,
     (values) => eq(zoneTable.id, values.id),
     {

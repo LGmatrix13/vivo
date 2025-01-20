@@ -6,6 +6,10 @@ export const ARD = z.object({
   staffId: z.coerce.number(),
 });
 
+export const UpdatedARD = ARD.extend({
+  residentId: z.undefined(),
+});
+
 export const CreatedARD = ARD.extend({
   id: z.undefined(),
 });
