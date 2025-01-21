@@ -9,27 +9,15 @@ export default function useMsal() {
     const pca = await PublicClientApplication.createPublicClientApplication(
       msalConfig
     );
-    pca.loginRedirect({
+    await pca.handleRedirectPromise();
+    const result = await pca.loginPopup({
       scopes: ["User.Read"],
       redirectUri: "http://localhost:5173/response-oidc",
     });
-  }
-
-  async function handleAccessToken() {
-    const pca = await PublicClientApplication.createPublicClientApplication(
-      msalConfig
-    );
-    const account = pca.getAllAccounts()[0];
-
-    const tokenRequest = {
-      scopes: ["User.Read"],
-      account: account,
-    };
-
-    const response = await pca.acquireTokenSilent(tokenRequest);
+    await pca.clearCache();
     fetcher.submit(
       {
-        accessToken: response.accessToken,
+        accessToken: result.accessToken,
       },
       {
         method: "POST",
@@ -39,6 +27,5 @@ export default function useMsal() {
 
   return {
     handleLogin,
-    handleAccessToken,
   };
 }
