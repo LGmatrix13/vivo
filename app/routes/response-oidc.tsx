@@ -1,16 +1,23 @@
 import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { eq } from "drizzle-orm";
 import { useEffect } from "react";
 import Loading from "~/components/common/Loading";
 import useMsal from "~/hooks/useMsal";
 import { IGraphUser } from "~/models/graphUser";
 import { auth } from "~/utilties/auth.server";
+import { db } from "~/utilties/connection.server";
+import {
+  adminTable,
+  residentTable,
+  staffTable,
+  zoneTable,
+} from "~/utilties/schema.server";
 
 export async function action({ request }: LoaderFunctionArgs) {
   const formData = await request.formData();
   const accessToken = formData.get("accessToken") as string;
 
   try {
-    // Fetch user information from Microsoft Graph API
     const graphResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -23,7 +30,45 @@ export async function action({ request }: LoaderFunctionArgs) {
 
     const userInfo = (await graphResponse.json()) as IGraphUser;
 
-    // TODO: get avatar, upsert in database, decide correct role, and redirect to correct role
+    const email = userInfo.mail;
+
+    const residents = await db.client
+      .select()
+      .from(residentTable)
+      .where(eq(residentTable.emailAddress, email))
+      .limit(1);
+
+    if (residents.length) {
+    }
+
+    const zones = await db.client
+      .select()
+      .from(zoneTable)
+      .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+      .where(eq(residentTable.emailAddress, email))
+      .limit(1);
+
+    if (zones.length) {
+    }
+
+    const staff = await db.client
+      .select()
+      .from(staffTable)
+      .where(eq(staffTable.emailAddress, email))
+      .limit(1);
+
+    if (staff.length) {
+    }
+
+    const admin = await db.client
+      .select()
+      .from(adminTable)
+      .where(eq(adminTable.emailAddress, email))
+      .limit(1);
+
+    if (admin.length) {
+    }
+
     const jwt = await auth.signJwt({
       id: 1,
       firstName: userInfo.givenName,
