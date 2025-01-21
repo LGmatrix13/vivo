@@ -13,10 +13,34 @@ import {
   staffTable,
   adminTable,
 } from "~/utilties/schema.server";
+import { Form } from "@remix-run/react";
 
 export async function action({ request }: LoaderFunctionArgs) {
   const formData = await request.formData();
-  const accessToken = formData.get("accessToken") as string;
+  const { role, ...values } = Object.fromEntries(formData);
+  if (role) {
+    const id = {
+      admin: 1,
+      resident: 4,
+      ard: 1,
+      rd: 2,
+      ra: 3,
+    };
+
+    const user = {
+      id: id[role as Role],
+      firstName: "Ethan",
+      lastName: "Kesterholt",
+      role: role as Role,
+      email: "kesterholter21@gcc.edu",
+      avatar:
+        "https://media.licdn.com/dms/image/v2/D4D03AQFBb5N0Hlk4QA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686060645931?e=1741219200&v=beta&t=QVHwVCYIQSJowagCjG53uRAIg72CoDM7HdIxDni6o8E",
+    };
+
+    return auth.login(user);
+  }
+
+  const accessToken = values["accessToken"];
 
   const graphResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
     headers: {
@@ -30,15 +54,6 @@ export async function action({ request }: LoaderFunctionArgs) {
 
   const userInfo = (await graphResponse.json()) as IGraphUser;
 
-  async function redirectWithJwt(jwt: string, role: Role) {
-    return redirect(`/${role}`, {
-      headers: {
-        "Set-Cookie": await auth.jwtCookie.serialize(jwt, {
-          expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-        }),
-      },
-    });
-  }
   const email = userInfo.mail.toUpperCase();
   const partialPayload = {
     firstName: userInfo.givenName,
@@ -54,16 +69,13 @@ export async function action({ request }: LoaderFunctionArgs) {
     .where(like(residentTable.emailAddress, email))
     .limit(1);
 
-  console.log(residents);
-
   if (residents.length) {
     const user = residents[0];
-    const jwt = await auth.signJwt({
+    return auth.login({
       ...partialPayload,
       id: user.id,
       role: "resident",
     });
-    return await redirectWithJwt(jwt, "resident");
   }
 
   const zones = await db.client
@@ -77,12 +89,11 @@ export async function action({ request }: LoaderFunctionArgs) {
 
   if (zones.length) {
     const user = zones[0];
-    const jwt = await auth.signJwt({
+    return auth.login({
       ...partialPayload,
       id: user.id,
       role: "ra",
     });
-    return await redirectWithJwt(jwt, "ra");
   }
 
   const staff = await db.client
@@ -95,12 +106,11 @@ export async function action({ request }: LoaderFunctionArgs) {
 
   if (staff.length) {
     const user = staff[0];
-    const jwt = await auth.signJwt({
+    return auth.login({
       ...partialPayload,
       id: user.id,
-      role: "rd",
+      role: "ra",
     });
-    return await redirectWithJwt(jwt, "rd");
   }
 
   const admin = await db.client
@@ -111,12 +121,11 @@ export async function action({ request }: LoaderFunctionArgs) {
 
   if (admin.length) {
     const user = admin[0];
-    const jwt = await auth.signJwt({
+    return auth.login({
       ...partialPayload,
       id: user.id,
-      role: "admin",
+      role: "ra",
     });
-    return await redirectWithJwt(jwt, "admin");
   }
 
   return redirect("/auth/login");
@@ -145,6 +154,50 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="w-1/2 h-screen flex flex-col items-center justify-center space-y-5">
+        <Form method="post">
+          <input type="hidden" value="admin" name="role" />
+          <IconButton
+            Icon={Office}
+            options={{
+              type: "submit",
+            }}
+          >
+            Login with Microsoft - Admin
+          </IconButton>
+        </Form>
+        <Form method="post">
+          <input type="hidden" value="ra" name="role" />
+          <IconButton
+            Icon={Office}
+            options={{
+              type: "submit",
+            }}
+          >
+            Login with Microsoft - RA
+          </IconButton>
+        </Form>
+        <Form method="post">
+          <input type="hidden" value="rd" name="role" />
+          <IconButton
+            Icon={Office}
+            options={{
+              type: "submit",
+            }}
+          >
+            Login with Microsoft - RD
+          </IconButton>
+        </Form>
+        <Form method="post">
+          <input type="hidden" value="resident" name="role" />
+          <IconButton
+            Icon={Office}
+            options={{
+              type: "submit",
+            }}
+          >
+            Login with Microsoft - Resident
+          </IconButton>
+        </Form>
         <IconButton
           onClick={() => handleLogin()}
           Icon={Office}
