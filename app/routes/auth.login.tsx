@@ -1,10 +1,10 @@
 import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
-import { ActionFunctionArgs } from "@remix-run/node";
-import { auth } from "~/utilties/auth.server";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 import useMsal from "~/hooks/useMsal";
+import { auth } from "~/utilties/auth.server";
 
-export async function loader({ request }: ActionFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await auth.rejectAuthorized(request);
   return null;
 }

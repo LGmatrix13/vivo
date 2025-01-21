@@ -3,64 +3,46 @@ import { useFetcher, useNavigate } from "@remix-run/react";
 import { msalConfig } from "~/utilties/msal";
 
 export default function useMsal() {
-  const pca = new PublicClientApplication(msalConfig);
   const navigate = useNavigate();
   const fetcher = useFetcher();
 
-  async function initialize() {
-    return pca.initialize().then(() => {
-      pca.handleRedirectPromise().catch((error) => {
-        console.error("Error handling redirect:", error);
-      });
+  async function handleLogin() {
+    const pca = await PublicClientApplication.createPublicClientApplication(
+      msalConfig
+    );
+    await pca.handleRedirectPromise();
+    pca.loginRedirect({
+      scopes: ["User.Read"],
+      redirectUri: "http://localhost:5173/response-oidc",
     });
   }
 
-  function handleLogin() {
-    initialize().then(() => {
-      try {
-        const accounts = pca.getAllAccounts();
+  async function handleAccessToken() {
+    const pca = await PublicClientApplication.createPublicClientApplication(
+      msalConfig
+    );
+    const accounts = pca.getAllAccounts();
 
-        if (accounts.length > 0) {
-          navigate("/response-oidc");
-        }
+    if (!accounts.length) {
+      navigate("/auth/login");
+    }
 
-        pca.loginRedirect({
-          scopes: ["User.Read"],
-          redirectUri: "http://localhost:5173/response-oidc",
-        });
-      } catch (error) {
-        console.error("Login error:", error);
+    const activeAccount = accounts[0];
+
+    const tokenRequest = {
+      scopes: ["User.Read"],
+      account: activeAccount as AccountInfo,
+    };
+
+    const response = await pca.acquireTokenSilent(tokenRequest);
+    fetcher.submit(
+      {
+        accessToken: response.accessToken,
+      },
+      {
+        method: "POST",
       }
-    });
-  }
-
-  function handleAccessToken() {
-    initialize().then(() => {
-      const accounts = pca.getAllAccounts();
-
-      if (!accounts.length) {
-        navigate("/auth/login");
-      }
-
-      const activeAccount = accounts[0];
-      pca.setActiveAccount(activeAccount);
-
-      const tokenRequest = {
-        scopes: ["User.Read"],
-        account: activeAccount as AccountInfo,
-      };
-
-      pca.acquireTokenSilent(tokenRequest).then((response) => {
-        fetcher.submit(
-          {
-            accessToken: response.accessToken,
-          },
-          {
-            method: "POST",
-          }
-        );
-      });
-    });
+    );
   }
 
   return {
