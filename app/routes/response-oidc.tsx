@@ -30,34 +30,75 @@ export async function action({ request }: LoaderFunctionArgs) {
 
     const userInfo = (await graphResponse.json()) as IGraphUser;
 
+    async function redirectWithJwt(jwt: string) {
+      return redirect("/staff/reports/conversation", {
+        headers: {
+          "Set-Cookie": await auth.jwtCookie.serialize(jwt, {
+            expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
+          }),
+        },
+      });
+    }
     const email = userInfo.mail;
+    const partialPayload = {
+      firstName: userInfo.givenName,
+      lastName: userInfo.surname,
+      email: userInfo.mail,
+    };
 
     const residents = await db.client
-      .select()
+      .select({
+        id: residentTable.id,
+      })
       .from(residentTable)
       .where(eq(residentTable.emailAddress, email))
       .limit(1);
 
     if (residents.length) {
+      const user = residents[0];
+      const jwt = await auth.signJwt({
+        ...partialPayload,
+        id: user.id,
+        role: "resident",
+      });
+      return redirectWithJwt(jwt);
     }
 
     const zones = await db.client
-      .select()
+      .select({
+        id: zoneTable.id,
+      })
       .from(zoneTable)
       .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
       .where(eq(residentTable.emailAddress, email))
       .limit(1);
 
     if (zones.length) {
+      const user = zones[0];
+      const jwt = await auth.signJwt({
+        ...partialPayload,
+        id: user.id,
+        role: "ra",
+      });
+      return redirectWithJwt(jwt);
     }
 
     const staff = await db.client
-      .select()
+      .select({
+        id: staffTable.id,
+      })
       .from(staffTable)
       .where(eq(staffTable.emailAddress, email))
       .limit(1);
 
     if (staff.length) {
+      const user = staff[0];
+      const jwt = await auth.signJwt({
+        ...partialPayload,
+        id: user.id,
+        role: "rd",
+      });
+      return redirectWithJwt(jwt);
     }
 
     const admin = await db.client
@@ -67,23 +108,16 @@ export async function action({ request }: LoaderFunctionArgs) {
       .limit(1);
 
     if (admin.length) {
+      const user = admin[0];
+      const jwt = await auth.signJwt({
+        ...partialPayload,
+        id: user.id,
+        role: "rd",
+      });
+      return redirectWithJwt(jwt);
     }
 
-    const jwt = await auth.signJwt({
-      id: 1,
-      firstName: userInfo.givenName,
-      lastName: userInfo.surname,
-      email: userInfo.mail,
-      role: "admin",
-    });
-
-    return redirect("/staff/reports/conversation", {
-      headers: {
-        "Set-Cookie": await auth.jwtCookie.serialize(jwt, {
-          expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-        }),
-      },
-    });
+    throw json({ error: "Token acquisition failed" }, { status: 500 });
   } catch (error) {
     throw json({ error: "Token acquisition failed" }, { status: 500 });
   }
