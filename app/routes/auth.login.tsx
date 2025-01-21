@@ -2,44 +2,15 @@ import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
-import { msalConfig } from "~/utilties/msal";
-import { PublicClientApplication } from "@azure/msal-browser";
-import { useEffect } from "react";
-import { useNavigate } from "@remix-run/react";
+import useMsal from "~/hooks/useMsal";
 
 export async function loader({ request }: ActionFunctionArgs) {
   await auth.rejectAuthorized(request);
   return null;
 }
 
-// Create a single instance of PublicClientApplication
-const pca = new PublicClientApplication(msalConfig);
-
 export default function LoginPage() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    pca.initialize().then(() => {
-      pca.handleRedirectPromise().catch((error) => {
-        console.error("Error handling redirect:", error);
-      });
-    });
-  }, []);
-
-  async function login() {
-    try {
-      const accounts = pca.getAllAccounts();
-      if (accounts.length > 0) {
-        navigate("/response-oidc");
-      }
-
-      await pca.loginRedirect({
-        scopes: ["User.Read"],
-        redirectUri: "http://localhost:5173/response-oidc",
-      });
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  }
+  const { handleLogin } = useMsal();
 
   return (
     <main className="flex flex-row divide-x">
@@ -57,7 +28,7 @@ export default function LoginPage() {
       </div>
       <div className="w-1/2 h-screen flex flex-col items-center justify-center space-y-5">
         <IconButton
-          onClick={() => login()}
+          onClick={() => handleLogin()}
           Icon={Office}
           options={{
             type: "submit",

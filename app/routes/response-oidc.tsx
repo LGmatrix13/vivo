@@ -1,11 +1,9 @@
-import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import Loading from "~/components/common/Loading";
+import useMsal from "~/hooks/useMsal";
 import { IGraphUser } from "~/models/graphUser";
 import { auth } from "~/utilties/auth.server";
-import { msalConfig } from "~/utilties/msal";
 
 export async function action({ request }: LoaderFunctionArgs) {
   const formData = await request.formData();
@@ -24,6 +22,7 @@ export async function action({ request }: LoaderFunctionArgs) {
     }
 
     const userInfo = (await graphResponse.json()) as IGraphUser;
+    console.log(userInfo);
 
     // TODO: get avatar, upsert in database, decide correct role, and redirect to correct role
     const jwt = await auth.signJwt({
@@ -43,54 +42,15 @@ export async function action({ request }: LoaderFunctionArgs) {
       },
     });
   } catch (error) {
-    console.error("Error acquiring token:", error);
     throw json({ error: "Token acquisition failed" }, { status: 500 });
   }
 }
 
 export default function ResponseOidcPage() {
-  const fetcher = useFetcher();
+  const { handleAccessToken } = useMsal();
 
   useEffect(() => {
-    const pca = new PublicClientApplication(msalConfig);
-
-    async function initAndHandleRedirect() {
-      try {
-        await pca.initialize();
-        const tokenResponse = await pca.handleRedirectPromise();
-        const accounts = pca.getAllAccounts();
-
-        if (!accounts.length && !tokenResponse) {
-          console.error("No accounts available after redirect.");
-          return;
-        }
-
-        // Set the active account (either from redirect response or the first account)
-        const activeAccount = tokenResponse?.account || accounts[0];
-        pca.setActiveAccount(activeAccount);
-
-        // Acquire token silently
-        const tokenRequest = {
-          scopes: ["User.Read"],
-          account: activeAccount as AccountInfo,
-        };
-        const silentTokenResponse = await pca.acquireTokenSilent(tokenRequest);
-
-        // Submit token to backend
-        fetcher.submit(
-          {
-            accessToken: silentTokenResponse.accessToken,
-          },
-          {
-            method: "POST",
-          }
-        );
-      } catch (error) {
-        console.error("Error handling redirect or acquiring token:", error);
-      }
-    }
-
-    initAndHandleRedirect();
+    handleAccessToken();
   }, []);
 
   return (
