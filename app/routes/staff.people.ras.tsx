@@ -13,6 +13,7 @@ import Table from "~/components/common/Table";
 import DeleteForm from "~/components/forms/DeleteForm";
 import RAForm from "~/components/forms/RAForm";
 import { IBuildingDropdown } from "~/models/housing";
+import { IRA } from "~/models/people";
 import {
   updateRA,
   createRA,
