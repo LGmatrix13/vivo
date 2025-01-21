@@ -31,7 +31,6 @@ export default function useMsal() {
       } catch (error) {
         console.error("Login error:", error);
       }
-      pca.clearCache();
     });
   }
 
@@ -61,7 +60,6 @@ export default function useMsal() {
           }
         );
       });
-      pca.clearCache();
     });
   }
 

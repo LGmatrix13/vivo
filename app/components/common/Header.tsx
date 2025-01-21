@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "@remix-run/react";
-import { Logo } from "./Icons";
+import { Logo, UserCircle } from "./Icons";
 import { IUser } from "~/models/user";
 
 interface HeaderProps {
@@ -12,8 +12,8 @@ interface HeaderProps {
     parent: string;
   }[];
   settings: {
-    user: IUser;
     path: string;
+    user: IUser;
   };
 }
 
@@ -54,6 +54,7 @@ export default function Header(props: HeaderProps) {
                   settings.path
                 )} md:py-7 py-5 flex items-center space-x-2`}
               >
+                <UserCircle />
                 <span className="font-bold">{settings.user.firstName}</span>
               </button>
             </Link>
