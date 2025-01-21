@@ -39,7 +39,6 @@ export default function useMsal() {
       const accounts = pca.getAllAccounts();
 
       if (!accounts.length) {
-        console.error("No accounts available after redirect.");
         navigate("/auth/login");
       }
 
@@ -50,6 +49,7 @@ export default function useMsal() {
         scopes: ["User.Read"],
         account: activeAccount as AccountInfo,
       };
+
       pca.acquireTokenSilent(tokenRequest).then((response) => {
         fetcher.submit(
           {
