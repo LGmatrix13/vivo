@@ -1,32 +1,21 @@
+import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
+import Loading from "~/components/common/Loading";
 import { IGraphUser } from "~/models/graphUser";
 import { auth } from "~/utilties/auth.server";
-import { msal } from "~/utilties/msal";
+import { msalConfig } from "~/utilties/msal";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const code = url.searchParams.get("code");
-
-  if (!code) {
-    return json({ error: "Missing authorization code" }, { status: 400 });
-  }
+export async function action({ request }: LoaderFunctionArgs) {
+  const formData = await request.formData();
+  const accessToken = formData.get("accessToken") as string;
 
   try {
-    const tokenRequest = {
-      code,
-      scopes: ["user.read"],
-      redirectUri: `${url.origin}/auth/callback`,
-    };
-
-    const tokenResponse = await msal.acquireTokenByCode(tokenRequest);
-    if (!tokenResponse.accessToken) {
-      throw new Error("Failed to acquire access token.");
-    }
-
     // Fetch user information from Microsoft Graph API
     const graphResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
       headers: {
-        Authorization: `Bearer ${tokenResponse.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -46,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       avatar: "",
     });
 
-    return redirect("/admin", {
+    return redirect("/staff/reports/conversation", {
       headers: {
         "Set-Cookie": await auth.jwtCookie.serialize(jwt, {
           expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
@@ -57,4 +46,56 @@ export async function loader({ request }: LoaderFunctionArgs) {
     console.error("Error acquiring token:", error);
     throw json({ error: "Token acquisition failed" }, { status: 500 });
   }
+}
+
+export default function ResponseOidcPage() {
+  const fetcher = useFetcher();
+
+  useEffect(() => {
+    const pca = new PublicClientApplication(msalConfig);
+
+    async function initAndHandleRedirect() {
+      try {
+        await pca.initialize();
+        const tokenResponse = await pca.handleRedirectPromise();
+        const accounts = pca.getAllAccounts();
+
+        if (!accounts.length && !tokenResponse) {
+          console.error("No accounts available after redirect.");
+          return;
+        }
+
+        // Set the active account (either from redirect response or the first account)
+        const activeAccount = tokenResponse?.account || accounts[0];
+        pca.setActiveAccount(activeAccount);
+
+        // Acquire token silently
+        const tokenRequest = {
+          scopes: ["User.Read"],
+          account: activeAccount as AccountInfo,
+        };
+        const silentTokenResponse = await pca.acquireTokenSilent(tokenRequest);
+
+        // Submit token to backend
+        fetcher.submit(
+          {
+            accessToken: silentTokenResponse.accessToken,
+          },
+          {
+            method: "POST",
+          }
+        );
+      } catch (error) {
+        console.error("Error handling redirect or acquiring token:", error);
+      }
+    }
+
+    initAndHandleRedirect();
+  }, []);
+
+  return (
+    <div className="flex justify-center items-center h-screen w-full">
+      <Loading title="Authenticating..." />
+    </div>
+  );
 }

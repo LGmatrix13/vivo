@@ -2,25 +2,45 @@ import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
-import { MsalProvider, useMsal } from "@azure/msal-react";
 import { msalConfig } from "~/utilties/msal";
-import { UnauthenticatedTemplate } from "@azure/msal-react";
 import { PublicClientApplication } from "@azure/msal-browser";
+import { useEffect } from "react";
+import { useNavigate } from "@remix-run/react";
 
 export async function loader({ request }: ActionFunctionArgs) {
   await auth.rejectAuthorized(request);
   return null;
 }
 
+// Create a single instance of PublicClientApplication
+const pca = new PublicClientApplication(msalConfig);
+
 export default function LoginPage() {
-  const { instance } = useMsal();
-  function login() {
-    instance.loginPopup({
-      ...msalConfig,
-      scopes: ["User.Read"],
-      redirectUri: "https://vivo.gcc.edu/response-oidc",
+  const navigate = useNavigate();
+  useEffect(() => {
+    pca.initialize().then(() => {
+      pca.handleRedirectPromise().catch((error) => {
+        console.error("Error handling redirect:", error);
+      });
     });
+  }, []);
+
+  async function login() {
+    try {
+      const accounts = pca.getAllAccounts();
+      if (accounts.length > 0) {
+        navigate("/response-oidc");
+      }
+
+      await pca.loginRedirect({
+        scopes: ["User.Read"],
+        redirectUri: "http://localhost:5173/response-oidc",
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   }
+
   return (
     <main className="flex flex-row divide-x">
       <div className="flex items-center justify-center w-1/2 h-screen">
