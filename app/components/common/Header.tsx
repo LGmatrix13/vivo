@@ -54,11 +54,6 @@ export default function Header(props: HeaderProps) {
                   settings.path
                 )} md:py-7 py-5 flex items-center space-x-2`}
               >
-                <img
-                  src={settings.user.avatar}
-                  alt={`${settings.user.firstName}'s Profile Picture`}
-                  className={`w-5 h-5 rounded-full`}
-                />
                 <span className="font-bold">{settings.user.firstName}</span>
               </button>
             </Link>

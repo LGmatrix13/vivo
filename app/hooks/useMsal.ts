@@ -31,6 +31,7 @@ export default function useMsal() {
       } catch (error) {
         console.error("Login error:", error);
       }
+      pca.clearCache();
     });
   }
 
@@ -60,18 +61,12 @@ export default function useMsal() {
           }
         );
       });
-    });
-  }
-
-  function handleLogout() {
-    pca.initialize().then(() => {
-      pca.logoutRedirect();
+      pca.clearCache();
     });
   }
 
   return {
     handleLogin,
     handleAccessToken,
-    handleLogout,
   };
 }

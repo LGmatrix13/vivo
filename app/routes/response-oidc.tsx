@@ -23,6 +23,19 @@ export async function action({ request }: LoaderFunctionArgs) {
 
     const userInfo = (await graphResponse.json()) as IGraphUser;
 
+    const photoGraph = await fetch(
+      "https://graph.microsoft.com/v1.0/me/photo/$value",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const photoBlob = await photoGraph.blob();
+    console.log(photoBlob);
+    const photoUrl = URL.createObjectURL(photoBlob);
+
     // TODO: get avatar, upsert in database, decide correct role, and redirect to correct role
     const jwt = await auth.signJwt({
       id: 1,
@@ -30,7 +43,6 @@ export async function action({ request }: LoaderFunctionArgs) {
       lastName: userInfo.surname,
       email: userInfo.mail,
       role: "admin",
-      avatar: "",
     });
 
     return redirect("/staff/reports/conversation", {

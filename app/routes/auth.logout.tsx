@@ -1,5 +1,5 @@
 import { auth } from "~/utilties/auth.server";
 
-export async function loader() {
+export function loader() {
   return auth.logout();
 }
