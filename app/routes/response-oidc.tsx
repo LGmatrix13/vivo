@@ -22,7 +22,6 @@ export async function action({ request }: LoaderFunctionArgs) {
     }
 
     const userInfo = (await graphResponse.json()) as IGraphUser;
-    console.log(userInfo);
 
     // TODO: get avatar, upsert in database, decide correct role, and redirect to correct role
     const jwt = await auth.signJwt({
