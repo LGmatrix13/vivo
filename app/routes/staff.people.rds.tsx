@@ -20,7 +20,6 @@ import {
 } from "~/repositories/people/rds";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const [rds] = await Promise.all([readRDs(), delay(100)]);

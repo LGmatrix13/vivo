@@ -1,56 +1,144 @@
 import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
-import { Form } from "@remix-run/react";
-import { ActionFunctionArgs } from "@remix-run/node";
-// import { msal } from "~/utilties/msal.server";
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import useMsal from "~/hooks/useMsal";
 import { auth } from "~/utilties/auth.server";
+import { like, eq } from "drizzle-orm";
+import { IGraphUser } from "~/models/graphUser";
 import { Role } from "~/models/role";
+import { db } from "~/utilties/connection.server";
+import {
+  residentTable,
+  zoneTable,
+  staffTable,
+  adminTable,
+} from "~/utilties/schema.server";
+import { Form } from "@remix-run/react";
 
-export async function loader({ request }: ActionFunctionArgs) {
+export async function action({ request }: LoaderFunctionArgs) {
+  const formData = await request.formData();
+  const { role, ...values } = Object.fromEntries(formData);
+  if (role) {
+    const id = {
+      admin: 1,
+      resident: 4,
+      ard: 1,
+      rd: 2,
+      ra: 3,
+    };
+
+    const user = {
+      id: id[role as Role],
+      firstName: "Ethan",
+      lastName: "Kesterholt",
+      role: role as Role,
+      email: "kesterholter21@gcc.edu",
+      avatar:
+        "https://media.licdn.com/dms/image/v2/D4D03AQFBb5N0Hlk4QA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686060645931?e=1741219200&v=beta&t=QVHwVCYIQSJowagCjG53uRAIg72CoDM7HdIxDni6o8E",
+    };
+
+    return auth.login(user);
+  }
+
+  const accessToken = values["accessToken"];
+
+  const graphResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!graphResponse.ok) {
+    throw new Error("Failed to fetch user profile.");
+  }
+
+  const userInfo = (await graphResponse.json()) as IGraphUser;
+
+  const email = userInfo.mail.toUpperCase();
+  const partialPayload = {
+    firstName: userInfo.givenName,
+    lastName: userInfo.surname,
+    email: userInfo.mail,
+  };
+
+  const residents = await db.client
+    .select({
+      id: residentTable.id,
+    })
+    .from(residentTable)
+    .where(like(residentTable.emailAddress, email))
+    .limit(1);
+
+  if (residents.length) {
+    const user = residents[0];
+    return auth.login({
+      ...partialPayload,
+      id: user.id,
+      role: "resident",
+    });
+  }
+
+  const zones = await db.client
+    .select({
+      id: zoneTable.id,
+    })
+    .from(zoneTable)
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .where(like(residentTable.emailAddress, email))
+    .limit(1);
+
+  if (zones.length) {
+    const user = zones[0];
+    return auth.login({
+      ...partialPayload,
+      id: user.id,
+      role: "ra",
+    });
+  }
+
+  const staff = await db.client
+    .select({
+      id: staffTable.id,
+    })
+    .from(staffTable)
+    .where(like(staffTable.emailAddress, email))
+    .limit(1);
+
+  if (staff.length) {
+    const user = staff[0];
+    return auth.login({
+      ...partialPayload,
+      id: user.id,
+      role: "ra",
+    });
+  }
+
+  const admin = await db.client
+    .select()
+    .from(adminTable)
+    .where(like(adminTable.emailAddress, email))
+    .limit(1);
+
+  if (admin.length) {
+    const user = admin[0];
+    return auth.login({
+      ...partialPayload,
+      id: user.id,
+      role: "ra",
+    });
+  }
+
+  return redirect("/auth/login");
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
   await auth.rejectAuthorized(request);
   return null;
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  // USE BELOW FOR MS-AUTH
-  // const redirectUri = `${new URL(request.url).origin}/auth/callback`;
-  // const authUrlRequest = {
-  //   scopes: ["user.read"],
-  //   redirectUri,
-  // };
-  // try {
-  //   const authCodeUrl = await msal.getAuthCodeUrl(authUrlRequest);
-  //   return redirect(authCodeUrl);
-  // } catch (error) {
-  //   console.error(error);
-  //   throw json({ error: "Authentication failed" }, { status: 500 });
-  // }
-  const formData = await request.formData();
-  const { intent, ...values } = Object.fromEntries(formData);
-  const role = values["role"] as Role;
-
-  const id = {
-    admin: 1,
-    resident: 4,
-    ard: 1,
-    rd: 2,
-    ra: 3,
-  };
-
-  const user = {
-    id: id[role],
-    firstName: "Ethan",
-    lastName: "Kesterholt",
-    role: role,
-    email: "kesterholter21@gcc.edu",
-    avatar:
-      "https://media.licdn.com/dms/image/v2/D4D03AQFBb5N0Hlk4QA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686060645931?e=1741219200&v=beta&t=QVHwVCYIQSJowagCjG53uRAIg72CoDM7HdIxDni6o8E",
-  };
-
-  return auth.login(user);
-}
-
 export default function LoginPage() {
+  const { handleLogin } = useMsal();
+
   return (
     <main className="flex flex-row divide-x">
       <div className="flex items-center justify-center w-1/2 h-screen">
@@ -110,6 +198,15 @@ export default function LoginPage() {
             Login with Microsoft - Resident
           </IconButton>
         </Form>
+        <IconButton
+          onClick={() => handleLogin()}
+          Icon={Office}
+          options={{
+            type: "submit",
+          }}
+        >
+          Login with Microsoft
+        </IconButton>
       </div>
     </main>
   );
