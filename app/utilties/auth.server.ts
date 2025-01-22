@@ -11,11 +11,13 @@ const jwtCookie = createCookie("jwt", {
   maxAge: 86400, // one day
 });
 
-const loginRedirect = redirect("/auth/login", {
-  headers: {
-    "Set-Cookie": await jwtCookie.serialize(""),
-  },
-});
+async function loginRedirect() {
+  return redirect("/auth/login", {
+    headers: {
+      "Set-Cookie": await jwtCookie.serialize(""),
+    },
+  });
+}
 
 async function signJwt(user: IUser) {
   const signedJwt = await new SignJWT({ ...user })
@@ -64,7 +66,7 @@ async function rejectUnauthorized(request: Request, roles: Role[]) {
   const authorized = await safeAuthorized(request, roles);
 
   if (!authorized) {
-    throw loginRedirect;
+    throw await loginRedirect();
   }
 }
 
@@ -98,7 +100,7 @@ async function readUser(request: Request, roles: Role[]) {
   const user = await safeReadUser(request);
 
   if (user === null) {
-    throw loginRedirect;
+    throw await loginRedirect();
   } else if (!roles.includes(user.role)) {
     throw redirectRole(user.role);
   }
@@ -114,7 +116,7 @@ async function login(user: IUser) {
 }
 
 async function logout() {
-  return loginRedirect;
+  return loginRedirect();
 }
 
 export const auth = {
