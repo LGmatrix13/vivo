@@ -1,4 +1,4 @@
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, desc } from "drizzle-orm";
 import { CreatedRound, Round } from "~/schemas/reports/round";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -32,7 +32,7 @@ export async function readRoundReports() {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     //add inner joins here
-    .orderBy(roundReportTable.submitted);
+    .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {
     return {
@@ -66,7 +66,7 @@ export async function readRoundReportsAsRD(id: number) {
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(staffTable.id, id))
     //add inner joins here
-    .orderBy(roundReportTable.submitted);
+    .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {
     return {
@@ -100,7 +100,7 @@ export async function readRoundReportsAsRA(id: number) {
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(zoneTable.id, id))
     //add inner joins here
-    .orderBy(roundReportTable.submitted);
+    .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {
     return {
