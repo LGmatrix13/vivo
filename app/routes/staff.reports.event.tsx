@@ -9,6 +9,7 @@ import { IBuildingDropdown } from "~/models/housing";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import {
   createEvent,
+  createReadReport,
   readEventReportsAdmin,
   readEventReportsRD,
   updateEvent,
@@ -44,6 +45,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createEvent(values, request);
     case "update":
       return await updateEvent(values, request);
+    case "create.read":
+      return await createReadReport(values, request);
   }
 }
 

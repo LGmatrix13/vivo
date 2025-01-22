@@ -9,6 +9,7 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import {
+  createReadReport,
   createRound,
   readRoundReports,
   readRoundReportsAsRD,
@@ -43,6 +44,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createRound(values, request);
     case "update":
       return await updateRound(values, request);
+    case "create.read":
+      return await createReadReport(values, request);
   }
 }
 

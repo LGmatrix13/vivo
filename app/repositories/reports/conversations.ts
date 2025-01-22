@@ -194,3 +194,12 @@ export async function updateConversation(values: Values, request: Request) {
     }
   );
 }
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Conversation,
+    values,
+  );
+}

@@ -193,3 +193,12 @@ export async function updateWeekly(values: Values, request: Request) {
     }
   );
 }
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Weekly,
+    values,
+  );
+}

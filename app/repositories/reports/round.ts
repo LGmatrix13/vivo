@@ -153,3 +153,12 @@ export async function updateRound(values: Values, request: Request) {
     }
   );
 }
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Round,
+    values,
+  );
+}
