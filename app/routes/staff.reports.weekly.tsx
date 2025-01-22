@@ -102,7 +102,7 @@ export default function StaffReportsWeeklyPage() {
               csv.download(rows, "Weeklys", rowKeys);
             }}
           >
-            Download Weeklys
+            Download Weekly Reports
           </IconButton>
         </div>
       )}

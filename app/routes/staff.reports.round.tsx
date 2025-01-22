@@ -95,7 +95,7 @@ export default function StaffReportsRoundPage() {
               csv.download(rows, "Rounds", rowKeys);
             }}
           >
-            Export Rounds
+            Export Round Reports
           </IconButton>
         </div>
       )}
