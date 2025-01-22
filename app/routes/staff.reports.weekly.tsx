@@ -10,6 +10,7 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import {
+  createReadReport,
   createWeekly,
   readWeeklyReports,
   readWeeklyReportsAsRD,
@@ -44,6 +45,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createWeekly(values, request);
     case "update":
       return await updateWeekly(values, request);
+    case "create.read":
+      return await createReadReport(values, request);
   }
 }
 

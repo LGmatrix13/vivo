@@ -3,6 +3,7 @@ import { CreatedWeekly, Weekly } from "~/schemas/reports/weekly";
 import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
+  readTable,
   staffTable,
   weeklyReportTable,
 } from "~/utilties/schema.server";
@@ -170,5 +171,14 @@ export async function updateWeekly(values: Values, request: Request) {
       message: "Weekly Updated",
       level: "success",
     }
+  );
+}
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Weekly,
+    values,
   );
 }

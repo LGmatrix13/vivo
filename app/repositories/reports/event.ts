@@ -5,6 +5,7 @@ import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,
   eventReportTable,
+  readTable,
   staffTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
@@ -130,5 +131,14 @@ export async function updateEvent(values: Values, request: Request) {
       message: "Event Updated",
       level: "success",
     }
+  );
+}
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Event,
+    values,
   );
 }

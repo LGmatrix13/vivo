@@ -10,6 +10,7 @@ import {
   buildingTable,
   staffTable,
   consverationReportTable,
+  readTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
@@ -159,5 +160,14 @@ export async function updateConversation(values: Values, request: Request) {
       message: "Conversation Created",
       level: "success",
     }
+  );
+}
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Conversation,
+    values,
   );
 }

@@ -13,6 +13,7 @@ import {
   updateConversation,
   createConversation,
   readConversationReportsAsRD,
+  createReadReport
 } from "~/repositories/reports/conversations";
 import { readConversationReports } from "~/repositories/reports/conversations";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
@@ -44,6 +45,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createConversation(values, request);
     case "update":
       return await updateConversation(values, request);
+    case "create.read":
+      return await createReadReport(values, request);
   }
 }
 

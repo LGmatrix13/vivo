@@ -6,6 +6,7 @@ import {
   buildingTable,
   staffTable,
   roundReportTable,
+  readTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
@@ -130,5 +131,14 @@ export async function updateRound(values: Values, request: Request) {
       message: "Round Created",
       level: "success",
     }
+  );
+}
+
+export async function createReadReport(values: Values, request: Request){
+  return db.insert(
+    request,
+    readTable,
+    Round,
+    values,
   );
 }
