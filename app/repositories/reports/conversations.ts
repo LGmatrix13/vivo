@@ -1,4 +1,5 @@
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, desc } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import {
   Conversation,
   CreatedConversation,
@@ -15,17 +16,21 @@ import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
 export async function readConversationReports() {
+  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
+      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+        "residentName"
+      ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
       zoneId: consverationReportTable.zoneId,
       sentiment: consverationReportTable.sentiment,
       highPriority: consverationReportTable.highPriority,
-      ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+      ra: sql<string>`${raInfoTable.firstName} || ' ' || ${raInfoTable.lastName}`.as(
         "raName"
       ),
       buildingId: buildingTable.id,
@@ -34,9 +39,10 @@ export async function readConversationReports() {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
     //add inner joins here
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((event) => {
     return {
@@ -49,10 +55,14 @@ export async function readConversationReports() {
 }
 
 export async function readConversationReportsAsRD(id: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
+      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+        "residentName"
+      ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -69,9 +79,10 @@ export async function readConversationReportsAsRD(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
     .where(eq(staffTable.id, id))
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((event) => {
     return {
@@ -84,10 +95,14 @@ export async function readConversationReportsAsRD(id: number) {
 }
 
 export async function readConversationReportsAsRA(id: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
+      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+        "residentName"
+      ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -104,9 +119,10 @@ export async function readConversationReportsAsRA(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
     .where(eq(zoneTable.id, id))
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((conversation) => {
     return {

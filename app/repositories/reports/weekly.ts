@@ -1,4 +1,4 @@
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, desc } from "drizzle-orm";
 import { CreatedWeekly, Weekly } from "~/schemas/reports/weekly";
 import { db } from "~/utilties/connection.server";
 import {
@@ -36,7 +36,7 @@ export async function readWeeklyReports() {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     //add inner joins here
-    .orderBy(weeklyReportTable.submittedOn);
+    .orderBy(desc(weeklyReportTable.submittedOn));
 
   const formattedStatus = {
     GREAT: "Great",
@@ -88,7 +88,7 @@ export async function readWeeklyReportsAsRD(id: number) {
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     //add inner joins here
     .where(eq(staffTable.id, id))
-    .orderBy(weeklyReportTable.submittedOn);
+    .orderBy(desc(weeklyReportTable.submittedOn));
 
   const formattedStatus = {
     GREAT: "Great",
@@ -140,7 +140,7 @@ export async function readWeeklyReportsAsRA(id: number) {
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     //add inner joins here
     .where(eq(zoneTable.id, id))
-    .orderBy(weeklyReportTable.submittedOn);
+    .orderBy(desc(weeklyReportTable.submittedOn));
 
   const formattedData = data.map((weekly) => {
     return {

@@ -1,4 +1,4 @@
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, desc } from "drizzle-orm";
 import { CreatedEvent, Event } from "~/schemas/reports/event";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -32,7 +32,7 @@ export async function readEventReportsAdmin() {
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .orderBy(eventReportTable.time);
+    .orderBy(desc(eventReportTable.time));
 
   const formattedData = data.map((event) => {
     return {
@@ -66,7 +66,7 @@ export async function readEventReportsRD(id: number) {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(staffTable.id, id))
-    .orderBy(eventReportTable.time);
+    .orderBy(desc(eventReportTable.time));
 
   const formattedData = data.map((event) => {
     return {
@@ -100,7 +100,7 @@ export async function readEventReportsRA(id: number) {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(zoneTable.id, id))
-    .orderBy(eventReportTable.time);
+    .orderBy(desc(eventReportTable.time));
 
   const formattedData = data.map((event) => {
     return {

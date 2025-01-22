@@ -60,6 +60,7 @@ export default function StaffReportsConversationPage() {
   const columnKeys = {
     submitted: "Date",
     ra: "RA",
+    residentName: "Resident",
     level: "Level",
     highPriority: "High Priority",
   };
