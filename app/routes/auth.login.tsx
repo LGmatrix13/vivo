@@ -61,20 +61,35 @@ export async function action({ request }: LoaderFunctionArgs) {
     email: userInfo.mail,
   };
 
-  const residents = await db.client
-    .select({
-      id: residentTable.id,
-    })
-    .from(residentTable)
-    .where(like(residentTable.emailAddress, email))
-    .limit(1);
+  const admin = await db.client
+  .select()
+  .from(adminTable)
+  .where(like(adminTable.emailAddress, email))
+  .limit(1);
 
-  if (residents.length) {
-    const user = residents[0];
+  if (admin.length) {
+    const user = admin[0];
     return auth.login({
       ...partialPayload,
       id: user.id,
-      role: "resident",
+      role: "admin",
+    });
+  }
+
+  const staff = await db.client
+  .select({
+    id: staffTable.id,
+  })
+  .from(staffTable)
+  .where(like(staffTable.emailAddress, email))
+  .limit(1);
+
+  if (staff.length) {
+    const user = staff[0];
+    return auth.login({
+      ...partialPayload,
+      id: user.id,
+      role: "rd",
     });
   }
 
@@ -96,35 +111,20 @@ export async function action({ request }: LoaderFunctionArgs) {
     });
   }
 
-  const staff = await db.client
+  const residents = await db.client
     .select({
-      id: staffTable.id,
+      id: residentTable.id,
     })
-    .from(staffTable)
-    .where(like(staffTable.emailAddress, email))
+    .from(residentTable)
+    .where(like(residentTable.emailAddress, email))
     .limit(1);
 
-  if (staff.length) {
-    const user = staff[0];
+  if (residents.length) {
+    const user = residents[0];
     return auth.login({
       ...partialPayload,
       id: user.id,
-      role: "ra",
-    });
-  }
-
-  const admin = await db.client
-    .select()
-    .from(adminTable)
-    .where(like(adminTable.emailAddress, email))
-    .limit(1);
-
-  if (admin.length) {
-    const user = admin[0];
-    return auth.login({
-      ...partialPayload,
-      id: user.id,
-      role: "ra",
+      role: "resident",
     });
   }
 
