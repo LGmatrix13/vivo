@@ -4,7 +4,6 @@ import Loading from "~/components/common/Loading";
 import { auth } from "~/utilties/auth.server";
 
 export function action() {
-  console.log("ran");
   return auth.logout();
 }
 
