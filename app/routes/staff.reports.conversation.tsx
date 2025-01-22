@@ -122,7 +122,7 @@ export default function StaffReportsConversationPage() {
               csv.download(rows, "Conversations", rowKeys);
             }}
           >
-            Export Conversations
+            Export Conversation Reports
           </IconButton>
         </div>
       )}
