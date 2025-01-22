@@ -10,7 +10,6 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import {
-  createReadReport,
   createWeekly,
   readWeeklyReports,
   readWeeklyReportsAsRD,
@@ -18,6 +17,7 @@ import {
 } from "~/repositories/reports/weekly";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IWeeklyReport } from "~/models/reports";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -88,6 +88,7 @@ export default function StaffReportsWeeklyPage() {
       search={{
         placeholder: "Search for a weekly report...",
       }}
+      enableReads={true}
       filter={{
         key: "buildingId",
         selected: "All",

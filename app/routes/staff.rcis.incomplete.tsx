@@ -75,6 +75,7 @@ export default function StaffRCIsIncompletePage() {
         options: buildingOptions,
       }}
       rowKeys={rowKeys}
+      enableReads={true}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}

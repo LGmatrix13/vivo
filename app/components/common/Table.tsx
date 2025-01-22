@@ -24,6 +24,7 @@ interface TableProps<T> {
     cells?: Record<string, (row: T) => React.ReactElement>;
     selectedRows?: Record<string, (row: T) => React.ReactElement>;
   };
+  enableReads?: boolean;
   ActionButtons?: (props: { rows: T[] }) => React.ReactElement;
   InstructionComponent?: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
@@ -46,6 +47,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     EditComponent,
     mixins = {},
     onRowRead = () => {},
+    enableReads = false,
   } = props;
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
@@ -171,7 +173,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                   className={`${
                     opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
                   } transition ease-in-out ${
-                    !readRows.includes(row.id)
+                    !readRows.includes(row.id) && enableReads
                       ? "border-l-4 border-l-blue-600"
                       : "pl-4"
                   }`}

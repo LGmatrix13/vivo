@@ -86,6 +86,7 @@ export default function StaffReportsRoundPage() {
         selected: "All",
         options: buildingOptions,
       }}
+      enableReads={true}
       rowKeys={rowKeys}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select a Round" />

@@ -77,6 +77,7 @@ export default function StaffRCIsCompletePage() {
         key: "buildingId",
         options: buildingOptions,
       }}
+      enableReads={true}
       mixins={{
         cells: {
           totalIssues: (row) => {

@@ -115,6 +115,7 @@ export default function ShiftTable<T extends Shift>(
           day: "Day",
           name: "Name",
         }}
+        enableReads={false}
         rows={filteredShifts}
         InstructionComponent={() => (
           <Instruction title="First Select a Shift" Icon={ClockSearch} />

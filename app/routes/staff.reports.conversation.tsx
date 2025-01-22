@@ -96,6 +96,7 @@ export default function StaffReportsConversationPage() {
         selected: "All",
       }}
       rowKeys={rowKeys}
+      enableReads={true}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select a Conversation" />
       )}
