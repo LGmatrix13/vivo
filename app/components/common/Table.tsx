@@ -97,71 +97,6 @@ export default function Table<T extends { [key: string]: any }>(
     setFilterOption(id);
   };
 
-  function TableRow({ rowIndex, row }: { rowIndex: number; row: T }) {
-    return (
-      <tr
-        className={`${
-          opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
-        } transition ease-in-out`}
-        key={rowIndex}
-      >
-        {originalColumnKeys.map((originalColumnKey, colIndex) => (
-          <td
-            className={`px-5 py-3 cursor-pointer ${
-              colIndex > 1 ? "hidden md:table-cell" : ""
-            }`}
-            onClick={() => {
-              setOpened(rowIndex);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            key={colIndex}
-          >
-            {cells && cells[originalColumnKey] ? (
-              cells[originalColumnKey](row)
-            ) : (
-              <>
-                {row[originalColumnKey] === null ||
-                row[originalColumnKey] === undefined
-                  ? "-"
-                  : row[originalColumnKey]}
-              </>
-            )}
-          </td>
-        ))}
-        {EditComponent && (
-          <td className="py-3">
-            <DrawerProvider>
-              <DrawerContent>
-                <EditComponent row={row} />
-              </DrawerContent>
-              <DrawerButton>
-                <button>
-                  <Pencil />
-                </button>
-              </DrawerButton>
-            </DrawerProvider>
-          </td>
-        )}
-        {EditComponent && <td />}
-        {DeleteComponent && (
-          <td className="py-3">
-            <DrawerProvider>
-              <DrawerContent>
-                <DeleteComponent row={row} />
-              </DrawerContent>
-              <DrawerButton>
-                <button>
-                  <Trash />
-                </button>
-              </DrawerButton>
-            </DrawerProvider>
-          </td>
-        )}
-        {DeleteComponent && <td />}
-      </tr>
-    );
-  }
-
   return (
     <section className="space-y-5">
       {(filter || search || ActionButtons) && (
@@ -228,7 +163,66 @@ export default function Table<T extends { [key: string]: any }>(
             </thead>
             <tbody className="divide-y">
               {sortedRows.map((row, rowIndex) => (
-                <TableRow row={row} rowIndex={rowIndex} />
+                <tr
+                  className={`${
+                    opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
+                  } transition ease-in-out`}
+                  key={rowIndex}
+                >
+                  {originalColumnKeys.map((originalColumnKey, colIndex) => (
+                    <td
+                      className={`px-5 py-3 cursor-pointer ${
+                        colIndex > 1 ? "hidden md:table-cell" : ""
+                      }`}
+                      onClick={() => {
+                        setOpened(rowIndex);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      key={colIndex}
+                    >
+                      {cells && cells[originalColumnKey] ? (
+                        cells[originalColumnKey](row)
+                      ) : (
+                        <>
+                          {row[originalColumnKey] === null ||
+                          row[originalColumnKey] === undefined
+                            ? "-"
+                            : row[originalColumnKey]}
+                        </>
+                      )}
+                    </td>
+                  ))}
+                  {EditComponent && (
+                    <td className="py-3">
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <EditComponent row={row} />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Pencil />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    </td>
+                  )}
+                  {EditComponent && <td />}
+                  {DeleteComponent && (
+                    <td className="py-3">
+                      <DrawerProvider>
+                        <DrawerContent>
+                          <DeleteComponent row={row} />
+                        </DrawerContent>
+                        <DrawerButton>
+                          <button>
+                            <Trash />
+                          </button>
+                        </DrawerButton>
+                      </DrawerProvider>
+                    </td>
+                  )}
+                  {DeleteComponent && <td />}
+                </tr>
               ))}
             </tbody>
           </table>
