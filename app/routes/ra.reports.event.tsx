@@ -56,7 +56,7 @@ export default function AdminReportsRoundPage() {
   return (
     <Table<IEventReport>
       columnKeys={columnKeys}
-      rows={data.events}
+      rows={data.events as IEventReport[]}
       rowKeys={rowKeys}
       search={{
         placeholder: "Search for an event...",
