@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -9,7 +14,6 @@ import { IBuildingDropdown } from "~/models/housing";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import {
   createEvent,
-  createReadReport,
   readEventReportsAdmin,
   readEventReportsRD,
   updateEvent,
@@ -18,6 +22,7 @@ import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -35,23 +40,32 @@ export async function loader({ request }: ActionFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+  const user = await auth.readUser(request, ["admin", "rd"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
+  console.log(intent, values);
   switch (intent) {
     case "create":
       return await createEvent(values, request);
     case "update":
       return await updateEvent(values, request);
     case "create.read":
-      return await createReadReport(values, request);
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "EVENT",
+          personType: "STAFF",
+        },
+        request
+      );
   }
 }
 
 export default function StaffReportsEventPage() {
   const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
   const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
     time: "Time",
@@ -103,6 +117,17 @@ export default function StaffReportsEventPage() {
           </IconButton>
         </div>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }

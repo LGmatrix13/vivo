@@ -9,7 +9,6 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import {
-  createReadReport,
   createRound,
   readRoundReports,
   readRoundReportsAsRD,
@@ -18,6 +17,7 @@ import {
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IRoundReport } from "~/models/reports";
 import { useState } from "react";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);

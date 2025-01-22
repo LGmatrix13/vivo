@@ -45,6 +45,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     DeleteComponent,
     EditComponent,
     mixins = {},
+    onRowRead = () => {},
   } = props;
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
@@ -170,7 +171,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                   className={`${
                     opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
                   } transition ease-in-out ${
-                    !readRows.includes(rowIndex)
+                    !readRows.includes(row.id)
                       ? "border-l-4 border-l-blue-600"
                       : "pl-4"
                   }`}
@@ -183,6 +184,9 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                       }`}
                       onClick={() => {
                         setReadRows([...readRows, rowIndex]);
+                        if (!readRows.includes(row.id)) {
+                          onRowRead({ row });
+                        }
                         setOpened(rowIndex);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}

@@ -153,4 +153,3 @@ export async function updateEvent(values: Values, request: Request) {
     }
   );
 }
-

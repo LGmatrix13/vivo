@@ -13,12 +13,10 @@ import {
   updateConversation,
   createConversation,
   readConversationReportsAsRD,
-  createReadReport
 } from "~/repositories/reports/conversations";
 import { readConversationReports } from "~/repositories/reports/conversations";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
-import { IConversationReport } from "~/models/reports";
-import { useState } from "react";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
