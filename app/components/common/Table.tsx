@@ -28,9 +28,10 @@ interface TableProps<T> {
   InstructionComponent?: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
   DeleteComponent?: (props: { row: T }) => React.ReactElement;
+  onRowRead?: (args: { row: T }) => void;
 }
 
-export default function Table<T extends { [key: string]: any }>(
+export default function Table<T extends { [key: string]: any; read?: boolean }>(
   props: TableProps<T>
 ) {
   const {
@@ -59,7 +60,9 @@ export default function Table<T extends { [key: string]: any }>(
     filter && filterOption
       ? rows.filter((row) => row[filter.key] === filterOption)
       : rows;
-
+  const [readRows, setReadRows] = useState<number[]>(
+    rows.filter((row) => row.read).map((row) => row.id)
+  );
   // Search rows based on the search query
   const searchedRows = filteredRows.filter((row) =>
     originalColumnKeys.some((key) =>
@@ -166,7 +169,11 @@ export default function Table<T extends { [key: string]: any }>(
                 <tr
                   className={`${
                     opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
-                  } transition ease-in-out`}
+                  } transition ease-in-out ${
+                    !readRows.includes(rowIndex)
+                      ? "border-l-4 border-l-blue-600"
+                      : "pl-4"
+                  }`}
                   key={rowIndex}
                 >
                   {originalColumnKeys.map((originalColumnKey, colIndex) => (
@@ -175,6 +182,7 @@ export default function Table<T extends { [key: string]: any }>(
                         colIndex > 1 ? "hidden md:table-cell" : ""
                       }`}
                       onClick={() => {
+                        setReadRows([...readRows, rowIndex]);
                         setOpened(rowIndex);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}

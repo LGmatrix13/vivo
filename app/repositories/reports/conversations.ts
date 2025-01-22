@@ -1,4 +1,4 @@
-import { sql, eq, desc } from "drizzle-orm";
+import { sql, eq, desc, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import {
   Conversation,
@@ -10,6 +10,7 @@ import {
   buildingTable,
   staffTable,
   consverationReportTable,
+  readTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
@@ -21,9 +22,10 @@ export async function readConversationReports() {
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-        "residentName"
-      ),
+      residentName:
+        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+          "residentName"
+        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -34,14 +36,27 @@ export async function readConversationReports() {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(consverationReportTable)
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
-    //add inner joins here
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, consverationReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "CONVERSATION")
+      )
+    )
     .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((event) => {
@@ -60,9 +75,10 @@ export async function readConversationReportsAsRD(id: number) {
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-        "residentName"
-      ),
+      residentName:
+        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+          "residentName"
+        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -73,14 +89,27 @@ export async function readConversationReportsAsRD(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(consverationReportTable)
-    //add inner joins here
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, consverationReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "CONVERSATION")
+      )
+    )
     .where(eq(staffTable.id, id))
     .orderBy(desc(consverationReportTable.submitted));
 
@@ -100,9 +129,10 @@ export async function readConversationReportsAsRA(id: number) {
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-        "residentName"
-      ),
+      residentName:
+        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
+          "residentName"
+        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -120,7 +150,10 @@ export async function readConversationReportsAsRA(id: number) {
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
     .where(eq(zoneTable.id, id))
     .orderBy(desc(consverationReportTable.submitted));
 

@@ -1,10 +1,11 @@
-import { sql, eq, desc } from "drizzle-orm";
+import { sql, eq, desc, and } from "drizzle-orm";
 import { CreatedEvent, Event } from "~/schemas/reports/event";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,
   eventReportTable,
+  readTable,
   staffTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
@@ -25,13 +26,23 @@ export async function readEventReportsAdmin() {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(eventReportTable)
-    //.innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .innerJoin(zoneTable, eq(eventReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, eventReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "EVENT")
+      )
+    )
     .orderBy(desc(eventReportTable.time));
 
   const formattedData = data.map((event) => {
@@ -58,14 +69,24 @@ export async function readEventReportsRD(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(eventReportTable)
-    //.innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .innerJoin(zoneTable, eq(eventReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(staffTable.id, id))
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, eventReportTable.id),
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, "EVENT")
+      )
+    )
     .orderBy(desc(eventReportTable.time));
 
   const formattedData = data.map((event) => {

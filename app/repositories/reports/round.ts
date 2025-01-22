@@ -1,4 +1,4 @@
-import { sql, eq, desc } from "drizzle-orm";
+import { sql, eq, desc, and } from "drizzle-orm";
 import { CreatedRound, Round } from "~/schemas/reports/round";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -6,6 +6,7 @@ import {
   buildingTable,
   staffTable,
   roundReportTable,
+  readTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
@@ -25,13 +26,23 @@ export async function readRoundReports() {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(roundReportTable)
     .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    //add inner joins here
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, roundReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "ROUND")
+      )
+    )
     .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {
@@ -58,6 +69,9 @@ export async function readRoundReportsAsRD(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(roundReportTable)
     .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
@@ -65,7 +79,14 @@ export async function readRoundReportsAsRD(id: number) {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(staffTable.id, id))
-    //add inner joins here
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, roundReportTable.id),
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, "ROUND")
+      )
+    )
     .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {
