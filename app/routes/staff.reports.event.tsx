@@ -41,10 +41,10 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
-
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-  console.log(intent, values);
+
   switch (intent) {
     case "create":
       return await createEvent(values, request);
@@ -56,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ...values,
           personId: user.id,
           reportType: "EVENT",
-          personType: "STAFF",
+          personType: admin ? "ADMIN" : "STAFF",
         },
         request
       );

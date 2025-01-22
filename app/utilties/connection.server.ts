@@ -12,6 +12,7 @@ async function insert<T extends z.ZodTypeAny>(
   table: PgTable,
   schema: T,
   values: Record<string, unknown>,
+  triggerMutate: boolean = true,
   toast?: {
     message: string;
     level: "success" | "failure";
@@ -26,13 +27,19 @@ async function insert<T extends z.ZodTypeAny>(
       await onSuccess(result.data);
     }
 
-    return mutate(request.url, toast);
+    if (triggerMutate) {
+      return mutate(request.url, toast);
+    }
   }
 
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
+  if (triggerMutate) {
+    return mutate(request.url, {
+      message: "System error occured",
+      level: "failure",
+    });
+  }
+
+  return null;
 }
 
 async function _delete(

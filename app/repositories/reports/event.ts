@@ -134,7 +134,7 @@ export async function readEventReportsRA(id: number) {
 }
 
 export async function createEvent(values: Values, request: Request) {
-  return db.insert(request, eventReportTable, CreatedEvent, values, {
+  return db.insert(request, eventReportTable, CreatedEvent, values, true, {
     message: "Event Created",
     level: "success",
   });

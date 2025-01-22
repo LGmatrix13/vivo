@@ -134,7 +134,7 @@ export async function readRoundReportsAsRA(id: number) {
 }
 
 export async function createRound(values: Values, request: Request) {
-  return db.insert(request, roundReportTable, CreatedRound, values, {
+  return db.insert(request, roundReportTable, CreatedRound, values, true, {
     message: "Round Created",
     level: "success",
   });
@@ -153,5 +153,3 @@ export async function updateRound(values: Values, request: Request) {
     }
   );
 }
-
-

@@ -174,6 +174,7 @@ export async function createConversation(values: Values, request: Request) {
     consverationReportTable,
     CreatedConversation,
     values,
+    true,
     {
       message: "Conversation Created",
       level: "success",
@@ -194,5 +195,3 @@ export async function updateConversation(values: Values, request: Request) {
     }
   );
 }
-
-

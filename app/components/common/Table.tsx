@@ -183,8 +183,8 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                         colIndex > 1 ? "hidden md:table-cell" : ""
                       }`}
                       onClick={() => {
-                        setReadRows([...readRows, rowIndex]);
                         if (!readRows.includes(row.id)) {
+                          setReadRows([...readRows, row.id]);
                           onRowRead({ row });
                         }
                         setOpened(rowIndex);

@@ -174,7 +174,7 @@ export async function readWeeklyReportsAsRA(id: number) {
 }
 
 export async function createWeekly(values: Values, request: Request) {
-  return db.insert(request, weeklyReportTable, CreatedWeekly, values, {
+  return db.insert(request, weeklyReportTable, CreatedWeekly, values, true, {
     message: "Weekly Created",
     level: "success",
   });
@@ -193,5 +193,3 @@ export async function updateWeekly(values: Values, request: Request) {
     }
   );
 }
-
-
