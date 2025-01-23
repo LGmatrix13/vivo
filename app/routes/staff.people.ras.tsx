@@ -126,7 +126,7 @@ export default function StaffAdminPeopleRAsPage() {
         <RAForm ra={row} rdsDropdown={data.rdsDropdown} />
       )}
       ActionButtons={() => (
-        <div className="ml-auto order-2 flex flex-row space-x-3">
+        <div className="flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <RAForm
@@ -135,11 +135,14 @@ export default function StaffAdminPeopleRAsPage() {
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add RA</IconButton>
+              <IconButton className="w-1/2" Icon={Plus}>
+                Add RA
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
+            className="w-1/2"
             onClick={() => {
               csv.download(data.ras, "RAs", rowKeys);
             }}

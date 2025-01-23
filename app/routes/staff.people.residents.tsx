@@ -109,17 +109,20 @@ export default function StaffAdminPeopleResidentsPage() {
         />
       )}
       ActionButtons={() => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
+        <div className="flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <ResidentForm />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Resident</IconButton>
+              <IconButton Icon={Plus} className="w-1/2">
+                Add Resident
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
+            className="w-1/2"
             onClick={() => {
               csv.download(data.residents, "Residents", rowKeys);
             }}

@@ -15,7 +15,7 @@ export default function Filter(props: FilterProps) {
   return (
     <div className="relative border rounded-lg">
       <select
-        className="w-40 p-2 h-12 items-center rounded-lg focus:ring-blue-600 appearance-none"
+        className="md:w-40 w-full bg-white p-2 h-12 items-center rounded-lg focus:ring-blue-600 appearance-none"
         defaultValue={selected}
         onChange={(e) => {
           handleFilter(Number(e.target.value));

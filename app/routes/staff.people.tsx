@@ -68,10 +68,12 @@ export default function StaffPeopleLayout() {
   return (
     <>
       <SubHeader pages={admin ? adminPages : rdPages} />
-      <Outlet context={data.extra.buildingsDropdown} />
-      {data.toast && (
-        <Toast level={data.toast.level}>{data.toast.message}</Toast>
-      )}
+      <main className="max-w-screen-2xl mx-auto px-7 mb-7">
+        <Outlet context={data.extra.buildingsDropdown} />
+        {data.toast && (
+          <Toast level={data.toast.level}>{data.toast.message}</Toast>
+        )}
+      </main>
     </>
   );
 }

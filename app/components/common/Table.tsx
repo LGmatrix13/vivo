@@ -100,8 +100,8 @@ export default function Table<T extends { [key: string]: any }>(
   return (
     <section className="space-y-5">
       {(filter || search || ActionButtons) && (
-        <div className="md:flex md:space-y-0 space-y-5">
-          <div className="flex space-x-3">
+        <div className="md:flex md:space-y-0 md:justify-between space-y-3">
+          <div className="md:flex md:space-y-0 md:space-x-3 space-y-3">
             {filter && (
               <Filter
                 options={filter.options}
@@ -125,7 +125,7 @@ export default function Table<T extends { [key: string]: any }>(
             opened >= 0 ? "hidden md:block" : ""
           }`}
         >
-          <table className="text-left table-fixed w-full ">
+          <table className="text-left table-fixed w-full">
             <thead className="uppercase border-b">
               <tr>
                 {originalColumnKeys.map((originalColumnKey, index) => (

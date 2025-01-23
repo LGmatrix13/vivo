@@ -73,9 +73,7 @@ export default function StaffLayout() {
         routes={routes}
         settings={settings}
       />
-      <main className="max-w-screen-2xl mx-auto px-10 mb-7">
-        {state !== "idle" ? <Loading /> : <Outlet context={data} />}
-      </main>
+      {state !== "idle" ? <Loading /> : <Outlet context={data} />}
     </>
   );
 }
