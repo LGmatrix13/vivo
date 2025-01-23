@@ -144,7 +144,7 @@ export default function AuthLoginPage() {
       <div className="md:block hidden absolute top-0 left-0 w-full h-full">
         <img
           src={"/GCC_background.png"}
-          className="w-full h-full object-cover opacity-20 saturate-50 blur-sm"
+          className="w-full h-full object-cover opacity-25 saturate-50 blur-sm"
           alt="Background"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-trannsparent to-white"></div>
