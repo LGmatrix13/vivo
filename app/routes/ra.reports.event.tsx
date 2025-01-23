@@ -1,5 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
-
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
