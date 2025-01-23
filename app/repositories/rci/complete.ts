@@ -17,6 +17,7 @@ export async function readCompleteRCIsAdmin() {
 
   const data = await db.client
     .select({
+      id: RCITable.id,
       sentToLimble: RCITable.sentToLimble,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
@@ -51,6 +52,7 @@ export async function readCompleteRCIsRD(id: number) {
 
   const data = await db.client
     .select({
+      id: RCITable.id,
       sentToLimble: RCITable.sentToLimble,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,

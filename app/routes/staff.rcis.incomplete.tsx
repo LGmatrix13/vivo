@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -13,6 +13,7 @@ import {
 } from "~/repositories/rci/incomplete";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -28,19 +29,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["admin"]);
-
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
     case "update":
       throw new Error("TODO: add read update");
+    case "create.read":
+              return await createReadReport(
+                {
+                  ...values,
+                  personId: user.id,
+                  reportType: "RCI",
+                  personType: admin ? "ADMIN" : "STAFF",
+                },
+                request
+              );
   }
 }
 
 export default function StaffRCIsIncompletePage() {
   const context = useOutletContext<IBuildingDropdown[]>();
   const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
   const columnKeys = {
     ra: "RA",
     resident: "Resident",
@@ -91,6 +104,17 @@ export default function StaffRCIsIncompletePage() {
           </IconButton>
         </div>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }
