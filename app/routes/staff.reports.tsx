@@ -71,9 +71,6 @@ export default function StaffReportsLayout() {
           <Toast level={data.toast.level}>{data.toast.message}</Toast>
         )}
       </main>
-      {data.toast && (
-        <Toast level={data.toast.level}>{data.toast.message}</Toast>
-      )}
     </>
   );
 }

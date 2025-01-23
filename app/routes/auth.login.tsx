@@ -62,10 +62,10 @@ export async function action({ request }: LoaderFunctionArgs) {
   };
 
   const admin = await db.client
-  .select()
-  .from(adminTable)
-  .where(like(adminTable.emailAddress, email))
-  .limit(1);
+    .select()
+    .from(adminTable)
+    .where(like(adminTable.emailAddress, email))
+    .limit(1);
 
   if (admin.length) {
     const user = admin[0];
@@ -77,12 +77,12 @@ export async function action({ request }: LoaderFunctionArgs) {
   }
 
   const staff = await db.client
-  .select({
-    id: staffTable.id,
-  })
-  .from(staffTable)
-  .where(like(staffTable.emailAddress, email))
-  .limit(1);
+    .select({
+      id: staffTable.id,
+    })
+    .from(staffTable)
+    .where(like(staffTable.emailAddress, email))
+    .limit(1);
 
   if (staff.length) {
     const user = staff[0];
@@ -141,14 +141,14 @@ export default function AuthLoginPage() {
 
   return (
     <main className="flex flex-row">
-      <div className="absolute top-0 left-0 w-full h-full">
+      <div className="md:block hidden absolute top-0 left-0 w-full h-full">
         <img
           src={"/GCC_background.png"}
           className="w-full h-full object-cover opacity-20 saturate-50 blur-sm"
           alt="Background"
         />
       </div>
-      <div className="flex items-center justify-center w-3/4 h-screen">
+      <div className="md:flex hidden items-center justify-center w-3/4 h-screen">
         <div className="relative z-10 flex flex-col space-y-5 w-96">
           <LoginLogo />
           <div className="space-y-3 flex flex-col">
@@ -160,7 +160,7 @@ export default function AuthLoginPage() {
           </div>
         </div>
       </div>
-      <div className="z-10 bg-white relative w-1/4 h-screen flex flex-col items-center justify-center space-y-5">
+      <div className="z-10 bg-white relative md:w-1/4 w-full h-screen flex flex-col items-center justify-center space-y-5">
         <Form method="post">
           <input type="hidden" value="admin" name="role" />
           <IconButton
