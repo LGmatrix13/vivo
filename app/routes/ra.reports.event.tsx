@@ -1,4 +1,4 @@
-import { json, useFetcher, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -13,7 +13,6 @@ import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -26,7 +25,7 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["ra"]);
-  const user = await auth.readUser(request, ["ra"]);
+
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -35,22 +34,11 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createEvent(values, request);
     case "update":
       return await updateEvent(values, request);
-    case "create.read":
-      return await createReadReport(
-        {
-          ...values,
-          personId: user.id,
-          reportType: "EVENT",
-          personType: "ZONE",
-        },
-        request
-      );
   }
 }
 
 export default function RAReportsEventPage() {
   const data = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
   const columnKeys = {
     time: "Time",
     ra: "RA",
@@ -84,17 +72,6 @@ export default function RAReportsEventPage() {
           </IconButton>
         </div>
       )}
-      onRowRead={({ row }) => {
-        fetcher.submit(
-          {
-            intent: "create.read",
-            reportId: row.id,
-          },
-          {
-            method: "POST",
-          }
-        );
-      }}
     />
   );
 }
