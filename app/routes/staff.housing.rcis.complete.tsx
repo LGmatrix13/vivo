@@ -38,8 +38,10 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffRCIsCompletePage() {
-  const context = useOutletContext<IBuildingDropdown[]>();
+export default function StaffHousingRCIsCompletePage() {
+  const context = useOutletContext<{
+    buildingsDropdown: IBuildingDropdown[];
+  }>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
     submittedOn: "Submitted",
@@ -57,7 +59,7 @@ export default function StaffRCIsCompletePage() {
       value: 0,
       key: "All",
     },
-    ...context.map((building) => {
+    ...context.buildingsDropdown.map((building) => {
       return {
         value: building.id,
         key: building.name,
@@ -102,16 +104,15 @@ export default function StaffRCIsCompletePage() {
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
-            Icon={Download}
-            onClick={() => {
-              csv.download(rows, "rcis", rowKeys);
-            }}
-          >
-            Export RCIs
-          </IconButton>
-        </div>
+        <IconButton
+          Icon={Download}
+          className="md:w-fit w-full"
+          onClick={() => {
+            csv.download(rows, "Complete_RCIs", rowKeys);
+          }}
+        >
+          Export Complete RCIs
+        </IconButton>
       )}
     />
   );

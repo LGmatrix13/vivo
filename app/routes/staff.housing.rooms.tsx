@@ -1,4 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData, useOutletContext } from "@remix-run/react";
 import {
   DrawerProvider,
   DrawerButton,
@@ -11,7 +11,7 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import RoomForm from "~/components/forms/RoomForm";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { IRoom } from "~/models/housing";
+import { IBuildingDropdown, IRoom } from "~/models/housing";
 import {
   createRoom,
   deleteRoom,
@@ -26,23 +26,17 @@ import {
   readRAsDropdownAsAdmin,
   readRAsDropdownAsRD,
 } from "~/repositories/people/ras";
-import {
-  readBuildingsDropdownAsAdmin,
-  readBuildingsDropdownAsRD,
-} from "~/repositories/housing/buildings";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
-  const [rooms, buildingsDropdown, rasDropdown] = await Promise.all([
+  const [rooms, rasDropdown] = await Promise.all([
     admin ? readRoomsAsAdmin() : readRoomsAsRD(user.id),
-    admin ? readBuildingsDropdownAsAdmin() : readBuildingsDropdownAsRD(user.id),
     admin ? readRAsDropdownAsAdmin() : readRAsDropdownAsRD(user.id),
     delay(100),
   ]);
   return json({
     rooms,
-    buildingsDropdown,
     rasDropdown,
   });
 }
@@ -65,6 +59,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function StaffHousingRoomsPage() {
   const data = useLoaderData<typeof loader>();
+  const context = useOutletContext<{
+    buildingsDropdown: IBuildingDropdown[];
+  }>();
   const columnKeys = {
     room: "Room",
     capacity: "Capacity",
@@ -91,7 +88,7 @@ export default function StaffHousingRoomsPage() {
       EditComponent={({ row }) => (
         <RoomForm
           room={row}
-          buildingsDropdown={data.buildingsDropdown}
+          buildingsDropdown={context.buildingsDropdown}
           rasDropdown={data.rasDropdown}
         />
       )}
@@ -104,18 +101,21 @@ export default function StaffHousingRoomsPage() {
         />
       )}
       ActionButtons={() => (
-        <div className="ml-auto order-2 flex space-x-3">
+        <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <RoomForm
-                buildingsDropdown={data.buildingsDropdown}
+                buildingsDropdown={context.buildingsDropdown}
                 rasDropdown={data.rasDropdown}
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Room</IconButton>
+              <IconButton Icon={Plus} className="md:w-fit w-full">
+                Add Room
+              </IconButton>
             </DrawerButton>
             <IconButton
+              className="md:flex hidden"
               Icon={Download}
               onClick={() => {
                 csv.download(data.rooms, "rooms", rowKeys);

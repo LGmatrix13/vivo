@@ -3,8 +3,10 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
+  useNavigation,
   useOutletContext,
 } from "@remix-run/react";
+import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import { IUser } from "~/models/user";
@@ -48,15 +50,34 @@ export default function StaffHousingLayout() {
       name: "Buildings",
       path: "/staff/housing/buildings",
     },
+    {
+      name: "Complete RCIs",
+      path: "/staff/housing/rcis/complete",
+    },
+    {
+      name: "Incomplete RCIs",
+      path: "/staff/housing/rcis/incomplete",
+    },
   ];
+  const { state } = useNavigation();
 
   return (
     <>
       {admin && <SubHeader pages={adminPages} />}
-      <Outlet />
-      {data.toast && (
-        <Toast level={data.toast.level}>{data.toast.message}</Toast>
-      )}
+      <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
+        {state == "loading" ? (
+          <Loading />
+        ) : (
+          <Outlet
+            context={{
+              buildingsDropdown: data.extra.buildingsDropdown,
+            }}
+          />
+        )}
+        {data.toast && (
+          <Toast level={data.toast.level}>{data.toast.message}</Toast>
+        )}
+      </main>
     </>
   );
 }

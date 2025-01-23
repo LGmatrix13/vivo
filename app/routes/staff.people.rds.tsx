@@ -76,17 +76,20 @@ export default function StaffAdminPeopleRDsPage() {
         />
       )}
       ActionButtons={() => (
-        <div className="ml-auto order-2 flex space-x-3">
+        <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <RDForm />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add RD</IconButton>
+              <IconButton className="md:w-fit w-full" Icon={Plus}>
+                Add RD
+              </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
+            className="md:flex hidden"
             onClick={() => {
               csv.download(data.rds, "RDs", rowKeys);
             }}
