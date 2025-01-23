@@ -119,9 +119,9 @@ export default function Table<T extends { [key: string]: any }>(
           {ActionButtons && <ActionButtons rows={sortedRows} />}
         </div>
       )}
-      <div className="flex flex-row border rounded-lg md:divide-x h-[600px]">
+      <div className="flex flex-row border rounded-lg md:divide-x min-h-[500px]">
         <div
-          className={`md:w-3/5 w-full overflow-y-auto h-[600px] ${
+          className={`md:w-3/5 w-full md:overflow-y-auto ${
             opened >= 0 ? "hidden md:block" : ""
           }`}
         >

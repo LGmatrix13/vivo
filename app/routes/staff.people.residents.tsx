@@ -115,14 +115,14 @@ export default function StaffAdminPeopleResidentsPage() {
               <ResidentForm />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus} className="w-1/2">
-                Add Resident
+              <IconButton Icon={Plus} className="md:w-fit w-full">
+                Resident
               </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
-            className="w-1/2"
+            className="md:flex hidden"
             onClick={() => {
               csv.download(data.residents, "Residents", rowKeys);
             }}

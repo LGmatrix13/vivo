@@ -22,7 +22,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function StaffLayout() {
   const data = useLoaderData<typeof loader>();
   const admin = data.user.role === "admin";
-  const { state } = useNavigation();
 
   const routes = [
     {
@@ -73,7 +72,7 @@ export default function StaffLayout() {
         routes={routes}
         settings={settings}
       />
-      {state !== "idle" ? <Loading /> : <Outlet context={data} />}
+      <Outlet context={data} />
     </>
   );
 }

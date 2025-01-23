@@ -127,14 +127,14 @@ export default function StaffAdminPeopleARDsPage() {
               />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus} className="w-1/2">
+              <IconButton Icon={Plus} className="md:w-fit w-full">
                 Add ARD
               </IconButton>
             </DrawerButton>
           </DrawerProvider>
           <IconButton
             Icon={Download}
-            className="w-1/2"
+            className="md:flex hidden"
             onClick={() => {
               csv.download(data.ards, "ARDs", rowKeys);
             }}

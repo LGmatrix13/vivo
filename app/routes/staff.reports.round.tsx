@@ -88,16 +88,15 @@ export default function StaffReportsRoundPage() {
         <Instruction Icon={FileSearch} title="First Select a Round" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
-            Icon={Download}
-            onClick={() => {
-              csv.download(rows, "Rounds", rowKeys);
-            }}
-          >
-            Export Round Reports
-          </IconButton>
-        </div>
+        <IconButton
+          Icon={Download}
+          className="md:w-fit w-full"
+          onClick={() => {
+            csv.download(rows, "Rounds", rowKeys);
+          }}
+        >
+          Export Round Reports
+        </IconButton>
       )}
     />
   );

@@ -15,13 +15,14 @@ export default function IconButton(props: IconButtonProps) {
 
   return (
     <Button
-      className={`flex items-center space-x-2 ${className || ""}`}
+      className={`flex justify-center items-center m-0 ${className || ""}`}
       onClick={onClick}
       options={options}
-  
     >
-      <Icon />
-      <span>{children}</span>
+      <div className="space-x-2 flex items-center">
+        <Icon />
+        <span>{children}</span>
+      </div>
     </Button>
   );
 }

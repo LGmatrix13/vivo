@@ -83,16 +83,19 @@ export default function StaffAdminHousingBuildingsPage() {
         />
       )}
       ActionButtons={() => (
-        <div className="ml-auto order-2 flex space-x-3">
+        <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
               <BuildingForm rds={data.rds} />
             </DrawerContent>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Building</IconButton>
+              <IconButton className="md:w-fit w-full" Icon={Plus}>
+                Add Building
+              </IconButton>
             </DrawerButton>
             <IconButton
               Icon={Download}
+              className="md:flex hidden"
               onClick={() => {
                 csv.download(data.buildings, "buildings", rowKeys);
               }}

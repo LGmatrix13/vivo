@@ -3,8 +3,10 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
+  useNavigation,
   useOutletContext,
 } from "@remix-run/react";
+import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import { IUser } from "~/models/user";
@@ -64,12 +66,17 @@ export default function StaffPeopleLayout() {
       path: "/staff/people/upload",
     },
   ];
+  const { state } = useNavigation();
 
   return (
     <>
       <SubHeader pages={admin ? adminPages : rdPages} />
       <main className="max-w-screen-2xl mx-auto px-7 mb-7">
-        <Outlet context={data.extra.buildingsDropdown} />
+        {state == "loading" ? (
+          <Loading />
+        ) : (
+          <Outlet context={data.extra.buildingsDropdown} />
+        )}
         {data.toast && (
           <Toast level={data.toast.level}>{data.toast.message}</Toast>
         )}

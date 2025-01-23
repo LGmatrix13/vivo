@@ -102,16 +102,15 @@ export default function StaffRCIsCompletePage() {
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
-            Icon={Download}
-            onClick={() => {
-              csv.download(rows, "rcis", rowKeys);
-            }}
-          >
-            Export RCIs
-          </IconButton>
-        </div>
+        <IconButton
+          Icon={Download}
+          className="md:w-fit w-full"
+          onClick={() => {
+            csv.download(rows, "Complete_RCIs", rowKeys);
+          }}
+        >
+          Export Complete RCIs
+        </IconButton>
       )}
     />
   );
