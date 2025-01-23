@@ -17,7 +17,7 @@ export default function SubHeader(props: SubHeaderProps) {
   }
 
   return (
-    <div className="flex w-full flex-row space-x-3 mb-5 overflow-x-auto px-7">
+    <div className="flex w-full flex-row space-x-3 mb-5 overflow-x-auto md:px-10 px-7">
       {pages.map((page, index) => (
         <Link to={page.path} key={index}>
           <button

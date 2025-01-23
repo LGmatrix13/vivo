@@ -28,7 +28,7 @@ export default function Header(props: HeaderProps) {
 
   return (
     <header className="border-b mb-7">
-      <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-7 md:justify-between">
+      <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-10 md:justify-between">
         <Link to={root}>
           <div className="md:p-0 px-7 pt-5">
             <Logo />
