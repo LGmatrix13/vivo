@@ -114,7 +114,7 @@ export default function StaffReportsEventPage() {
               csv.download(rows, "Events", rowKeys);
             }}
           >
-            Export Events
+            Export Event Reports
           </IconButton>
         </div>
       )}

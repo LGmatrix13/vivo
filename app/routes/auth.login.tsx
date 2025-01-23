@@ -173,17 +173,6 @@ export default function AuthLoginPage() {
           </IconButton>
         </Form>
         <Form method="post">
-          <input type="hidden" value="ra" name="role" />
-          <IconButton
-            Icon={Office}
-            options={{
-              type: "submit",
-            }}
-          >
-            Login with Microsoft - RA
-          </IconButton>
-        </Form>
-        <Form method="post">
           <input type="hidden" value="rd" name="role" />
           <IconButton
             Icon={Office}
@@ -192,6 +181,17 @@ export default function AuthLoginPage() {
             }}
           >
             Login with Microsoft - RD
+          </IconButton>
+        </Form>
+        <Form method="post">
+          <input type="hidden" value="ra" name="role" />
+          <IconButton
+            Icon={Office}
+            options={{
+              type: "submit",
+            }}
+          >
+            Login with Microsoft - RA
           </IconButton>
         </Form>
         <Form method="post">
