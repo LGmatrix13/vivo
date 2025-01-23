@@ -42,8 +42,8 @@ export default function AdminLayout() {
     {
       name: "Residents",
       Icon: Users,
-      default: "/ra/residents",
-      parent: "/ra/residents",
+      default: "/ra/people/residents",
+      parent: "/ra/people/residents",
     },
   ];
 

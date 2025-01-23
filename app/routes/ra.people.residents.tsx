@@ -21,11 +21,9 @@ import {
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const admin = user.role === "admin";
   const [residents] = await Promise.all([
     readResidentsAsRA(user.id),
     delay(100),
@@ -53,7 +51,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAResidentsPage() {
   const data = useLoaderData<typeof loader>();
-  const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
