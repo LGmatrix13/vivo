@@ -147,8 +147,9 @@ export default function AuthLoginPage() {
           className="w-full h-full object-cover opacity-20 saturate-50 blur-sm"
           alt="Background"
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-trannsparent to-white"></div>
       </div>
-      <div className="md:flex hidden items-center justify-center w-3/4 h-screen">
+      <div className="md:flex hidden items-center justify-center w-1/2 h-screen">
         <div className="relative z-10 flex flex-col space-y-5 w-96">
           <LoginLogo />
           <div className="space-y-3 flex flex-col">
@@ -160,7 +161,7 @@ export default function AuthLoginPage() {
           </div>
         </div>
       </div>
-      <div className="z-10 bg-white relative md:w-1/4 w-full h-screen flex flex-col items-center justify-center space-y-5">
+      <div className="w-1/2 relative z-10 flex flex-col items-center justify-center space-y-5">
         <Form method="post">
           <input type="hidden" value="admin" name="role" />
           <IconButton
