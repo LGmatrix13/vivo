@@ -36,7 +36,8 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["admin", "rd"]);
-
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -46,7 +47,15 @@ export async function action({ request }: ActionFunctionArgs) {
     case "update":
       return await updateWeekly(values, request);
     case "create.read":
-      return await createReadReport(values, request);
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "WEEKLY",
+          personType: admin ? "ADMIN" : "STAFF",
+        },
+        request
+      );
   }
 }
 
