@@ -43,19 +43,13 @@ export default function StaffLayout() {
       parent: "/staff/insights",
     },
     {
-      name: "RCIs",
-      Icon: Door,
-      default: "/staff/rcis/complete",
-      parent: "/staff/rcis",
-    },
-    {
       name: "People",
       Icon: Users,
       default: `/staff/people/residents`,
       parent: `/staff/people`,
     },
     {
-      name: admin ? "Housing" : "Rooms",
+      name: "Housing",
       Icon: Home,
       default: `/staff/housing/rooms`,
       parent: `/staff/housing`,

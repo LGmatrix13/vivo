@@ -6,28 +6,28 @@ import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import { IIncompleteRCI } from "~/models/rci";
+import type { ICompleteRCI } from "~/models/rci";
 import {
-  readIncompleteRCIsAsAdmin,
-  readIncompleteRCIsAsRD,
-} from "~/repositories/rci/incomplete";
+  readCompleteRCIsAdmin,
+  readCompleteRCIsRD,
+} from "~/repositories/rci/complete";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
-  const [incompleteRCIs] = await Promise.all([
-    admin ? readIncompleteRCIsAsAdmin() : readIncompleteRCIsAsRD(user.id),
+  const [completeRCIs] = await Promise.all([
+    admin ? readCompleteRCIsAdmin() : readCompleteRCIsRD(user.id),
     delay(100),
   ]);
   return json({
-    incompleteRCIs,
+    completeRCIs,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin"]);
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -38,23 +38,28 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffRCIsIncompletePage() {
-  const context = useOutletContext<IBuildingDropdown[]>();
+export default function StaffHousingRCIsCompletePage() {
+  const context = useOutletContext<{
+    buildingsDropdown: IBuildingDropdown[];
+  }>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
+    submittedOn: "Submitted",
     ra: "RA",
-    resident: "Resident",
     room: "Room",
+    totalIssues: "Issues",
   };
   const rowKeys = {
-    ...columnKeys,
+    door: "Door",
+    closet: "Closet",
+    bed: "Bed",
   };
   const buildingOptions = [
     {
       value: 0,
       key: "All",
     },
-    ...context.map((building) => {
+    ...context.buildingsDropdown.map((building) => {
       return {
         value: building.id,
         key: building.name,
@@ -63,16 +68,36 @@ export default function StaffRCIsIncompletePage() {
   ];
 
   return (
-    <Table<IIncompleteRCI>
+    <Table<ICompleteRCI>
       columnKeys={columnKeys}
-      rows={data.incompleteRCIs}
+      rows={data.completeRCIs}
       search={{
-        placeholder: "Search for an incomplete RCI...",
+        placeholder: "Search for a complete RCI...",
       }}
       filter={{
-        key: "buildingId",
         selected: "All",
+        key: "buildingId",
         options: buildingOptions,
+      }}
+      mixins={{
+        cells: {
+          totalIssues: (row) => {
+            const { totalIssues } = row;
+            const color =
+              totalIssues > 3
+                ? "bg-red-700"
+                : totalIssues > 2
+                ? "bg-yellow-700"
+                : "bg-green-700";
+            return (
+              <div
+                className={`${color} w-6 h-6 rounded-full flex justify-center items-center`}
+              >
+                <span className="text-xs text-white">{row.totalIssues}</span>
+              </div>
+            );
+          },
+        },
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (
@@ -83,10 +108,10 @@ export default function StaffRCIsIncompletePage() {
           Icon={Download}
           className="md:w-fit w-full"
           onClick={() => {
-            csv.download(rows, "Residents", rowKeys);
+            csv.download(rows, "Complete_RCIs", rowKeys);
           }}
         >
-          Export Incomplete RCIs
+          Export Complete RCIs
         </IconButton>
       )}
     />

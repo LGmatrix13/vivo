@@ -50,6 +50,14 @@ export default function StaffHousingLayout() {
       name: "Buildings",
       path: "/staff/housing/buildings",
     },
+    {
+      name: "Complete RCIs",
+      path: "/staff/housing/rcis/complete",
+    },
+    {
+      name: "Incomplete RCIs",
+      path: "/staff/housing/rcis/incomplete",
+    },
   ];
   const { state } = useNavigation();
 
@@ -57,7 +65,15 @@ export default function StaffHousingLayout() {
     <>
       {admin && <SubHeader pages={adminPages} />}
       <main className="max-w-screen-2xl mx-auto px-7 mb-7">
-        {state == "loading" ? <Loading /> : <Outlet />}
+        {state == "loading" ? (
+          <Loading />
+        ) : (
+          <Outlet
+            context={{
+              buildingsDropdown: data.extra.buildingsDropdown,
+            }}
+          />
+        )}
         {data.toast && (
           <Toast level={data.toast.level}>{data.toast.message}</Toast>
         )}
