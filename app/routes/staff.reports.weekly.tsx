@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -53,6 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
+  const fetcher = useFetcher();
   const columnKeys = {
     submittedOn: "Date",
     ra: "RA",
@@ -110,6 +111,17 @@ export default function StaffReportsWeeklyPage() {
           </IconButton>
         </div>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }

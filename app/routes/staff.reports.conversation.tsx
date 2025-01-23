@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -51,12 +51,14 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
+  const fetcher = useFetcher();
   const formattedRows = data.conversation.map(
-    (conversation: { highPriority: any }) => ({
+    (conversation) => ({
       ...conversation,
       highPriority: conversation.highPriority ? "Yes" : "No",
     })
   );
+
 
   const columnKeys = {
     submitted: "Date",
@@ -128,6 +130,17 @@ export default function StaffReportsConversationPage() {
           </IconButton>
         </div>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }
