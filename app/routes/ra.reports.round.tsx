@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -14,6 +14,7 @@ import {
   updateRound,
 } from "~/repositories/reports/round";
 import { IRoundReport } from "~/models/reports";
+import { createReadReport } from "~/repositories/ReadReports/readReports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -28,7 +29,7 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["ra"]);
-
+  const user = await auth.readUser(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -37,11 +38,22 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createRound(values, request);
     case "update":
       return await updateRound(values, request);
+    case "create.read":
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "ROUND",
+          personType: "ZONE",
+        },
+        request
+      );
   }
 }
 
 export default function RAReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Date",
     time: "Time",
@@ -75,6 +87,17 @@ export default function RAReportsRoundPage() {
           </IconButton>
         </div>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }
