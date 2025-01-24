@@ -1,3 +1,5 @@
+import UpperCampusRCI from "~/components/forms/UpperCampusRCI";
+
 export default function ResidentCheckInPage() {
-  return <p className="text-center">Not yet complete</p>;
+  return <UpperCampusRCI roomId={0} />;
 }

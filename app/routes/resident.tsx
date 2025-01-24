@@ -1,3 +1,5 @@
+import { Outlet } from "@remix-run/react";
+
 export default function ResidentLayout() {
-  return <p className="text-center">Not yet complete</p>;
+  return <Outlet />;
 }

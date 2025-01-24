@@ -5,6 +5,7 @@ import {
 import { readConversationReports } from "~/repositories/reports/conversations";
 import { readWeeklyReports } from "~/repositories/reports/weekly";
 import { readRoundReports } from "~/repositories/reports/round";
+import { readUpperRCIReports } from "~/repositories/reports/upperRCI";
 
 export type IEventReport = Awaited<
   ReturnType<typeof readEventReportsAdmin>
@@ -21,5 +22,9 @@ export type IConversationReport = Awaited<
 export type IWeeklyReport = Awaited<
   ReturnType<typeof readWeeklyReports>
 >[number];
+
+export type IUpperRCI = Awaited<
+  ReturnType<typeof readUpperRCIReports>
+>[];
 
 export type IRoundReport = Awaited<ReturnType<typeof readRoundReports>>[number];
