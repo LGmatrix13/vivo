@@ -104,17 +104,6 @@ export default function StaffRCIsIncompletePage() {
           </IconButton>
         </div>
       )}
-      onRowRead={({ row }) => {
-        fetcher.submit(
-          {
-            intent: "create.read",
-            reportId: row.id,
-          },
-          {
-            method: "POST",
-          }
-        );
-      }}
     />
   );
 }
