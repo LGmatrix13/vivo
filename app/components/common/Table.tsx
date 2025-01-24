@@ -134,6 +134,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
           <table className="text-left table-fixed w-full ">
             <thead className="uppercase border-b">
               <tr>
+                {enableReads && <th scope="col" className="w-[2px]" />}
                 {originalColumnKeys.map((originalColumnKey, index) => (
                   <th
                     scope="col"
@@ -172,13 +173,14 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                 <tr
                   className={`${
                     opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
-                  } transition ease-in-out ${
-                    !readRows.includes(row.id) && enableReads
-                      ? "border-l-4 border-l-blue-600"
-                      : "pl-4"
-                  }`}
+                  } transition ease-in-out`}
                   key={rowIndex}
                 >
+                  {enableReads && !readRows.includes(row.id) ? (
+                    <td className="bg-blue-600" />
+                  ) : enableReads ? (
+                    <td />
+                  ) : null}
                   {originalColumnKeys.map((originalColumnKey, colIndex) => (
                     <td
                       className={`px-5 py-3 cursor-pointer ${
