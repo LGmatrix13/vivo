@@ -19,8 +19,8 @@ import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Vivo: People" },
-    { name: "Vivo: People", content: "Residents, RAs, ARDS, and RDs" },
+    { title: "Vivo: Residents" },
+    { name: "Vivo: Residents", content: "Residents on your hall" },
   ];
 };
 
