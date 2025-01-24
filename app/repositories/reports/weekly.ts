@@ -1,8 +1,9 @@
-import { sql, eq, desc } from "drizzle-orm";
+import { sql, eq, desc, and } from "drizzle-orm";
 import { CreatedWeekly, Weekly } from "~/schemas/reports/weekly";
 import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
+  readTable,
   staffTable,
   weeklyReportTable,
 } from "~/utilties/schema.server";
@@ -29,13 +30,23 @@ export async function readWeeklyReports() {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(weeklyReportTable)
     .innerJoin(zoneTable, eq(weeklyReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    //add inner joins here
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, weeklyReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "WEEKLY")
+      )
+    )
     .orderBy(desc(weeklyReportTable.submittedOn));
 
   const formattedStatus = {
@@ -80,13 +91,23 @@ export async function readWeeklyReportsAsRD(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(weeklyReportTable)
     .innerJoin(zoneTable, eq(weeklyReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    //add inner joins here
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, weeklyReportTable.id),
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, "WEEKLY")
+      )
+    )
     .where(eq(staffTable.id, id))
     .orderBy(desc(weeklyReportTable.submittedOn));
 
@@ -132,20 +153,43 @@ export async function readWeeklyReportsAsRA(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
     })
     .from(weeklyReportTable)
     .innerJoin(zoneTable, eq(weeklyReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    //add inner joins here
-    .where(eq(zoneTable.id, id))
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, weeklyReportTable.id),
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, "WEEKLY")
+      )
+    )
+    .where(eq(staffTable.id, id))
     .orderBy(desc(weeklyReportTable.submittedOn));
 
+  const formattedStatus = {
+    GREAT: "Great",
+    GOOD: "Good",
+    OK: "Ok",
+    ROUGH: "Rough",
+    REALLY_ROUGH: "Really Rough",
+  };
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      //time: formatDate(weekly.submittedOn, true),
+      raResponsibilities: formattedStatus[weekly.raResponsibilities],
+      academics: formattedStatus[weekly.academics],
+      spiritualHealth: formattedStatus[weekly.spiritualHealth],
+      mentalHealth: formattedStatus[weekly.mentalHealth],
+      physicalHealth: formattedStatus[weekly.physicalHealth],
+      personalLife: formattedStatus[weekly.personalLife],
+      technologyAndMedia: formattedStatus[weekly.technologyAndMedia],
     };
   });
 
@@ -153,7 +197,7 @@ export async function readWeeklyReportsAsRA(id: number) {
 }
 
 export async function createWeekly(values: Values, request: Request) {
-  return db.insert(request, weeklyReportTable, CreatedWeekly, values, {
+  return db.insert(request, weeklyReportTable, CreatedWeekly, values, true, {
     message: "Weekly Created",
     level: "success",
   });

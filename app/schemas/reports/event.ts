@@ -11,3 +11,4 @@ export const Event = z.object({
 export const CreatedEvent = Event.extend({
   id: z.undefined(),
 });
+

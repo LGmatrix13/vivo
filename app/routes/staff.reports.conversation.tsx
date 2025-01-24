@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -16,8 +21,7 @@ import {
 } from "~/repositories/reports/conversations";
 import { readConversationReports } from "~/repositories/reports/conversations";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
-import { IConversationReport } from "~/models/reports";
-import { useState } from "react";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -35,7 +39,8 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["admin", "rd"]);
-
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -44,18 +49,27 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createConversation(values, request);
     case "update":
       return await updateConversation(values, request);
+    case "create.read":
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "CONVERSATION",
+          personType: admin ? "ADMIN" : "STAFF",
+        },
+        request
+      );
   }
 }
 
 export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
-  const formattedRows = data.conversation.map(
-    (conversation: { highPriority: any }) => ({
-      ...conversation,
-      highPriority: conversation.highPriority ? "Yes" : "No",
-    })
-  );
+  const fetcher = useFetcher();
+  const formattedRows = data.conversation.map((conversation) => ({
+    ...conversation,
+    highPriority: conversation.highPriority ? "Yes" : "No",
+  }));
 
   const columnKeys = {
     submitted: "Date",
@@ -95,6 +109,7 @@ export default function StaffReportsConversationPage() {
         selected: "All",
       }}
       rowKeys={rowKeys}
+      enableReads={true}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select a Conversation" />
       )}
@@ -125,6 +140,17 @@ export default function StaffReportsConversationPage() {
           Export Conversation Reports
         </IconButton>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }

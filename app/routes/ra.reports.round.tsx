@@ -55,7 +55,7 @@ export default function RAReportsRoundPage() {
   return (
     <Table<IRoundReport>
       columnKeys={columnKeys}
-      rows={data.round}
+      rows={data.round as IRoundReport[]}
       search={{
         placeholder: "Search for a round report...",
       }}

@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -17,6 +22,7 @@ import {
 } from "~/repositories/reports/weekly";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IWeeklyReport } from "~/models/reports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -35,7 +41,8 @@ export async function loader({ request }: ActionFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["admin", "rd"]);
-
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -44,12 +51,23 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createWeekly(values, request);
     case "update":
       return await updateWeekly(values, request);
+    case "create.read":
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "WEEKLY",
+          personType: admin ? "ADMIN" : "STAFF",
+        },
+        request
+      );
   }
 }
 
 export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
+  const fetcher = useFetcher();
   const columnKeys = {
     submittedOn: "Date",
     ra: "RA",
@@ -85,6 +103,7 @@ export default function StaffReportsWeeklyPage() {
       search={{
         placeholder: "Search for a weekly report...",
       }}
+      enableReads={true}
       filter={{
         key: "buildingId",
         selected: "All",
@@ -105,6 +124,17 @@ export default function StaffReportsWeeklyPage() {
           Export Weekly Reports
         </IconButton>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }

@@ -24,13 +24,15 @@ interface TableProps<T> {
     cells?: Record<string, (row: T) => React.ReactElement>;
     selectedRows?: Record<string, (row: T) => React.ReactElement>;
   };
+  enableReads?: boolean;
   ActionButtons?: (props: { rows: T[] }) => React.ReactElement;
   InstructionComponent?: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
   DeleteComponent?: (props: { row: T }) => React.ReactElement;
+  onRowRead?: (args: { row: T }) => void;
 }
 
-export default function Table<T extends { [key: string]: any }>(
+export default function Table<T extends { [key: string]: any; read?: boolean }>(
   props: TableProps<T>
 ) {
   const {
@@ -44,6 +46,8 @@ export default function Table<T extends { [key: string]: any }>(
     DeleteComponent,
     EditComponent,
     mixins = {},
+    onRowRead = () => {},
+    enableReads = false,
   } = props;
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
@@ -59,7 +63,9 @@ export default function Table<T extends { [key: string]: any }>(
     filter && filterOption
       ? rows.filter((row) => row[filter.key] === filterOption)
       : rows;
-
+  const [readRows, setReadRows] = useState<number[]>(
+    rows.filter((row) => row.read).map((row) => row.id)
+  );
   // Search rows based on the search query
   const searchedRows = filteredRows.filter((row) =>
     originalColumnKeys.some((key) =>
@@ -128,6 +134,7 @@ export default function Table<T extends { [key: string]: any }>(
           <table className="text-left table-fixed w-full">
             <thead className="uppercase border-b">
               <tr>
+                {enableReads && <th scope="col" className="w-[2px]" />}
                 {originalColumnKeys.map((originalColumnKey, index) => (
                   <th
                     scope="col"
@@ -169,12 +176,21 @@ export default function Table<T extends { [key: string]: any }>(
                   } transition ease-in-out`}
                   key={rowIndex}
                 >
+                  {enableReads && !readRows.includes(row.id) ? (
+                    <td className="bg-blue-600" />
+                  ) : enableReads ? (
+                    <td />
+                  ) : null}
                   {originalColumnKeys.map((originalColumnKey, colIndex) => (
                     <td
                       className={`px-5 py-3 cursor-pointer ${
                         colIndex > 1 ? "hidden md:table-cell" : ""
                       }`}
                       onClick={() => {
+                        if (!readRows.includes(row.id)) {
+                          setReadRows([...readRows, row.id]);
+                          onRowRead({ row });
+                        }
                         setOpened(rowIndex);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}

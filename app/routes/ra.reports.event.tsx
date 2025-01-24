@@ -1,5 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
-
+import { json, useLoaderData } from "@remix-run/react";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -17,10 +16,7 @@ import { csv } from "~/utilties/csv";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const [events] = await Promise.all([
-    readEventReportsRA(user.id),
-    delay(100),
-  ]);
+  const [events] = await Promise.all([readEventReportsRA(user.id), delay(100)]);
 
   return json({
     events,
@@ -56,11 +52,11 @@ export default function RAReportsEventPage() {
   return (
     <Table<IEventReport>
       columnKeys={columnKeys}
-      rows={data.events}
+      rows={data.events as IEventReport[]}
+      rowKeys={rowKeys}
       search={{
         placeholder: "Search for an event report...",
       }}
-      rowKeys={rowKeys}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an Event Report" />
       )}

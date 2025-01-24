@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -17,6 +22,7 @@ import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -34,8 +40,8 @@ export async function loader({ request }: ActionFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
-
+  const user = await auth.readUser(request, ["admin", "rd"]);
+  const admin = user.role === "admin";
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -44,11 +50,22 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createEvent(values, request);
     case "update":
       return await updateEvent(values, request);
+    case "create.read":
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "EVENT",
+          personType: admin ? "ADMIN" : "STAFF",
+        },
+        request
+      );
   }
 }
 
 export default function StaffReportsEventPage() {
   const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
   const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
     time: "Time",
@@ -85,6 +102,7 @@ export default function StaffReportsEventPage() {
         selected: "All",
       }}
       rowKeys={rowKeys}
+      enableReads={true}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an Event" />
       )}
@@ -99,6 +117,17 @@ export default function StaffReportsEventPage() {
           Export Event Reports
         </IconButton>
       )}
+      onRowRead={({ row }) => {
+        fetcher.submit(
+          {
+            intent: "create.read",
+            reportId: row.id,
+          },
+          {
+            method: "POST",
+          }
+        );
+      }}
     />
   );
 }
