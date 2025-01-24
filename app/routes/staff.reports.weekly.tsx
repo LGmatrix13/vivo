@@ -1,4 +1,9 @@
-import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -17,7 +22,7 @@ import {
 } from "~/repositories/reports/weekly";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IWeeklyReport } from "~/models/reports";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);

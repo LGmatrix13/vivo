@@ -1,4 +1,9 @@
-import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -17,7 +22,7 @@ import {
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IRoundReport } from "~/models/reports";
 import { useState } from "react";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -61,7 +66,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
-    const fetcher = useFetcher();
+  const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Date",
     time: "Time",

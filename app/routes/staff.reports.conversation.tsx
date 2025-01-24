@@ -1,4 +1,9 @@
-import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -16,7 +21,7 @@ import {
 } from "~/repositories/reports/conversations";
 import { readConversationReports } from "~/repositories/reports/conversations";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -61,13 +66,10 @@ export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
-  const formattedRows = data.conversation.map(
-    (conversation) => ({
-      ...conversation,
-      highPriority: conversation.highPriority ? "Yes" : "No",
-    })
-  );
-
+  const formattedRows = data.conversation.map((conversation) => ({
+    ...conversation,
+    highPriority: conversation.highPriority ? "Yes" : "No",
+  }));
 
   const columnKeys = {
     submitted: "Date",

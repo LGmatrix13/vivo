@@ -22,7 +22,7 @@ import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);

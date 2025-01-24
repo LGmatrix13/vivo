@@ -1,4 +1,9 @@
-import { json, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  json,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -13,7 +18,7 @@ import {
 } from "~/repositories/rci/complete";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
-import { createReadReport } from "~/repositories/ReadReports/readReports";
+import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -38,15 +43,15 @@ export async function action({ request }: ActionFunctionArgs) {
     case "update":
       throw new Error("TODO: add read update");
     case "create.read":
-          return await createReadReport(
-            {
-              ...values,
-              personId: user.id,
-              reportType: "RCI",
-              personType: admin ? "ADMIN" : "STAFF",
-            },
-            request
-          );
+      return await createReadReport(
+        {
+          ...values,
+          personId: user.id,
+          reportType: "RCI",
+          personType: admin ? "ADMIN" : "STAFF",
+        },
+        request
+      );
   }
 }
 
