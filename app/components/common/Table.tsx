@@ -106,8 +106,8 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   return (
     <section className="space-y-5">
       {(filter || search || ActionButtons) && (
-        <div className="md:flex md:space-y-0 space-y-5">
-          <div className="flex space-x-3">
+        <div className="md:flex md:space-y-0 md:justify-between space-y-3">
+          <div className="md:flex md:space-y-0 md:space-x-3 space-y-3">
             {filter && (
               <Filter
                 options={filter.options}
@@ -125,13 +125,13 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
           {ActionButtons && <ActionButtons rows={sortedRows} />}
         </div>
       )}
-      <div className="flex flex-row border rounded-lg md:divide-x h-[600px]">
+      <div className="flex flex-row border rounded-lg md:divide-x min-h-[500px]">
         <div
-          className={`md:w-3/5 w-full overflow-y-auto h-[600px] ${
+          className={`md:w-3/5 w-full md:overflow-y-auto ${
             opened >= 0 ? "hidden md:block" : ""
           }`}
         >
-          <table className="text-left table-fixed w-full ">
+          <table className="text-left table-fixed w-full">
             <thead className="uppercase border-b">
               <tr>
                 {enableReads && <th scope="col" className="w-[2px]" />}

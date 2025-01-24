@@ -14,8 +14,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function AdminLayout() {
   const data = useLoaderData<typeof loader>();
-  const { state } = useNavigation();
-
   const routes = [
     {
       name: "Shifts",
@@ -44,8 +42,8 @@ export default function AdminLayout() {
     {
       name: "Residents",
       Icon: Users,
-      default: "/ra/residents",
-      parent: "/ra/residents",
+      default: "/ra/people/residents",
+      parent: "/ra/people/residents",
     },
   ];
 
@@ -57,13 +55,7 @@ export default function AdminLayout() {
   return (
     <>
       <Header root="/ra/shifts/on-duty" routes={routes} settings={settings} />
-      <main className="max-w-screen-2xl mx-auto px-10 mb-7">
-        {state !== "idle" ? (
-          <Loading />
-        ) : (
-          <Outlet context={{ user: data.ra }} />
-        )}
-      </main>
+      <Outlet context={{ user: data.ra }} />
     </>
   );
 }

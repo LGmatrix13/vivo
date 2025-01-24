@@ -30,11 +30,11 @@ export default function Header(props: HeaderProps) {
     <header className="border-b mb-7">
       <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-10 md:justify-between">
         <Link to={root}>
-          <div className="md:p-0 px-10 pt-5">
+          <div className="md:p-0 px-7 pt-5">
             <Logo />
           </div>
         </Link>
-        <div className="space-x-7 flex items-center overflow-x-auto md:px-0 px-10">
+        <div className="space-x-7 flex items-center overflow-x-auto md:px-0 px-7">
           <div className="flex space-x-5 md:text-lg">
             {routes.map((route, index) => (
               <Link to={route.default} key={index}>

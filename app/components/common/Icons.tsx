@@ -346,7 +346,7 @@ export function Logo() {
     <svg
       width="75"
       height="25"
-      className="group"
+      className="md:group"
       viewBox="0 0 75 25"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -357,7 +357,7 @@ export function Logo() {
       />
       <path
         d="M23.7953 4.97804V0H31.3438V4.97804H23.7953ZM24.353 24.634V12.2987H21.7873L22.3822 7.28404H31.3438V24.634H24.353Z"
-        className="group-hover:fill-black duration-300 ease-in-out transition-all"
+        className="md:group-hover:fill-black md:duration-300 md:ease-in-out md:transition-all"
         fill="#2463EB"
       />
       <path
@@ -908,8 +908,8 @@ export function UserCircle(props: IconProps) {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />

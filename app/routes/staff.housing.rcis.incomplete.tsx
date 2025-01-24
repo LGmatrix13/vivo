@@ -11,11 +11,11 @@ import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import type { ICompleteRCI } from "~/models/rci";
+import { IIncompleteRCI } from "~/models/rci";
 import {
-  readCompleteRCIsAdmin,
-  readCompleteRCIsRD,
-} from "~/repositories/rci/complete";
+  readIncompleteRCIsAsAdmin,
+  readIncompleteRCIsAsRD,
+} from "~/repositories/rci/incomplete";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
@@ -23,17 +23,17 @@ import { createReadReport } from "~/repositories/read/reports";
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
-  const [completeRCIs] = await Promise.all([
-    admin ? readCompleteRCIsAdmin() : readCompleteRCIsRD(user.id),
+  const [incompleteRCIs] = await Promise.all([
+    admin ? readIncompleteRCIsAsAdmin() : readIncompleteRCIsAsRD(user.id),
     delay(100),
   ]);
   return json({
-    completeRCIs,
+    incompleteRCIs,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+  await auth.rejectUnauthorized(request, ["admin"]);
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
   const formData = await request.formData();
@@ -55,27 +55,26 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffRCIsCompletePage() {
-  const context = useOutletContext<IBuildingDropdown[]>();
+export default function StaffHousingRCIsIncompletePage() {
+  const context = useOutletContext<{
+    buildingsDropdown: IBuildingDropdown[];
+  }>();
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
-    submittedOn: "Submitted",
     ra: "RA",
+    resident: "Resident",
     room: "Room",
-    totalIssues: "Issues",
   };
   const rowKeys = {
-    door: "Door",
-    closet: "Closet",
-    bed: "Bed",
+    ...columnKeys,
   };
   const buildingOptions = [
     {
       value: 0,
       key: "All",
     },
-    ...context.map((building) => {
+    ...context.buildingsDropdown.map((building) => {
       return {
         value: building.id,
         key: building.name,
@@ -84,65 +83,33 @@ export default function StaffRCIsCompletePage() {
   ];
 
   return (
-    <Table<ICompleteRCI>
+    <Table<IIncompleteRCI>
       columnKeys={columnKeys}
-      rows={data.completeRCIs}
+      rows={data.incompleteRCIs}
       search={{
-        placeholder: "Search for a complete RCI...",
+        placeholder: "Search for an incomplete RCI...",
       }}
       filter={{
-        selected: "All",
         key: "buildingId",
+        selected: "All",
         options: buildingOptions,
       }}
-      enableReads={true}
-      mixins={{
-        cells: {
-          totalIssues: (row) => {
-            const { totalIssues } = row;
-            const color =
-              totalIssues > 3
-                ? "bg-red-700"
-                : totalIssues > 2
-                ? "bg-yellow-700"
-                : "bg-green-700";
-            return (
-              <div
-                className={`${color} w-6 h-6 rounded-full flex justify-center items-center`}
-              >
-                <span className="text-xs text-white">{row.totalIssues}</span>
-              </div>
-            );
-          },
-        },
-      }}
       rowKeys={rowKeys}
+      enableReads={true}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
-            Icon={Download}
-            onClick={() => {
-              csv.download(rows, "rcis", rowKeys);
-            }}
-          >
-            Export RCIs
-          </IconButton>
-        </div>
+        <IconButton
+          Icon={Download}
+          className="md:w-fit w-full"
+          onClick={() => {
+            csv.download(rows, "Incomplete_RCIs", rowKeys);
+          }}
+        >
+          Export Incomplete RCIs
+        </IconButton>
       )}
-      onRowRead={({ row }) => {
-        fetcher.submit(
-          {
-            intent: "create.read",
-            reportId: row.id,
-          },
-          {
-            method: "POST",
-          }
-        );
-      }}
     />
   );
 }

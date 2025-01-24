@@ -10,18 +10,17 @@ export default function StaffSettings() {
     user: IUser;
   }>();
   return (
-    <section className="space-y-5">
-      <Link to="/auth/logout">
-        <IconButton Icon={Logout} className="ml-auto order-2">
-          Logout
-        </IconButton>
-      </Link>
-      <CollaspableContent title="User Info" collasped>
-        <UserInfo user={context.user} />
-      </CollaspableContent>
-      <CollaspableContent title="Integrations" collasped>
-        <p>TODO</p>
-      </CollaspableContent>
-    </section>
+    <main className="max-w-screen-2xl mx-auto px-7 mb-7">
+      <section className="space-y-5">
+        <Link to="/auth/logout">
+          <IconButton Icon={Logout} className="ml-auto order-2">
+            Logout
+          </IconButton>
+        </Link>
+        <CollaspableContent title="User Info" collasped>
+          <UserInfo user={context.user} />
+        </CollaspableContent>
+      </section>
+    </main>
   );
 }

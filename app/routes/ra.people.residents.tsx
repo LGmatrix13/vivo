@@ -16,19 +16,16 @@ import {
   createResident,
   updateResident,
   deleteResident,
-  readResidentsAsAdmin,
-  readResidentsAsRD,
+  readResidentsAsRA,
 } from "~/repositories/people/residents";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const admin = user.role === "admin";
+  const user = await auth.readUser(request, ["ra"]);
   const [residents] = await Promise.all([
-    admin ? readResidentsAsAdmin() : readResidentsAsRD(user.id),
+    readResidentsAsRA(user.id),
     delay(100),
   ]);
   return json({
@@ -37,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+  await auth.rejectUnauthorized(request, ["ra"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -52,9 +49,8 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffAdminPeopleResidentsPage() {
+export default function RAResidentsPage() {
   const data = useLoaderData<typeof loader>();
-  const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
     firstName: "Firstname",
     lastName: "Lastname",
@@ -70,18 +66,6 @@ export default function StaffAdminPeopleResidentsPage() {
     hometown: "Hometown",
     class: "Class",
   };
-  const buildingOptions = [
-    {
-      value: 0,
-      key: "All",
-    },
-    ...context.map((building) => {
-      return {
-        value: building.id,
-        key: building.name,
-      };
-    }),
-  ];
 
   return (
     <Table<IResident>
@@ -90,11 +74,6 @@ export default function StaffAdminPeopleResidentsPage() {
       rowKeys={rowKeys}
       search={{
         placeholder: "Search for a resident...",
-      }}
-      filter={{
-        selected: "All",
-        key: "buildingId",
-        options: buildingOptions,
       }}
       InstructionComponent={() => (
         <Instruction Icon={UserSearch} title="First Select a Resident" />

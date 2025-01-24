@@ -114,16 +114,15 @@ export default function StaffReportsWeeklyPage() {
         <Instruction Icon={FileSearch} title="First Select a Weekly" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
-            Icon={Download}
-            onClick={() => {
-              csv.download(rows, "Weeklys", rowKeys);
-            }}
-          >
-            Download Weekly Reports
-          </IconButton>
-        </div>
+        <IconButton
+          Icon={Download}
+          onClick={() => {
+            csv.download(rows, "Weeklys", rowKeys);
+          }}
+          className="md:w-fit w-full"
+        >
+          Export Weekly Reports
+        </IconButton>
       )}
       onRowRead={({ row }) => {
         fetcher.submit(
