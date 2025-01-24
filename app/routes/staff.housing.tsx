@@ -41,14 +41,10 @@ export default function StaffHousingLayout() {
   }>();
   const admin = context.user.role === "admin";
   const data = useLoaderData<typeof loader>();
-  const adminPages = [
+  const rdPages = [
     {
       name: "Rooms",
       path: "/staff/housing/rooms",
-    },
-    {
-      name: "Buildings",
-      path: "/staff/housing/buildings",
     },
     {
       name: "Complete RCIs",
@@ -59,11 +55,19 @@ export default function StaffHousingLayout() {
       path: "/staff/housing/rcis/incomplete",
     },
   ];
+  const adminPages = [
+    {
+      name: "Rooms",
+      path: "/staff/housing/rooms",
+    },
+    ...rdPages,
+  ];
+
   const { state } = useNavigation();
 
   return (
     <>
-      {admin && <SubHeader pages={adminPages} />}
+      <SubHeader pages={admin ? adminPages : rdPages} />
       <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
         {state == "loading" ? (
           <Loading />
