@@ -414,7 +414,7 @@ export default function ColonialRCIDoubleForm(
       <WideButton
         options={{
           type: "submit",
-          intent: "create",
+          intent: "create.colonialDouble",
         }}
       >
         Save Check-in Form

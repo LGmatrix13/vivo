@@ -135,7 +135,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
       <WideButton
         options={{
           type: "submit",
-          intent: "create",
+          intent: "create.upperCampus",
         }}
       >
         Submit Check-in Form

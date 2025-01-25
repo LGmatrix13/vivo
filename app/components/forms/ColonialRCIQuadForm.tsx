@@ -567,7 +567,7 @@ export default function ColonialRCIQuadForm(props: ColonialRCIQuadFormProps) {
       />
       <WideButton
         options={{
-          intent: "create",
+          intent: "create.colonialQuad",
           type: "submit",
         }}
       >
