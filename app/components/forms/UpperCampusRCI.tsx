@@ -186,7 +186,7 @@ export default function RCIForm(props: RCIFormProps) {
         required
         />
         <button type="submit" className="btn btn-primary">
-        Submit RCI
+        Submit
       </button>
       </Form>
     );
