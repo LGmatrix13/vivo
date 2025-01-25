@@ -251,7 +251,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                 <Close />
               </button>
             </div>
-            <SelectedRow keys={rowKeys} row={rows[opened]} />
+            <SelectedRow keys={rowKeys} row={sortedRows[opened]} />
           </div>
         )}
       </div>
