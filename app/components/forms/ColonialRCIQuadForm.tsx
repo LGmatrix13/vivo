@@ -571,7 +571,7 @@ export default function ColonialRCIQuadForm(props: ColonialRCIQuadFormProps) {
           type: "submit",
         }}
       >
-        Submit
+        Save Check-in Form
       </WideButton>
     </Form>
   );

@@ -2,6 +2,7 @@ import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import Input from "../common/Input";
 import Textarea from "../common/Textarea";
 import { Form } from "@remix-run/react";
+import WideButton from "../common/WideButton";
 
 interface UpperCampusRCIFormProps {
   roomId: number;
@@ -16,7 +17,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="doorsLocks"
           placeholder="Describe the issues with the doors and locks"
         />
       </AcknowledgeIssueRadio>
@@ -24,7 +25,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="emergencyItems"
           placeholder="Describe the issues with the emergency items"
         />
       </AcknowledgeIssueRadio>
@@ -32,7 +33,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="walls"
           placeholder="Describe the issues with the walls"
         />
       </AcknowledgeIssueRadio>
@@ -40,7 +41,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="floor"
           placeholder="Describe the issues with the floor"
         />
       </AcknowledgeIssueRadio>
@@ -48,15 +49,15 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="ceiling"
           placeholder="Describe the issues with the ceiling"
         />
       </AcknowledgeIssueRadio>
-      <AcknowledgeIssueRadio title={"Lights, Lighting Fixures"}>
+      <AcknowledgeIssueRadio title={"Lights, Lighting Fixtures"}>
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="lightsFixtures"
           placeholder="Describe the issues with the lights and lighting fixtures"
         />
       </AcknowledgeIssueRadio>
@@ -64,7 +65,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="closetWardrobeMirror"
           placeholder="Describe the issues with the chest, wardrobe, and mirror"
         />
       </AcknowledgeIssueRadio>
@@ -72,7 +73,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="windowsScreens"
           placeholder="Describe the issues with the windows and screens"
         />
       </AcknowledgeIssueRadio>
@@ -80,7 +81,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="curtainsRods"
           placeholder="Describe the issues with the curtains and rods"
         />
       </AcknowledgeIssueRadio>
@@ -88,7 +89,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="deskChair"
           placeholder="Describe the issues with the desk and chair"
         />
       </AcknowledgeIssueRadio>
@@ -96,7 +97,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedMattress"
           placeholder="Describe the issues with the bed and mattress"
         />
       </AcknowledgeIssueRadio>
@@ -104,7 +105,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="dresser"
           placeholder="Describe the issues with the dresser"
         />
       </AcknowledgeIssueRadio>
@@ -112,7 +113,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroom"
           placeholder="Describe the issues with the bathroom"
         />
       </AcknowledgeIssueRadio>
@@ -120,20 +121,25 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="towelbarRings"
           placeholder="Describe the issues with the towel bar and rings"
         />
       </AcknowledgeIssueRadio>
       <Input
         label="Student Signature"
         placeholder="Signature"
-        name="studentName"
+        name="studentSignature"
         type="text"
         required
       />
-      <button type="submit" className="btn btn-primary">
-        Submit
-      </button>
+      <WideButton
+        options={{
+          type: "submit",
+          intent: "create",
+        }}
+      >
+        Submit Check-in Form
+      </WideButton>
     </Form>
   );
 }

@@ -2,6 +2,7 @@ import Input from "../common/Input";
 import Textarea from "../common/Textarea";
 import { Form } from "@remix-run/react";
 import AcknowledgeIssueRadio from "~/components/common/AcknowledgeIssueRadio";
+import WideButton from "../common/WideButton";
 
 interface ColonialRCIDoubleFormProps {
   roomId: number;
@@ -410,9 +411,14 @@ export default function ColonialRCIDoubleForm(
         type="text"
         required
       />
-      <button type="submit" className="btn btn-primary">
-        Submit
-      </button>
+      <WideButton
+        options={{
+          type: "submit",
+          intent: "create",
+        }}
+      >
+        Save Check-in Form
+      </WideButton>
     </Form>
   );
 }
