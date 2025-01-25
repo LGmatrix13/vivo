@@ -26,7 +26,6 @@ function AcknowledgeProblemField(props: AcknowledgeProblemFieldProps) {
         value={hasProblem ? "yes" : "no"}
         onClick={() => setHasProblem(true)}
         readOnly
-        required
       />
       <label htmlFor="yes">Issues</label>
       <input
@@ -50,7 +49,7 @@ export default function RCIForm(props: RCIFormProps) {
     return (
     <Form>
         <h2 className="font-bold text-xl">
-          Room Inspection Form
+        Room Condition Inspection Form
         </h2>
         <input name="roomId" type="hidden" value={roomId} />
         <Input
@@ -72,6 +71,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the doors and locks"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Emergency Items"}>
@@ -79,6 +79,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the emergency items"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Walls"}>
@@ -86,6 +87,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the walls"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Floor"}>
@@ -93,6 +95,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the floor"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Ceiling"}>
@@ -100,13 +103,15 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the ceiling"
           />
         </AcknowledgeProblemField>
-        <AcknowledgeProblemField title={"Lights and Lighting Fixures"}>
+        <AcknowledgeProblemField title={"Lights, Lighting Fixures"}>
           <Textarea
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the lights and lighting fixtures"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Chest, Wardrobe, Mirror"}>
@@ -114,34 +119,39 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the chest, wardrobe, and mirror"
           />
         </AcknowledgeProblemField>
-        <AcknowledgeProblemField title={"Window and Screens"}>
+        <AcknowledgeProblemField title={"Windows, Screens"}>
           <Textarea
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the windows and screens"
           />
         </AcknowledgeProblemField>
-        <AcknowledgeProblemField title={"Curtains and Rods"}>
+        <AcknowledgeProblemField title={"Curtains, Rods"}>
           <Textarea
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the curtains and rods"
           />
         </AcknowledgeProblemField>
-        <AcknowledgeProblemField title={"Desk and Chair"}>
+        <AcknowledgeProblemField title={"Desk, Chair"}>
           <Textarea
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the desk and chair"
           />
         </AcknowledgeProblemField>
-        <AcknowledgeProblemField title={"Bed and Mattress"}>
+        <AcknowledgeProblemField title={"Bed, Mattress"}>
           <Textarea
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the bed and mattress"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Dresser"}>
@@ -149,6 +159,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the dresser"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Bathroom"}>
@@ -156,6 +167,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the bathroom"
           />
         </AcknowledgeProblemField>
         <AcknowledgeProblemField title={"Towel Bar and Rings"}>
@@ -163,17 +175,20 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name="comments"
+            placeholder="Describe the issues with the towel bar and rings"
           />
         </AcknowledgeProblemField>
         <Input
         label="Student Signature"
-        placeholder="Student Signature"
+        placeholder="Signature"
         name="studentName"
         type="text"
         required
         />
+        <button type="submit" className="btn btn-primary">
+        Submit RCI
+      </button>
       </Form>
-      
     );
   }
 
