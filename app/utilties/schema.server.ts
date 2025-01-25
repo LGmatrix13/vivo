@@ -44,6 +44,12 @@ export const personTypeEnum = pgEnum("personType", [
   "ASSISTANT_STAFF",
   "ADMIN",
 ]);
+export const rciTypeEnum = pgEnum("rciType", [
+  "UPPER_CAMPUS",
+  "APT_DOUBLE",
+  "APT_TRIPLE",
+  "APT_QUAD"
+]);
 
 export const residentTable = pgTable("Resident", {
   id: serial("id").notNull().primaryKey(),
@@ -318,4 +324,5 @@ export const RCITable = pgTable("RCI", {
   status: statusEnum().notNull(),
   signedOn: date("signed_on").defaultNow(),
   sentToLimble: boolean("sent_to_limble").notNull().default(false),
+  rciType: rciTypeEnum().notNull()
 });
