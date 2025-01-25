@@ -1,461 +1,408 @@
-import { IUpperRCI } from "~/models/reports";
 import Input from "../common/Input";
 import Textarea from "../common/Textarea";
-import { useState } from "react";
 import { Form } from "@remix-run/react";
+import AcknowledgeIssueRadio from "~/components/common/AcknowledgeIssueRadio";
 
-interface RCIFormProps {
+interface ColonialRCIDoubleFormProps {
   roomId: number;
 }
 
-interface AcknowledgeProblemFieldProps {
-  title: string;
-  children: React.ReactElement;
-}
-
-function AcknowledgeProblemField(props: AcknowledgeProblemFieldProps) {
-  const [hasProblem, setHasProblem] = useState<boolean>();
-
-  return (
-    <div>
-      <label>
-        {props.title} <span className="text-red-600">*</span>
-      </label>
-      <div>
-        <input
-          type="radio"
-          id="yes"
-          name={"condition" + props.title}
-          value={hasProblem ? "yes" : "no"}
-          onClick={() => setHasProblem(true)}
-          readOnly
-        />
-        <label htmlFor="yes">Issues</label>
-        <input
-          type="radio"
-          id="no"
-          name={"condition" + props.title}
-          value={hasProblem ? "yes" : "no"}
-          onClick={() => setHasProblem(false)}
-          readOnly
-          required
-        />
-        <label htmlFor="no">No Issues</label>
-        {hasProblem && props.children}
-      </div>
-    </div>
-  );
-}
-
-export default function RCIForm(props: RCIFormProps) {
+export default function ColonialRCIDoubleForm(
+  props: ColonialRCIDoubleFormProps
+) {
   const { roomId } = props;
   return (
-    <Form>
-      <h2 className="font-bold text-xl">Room Condition Inspection Form</h2>
+    <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />
-      <Input
-        label="RA Name"
-        placeholder="RA Name"
-        name="RAName"
-        type="text"
-        readOnly
-      />
-      <Input
-        label="Inspection Date"
-        placeholder="Inspection Date"
-        name="inspectionDate"
-        type="date"
-        readOnly
-      />
       <label className="text-2xl font-bold">Foyer/Kitchen/Dining</label>
-      <AcknowledgeProblemField title={"Entry Door"}>
+      <AcknowledgeIssueRadio title={"Entry Door"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Entry Door"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Ceiling"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Ceiling"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Ceiling"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Walls"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Walls"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Walls"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Sink/Disposal"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Sink/Disposal"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Sink/Disposal"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Countertops"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Countertops"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Countertops"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Dishwasher"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Dishwasher"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Dishwasher"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Washer/Dryer"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Washer/Dryer"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Washer/Dryer"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Refrigerator"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Refrigerator"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Refrigerator"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Stove/Oven"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Stove/Oven"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Stove/Oven"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Wall Cabinets"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Wall Cabinets"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Wall Cabinets"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Table"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Table"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Table"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Chairs"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Chairs"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Chairs"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Fire Exstinguisher"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Fire Exstinguisher"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Fire Exstinguisher"
         />
-      </AcknowledgeProblemField>
+      </AcknowledgeIssueRadio>
       <label className="text-2xl font-bold">Living Room</label>
-      <AcknowledgeProblemField title={"Ceiling"}>
+      <AcknowledgeIssueRadio title={"Ceiling"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Ceiling"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor/Carpet"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor/Carpet"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor/Carpet"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Walls"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Walls"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Walls"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Sofa"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Sofa"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Sofa"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Chair"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Chair"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Chair"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Side Table"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Side Table"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Side Table"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"TV Stand"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"TV Stand"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the TV Stand"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Window/Blinds"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Window/Blinds"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Window/Blinds"
         />
-      </AcknowledgeProblemField>
+      </AcknowledgeIssueRadio>
       <label className="text-2xl font-bold">Bathroom</label>
-      <AcknowledgeProblemField title={"Entry Door"}>
+      <AcknowledgeIssueRadio title={"Entry Door"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Entry Door"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Ceiling"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Ceiling"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Ceiling"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Walls"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Walls"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Walls"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Cabinet(s)"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Cabinet(s)"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Cabinet(s)"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Mirror"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Mirror"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Mirror"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Sink/Counter"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Sink/Counter"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Sink/Counter"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Tub/Shower/Curtain"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Tub/Shower/Curtain"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Tub/Shower/Curtain"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Toilet"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Toilet"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Toilet"
         />
-      </AcknowledgeProblemField>
+      </AcknowledgeIssueRadio>
       <label className="text-2xl font-bold">Bedroom - Left Side</label>
-      <AcknowledgeProblemField title={"Entry Door"}>
+      <AcknowledgeIssueRadio title={"Entry Door"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Entry Door"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Ceiling"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Ceiling"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Ceiling"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor/Carpet"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor/Carpet"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor/Carpet"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Walls"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Walls"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Walls"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Bed/Mattress"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Bed/Mattress"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Bed/Mattress"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Closet/Mirror"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Closet/Mirror"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Closet/Mirror"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Desk/Chair"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Desk/Chair"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Desk/Chair"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Dresser"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Dresser"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Dresser"
         />
-      </AcknowledgeProblemField>
+      </AcknowledgeIssueRadio>
       <label className="text-2xl font-bold">Bedroom - Right Side</label>
-      <AcknowledgeProblemField title={"Entry Door"}>
+      <AcknowledgeIssueRadio title={"Entry Door"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Entry Door"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Ceiling"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Ceiling"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Ceiling"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Floor/Carpet"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Floor/Carpet"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Floor/Carpet"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Walls"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Walls"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Walls"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Bed/Mattress"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Bed/Mattress"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Bed/Mattress"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Closet/Mirror"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Closet/Mirror"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Closet/Mirror"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Desk/Chair"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Desk/Chair"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Desk/Chair"
         />
-      </AcknowledgeProblemField>
-      <AcknowledgeProblemField title={"Dresser"}>
+      </AcknowledgeIssueRadio>
+      <AcknowledgeIssueRadio title={"Dresser"}>
         <Textarea
           required
           label="Comments"
           name="comments"
           placeholder="Describe the issues with the Dresser"
         />
-      </AcknowledgeProblemField>
+      </AcknowledgeIssueRadio>
       <Input
         label="Student Signature"
         placeholder="Signature"

@@ -1,6 +1,4 @@
-import UpperCampusRCI from "~/components/forms/UpperCampusRCI";
-import ColonialRCIDouble from "~/components/forms/ColonialRCIDouble";
-import ColonialRCIQuad from "~/components/forms/ColonialRCIQuad";
+import ColonialRCIQuad from "~/components/forms/ColonialRCIQuadForm";
 
 export default function ResidentCheckInPage() {
   return <ColonialRCIQuad roomId={0} />;

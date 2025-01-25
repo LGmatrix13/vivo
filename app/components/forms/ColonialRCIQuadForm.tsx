@@ -5,11 +5,11 @@ import CollaspableContent from "../common/CollaspableContent";
 import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import WideButton from "../common/WideButton";
 
-interface RCIFormProps {
+interface ColonialRCIQuadFormProps {
   roomId: number;
 }
 
-export default function RCIForm(props: RCIFormProps) {
+export default function ColonialRCIQuadForm(props: ColonialRCIQuadFormProps) {
   const { roomId } = props;
   return (
     <Form className="space-y-5 flex flex-col">
