@@ -3,12 +3,13 @@ import { ChevronDown } from "./Icons";
 
 interface CollaspableContentProps {
   title: string;
+  className?: string;
   collasped?: boolean;
   children: React.ReactNode;
 }
 
 export default function CollaspableContent(props: CollaspableContentProps) {
-  const { title, children, collasped = false } = props;
+  const { title, children, className, collasped = false } = props;
   const [collapsed, setCollapsed] = useState(collasped);
 
   function toggleCollapse() {
@@ -16,7 +17,7 @@ export default function CollaspableContent(props: CollaspableContentProps) {
   }
 
   return (
-    <div className="space-y-5">
+    <div className={`space-y-5 ${className || ""}`}>
       <div className="flex items-center">
         <h2 className="font-bold text-lg">{title}</h2>
         <button className="ml-auto order-2" onClick={toggleCollapse}>
