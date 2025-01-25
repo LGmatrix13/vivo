@@ -84,7 +84,9 @@ export const roomConditionItemsTable = pgTable("RoomConditionItems", {
   floor: varchar("floor", { length: 225 }).notNull(),
   ceiling: varchar("ceiling", { length: 225 }).notNull(),
   lightsFixtures: varchar("lights_fixtures", { length: 225 }).notNull(),
-  closetWardrobeMirror: varchar("closet_wardrobe_mirror", { length: 225 }).notNull(),
+  closetWardrobeMirror: varchar("closet_wardrobe_mirror", {
+    length: 225,
+  }).notNull(),
   windowsScreens: varchar("windows_screens", { length: 225 }).notNull(),
   curtainsRods: varchar("curtains_rods", { length: 225 }).notNull(),
   deskChair: varchar("desk_chair", { length: 225 }).notNull(),
@@ -104,7 +106,9 @@ export const roomConditionItemsTable = pgTable("RoomConditionItems", {
   chairs: varchar("chairs", { length: 225 }).notNull(),
   fireExtinguisher: varchar("fire_extinguisher", { length: 225 }).notNull(),
   livingRoomCeiling: varchar("living_room_ceiling", { length: 225 }).notNull(),
-  livingRoomFloorCarpet: varchar("living_room_floor_carpet", { length: 225 }).notNull(),
+  livingRoomFloorCarpet: varchar("living_room_floor_carpet", {
+    length: 225,
+  }).notNull(),
   livingRoomWalls: varchar("living_room_walls", { length: 225 }).notNull(),
   sofa: varchar("sofa", { length: 225 }).notNull(),
   chair: varchar("chair", { length: 225 }).notNull(),
@@ -120,22 +124,50 @@ export const roomConditionItemsTable = pgTable("RoomConditionItems", {
   sinkCounter: varchar("sink_counter", { length: 225 }).notNull(),
   tubShowerCurtain: varchar("tub_shower_curtain", { length: 225 }).notNull(),
   toilet: varchar("toilet", { length: 225 }).notNull(),
-  bedroomLeftEntryDoor: varchar("bedroom_left_entry_door", { length: 225 }).notNull(),
-  bedroomLeftCeiling: varchar("bedroom_left_ceiling", { length: 225 }).notNull(),
-  bedroomLeftFloorCarpet: varchar("bedroom_left_floor_carpet", { length: 225 }).notNull(),
+  bedroomLeftEntryDoor: varchar("bedroom_left_entry_door", {
+    length: 225,
+  }).notNull(),
+  bedroomLeftCeiling: varchar("bedroom_left_ceiling", {
+    length: 225,
+  }).notNull(),
+  bedroomLeftFloorCarpet: varchar("bedroom_left_floor_carpet", {
+    length: 225,
+  }).notNull(),
   bedroomLeftWalls: varchar("bedroom_left_walls", { length: 225 }).notNull(),
-  bedroomLeftBedMattress: varchar("bedroom_left_bed_mattress", { length: 225 }).notNull(),
-  bedroomLeftClosetMirror: varchar("bedroom_left_closet_mirror", { length: 225 }).notNull(),
-  bedroomLeftDeskChair: varchar("bedroom_left_desk_chair", { length: 225 }).notNull(),
-  bedroomLeftDresser: varchar("bedroom_left_dresser", { length: 225 }).notNull(),
-  bedroomRightEntryDoor: varchar("bedroom_right_entry_door", { length: 225 }).notNull(),
-  bedroomRightCeiling: varchar("bedroom_right_ceiling", { length: 225 }).notNull(),
-  bedroomRightFloorCarpet: varchar("bedroom_right_floor_carpet", { length: 225 }).notNull(),
+  bedroomLeftBedMattress: varchar("bedroom_left_bed_mattress", {
+    length: 225,
+  }).notNull(),
+  bedroomLeftClosetMirror: varchar("bedroom_left_closet_mirror", {
+    length: 225,
+  }).notNull(),
+  bedroomLeftDeskChair: varchar("bedroom_left_desk_chair", {
+    length: 225,
+  }).notNull(),
+  bedroomLeftDresser: varchar("bedroom_left_dresser", {
+    length: 225,
+  }).notNull(),
+  bedroomRightEntryDoor: varchar("bedroom_right_entry_door", {
+    length: 225,
+  }).notNull(),
+  bedroomRightCeiling: varchar("bedroom_right_ceiling", {
+    length: 225,
+  }).notNull(),
+  bedroomRightFloorCarpet: varchar("bedroom_right_floor_carpet", {
+    length: 225,
+  }).notNull(),
   bedroomRightWalls: varchar("bedroom_right_walls", { length: 225 }).notNull(),
-  bedroomRightBedMattress: varchar("bedroom_right_bed_mattress", { length: 225 }).notNull(),
-  bedroomRightClosetMirror: varchar("bedroom_right_closet_mirror", { length: 225 }).notNull(),
-  bedroomRightDeskChair: varchar("bedroom_right_desk_chair", { length: 225 }).notNull(),
-  bedroomRightDresser: varchar("bedroom_right_dresser", { length: 225 }).notNull(),
+  bedroomRightBedMattress: varchar("bedroom_right_bed_mattress", {
+    length: 225,
+  }).notNull(),
+  bedroomRightClosetMirror: varchar("bedroom_right_closet_mirror", {
+    length: 225,
+  }).notNull(),
+  bedroomRightDeskChair: varchar("bedroom_right_desk_chair", {
+    length: 225,
+  }).notNull(),
+  bedroomRightDresser: varchar("bedroom_right_dresser", {
+    length: 225,
+  }).notNull(),
 
   studentSignature: varchar("student_signature", { length: 225 }).notNull(),
   RASignature: varchar("ra_signature", { length: 225 }).notNull(),
@@ -284,6 +316,6 @@ export const RCITable = pgTable("RCI", {
   submittedOn: date("submitted_on").defaultNow().notNull(),
   issues: json().default({}),
   status: statusEnum().notNull(),
-  signedOn: date("signed_on"),
+  signedOn: date("signed_on").defaultNow(),
   sentToLimble: boolean("sent_to_limble").notNull().default(false),
 });
