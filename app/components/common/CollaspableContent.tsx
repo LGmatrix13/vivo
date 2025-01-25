@@ -20,7 +20,11 @@ export default function CollaspableContent(props: CollaspableContentProps) {
     <div className={`space-y-5 ${className || ""}`}>
       <div className="flex items-center">
         <h2 className="font-bold text-lg">{title}</h2>
-        <button className="ml-auto order-2" onClick={toggleCollapse}>
+        <button
+          className="ml-auto order-2"
+          onClick={toggleCollapse}
+          type="button"
+        >
           <ChevronDown
             className={`${
               collapsed ? "rotate-180" : ""
