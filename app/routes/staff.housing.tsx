@@ -57,8 +57,8 @@ export default function StaffHousingLayout() {
   ];
   const adminPages = [
     {
-      name: "Rooms",
-      path: "/staff/housing/rooms",
+      name: "Buildings",
+      path: "/staff/housing/buildings",
     },
     ...rdPages,
   ];
