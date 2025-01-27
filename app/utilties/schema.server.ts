@@ -326,3 +326,28 @@ export const RCITable = pgTable("RCI", {
   sentToLimble: boolean("sent_to_limble").notNull().default(false),
   rciType: rciTypeEnum().notNull()
 });
+
+export const roomConditionItemsTable = pgTable("RoomConditionItems", {
+  id: serial("id").notNull().primaryKey(),
+  rciId: integer("rci_id")
+    .notNull()
+    .references(() => RCITable.id),
+  emergencyItems: varchar("emergency_items", { length: 225 }),
+  walls: varchar("walls", { length: 225 }),
+  floor: varchar("floor", { length: 225 }),
+  doorsLocks: varchar("doors_locks", { length: 225 }),
+  ceiling: varchar("ceiling", { length: 225 }),
+  lightsFixtures: varchar("lights_fixtures", { length: 225 }),
+  closetWardrobeMirror: varchar("closet_wardrobe_mirror", { length: 225 }),
+  windowsScreens: varchar("windows_screens", { length: 225 }),
+  curtainsRods: varchar("curtains_rods", { length: 225 }),
+  deskChair: varchar("desk_chair", { length: 225 }),
+  bedMattress: varchar("bed_mattress", { length: 225 }),
+  dresser: varchar("dresser", { length: 225 }),
+  bathroom: varchar("bathroom", { length: 225 }),
+  towelbarRings: varchar("towelbar_rings", { length: 225 }),
+  studentSignature: varchar("student_signature", { length: 225 }),
+  RASignature: varchar("RA_signature", { length: 225 }),
+  studentDate: date("student_date"),
+  RADate: date("RA_date"),
+});

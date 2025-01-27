@@ -18,6 +18,7 @@ export async function createUpperCampus(
       residentId,
       issues,
       status: "SUBMITTED_BY_RESIDENT",
+      rciType: "UPPER_CAMPUS",
     });
 
     return mutate(request.url, {
