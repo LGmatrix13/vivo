@@ -12,7 +12,7 @@ import {
 
 type Values = { [key: string]: any };
 
-export async function readColonialRCIReports() {
+export async function readColonialDoubleRCIReports() {
     const data = await db.client.select({
         roomID: residentTable.id,
         emergencyItems: roomConditionItemsTable.emergencyItems,
