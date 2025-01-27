@@ -1,5 +1,5 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import ColonialRCIQuad from "~/components/forms/ColonialRCIQuadForm";
+import UpperCampusRCIForm from "~/components/forms/UpperCampusRCIForm";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
@@ -22,5 +22,5 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function ResidentCheckInPage() {
-  return <UpperCampusRCI roomId={0} />;
+  return <UpperCampusRCIForm roomId={0} />;
 }

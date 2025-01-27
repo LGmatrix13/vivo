@@ -1,48 +1,6 @@
 import { z } from "zod";
 
-export const UpperCampus = z.object({
-  roomId: z.coerce.number(),
-  doorsLocks: z.string(),
-  emergencyItems: z.string(),
-  walls: z.string(),
-  floor: z.string(),
-  ceiling: z.string(),
-  lightsFixtures: z.string(),
-  closetWardrobeMirror: z.string(),
-  windowsScreens: z.string(),
-  curtainsRods: z.string(),
-  deskChair: z.string(),
-  bedMattress: z.string(),
-  dresser: z.string(),
-  bathroom: z.string(),
-  towelbarRings: z.string(),
-  // colonial RCI items
-  keyRecieved: z.boolean(),
-  entryDoor: z.string(),
-  stoveOven: z.string(),
-  countertops: z.string(),
-  cabinets: z.string(),
-  washerDryer: z.string(),
-  refrigerator: z.string(),
-  dishwasher: z.string(),
-  sinkDisposal: z.string(),
-  table: z.string(),
-  chairs: z.string(),
-  fireExtinguisher: z.string(),
-  sofa: z.string(),
-  sideTable: z.string(),
-  tvStand: z.string(),
-  bathMirror: z.string(),
-  bathtubShowerCurtain: z.string(),
-  toilet: z.string(),
-
-  studentSignature: z.string(),
-  raSignature: z.string(),
-  studentDate: z.string(),
-  RADate: z.string(),
-});
-
-export const LRCIQuad = z.object({
+export const ColonialQuad = z.object({
   kitchenFloor: z.string(),
   kitchenStoveOven: z.string(),
   kitchenCountertops: z.string(),
