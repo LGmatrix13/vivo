@@ -8,7 +8,6 @@ interface RCIFormProps {
     roomId: number;
 }
 
-
 interface AcknowledgeProblemFieldProps {
     title: string; children: React.ReactElement;
 }
@@ -300,7 +299,7 @@ export default function RCIForm(props: RCIFormProps) {
                     <Textarea
                         required
                         label="Comments"
-                        name="comments"
+                        name="comm</Ac                        />"
                         placeholder="Describe the issues with the Toilet"
                     />
                 </AcknowledgeProblemField>
