@@ -1,5 +1,5 @@
-import { json, useLoaderData } from "@remix-run/react";
-import { Download, FileSearch } from "~/components/common/Icons";
+import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
 import Instruction from "~/components/common/Instruction";
@@ -13,6 +13,13 @@ import { delay } from "~/utilties/delay.server";
 import { IEventReport } from "~/models/reports";
 import IconButton from "~/components/common/IconButton";
 import { csv } from "~/utilties/csv";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
+import EventForm from "~/components/forms/EventForm";
+import { IUser } from "~/models/user";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -39,6 +46,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAReportsEventPage() {
   const data = useLoaderData<typeof loader>();
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
   const columnKeys = {
     time: "Time",
     ra: "RA",
@@ -62,13 +72,21 @@ export default function RAReportsEventPage() {
       )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">
+          <DrawerProvider>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Event</IconButton>
+            </DrawerButton>
+            <DrawerContent>
+              <EventForm zoneId={context.user.id} />
+            </DrawerContent>
+          </DrawerProvider>
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(rows, "Events", rowKeys);
+              csv.download([], "events", rowKeys);
             }}
           >
-            Export Event Reports
+            Export Events
           </IconButton>
         </div>
       )}

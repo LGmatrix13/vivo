@@ -24,6 +24,7 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["admin"]);
   const [buildings, rds] = await Promise.all([
     readAdminBuildings(),
     readAdminRDsDropdown(),
