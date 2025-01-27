@@ -73,7 +73,18 @@ export default function StaffHousingRoomsPage() {
     raFullName: "RA",
     capacity: "Capacity",
   };
-
+  const buildingOptions = [
+    {
+      value: 0,
+      key: "All",
+    },
+    ...context.buildingsDropdown.map((building) => {
+      return {
+        value: building.id,
+        key: building.name,
+      };
+    }),
+  ];
   return (
     <Table<IRoom>
       columnKeys={columnKeys}
@@ -81,6 +92,11 @@ export default function StaffHousingRoomsPage() {
       rowKeys={rowKeys}
       search={{
         placeholder: "Search for a room...",
+      }}
+      filter={{
+        key: "buildingId",
+        selected: "All",
+        options: buildingOptions,
       }}
       InstructionComponent={() => (
         <Instruction Icon={HomeSearch} title="First Select a Room" />
