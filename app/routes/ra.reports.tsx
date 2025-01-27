@@ -4,10 +4,12 @@ import {
   Outlet,
   useLoaderData,
   useNavigation,
+  useOutletContext,
 } from "@remix-run/react";
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
+import { IUser } from "~/models/user";
 import { auth } from "~/utilties/auth.server";
 import { toast } from "~/utilties/toast.server";
 
@@ -27,6 +29,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function RAReportsLayout() {
   const data = useLoaderData<typeof loader>();
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
   const pages = [
     {
       name: "Weekly",
@@ -52,7 +57,7 @@ export default function RAReportsLayout() {
     <>
       <SubHeader pages={pages} />
       <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
-        {state == "loading" ? <Loading /> : <Outlet />}
+        {state == "loading" ? <Loading /> : <Outlet context={context} />}
         {data.toast && (
           <Toast level={data.toast.level}>{data.toast.message}</Toast>
         )}
