@@ -1,16 +1,16 @@
-import { UpperCampus } from "~/schemas/rcis/upperCampus";
+import { ColonialQuad } from "~/schemas/rcis/colonialQuad";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createUpperCampus(
+export async function createColonialQuad(
   request: Request,
   residentId: number,
   values: Values
 ) {
-  const result = UpperCampus.safeParse(values);
+  const result = ColonialQuad.safeParse(values);
 
   if (result.success) {
     const issues = result.data;
@@ -18,7 +18,7 @@ export async function createUpperCampus(
       residentId,
       issues,
       status: "SUBMITTED_BY_RESIDENT",
-      roomType: "UPPER_CAMPUS",
+      roomType: "APT_QUAD",
     });
 
     return mutate(request.url, {
