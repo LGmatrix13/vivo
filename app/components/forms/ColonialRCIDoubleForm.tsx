@@ -16,11 +16,11 @@ export default function ColonialRCIDoubleForm(
     <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />
       <label className="text-2xl font-bold">Foyer/Kitchen/Dining</label>
-      <AcknowledgeIssueRadio title={"Entry Door"}>
+      <AcknowledgeIssueRadio title={"Foyer Kitchen Dining Entry Door"}>
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningEntryDoor"
           placeholder="Describe the issues with the Entry Door"
         />
       </AcknowledgeIssueRadio>
@@ -28,7 +28,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningCeiling"
           placeholder="Describe the issues with the Ceiling"
         />
       </AcknowledgeIssueRadio>
@@ -36,7 +36,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningFloor"
           placeholder="Describe the issues with the Floor"
         />
       </AcknowledgeIssueRadio>
@@ -44,23 +44,15 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningWalls"
           placeholder="Describe the issues with the Walls"
-        />
-      </AcknowledgeIssueRadio>
-      <AcknowledgeIssueRadio title={"Floor"}>
-        <Textarea
-          required
-          label="Comments"
-          name="comments"
-          placeholder="Describe the issues with the Floor"
         />
       </AcknowledgeIssueRadio>
       <AcknowledgeIssueRadio title={"Sink/Disposal"}>
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningSinkDisposal"
           placeholder="Describe the issues with the Sink/Disposal"
         />
       </AcknowledgeIssueRadio>
@@ -68,7 +60,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningCountertops"
           placeholder="Describe the issues with the Countertops"
         />
       </AcknowledgeIssueRadio>
@@ -76,7 +68,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningDishwasher"
           placeholder="Describe the issues with the Dishwasher"
         />
       </AcknowledgeIssueRadio>
@@ -84,7 +76,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningWasherDryer"
           placeholder="Describe the issues with the Washer/Dryer"
         />
       </AcknowledgeIssueRadio>
@@ -92,7 +84,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningRefrigerator"
           placeholder="Describe the issues with the Refrigerator"
         />
       </AcknowledgeIssueRadio>
@@ -100,7 +92,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningStoveOven"
           placeholder="Describe the issues with the Stove/Oven"
         />
       </AcknowledgeIssueRadio>
@@ -108,7 +100,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningWallCabinets"
           placeholder="Describe the issues with the Wall Cabinets"
         />
       </AcknowledgeIssueRadio>
@@ -116,7 +108,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningTable"
           placeholder="Describe the issues with the Table"
         />
       </AcknowledgeIssueRadio>
@@ -124,7 +116,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningChairs"
           placeholder="Describe the issues with the Chairs"
         />
       </AcknowledgeIssueRadio>
@@ -132,7 +124,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="foyerKitchenDiningFireExtinguisher"
           placeholder="Describe the issues with the Fire Exstinguisher"
         />
       </AcknowledgeIssueRadio>
@@ -141,7 +133,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomCeiling"
           placeholder="Describe the issues with the Ceiling"
         />
       </AcknowledgeIssueRadio>
@@ -149,7 +141,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomFloorCarpet"
           placeholder="Describe the issues with the Floor/Carpet"
         />
       </AcknowledgeIssueRadio>
@@ -157,7 +149,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomWalls"
           placeholder="Describe the issues with the Walls"
         />
       </AcknowledgeIssueRadio>
@@ -165,7 +157,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomSofa"
           placeholder="Describe the issues with the Sofa"
         />
       </AcknowledgeIssueRadio>
@@ -173,7 +165,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomChair"
           placeholder="Describe the issues with the Chair"
         />
       </AcknowledgeIssueRadio>
@@ -181,7 +173,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomSideTable"
           placeholder="Describe the issues with the Side Table"
         />
       </AcknowledgeIssueRadio>
@@ -189,7 +181,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomTVStand"
           placeholder="Describe the issues with the TV Stand"
         />
       </AcknowledgeIssueRadio>
@@ -197,7 +189,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="livingRoomWindowBlinds"
           placeholder="Describe the issues with the Window/Blinds"
         />
       </AcknowledgeIssueRadio>
@@ -206,7 +198,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomEntryDoor"
           placeholder="Describe the issues with the Entry Door"
         />
       </AcknowledgeIssueRadio>
@@ -214,7 +206,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomCeiling"
           placeholder="Describe the issues with the Ceiling"
         />
       </AcknowledgeIssueRadio>
@@ -222,7 +214,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomFloor"
           placeholder="Describe the issues with the Floor"
         />
       </AcknowledgeIssueRadio>
@@ -230,7 +222,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomWalls"
           placeholder="Describe the issues with the Walls"
         />
       </AcknowledgeIssueRadio>
@@ -238,7 +230,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomCabinet"
           placeholder="Describe the issues with the Cabinet(s)"
         />
       </AcknowledgeIssueRadio>
@@ -246,7 +238,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomMirror"
           placeholder="Describe the issues with the Mirror"
         />
       </AcknowledgeIssueRadio>
@@ -254,7 +246,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomSinkCounter"
           placeholder="Describe the issues with the Sink/Counter"
         />
       </AcknowledgeIssueRadio>
@@ -262,7 +254,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomTubShowerCurtain"
           placeholder="Describe the issues with the Tub/Shower/Curtain"
         />
       </AcknowledgeIssueRadio>
@@ -270,7 +262,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bathroomToilet"
           placeholder="Describe the issues with the Toilet"
         />
       </AcknowledgeIssueRadio>
@@ -279,7 +271,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftEntryDoor"
           placeholder="Describe the issues with the Entry Door"
         />
       </AcknowledgeIssueRadio>
@@ -287,7 +279,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftCeiling"
           placeholder="Describe the issues with the Ceiling"
         />
       </AcknowledgeIssueRadio>
@@ -295,7 +287,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftFloorCarpet"
           placeholder="Describe the issues with the Floor/Carpet"
         />
       </AcknowledgeIssueRadio>
@@ -303,7 +295,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftWalls"
           placeholder="Describe the issues with the Walls"
         />
       </AcknowledgeIssueRadio>
@@ -311,7 +303,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftBedMattress"
           placeholder="Describe the issues with the Bed/Mattress"
         />
       </AcknowledgeIssueRadio>
@@ -319,7 +311,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftClosetMirror"
           placeholder="Describe the issues with the Closet/Mirror"
         />
       </AcknowledgeIssueRadio>
@@ -327,7 +319,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftDeskChair"
           placeholder="Describe the issues with the Desk/Chair"
         />
       </AcknowledgeIssueRadio>
@@ -335,7 +327,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomLeftDresser"
           placeholder="Describe the issues with the Dresser"
         />
       </AcknowledgeIssueRadio>
@@ -344,7 +336,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightEntryDoor"
           placeholder="Describe the issues with the Entry Door"
         />
       </AcknowledgeIssueRadio>
@@ -352,7 +344,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightCeiling"
           placeholder="Describe the issues with the Ceiling"
         />
       </AcknowledgeIssueRadio>
@@ -360,7 +352,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightFloorCarpet"
           placeholder="Describe the issues with the Floor/Carpet"
         />
       </AcknowledgeIssueRadio>
@@ -368,7 +360,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightWalls"
           placeholder="Describe the issues with the Walls"
         />
       </AcknowledgeIssueRadio>
@@ -376,7 +368,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightBedMattress"
           placeholder="Describe the issues with the Bed/Mattress"
         />
       </AcknowledgeIssueRadio>
@@ -384,7 +376,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightClosetMirror"
           placeholder="Describe the issues with the Closet/Mirror"
         />
       </AcknowledgeIssueRadio>
@@ -392,7 +384,7 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightDeskChair"
           placeholder="Describe the issues with the Desk/Chair"
         />
       </AcknowledgeIssueRadio>
@@ -400,14 +392,14 @@ export default function ColonialRCIDoubleForm(
         <Textarea
           required
           label="Comments"
-          name="comments"
+          name="bedroomRightDresser"
           placeholder="Describe the issues with the Dresser"
         />
       </AcknowledgeIssueRadio>
       <Input
         label="Student Signature"
         placeholder="Signature"
-        name="studentName"
+        name="signature"
         type="text"
         required
       />

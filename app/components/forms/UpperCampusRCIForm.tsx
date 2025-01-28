@@ -11,7 +11,7 @@ interface UpperCampusRCIFormProps {
 export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
   const { roomId } = props;
   return (
-    <Form className="spacee-y-5">
+    <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />
       <AcknowledgeIssueRadio title={"Doors and Locks"}>
         <Textarea
