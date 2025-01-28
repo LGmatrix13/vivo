@@ -1,6 +1,5 @@
 import { desc, eq, sql, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { IRCIIssues } from "~/models/rci";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -13,6 +12,24 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
+export async function readCompleteRCI(residentId: number) {
+  const data = await db.client
+    .select({
+      roomType: roomTable.roomType,
+      roomId: roomTable.id,
+      issues: RCITable.issues,
+    })
+    .from(roomTable)
+    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(RCITable, eq(roomTable.id, RCITable.id))
+    .where(eq(residentTable.id, residentId));
+
+  return {
+    ...data[0],
+    issues: data[0].issues as Record<string, string>,
+  };
+}
+
 export async function readCompleteRCIsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -20,7 +37,6 @@ export async function readCompleteRCIsAdmin() {
     .select({
       id: RCITable.id,
       sentToLimble: RCITable.sentToLimble,
-      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
@@ -33,8 +49,7 @@ export async function readCompleteRCIsAdmin() {
       ),
     })
     .from(RCITable)
-    .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
-    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(roomTable, eq(RCITable.roomId, roomTable.id))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
@@ -46,13 +61,12 @@ export async function readCompleteRCIsAdmin() {
         eq(readTable.reportType, "RCI")
       )
     )
-    .orderBy(desc(RCITable.submittedOn));
+    .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
     return {
       ...rci,
-      ...(rci.issues as IRCIIssues),
-      totalIssues: Object.keys(rci.issues as IRCIIssues).length,
+      totalIssues: Object.keys(rci.issues).length,
       submittedOn: formatDate(rci.submittedOn),
     };
   });
@@ -66,7 +80,6 @@ export async function readCompleteRCIsRD(id: number) {
     .select({
       id: RCITable.id,
       sentToLimble: RCITable.sentToLimble,
-      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
@@ -79,8 +92,7 @@ export async function readCompleteRCIsRD(id: number) {
       ),
     })
     .from(RCITable)
-    .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
-    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(roomTable, eq(RCITable.roomId, roomTable.id))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
@@ -94,13 +106,12 @@ export async function readCompleteRCIsRD(id: number) {
       )
     )
     .where(eq(staffTable.id, id))
-    .orderBy(desc(RCITable.submittedOn));
+    .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
     return {
       ...rci,
-      ...(rci.issues as IRCIIssues),
-      totalIssues: Object.keys(rci.issues as IRCIIssues).length,
+      totalIssues: Object.keys(rci.issues).length,
       submittedOn: formatDate(rci.submittedOn),
     };
   });

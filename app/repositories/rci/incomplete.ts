@@ -1,4 +1,4 @@
-import { and, asc, eq, notExists, sql } from "drizzle-orm";
+import { and, asc, desc, eq, notExists, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
 import {
@@ -15,25 +15,24 @@ export async function readIncompleteRCIsAsAdmin() {
 
   const data = await db.client
     .select({
-      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
     })
-    .from(residentTable)
+    .from(roomTable)
     .where(
       notExists(
         db.client
           .select()
           .from(RCITable)
-          .where(eq(RCITable.residentId, residentTable.id))
+          .where(eq(RCITable.roomId, roomTable.id))
       )
     )
-    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .orderBy(asc(residentTable.lastName));
+    .orderBy(desc(RCITable.id));
+
   return data;
 }
 
@@ -42,28 +41,27 @@ export async function readIncompleteRCIsAsRD(id: number) {
 
   const data = await db.client
     .select({
-      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
     })
-    .from(residentTable)
+    .from(roomTable)
     .where(
       and(
         notExists(
           db.client
             .select()
             .from(RCITable)
-            .where(eq(RCITable.residentId, residentTable.id))
+            .where(eq(RCITable.roomId, roomTable.id))
         ),
         eq(staffTable.id, id)
       )
     )
-    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .orderBy(asc(residentTable.lastName));
+    .orderBy(desc(RCITable.id));
+
   return data;
 }

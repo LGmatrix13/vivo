@@ -13,16 +13,6 @@ import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
-  // const data = await db.client
-  //   .select({
-  //     roomType: roomTable.roomType,
-  //     roomId: roomTable.id,
-  //     issues: RCITable.issues,
-  //   })
-  //   .from(roomTable)
-  //   .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
-  //   .innerJoin(RCITable, eq(roomTable.id, RCITable.id))
-  //   .where(eq(residentTable.id, user.id));
 
   return json({
     roomType: "UPPER_CAMPUS",

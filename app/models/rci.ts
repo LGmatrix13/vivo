@@ -8,9 +8,3 @@ export type ICompleteRCI = Awaited<
 export type IIncompleteRCI = Awaited<
   ReturnType<typeof readIncompleteRCIsAdmin>
 >[number];
-
-export type IRCIIssues = {
-  door?: string;
-  closet?: string;
-  bed?: string;
-};
