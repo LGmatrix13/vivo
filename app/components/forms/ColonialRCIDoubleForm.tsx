@@ -32,7 +32,7 @@ export default function ColonialRCIDoubleForm(
             placeholder={`Describe the issues with the ${
               colonialDoubleMapping[key as keyof typeof colonialDoubleMapping]
             }`}
-            value={
+            defaultValue={
               colonialDoubleMapping[key as keyof typeof colonialDoubleMapping]
             }
           />

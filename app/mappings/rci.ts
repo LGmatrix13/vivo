@@ -1,6 +1,6 @@
 export const upperCampusMapping = {
   doorsLocks: "Doors Locks",
-  emergencyItems: "Emergy Items",
+  emergencyItems: "Emergency Items",
   walls: "Walls",
   floor: "Floor",
   ceiling: "Ceiling",
@@ -13,25 +13,6 @@ export const upperCampusMapping = {
   dresser: "Dresser",
   bathroom: "Bathroom",
   towelbarRings: "Towel Bar Rings",
-  // colonial RCI items
-  keyRecieved: "Key Recieved",
-  entryDoor: "Entry Door",
-  stoveOven: "Stove Oven",
-  countertops: "Counter Tops",
-  cabinets: "Cabinets",
-  washerDryer: "Washer Dryer",
-  refrigerator: "Refrigerator",
-  dishwasher: "Dishwasher",
-  sinkDisposal: "Sink Disposal",
-  table: "Table",
-  chairs: "Chairs",
-  fireExtinguisher: "Fire Extinguisher",
-  sofa: "Sofa",
-  sideTable: "Side Table",
-  tvStand: "TV Stand",
-  bathMirror: "Bath Mirror",
-  bathtubShowerCurtain: "Bathtub Shower Curtain",
-  toilet: "Toliet",
 };
 
 export const colonialQuadMapping = {

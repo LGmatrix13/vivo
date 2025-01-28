@@ -28,7 +28,9 @@ export default function RCIForm(props: ColonialRCIQuadFormProps) {
             placeholder={`Describe the issues with the ${
               colonialQuadMapping[key as keyof typeof colonialQuadMapping]
             }`}
-            value={colonialQuadMapping[key as keyof typeof colonialQuadMapping]}
+            defaultValue={
+              colonialQuadMapping[key as keyof typeof colonialQuadMapping]
+            }
           />
         </AcknowledgeIssueRadio>
       ))}

@@ -27,7 +27,7 @@ export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
             placeholder={`Describe the issues with the ${
               upperCampusMapping[key as keyof typeof upperCampusMapping]
             }`}
-            value={upperCampusMapping[key as keyof typeof upperCampusMapping]}
+            defaultValue={issues ? issues[key] : ""}
           />
         </AcknowledgeIssueRadio>
       ))}
