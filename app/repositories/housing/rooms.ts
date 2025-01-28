@@ -9,6 +9,7 @@ import {
   buildingTable,
   zoneTable,
   staffTable,
+  rciTypeEnum
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
@@ -110,4 +111,53 @@ export async function createRoom(values: Values, request: Request) {
     message: "Created Room",
     level: "success",
   });
+}
+
+export async function getRoomTypefromResidentID(residentId: number) {
+  const room = await db.client
+    .select({
+      capacity: roomTable.capacity,
+      buildingName: buildingTable.name
+    })
+    .from(residentTable)
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .where(eq(residentTable.id, residentId))
+  if (room.length == 0) {
+    return "UPPER_CAMPUS"
+  }
+  if (!room[0].buildingName.toLowerCase().includes("colonial")) {
+    return "UPPER_CAMPUS"
+  }
+  switch(room[0].capacity) {
+    case 2: return "APT_DOUBLE";
+    case 3: return "APT_TRIPLE";
+    case 4: return "APT_QUAD";
+    default: return "APT_QUAD";
+  }
+}
+
+export async function getRoomTypefromZoneID(zoneId: number) {
+  const room = await db.client
+    .select({
+      capacity: roomTable.capacity,
+      buildingName: buildingTable.name
+    })
+    .from(zoneTable)
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .where(eq(zoneTable.id, zoneId))
+  if (room.length == 0) {
+    return "UPPER_CAMPUS"
+  }
+  if (!room[0].buildingName.toLowerCase().includes("colonial")) {
+    return "UPPER_CAMPUS"
+  }
+  switch(room[0].capacity) {
+    case 2: return "APT_DOUBLE";
+    case 3: return "APT_TRIPLE";
+    case 4: return "APT_QUAD";
+    default: return "APT_QUAD";
+  }
 }
