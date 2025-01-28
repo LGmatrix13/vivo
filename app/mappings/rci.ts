@@ -102,7 +102,7 @@ export const colonialQuadMapping = {
   bedroomDDresser: "Bedroom D Dresser",
 };
 
-export const ColonialDouble = {
+export const colonialDoubleMapping = {
   foyerKitchenDiningEntryDoor: "Foyer Kitchen Dining Entry Door",
   foyerKitchenDiningCeiling: "Foyer Kitchen Dining Ceiling",
   foyerKitchenDiningFloor: "Foyer Kitchen Dining Floor",
