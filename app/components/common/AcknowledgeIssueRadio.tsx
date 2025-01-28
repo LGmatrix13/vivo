@@ -3,12 +3,13 @@ import { useState } from "react";
 interface AcknowledgeIssueRadioProps {
   title: string;
   children: React.ReactElement;
+  yes?: boolean;
 }
 
 export default function AcknowledgeIssueRadio(
   props: AcknowledgeIssueRadioProps
 ) {
-  const [hasProblem, setHasProblem] = useState<boolean>();
+  const [hasProblem, setHasProblem] = useState<boolean | undefined>(props.yes);
 
   return (
     <div className="space-y-3">

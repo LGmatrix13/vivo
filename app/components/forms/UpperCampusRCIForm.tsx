@@ -6,10 +6,11 @@ import WideButton from "../common/WideButton";
 
 interface UpperCampusRCIFormProps {
   roomId: number;
+  issues?: Record<string, string>;
 }
 
 export default function UpperCampusRCIForm(props: UpperCampusRCIFormProps) {
-  const { roomId } = props;
+  const { roomId, issues } = props;
   return (
     <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />

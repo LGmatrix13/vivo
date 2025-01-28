@@ -9,7 +9,7 @@ import { createColonialQuad } from "~/repositories/rci/colonialQuad";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 import { db } from "~/utilties/connection.server";
-import { residentTable, roomTable } from "~/utilties/schema.server";
+import { RCITable, residentTable, roomTable } from "~/utilties/schema.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
@@ -17,12 +17,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     .select({
       roomType: roomTable.roomType,
       roomId: roomTable.id,
+      issues: RCITable.issues,
     })
     .from(roomTable)
     .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(RCITable, eq(roomTable.id, RCITable.id))
     .where(eq(residentTable.id, user.id));
 
-  return json(data[0]);
+  return json({
+    ...data[0],
+    issues: data[0].issues as Record<string, string>,
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {

@@ -6,12 +6,13 @@ import WideButton from "../common/WideButton";
 
 interface ColonialRCIDoubleFormProps {
   roomId: number;
+  issues?: Record<string, string>;
 }
 
 export default function ColonialRCIDoubleForm(
   props: ColonialRCIDoubleFormProps
 ) {
-  const { roomId } = props;
+  const { roomId, issues } = props;
   return (
     <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />
