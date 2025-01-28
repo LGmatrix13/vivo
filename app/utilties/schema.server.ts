@@ -324,7 +324,7 @@ export const RCITable = pgTable("RCI", {
   status: statusEnum().notNull(),
   signedOn: date("signed_on").defaultNow(),
   sentToLimble: boolean("sent_to_limble").notNull().default(false),
-  rciType: rciTypeEnum().notNull()
+  rciType: rciTypeEnum().notNull().default("UPPER_CAMPUS")
 });
 
 export const roomConditionItemsTable = pgTable("RoomConditionItems", {
