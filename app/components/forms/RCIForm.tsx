@@ -1,40 +1,32 @@
 import Input from "../common/Input";
 import Textarea from "../common/Textarea";
 import { Form } from "@remix-run/react";
-import AcknowledgeIssueRadio from "~/components/common/AcknowledgeIssueRadio";
+import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import WideButton from "../common/WideButton";
-import { colonialDoubleMapping } from "~/mappings/rci";
 
-interface ColonialRCIDoubleFormProps {
+interface RCIFormProps {
+  mapping: Record<string, string>;
   roomId: number;
   issues?: Record<string, string>;
 }
 
-export default function ColonialRCIDoubleForm(
-  props: ColonialRCIDoubleFormProps
-) {
-  const { roomId, issues } = props;
+export default function RCIForm(props: RCIFormProps) {
+  const { roomId, issues, mapping } = props;
 
   return (
     <Form className="space-y-5">
       <input name="roomId" type="hidden" value={roomId} />
-      {Object.keys(colonialDoubleMapping).map((key) => (
+      {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
-          title={
-            colonialDoubleMapping[key as keyof typeof colonialDoubleMapping]
-          }
+          title={mapping[key as keyof typeof mapping]}
           yes={issues && !issues[key]}
         >
           <Textarea
             required
             label="Comments"
             name={key}
-            placeholder={`Describe the issues with the ${
-              colonialDoubleMapping[key as keyof typeof colonialDoubleMapping]
-            }`}
-            defaultValue={
-              colonialDoubleMapping[key as keyof typeof colonialDoubleMapping]
-            }
+            placeholder={`Describe the issues with the ${mapping[key]}`}
+            defaultValue={mapping[key]}
           />
         </AcknowledgeIssueRadio>
       ))}

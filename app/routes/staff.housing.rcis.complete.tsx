@@ -19,6 +19,7 @@ import {
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
+import { colonialQuadMapping } from "~/mappings/rci";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -118,7 +119,7 @@ export default function StaffHousingRCIsCompletePage() {
           },
         },
       }}
-      rowKeys={rowKeys}
+      rowKeys={colonialQuadMapping}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}

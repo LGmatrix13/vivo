@@ -1,15 +1,15 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { eq } from "drizzle-orm";
-import ColonialRCIDoubleForm from "~/components/forms/ColonialRCIDoubleForm";
-import ColonialRCIQuadForm from "~/components/forms/ColonialRCIQuadForm";
-import UpperCampusRCIForm from "~/components/forms/UpperCampusRCIForm";
+import RCIForm from "~/components/forms/RCIForm";
+import {
+  colonialDoubleMapping,
+  colonialQuadMapping,
+  upperCampusMapping,
+} from "~/mappings/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
-import { db } from "~/utilties/connection.server";
-import { RCITable, residentTable, roomTable } from "~/utilties/schema.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
@@ -52,10 +52,10 @@ export default function ResidentCheckInPage() {
 
   switch (data.roomType) {
     case "UPPER_CAMPUS":
-      return <UpperCampusRCIForm roomId={data.roomId} />;
+      return <RCIForm mapping={upperCampusMapping} roomId={data.roomId} />;
     case "APT_DOUBLE":
-      return <ColonialRCIDoubleForm roomId={data.roomId} />;
+      return <RCIForm mapping={colonialDoubleMapping} roomId={data.roomId} />;
     case "APT_QUAD":
-      return <ColonialRCIQuadForm roomId={data.roomId} />;
+      return <RCIForm mapping={colonialQuadMapping} roomId={data.roomId} />;
   }
 }
