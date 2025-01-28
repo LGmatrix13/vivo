@@ -120,13 +120,13 @@ export async function getRoomTypefromResidentID(residentId: number) {
       buildingName: buildingTable.name
     })
     .from(residentTable)
-    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .where(eq(residentTable.id, residentId))
   if (room.length == 0) {
     return "UPPER_CAMPUS"
   }
-  if (room[0].buildingName && !room[0].buildingName.toLowerCase().includes("colonial")) {
+  if (!room[0].buildingName.toLowerCase().includes("colonial")) {
     return "UPPER_CAMPUS"
   }
   switch(room[0].capacity) {
@@ -144,14 +144,14 @@ export async function getRoomTypefromZoneID(zoneId: number) {
       buildingName: buildingTable.name
     })
     .from(zoneTable)
-    .leftJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
-    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .innerJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .where(eq(zoneTable.id, zoneId))
   if (room.length == 0) {
     return "UPPER_CAMPUS"
   }
-  if (room[0].buildingName && !room[0].buildingName.toLowerCase().includes("colonial")) {
+  if (!room[0].buildingName.toLowerCase().includes("colonial")) {
     return "UPPER_CAMPUS"
   }
   switch(room[0].capacity) {
