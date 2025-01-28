@@ -21,12 +21,13 @@ export async function readCompleteRCI(residentId: number) {
     })
     .from(roomTable)
     .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
-    .innerJoin(RCITable, eq(roomTable.id, RCITable.id))
+    .leftJoin(RCITable, eq(roomTable.id, RCITable.id))
     .where(eq(residentTable.id, residentId));
 
+  const rci = data[0];
   return {
-    ...data[0],
-    issues: data[0].issues as Record<string, string>,
+    ...rci,
+    issues: rci.issues as Record<string, string> | undefined,
   };
 }
 

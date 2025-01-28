@@ -26,7 +26,7 @@ export default function RCIForm(props: RCIFormProps) {
             label="Comments"
             name={key}
             placeholder={`Describe the issues with the ${mapping[key]}`}
-            defaultValue={mapping[key]}
+            defaultValue={issues && issues[key]}
           />
         </AcknowledgeIssueRadio>
       ))}

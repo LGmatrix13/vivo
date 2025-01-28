@@ -8,17 +8,14 @@ import {
 } from "~/mappings/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
+import { readCompleteRCI } from "~/repositories/rci/complete";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
-
-  return json({
-    roomType: "UPPER_CAMPUS",
-    roomId: 1,
-    issues: {},
-  });
+  const rci = await readCompleteRCI(user.id);
+  return json(rci);
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -43,9 +40,9 @@ export default function ResidentCheckInPage() {
   switch (data.roomType) {
     case "UPPER_CAMPUS":
       return <RCIForm mapping={upperCampusMapping} roomId={data.roomId} />;
-    case "APT_DOUBLE":
+    case "COLONIAL_DOUBLE":
       return <RCIForm mapping={colonialDoubleMapping} roomId={data.roomId} />;
-    case "APT_QUAD":
+    case "COLONIAL_QUAD":
       return <RCIForm mapping={colonialQuadMapping} roomId={data.roomId} />;
   }
 }
