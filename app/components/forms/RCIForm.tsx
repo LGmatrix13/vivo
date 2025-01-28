@@ -14,7 +14,7 @@ export default function RCIForm(props: RCIFormProps) {
   const { roomId, issues, mapping } = props;
 
   return (
-    <Form className="space-y-5">
+    <Form className="space-y-5" method="post">
       <input name="roomId" type="hidden" value={roomId} />
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio

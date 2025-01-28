@@ -1,23 +1,23 @@
 import { z } from "zod";
 
-export const UpperCampus = z.object({
+export const UpperCampusIssues = z.object({
+  doorLocks: z.string().optional(),
+  emergencyItems: z.string().optional(),
+  walls: z.string().optional(),
+  floor: z.string().optional(),
+  ceiling: z.string().optional(),
+  lightFixtures: z.string().optional(),
+  closetWardrobeMirror: z.string().optional(),
+  windowScreens: z.string().optional(),
+  curtainRods: z.string().optional(),
+  deskChair: z.string().optional(),
+  bedMattress: z.string().optional(),
+  dresser: z.string().optional(),
+  bathroom: z.string().optional(),
+  towelbarRings: z.string().optional(),
+});
+
+export const CreatedUpperCampus = UpperCampusIssues.extend({
   roomId: z.coerce.number(),
-  doorLocks: z.string(),
-  emergencyItems: z.string(),
-  walls: z.string(),
-  floor: z.string(),
-  ceiling: z.string(),
-  lightFixtures: z.string(),
-  closetWardrobeMirror: z.string(),
-  windowScreens: z.string(),
-  curtainRods: z.string(),
-  deskChair: z.string(),
-  bedMattress: z.string(),
-  dresser: z.string(),
-  bathroom: z.string(),
-  towelbarRings: z.string(),
   studentSignature: z.string(),
-  raSignature: z.string(),
-  studentDate: z.string(),
-  RADate: z.string(),
 });

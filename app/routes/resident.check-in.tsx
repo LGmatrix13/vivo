@@ -26,11 +26,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create.upperCampus":
-      return createUpperCampus(request, user.id, values);
+      return await createUpperCampus(request, user.id, values);
     case "create.colonialDouble":
-      return createColonialDouble(request, user.id, values);
+      return await createColonialDouble(request, user.id, values);
     case "create.colonialQuad":
-      return createColonialQuad(request, user.id, values);
+      return await createColonialQuad(request, user.id, values);
   }
 }
 

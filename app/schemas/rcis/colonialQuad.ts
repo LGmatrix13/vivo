@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ColonialQuad = z.object({
+export const ColonialQuadIssues = z.object({
   kitchenFloor: z.string(),
   kitchenStoveOven: z.string(),
   kitchenCountertops: z.string(),
@@ -66,4 +66,9 @@ export const ColonialQuad = z.object({
   bedroomDBedMattress: z.string(),
   bedroomDDeskChair: z.string(),
   bedroomDDresser: z.string(),
+});
+
+export const CreatedColonialQuad = ColonialQuadIssues.extend({
+  roomId: z.coerce.number(),
+  studentSignature: z.string(),
 });

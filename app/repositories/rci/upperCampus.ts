@@ -1,4 +1,7 @@
-import { UpperCampus } from "~/schemas/rcis/upperCampus";
+import {
+  CreatedUpperCampus,
+  UpperCampusIssues,
+} from "~/schemas/rcis/upperCampus";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
@@ -7,18 +10,17 @@ type Values = { [key: string]: any };
 
 export async function createUpperCampus(
   request: Request,
-  residentId: number,
+  roomId: number,
   values: Values
 ) {
-  const result = UpperCampus.safeParse(values);
+  const result = CreatedUpperCampus.safeParse(values);
+  const issues = UpperCampusIssues.safeParse(values);
 
-  if (result.success) {
-    const issues = result.data;
+  if (result.success && issues.success) {
     await db.client.insert(RCITable).values({
-      residentId,
-      issues,
+      roomId,
+      issues: issues.data,
       status: "SUBMITTED_BY_RESIDENT",
-      roomType: "UPPER_CAMPUS",
     });
 
     return mutate(request.url, {

@@ -1,4 +1,7 @@
-import { ColonialQuad } from "~/schemas/rcis/colonialQuad";
+import {
+  ColonialQuadIssues,
+  CreatedColonialQuad,
+} from "~/schemas/rcis/colonialQuad";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
@@ -7,18 +10,17 @@ type Values = { [key: string]: any };
 
 export async function createColonialQuad(
   request: Request,
-  residentId: number,
+  roomId: number,
   values: Values
 ) {
-  const result = ColonialQuad.safeParse(values);
+  const result = CreatedColonialQuad.safeParse(values);
+  const issues = ColonialQuadIssues.safeParse(values);
 
-  if (result.success) {
-    const issues = result.data;
+  if (result.success && issues.success) {
     await db.client.insert(RCITable).values({
-      residentId,
-      issues,
+      roomId,
+      issues: issues.data,
       status: "SUBMITTED_BY_RESIDENT",
-      roomType: "APT_QUAD",
     });
 
     return mutate(request.url, {
