@@ -61,7 +61,7 @@ export async function readIncompleteRCIsAsRD(id: number) {
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .orderBy(desc(RCITable.id));
+    .orderBy(desc(roomTable.id));
 
   return data;
 }

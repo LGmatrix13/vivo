@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const UpperCampus = z.object({
   roomId: z.coerce.number(),
-  doorsLocks: z.string(),
+  doorLocks: z.string(),
   emergencyItems: z.string(),
   walls: z.string(),
   floor: z.string(),
