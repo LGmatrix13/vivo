@@ -23,8 +23,8 @@ export type IWeeklyReport = Awaited<
   ReturnType<typeof readWeeklyReports>
 >[number];
 
+export type IRoundReport = Awaited<ReturnType<typeof readRoundReports>>[number];
+
 export type IUpperRCI = Awaited<
   ReturnType<typeof readUpperRCIReports>
 >[];
-
-export type IRoundReport = Awaited<ReturnType<typeof readRoundReports>>[number];

@@ -1,28 +1,35 @@
 import { json, useLoaderData, useOutletContext } from "@remix-run/react";
-
 import IconButton from "~/components/common/IconButton";
-import { Download, FileSearch } from "~/components/common/Icons";
+import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
-import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 import {
-  updateConversation,
   createConversation,
   readConversationReportsAsRA,
+  updateConversation,
 } from "~/repositories/reports/conversations";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
+import { IUser } from "~/models/user";
+import ConversationForm from "~/components/forms/ConversationForm";
+import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
 
 export async function loader({ request }: ActionFunctionArgs) {
-  const user = await auth.readUser(request, ["ra"]);
-  const [conversation] = await Promise.all([
-    readConversationReportsAsRA(user.id),
+  const ra = await auth.readUser(request, ["ra"]);
+  const [conversations, residentsDropdown] = await Promise.all([
+    readConversationReportsAsRA(ra.id),
+    readResidentsDropdownAsRA(ra.id),
     delay(100),
   ]);
   return json({
-    conversation,
+    conversations,
+    residentsDropdown,
   });
 }
 
@@ -34,25 +41,21 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      return await createConversation(values, request);
+      const conversation = { submitted: new Date().toDateString(), ...values };
+      return await createConversation(conversation, request);
     case "update":
       return await updateConversation(values, request);
   }
 }
 
-export default function RAReportsConversationPage() {
+export default function AdminReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
-  const formattedRows = data.conversation.map(
-    (conversation: { highPriority: any }) => ({
-      ...conversation,
-      highPriority: conversation.highPriority ? "Yes" : "No",
-    })
-  );
-
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
   const columnKeys = {
-    submitted: "Date",
+    submitted: "Submitted",
     ra: "RA",
-    residentName: "Resident",
     level: "Level",
     highPriority: "High Priority",
   };
@@ -65,14 +68,10 @@ export default function RAReportsConversationPage() {
   return (
     <Table
       columnKeys={columnKeys}
-      rows={formattedRows}
+      rows={data.conversations}
       search={{
-        placeholder: "Search for a conversation report...",
+        placeholder: "Search for a conversation...",
       }}
-      rowKeys={rowKeys}
-      InstructionComponent={() => (
-        <Instruction Icon={FileSearch} title="First Select a Conversation Report" />
-      )}
       mixins={{
         cells: {
           highPriority: (row) => {
@@ -89,15 +88,33 @@ export default function RAReportsConversationPage() {
           },
         },
       }}
+      rowKeys={rowKeys}
+      InstructionComponent={() => (
+        <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
+          <FileSearch className="w-7 h-7" />
+          <h2 className="text-xl font-bold">First Select a Conversation</h2>
+        </div>
+      )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">
+          <DrawerProvider>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Add Conversation</IconButton>
+            </DrawerButton>
+            <DrawerContent>
+              <ConversationForm
+                zoneId={context.user.id}
+                IRA={data.residentsDropdown}
+              />
+            </DrawerContent>
+          </DrawerProvider>
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(rows, "Conversations", rowKeys);
+              csv.download(rows, "Residents", rowKeys);
             }}
           >
-            Export Conversation Reports
+            Export Conversations
           </IconButton>
         </div>
       )}
