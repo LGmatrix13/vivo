@@ -19,18 +19,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const user = await auth.readUser(request, ["resident"]);
+  await auth.rejectUnauthorized(request, ["resident"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
     case "create.upperCampus":
-      return await createUpperCampus(request, user.id, values);
+      return await createUpperCampus(request, values);
     case "create.colonialDouble":
-      return await createColonialDouble(request, user.id, values);
+      return await createColonialDouble(request, values);
     case "create.colonialQuad":
-      return await createColonialQuad(request, user.id, values);
+      return await createColonialQuad(request, values);
   }
 }
 
@@ -39,10 +39,28 @@ export default function ResidentCheckInPage() {
 
   switch (data.roomType) {
     case "UPPER_CAMPUS":
-      return <RCIForm mapping={upperCampusMapping} roomId={data.roomId} />;
+      return (
+        <RCIForm
+          intent="create.upperCampus"
+          mapping={upperCampusMapping}
+          roomId={data.roomId}
+        />
+      );
     case "COLONIAL_DOUBLE":
-      return <RCIForm mapping={colonialDoubleMapping} roomId={data.roomId} />;
+      return (
+        <RCIForm
+          intent="create.colonialDouble"
+          mapping={colonialDoubleMapping}
+          roomId={data.roomId}
+        />
+      );
     case "COLONIAL_QUAD":
-      return <RCIForm mapping={colonialQuadMapping} roomId={data.roomId} />;
+      return (
+        <RCIForm
+          intent="create.colonialQuad"
+          mapping={colonialQuadMapping}
+          roomId={data.roomId}
+        />
+      );
   }
 }

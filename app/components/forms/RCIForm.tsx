@@ -5,13 +5,14 @@ import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import WideButton from "../common/WideButton";
 
 interface RCIFormProps {
+  intent: string;
   mapping: Record<string, string>;
   roomId: number;
   issues?: Record<string, string>;
 }
 
 export default function RCIForm(props: RCIFormProps) {
-  const { roomId, issues, mapping } = props;
+  const { roomId, issues, mapping, intent } = props;
 
   return (
     <Form className="space-y-5" method="post">
@@ -33,14 +34,15 @@ export default function RCIForm(props: RCIFormProps) {
       <Input
         label="Student Signature"
         placeholder="Signature"
-        name="signature"
+        name="studentSignature"
         type="text"
         required
       />
       <WideButton
         options={{
           type: "submit",
-          intent: "create.colonialDouble",
+          name: "intent",
+          value: intent,
         }}
       >
         Save Check-in Form

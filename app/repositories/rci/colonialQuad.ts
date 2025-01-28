@@ -8,17 +8,13 @@ import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createColonialQuad(
-  request: Request,
-  roomId: number,
-  values: Values
-) {
+export async function createColonialQuad(request: Request, values: Values) {
   const result = CreatedColonialQuad.safeParse(values);
   const issues = ColonialQuadIssues.safeParse(values);
 
   if (result.success && issues.success) {
     await db.client.insert(RCITable).values({
-      roomId,
+      roomId: result.data.roomId,
       issues: issues.data,
       status: "SUBMITTED_BY_RESIDENT",
     });
