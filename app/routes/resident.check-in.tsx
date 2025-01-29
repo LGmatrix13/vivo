@@ -36,7 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function ResidentCheckInPage() {
   const data = useLoaderData<typeof loader>();
-
   switch (data.roomType) {
     case "UPPER_CAMPUS":
       return (
@@ -44,6 +43,7 @@ export default function ResidentCheckInPage() {
           intent="create.upperCampus"
           mapping={upperCampusMapping}
           roomId={data.roomId}
+          issues={data.issues}
         />
       );
     case "COLONIAL_DOUBLE":
@@ -52,6 +52,7 @@ export default function ResidentCheckInPage() {
           intent="create.colonialDouble"
           mapping={colonialDoubleMapping}
           roomId={data.roomId}
+          issues={data.issues}
         />
       );
     case "COLONIAL_QUAD":
@@ -60,6 +61,7 @@ export default function ResidentCheckInPage() {
           intent="create.colonialQuad"
           mapping={colonialQuadMapping}
           roomId={data.roomId}
+          issues={data.issues}
         />
       );
   }
