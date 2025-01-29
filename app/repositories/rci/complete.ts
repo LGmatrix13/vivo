@@ -45,6 +45,7 @@ export async function readCompleteRCIsAdmin() {
       submittedOn: RCITable.submittedOn,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
+      roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),
@@ -88,6 +89,7 @@ export async function readCompleteRCIsRD(id: number) {
       submittedOn: RCITable.submittedOn,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
+      roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),

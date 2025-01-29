@@ -19,7 +19,12 @@ import {
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
-import { colonialQuadMapping } from "~/mappings/rci";
+import {
+  colonialDoubleMapping,
+  colonialQuadMapping,
+  upperCampusMapping,
+} from "~/mappings/rci";
+import SelectedRow from "~/components/common/SelectedRow";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -119,7 +124,7 @@ export default function StaffHousingRCIsCompletePage() {
           },
         },
       }}
-      rowKeys={colonialQuadMapping}
+      rowKeys={upperCampusMapping}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
@@ -133,6 +138,20 @@ export default function StaffHousingRCIsCompletePage() {
         >
           Export Complete RCIs
         </IconButton>
+      )}
+      SelectedRowComponent={({ row }) => (
+        <SelectedRow
+          row={row.issues}
+          keys={
+            row.roomType === "UPPER_CAMPUS"
+              ? upperCampusMapping
+              : row.roomType === "COLONIAL_DOUBLE"
+              ? colonialDoubleMapping
+              : row.roomType === "COLONIAL_QUAD"
+              ? colonialQuadMapping
+              : {}
+          }
+        />
       )}
       onRowRead={({ row }) => {
         fetcher.submit(

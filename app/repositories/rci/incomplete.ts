@@ -30,8 +30,7 @@ export async function readIncompleteRCIsAsAdmin() {
     )
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
-    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .orderBy(desc(RCITable.id));
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId));
 
   return data;
 }
