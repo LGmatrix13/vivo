@@ -54,3 +54,7 @@ export const CreatedColonialDouble = ColonialDoubleIssues.extend({
   roomId: z.coerce.number(),
   studentSignature: z.string(),
 });
+
+export const UpdatedColonialDouble = CreatedColonialDouble.extend({
+  id: z.coerce.number(),
+});

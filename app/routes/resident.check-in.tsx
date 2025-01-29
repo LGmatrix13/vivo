@@ -6,17 +6,28 @@ import {
   colonialQuadMapping,
   upperCampusMapping,
 } from "~/mappings/rci";
-import { createColonialDouble } from "~/repositories/rci/colonialDouble";
-import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import { readCompleteRCI } from "~/repositories/rci/complete";
-import { createUpperCampus } from "~/repositories/rci/upperCampus";
+import { ISubmittedRCI } from "~/models/rci";
+import {
+  createColonialDouble,
+  updateColonialDouble,
+} from "~/repositories/rci/colonialDouble";
+import {
+  createColonialQuad,
+  updateColonialQuad,
+} from "~/repositories/rci/colonialQuad";
+import { readSubmittedRCI } from "~/repositories/rci/complete";
+import {
+  createUpperCampus,
+  updateUpperCampus,
+} from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
-  const rci = await readCompleteRCI(user.id);
-  console.log(rci);
-  return json(rci);
+  const submittedRCI = await readSubmittedRCI(user.id);
+  return json({
+    submittedRCI,
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -32,37 +43,42 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createColonialDouble(request, values);
     case "create.colonialQuad":
       return await createColonialQuad(request, values);
+    case "update.upperCampus":
+      return await updateUpperCampus(request, values);
+    case "update.colonialDouble":
+      return await updateColonialDouble(request, values);
+    case "update.colonialQuad":
+      return await updateColonialQuad(request, values);
   }
 }
 
 export default function ResidentCheckInPage() {
   const data = useLoaderData<typeof loader>();
-  switch (data.roomType) {
+  const action = data.submittedRCI.id ? "update" : "create";
+
+  switch (data.submittedRCI.roomType) {
     case "UPPER_CAMPUS":
       return (
         <RCIForm
-          intent="create.upperCampus"
+          intent={`${action}.upperCampus`}
           mapping={upperCampusMapping}
-          roomId={data.roomId}
-          issues={data.issues}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
         />
       );
     case "COLONIAL_DOUBLE":
       return (
         <RCIForm
-          intent="create.colonialDouble"
+          intent={`${action}.upperCampus`}
           mapping={colonialDoubleMapping}
-          roomId={data.roomId}
-          issues={data.issues}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
         />
       );
     case "COLONIAL_QUAD":
       return (
         <RCIForm
-          intent="create.colonialQuad"
+          intent={`${action}.upperCampus`}
           mapping={colonialQuadMapping}
-          roomId={data.roomId}
-          issues={data.issues}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
         />
       );
   }

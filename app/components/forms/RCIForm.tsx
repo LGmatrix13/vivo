@@ -3,31 +3,34 @@ import Textarea from "../common/Textarea";
 import { Form } from "@remix-run/react";
 import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import WideButton from "../common/WideButton";
+import { ISubmittedRCI } from "~/models/rci";
 
 interface RCIFormProps {
   intent: string;
   mapping: Record<string, string>;
-  roomId: number;
-  issues?: Record<string, string>;
+  submittedRCI?: ISubmittedRCI;
 }
 
 export default function RCIForm(props: RCIFormProps) {
-  const { roomId, issues, mapping, intent } = props;
+  const { submittedRCI, mapping, intent } = props;
 
   return (
     <Form className="space-y-5" method="post">
-      <input name="roomId" type="hidden" value={roomId} />
+      {submittedRCI?.id && (
+        <input name="id" type="hidden" value={submittedRCI.id} />
+      )}
+      <input name="roomId" type="hidden" value={submittedRCI?.roomId} />
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}
-          yes={issues && !!issues[key]}
+          yes={submittedRCI?.issues && !!submittedRCI.issues[key]}
         >
           <Textarea
             required
             label="Comments"
             name={key}
             placeholder={`Describe the issues with the ${mapping[key]}`}
-            defaultValue={issues ? issues[key] : ""}
+            defaultValue={submittedRCI?.issues ? submittedRCI?.issues[key] : ""}
           />
         </AcknowledgeIssueRadio>
       ))}

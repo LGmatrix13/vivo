@@ -21,3 +21,7 @@ export const CreatedUpperCampus = UpperCampusIssues.extend({
   roomId: z.coerce.number(),
   studentSignature: z.string(),
 });
+
+export const UpdatedUpperCampus = CreatedUpperCampus.extend({
+  id: z.coerce.number(),
+});

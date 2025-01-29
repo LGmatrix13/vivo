@@ -12,9 +12,10 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
-export async function readCompleteRCI(residentId: number) {
+export async function readSubmittedRCI(residentId: number) {
   const data = await db.client
     .select({
+      id: RCITable.id,
       roomType: roomTable.roomType,
       roomId: roomTable.id,
       issues: RCITable.issues,

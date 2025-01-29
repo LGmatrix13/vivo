@@ -17,7 +17,7 @@ export default function AcknowledgeIssueRadio(
         {props.title} <span className="text-red-600">*</span>
       </label>
       <div className="space-y-3 flex flex-col">
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 accent-blue-600">
           <div className="space-x-2">
             <input
               type="radio"

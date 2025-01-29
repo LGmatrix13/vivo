@@ -1,6 +1,12 @@
+import { eq } from "drizzle-orm";
+import {
+  ColonialDoubleIssues,
+  UpdatedColonialDouble,
+} from "~/schemas/rcis/colonialDouble";
 import {
   ColonialQuadIssues,
   CreatedColonialQuad,
+  UpdatedColonialQuad,
 } from "~/schemas/rcis/colonialQuad";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
@@ -18,6 +24,32 @@ export async function createColonialQuad(request: Request, values: Values) {
       issues: issues.data,
       status: "SUBMITTED_BY_RESIDENT",
     });
+
+    return mutate(request.url, {
+      message: "Saved Check-in form",
+      level: "success",
+    });
+  }
+
+  return mutate(request.url, {
+    message: "System error occured",
+    level: "failure",
+  });
+}
+
+export async function updateColonialQuad(request: Request, values: Values) {
+  const result = UpdatedColonialQuad.safeParse(values);
+  const issues = ColonialQuadIssues.safeParse(values);
+
+  if (result.success && issues.success) {
+    await db.client
+      .update(RCITable)
+      .set({
+        roomId: result.data.roomId,
+        issues: issues.data,
+        status: "SUBMITTED_BY_RESIDENT",
+      })
+      .where(eq(RCITable.id, result.data.id));
 
     return mutate(request.url, {
       message: "Saved Check-in form",
