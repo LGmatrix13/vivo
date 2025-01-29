@@ -21,7 +21,7 @@ export async function readCompleteRCI(residentId: number) {
     })
     .from(roomTable)
     .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(RCITable, eq(roomTable.id, RCITable.id))
+    .leftJoin(RCITable, eq(roomTable.id, RCITable.roomId))
     .where(eq(residentTable.id, residentId));
 
   const rci = data[0];

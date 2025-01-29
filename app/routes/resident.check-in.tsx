@@ -15,6 +15,7 @@ import { auth } from "~/utilties/auth.server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
   const rci = await readCompleteRCI(user.id);
+  console.log(rci);
   return json(rci);
 }
 

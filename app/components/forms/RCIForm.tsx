@@ -20,14 +20,14 @@ export default function RCIForm(props: RCIFormProps) {
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}
-          yes={issues && !issues[key]}
+          yes={issues && !!issues[key]}
         >
           <Textarea
             required
             label="Comments"
             name={key}
             placeholder={`Describe the issues with the ${mapping[key]}`}
-            defaultValue={issues && issues[key]}
+            defaultValue={issues ? issues[key] : ""}
           />
         </AcknowledgeIssueRadio>
       ))}

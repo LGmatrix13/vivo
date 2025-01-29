@@ -24,6 +24,7 @@ export default function AcknowledgeIssueRadio(
               id="yes"
               name={"condition" + props.title}
               value={hasProblem ? "yes" : "no"}
+              checked={hasProblem}
               onClick={() => setHasProblem(true)}
               required
             />
@@ -36,6 +37,7 @@ export default function AcknowledgeIssueRadio(
               name={"condition" + props.title}
               value={hasProblem ? "yes" : "no"}
               onClick={() => setHasProblem(false)}
+              checked={hasProblem === false}
               required
             />
             <label htmlFor="no">No Issues</label>
