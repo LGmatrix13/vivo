@@ -8,7 +8,7 @@ import Filter from "./Filter";
 interface TableProps<T> {
   columnKeys: Record<string, string>;
   rows: T[];
-  rowKeys: Record<string, string>;
+  rowKeys?: Record<string, string>;
   search?: {
     placeholder: string;
   };
@@ -46,7 +46,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     InstructionComponent,
     DeleteComponent,
     EditComponent,
-    SelectedRowComponent = SelectedRow,
+    SelectedRowComponent,
     mixins = {},
     onRowRead = () => {},
     enableReads = false,
@@ -253,7 +253,11 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                 <Close />
               </button>
             </div>
-            <SelectedRowComponent keys={rowKeys} row={sortedRows[opened]} />
+            {SelectedRowComponent ? (
+              <SelectedRowComponent row={sortedRows[opened]} />
+            ) : rowKeys ? (
+              <SelectedRow row={sortedRows[opened]} keys={rowKeys} />
+            ) : null}
           </div>
         )}
       </div>
