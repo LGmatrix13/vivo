@@ -44,11 +44,11 @@ export const personTypeEnum = pgEnum("personType", [
   "ASSISTANT_STAFF",
   "ADMIN",
 ]);
-export const rciTypeEnum = pgEnum("rciType", [
+export const roomTypeEnum = pgEnum("roomType", [
   "UPPER_CAMPUS",
-  "APT_DOUBLE",
-  "APT_TRIPLE",
-  "APT_QUAD"
+  "COLONIAL_DOUBLE",
+  "COLONIAL_TRIPLE",
+  "COLONIAL_QUAD",
 ]);
 
 export const residentTable = pgTable("Resident", {
@@ -81,8 +81,8 @@ export const roomTable = pgTable("Room", {
     .references(() => buildingTable.id),
   zoneId: integer("zone_id").references(() => zoneTable.id),
   capacity: integer("capacity").notNull(),
+  roomType: roomTypeEnum().notNull(),
 });
-
 
 export const assistantStaffTable = pgTable("AssistantStaff", {
   id: serial("id").notNull().primaryKey(),
@@ -206,51 +206,23 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
 export const zoneShiftTable = pgTable("ZoneShift", {
   id: serial("id").notNull().primaryKey(),
   zoneId: integer().references(() => zoneTable.id),
-  start: timestamp("start").notNull(),
-  finish: timestamp("finish").notNull(),
+  date: timestamp("date").notNull(),
 });
 
 export const staffShiftTable = pgTable("StaffShift", {
   id: serial("id").notNull().primaryKey(),
   staffId: integer().references(() => staffTable.id),
-  start: timestamp("start").notNull(),
-  finish: timestamp("finish").notNull(),
+  date: timestamp("date").notNull(),
 });
 
 export const RCITable = pgTable("RCI", {
   id: serial("id").notNull().primaryKey(),
-  residentId: integer("resident_id")
+  roomId: integer("room_id")
     .notNull()
-    .references(() => residentTable.id), // Assumes there's a Residents table
+    .references(() => roomTable.id),
   submittedOn: date("submitted_on").defaultNow().notNull(),
   issues: json().default({}),
   status: statusEnum().notNull(),
   signedOn: date("signed_on").defaultNow(),
   sentToLimble: boolean("sent_to_limble").notNull().default(false),
-  rciType: rciTypeEnum().notNull().default("UPPER_CAMPUS")
-});
-
-export const roomConditionItemsTable = pgTable("RoomConditionItems", {
-  id: serial("id").notNull().primaryKey(),
-  rciId: integer("rci_id")
-    .notNull()
-    .references(() => RCITable.id),
-  emergencyItems: varchar("emergency_items", { length: 225 }),
-  walls: varchar("walls", { length: 225 }),
-  floor: varchar("floor", { length: 225 }),
-  doorsLocks: varchar("doors_locks", { length: 225 }),
-  ceiling: varchar("ceiling", { length: 225 }),
-  lightsFixtures: varchar("lights_fixtures", { length: 225 }),
-  closetWardrobeMirror: varchar("closet_wardrobe_mirror", { length: 225 }),
-  windowsScreens: varchar("windows_screens", { length: 225 }),
-  curtainsRods: varchar("curtains_rods", { length: 225 }),
-  deskChair: varchar("desk_chair", { length: 225 }),
-  bedMattress: varchar("bed_mattress", { length: 225 }),
-  dresser: varchar("dresser", { length: 225 }),
-  bathroom: varchar("bathroom", { length: 225 }),
-  towelbarRings: varchar("towelbar_rings", { length: 225 }),
-  studentSignature: varchar("student_signature", { length: 225 }),
-  RASignature: varchar("RA_signature", { length: 225 }),
-  studentDate: date("student_date"),
-  RADate: date("RA_date"),
 });

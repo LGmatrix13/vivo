@@ -1,18 +1,18 @@
 import { eq } from "drizzle-orm";
 import {
-  CreatedUpperCampus,
-  UpdatedUpperCampus,
-  UpperCampusIssues,
-} from "~/schemas/rcis/upperCampus";
+  ColonialDoubleIssues,
+  CreatedColonialDouble,
+  UpdatedColonialDouble,
+} from "~/schemas/rcis/colonialDouble";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createUpperCampus(request: Request, values: Values) {
-  const result = CreatedUpperCampus.safeParse(values);
-  const issues = UpperCampusIssues.safeParse(values);
+export async function createColonialDouble(request: Request, values: Values) {
+  const result = CreatedColonialDouble.safeParse(values);
+  const issues = ColonialDoubleIssues.safeParse(values);
 
   if (result.success && issues.success) {
     await db.client.insert(RCITable).values({
@@ -32,9 +32,10 @@ export async function createUpperCampus(request: Request, values: Values) {
     level: "failure",
   });
 }
-export async function updateUpperCampus(request: Request, values: Values) {
-  const result = UpdatedUpperCampus.safeParse(values);
-  const issues = UpperCampusIssues.safeParse(values);
+
+export async function updateColonialDouble(request: Request, values: Values) {
+  const result = UpdatedColonialDouble.safeParse(values);
+  const issues = ColonialDoubleIssues.safeParse(values);
 
   if (result.success && issues.success) {
     await db.client

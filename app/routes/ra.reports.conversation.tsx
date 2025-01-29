@@ -104,7 +104,7 @@ export default function AdminReportsRoundPage() {
             <DrawerContent>
               <ConversationForm
                 zoneId={context.user.id}
-                IRA={data.residentsDropdown}
+                residentsDropdown={data.residentsDropdown}
               />
             </DrawerContent>
           </DrawerProvider>

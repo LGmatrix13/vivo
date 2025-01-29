@@ -3,7 +3,6 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
 import { File, Chart, Door, Users, Clock } from "~/components/common/Icons";
-import Loading from "~/components/common/Loading";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ra = await auth.readUser(request, ["ra"]);

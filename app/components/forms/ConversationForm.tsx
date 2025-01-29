@@ -1,14 +1,12 @@
 import { IConversationReport } from "~/models/reports";
 import Form from "../common/Form";
-import Input from "../common/Input";
 import Textarea from "../common/Textarea";
 import Select from "../common/Select";
-import { IRA } from "~/models/people";
 
 interface ConversationFormProps {
   zoneId: number;
+  residentsDropdown: IRADropdown[];
   conversation?: IConversationReport;
-  residentsDropdown: IRA[];
 }
 
 export default function ConversationForm(props: ConversationFormProps) {
