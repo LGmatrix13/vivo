@@ -12,7 +12,7 @@ export default function useMsal() {
     await pca.handleRedirectPromise();
     const result = await pca.loginPopup({
       scopes: ["User.Read"],
-      redirectUri: "http://localhost:5173/response-oidc",
+      redirectUri: "http://vivo.gcc.edu/response-oidc",
     });
     await pca.clearCache();
     fetcher.submit(
