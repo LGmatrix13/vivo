@@ -4,6 +4,14 @@ import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import { toast } from "~/utilties/toast.server";
+import { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: RCIs" },
+    { name: "Vivo: RCIs", content: "RCIs for your hall" },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   return toast(request, {});

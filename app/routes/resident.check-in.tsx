@@ -13,6 +13,14 @@ import { createColonialQuad } from "~/repositories/rci/colonialQuad";
 import { readSubmittedRCI } from "~/repositories/rci/complete";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
+import { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: Check-In" },
+    { name: "Vivo: Check-In", content: "Check-in page" },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);

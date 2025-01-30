@@ -20,7 +20,7 @@ export const meta: MetaFunction = () => {
     { title: "Vivo: Reports" },
     {
       name: "Vivo: Reports",
-      content: "Weekly, Round, Conversation, and Event",
+      content: "Weekly, Round, Conversation, and Event reports",
     },
   ];
 };
