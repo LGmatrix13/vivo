@@ -59,6 +59,8 @@ export async function readOnDutyRAAsRD(id: number) {
   return data;
 }
 
+
+
 export async function readOnDutyRD() {
   const data = await db.client
     .select({
