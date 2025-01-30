@@ -66,15 +66,10 @@ export default function StaffHousingRCIsCompletePage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
-    submittedOn: "Submitted",
+    submitted: "Submitted",
     ra: "RA",
     room: "Room",
     totalIssues: "Issues",
-  };
-  const rowKeys = {
-    door: "Door",
-    closet: "Closet",
-    bed: "Bed",
   };
   const buildingOptions = [
     {
@@ -131,7 +126,7 @@ export default function StaffHousingRCIsCompletePage() {
           Icon={Download}
           className="md:w-fit w-full"
           onClick={() => {
-            csv.download(rows, "Complete_RCIs", rowKeys);
+            csv.download(rows, "Complete_RCIs", columnKeys);
           }}
         >
           Export Complete RCIs

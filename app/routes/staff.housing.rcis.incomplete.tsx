@@ -40,8 +40,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
-    case "update":
-      throw new Error("TODO: add read update");
     case "create.read":
       return await createReadReport(
         {

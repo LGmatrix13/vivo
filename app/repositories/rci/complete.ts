@@ -22,7 +22,7 @@ export async function readSubmittedRCI(residentId: number) {
     })
     .from(roomTable)
     .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(RCITable, eq(roomTable.id, RCITable.roomId))
+    .leftJoin(RCITable, eq(roomTable.id, residentTable.roomId))
     .where(eq(residentTable.id, residentId));
 
   const rci = data[0];
@@ -38,12 +38,11 @@ export async function readCompleteRCIsAdmin() {
   const data = await db.client
     .select({
       id: RCITable.id,
-      sentToLimble: RCITable.sentToLimble,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
+      submitted: RCITable.submitted,
       status: RCITable.status,
-      submittedOn: RCITable.submittedOn,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
       roomType: roomTable.roomType,
@@ -52,7 +51,8 @@ export async function readCompleteRCIsAdmin() {
       ),
     })
     .from(RCITable)
-    .innerJoin(roomTable, eq(RCITable.roomId, roomTable.id))
+    .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
@@ -70,7 +70,7 @@ export async function readCompleteRCIsAdmin() {
     return {
       ...rci,
       totalIssues: Object.keys(rci.issues).length,
-      submittedOn: formatDate(rci.submittedOn),
+      submitted: formatDate(rci.submitted),
     };
   });
   return formattedData;
@@ -82,21 +82,21 @@ export async function readCompleteRCIsRD(id: number) {
   const data = await db.client
     .select({
       id: RCITable.id,
-      sentToLimble: RCITable.sentToLimble,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
       status: RCITable.status,
-      submittedOn: RCITable.submittedOn,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
+      submitted: RCITable.submitted,
       roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),
     })
     .from(RCITable)
-    .innerJoin(roomTable, eq(RCITable.roomId, roomTable.id))
+    .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+    .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
@@ -116,7 +116,7 @@ export async function readCompleteRCIsRD(id: number) {
     return {
       ...rci,
       totalIssues: Object.keys(rci.issues).length,
-      submittedOn: formatDate(rci.submittedOn),
+      submitted: formatDate(rci.submitted),
     };
   });
   return formattedData;

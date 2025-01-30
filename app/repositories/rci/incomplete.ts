@@ -12,7 +12,7 @@ import {
 
 export async function readIncompleteRCIsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
-
+  const innerRoomTable = alias(roomTable, "innerRoomTable");
   const data = await db.client
     .select({
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
@@ -23,9 +23,14 @@ export async function readIncompleteRCIsAsAdmin() {
     .where(
       notExists(
         db.client
-          .select()
+          .select({ id: RCITable.id })
           .from(RCITable)
-          .where(eq(RCITable.roomId, roomTable.id))
+          .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+          .innerJoin(
+            innerRoomTable,
+            eq(residentTable.roomId, innerRoomTable.id)
+          )
+          .where(eq(roomTable.id, innerRoomTable.id))
       )
     )
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
@@ -37,6 +42,7 @@ export async function readIncompleteRCIsAsAdmin() {
 
 export async function readIncompleteRCIsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
+  const innerRoomTable = alias(roomTable, "innerRoomTable");
 
   const data = await db.client
     .select({
@@ -49,9 +55,14 @@ export async function readIncompleteRCIsAsRD(id: number) {
       and(
         notExists(
           db.client
-            .select()
+            .select({ id: RCITable.id })
             .from(RCITable)
-            .where(eq(RCITable.roomId, roomTable.id))
+            .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+            .innerJoin(
+              innerRoomTable,
+              eq(residentTable.roomId, innerRoomTable.id)
+            )
+            .where(eq(roomTable.id, innerRoomTable.id))
         ),
         eq(staffTable.id, id)
       )
