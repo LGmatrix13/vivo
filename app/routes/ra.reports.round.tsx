@@ -1,37 +1,36 @@
 import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
+import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
+import { IBuildingDropdown } from "~/models/housing";
 import {
   createRound,
   readRoundReportsAsRA,
   updateRound,
 } from "~/repositories/reports/round";
-import { delay } from "~/utilties/delay.server";
 import { IRoundReport } from "~/models/reports";
-import IconButton from "~/components/common/IconButton";
-import { csv } from "~/utilties/csv";
-import {
-  DrawerButton,
-  DrawerContent,
-  DrawerProvider,
-} from "~/components/common/Drawer";
-import RoundForm from "~/components/forms/Roundform";
-import { IUser } from "~/models/user";
+import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import EventForm from "~/components/forms/EventForm";
+import RoundForm from "~/components/forms/RoundForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const [rounds] = await Promise.all([readRoundReportsAsRA(user.id), delay(100)]);
-
+  const [round] = await Promise.all([
+    readRoundReportsAsRA(user.id),
+    delay(100),
+  ]);
   return json({
-    rounds,
+    round,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["ra"]);
+  await auth.rejectUnauthorized(request, ["ra", "admin"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -46,9 +45,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
-  const context = useOutletContext<{
-    user: IUser;
-  }>();
+  const context = useOutletContext<{ user: { id: string } }>();
   const columnKeys = {
     submitted: "Date",
     time: "Time",
@@ -62,11 +59,11 @@ export default function RAReportsRoundPage() {
   return (
     <Table<IRoundReport>
       columnKeys={columnKeys}
-      rows={data.rounds as IRoundReport[]}
-      rowKeys={rowKeys}
+      rows={data.round as IRoundReport[]}
       search={{
         placeholder: "Search for a round report...",
       }}
+      rowKeys={rowKeys}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select a Round Report" />
       )}
@@ -74,10 +71,10 @@ export default function RAReportsRoundPage() {
         <div className="ml-auto order-2 flex space-x-3 h-12">
           <DrawerProvider>
             <DrawerButton>
-              <IconButton Icon={Plus}>Add Round Report</IconButton>
+              <IconButton Icon={Plus}>Round Report</IconButton>
             </DrawerButton>
             <DrawerContent>
-              <RoundForm zoneId={context.user.id} />
+              <RoundForm zoneId={Number(context.user.id)} />
             </DrawerContent>
           </DrawerProvider>
           <IconButton

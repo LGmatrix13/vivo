@@ -1,7 +1,7 @@
 import { json, useLoaderData } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
-import { Download, FileSearch } from "~/components/common/Icons";
+import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -14,6 +14,8 @@ import {
   updateWeekly,
 } from "~/repositories/reports/weekly";
 import { IWeeklyReport } from "~/models/reports";
+import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import WeeklyForm from "~/components/forms/WeeklyForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -24,6 +26,7 @@ export async function loader({ request }: ActionFunctionArgs) {
 
   return json({
     weekly,
+    user,
   });
 }
 
@@ -72,7 +75,15 @@ export default function StaffReportsWeeklyPage() {
       )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">
-          <IconButton
+            <DrawerProvider>
+            <DrawerButton>
+              <IconButton Icon={Plus}>Weekly Report</IconButton>
+            </DrawerButton>
+            <DrawerContent>
+              <WeeklyForm zoneId={0} />
+            </DrawerContent>
+            </DrawerProvider>
+            <IconButton
             Icon={Download}
             onClick={() => {
               csv.download(rows, "Weeklys", rowKeys);
