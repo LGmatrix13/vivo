@@ -2,12 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ScheduleTable from "~/components/common/ShiftTable";
 import { IZoneShift } from "~/models/shifts";
-import {
-  createRAShift,
-  deleteRAShift,
-  updateRAShift,
-  readShiftsRAAsRA,
-} from "~/repositories/shifts/ra";
+import { createRAShift, readShiftsRAAsRA } from "~/repositories/shifts/ra";
 import { auth } from "~/utilties/auth.server";
 import { delay } from "~/utilties/delay.server";
 

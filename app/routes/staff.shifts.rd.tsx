@@ -5,7 +5,6 @@ import DeleteForm from "~/components/forms/DeleteForm";
 import StaffShiftForm from "~/components/forms/StaffShiftForm";
 import { IStaffShift } from "~/models/shifts";
 import { readRDsDropdown } from "~/repositories/people/rds";
-import { readShiftsRAAsRD } from "~/repositories/shifts/ra";
 import {
   createRDShift,
   deleteRDShift,
