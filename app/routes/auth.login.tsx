@@ -1,6 +1,6 @@
 import { LoginLogo, Office } from "~/components/common/Icons";
 import IconButton from "~/components/common/IconButton";
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import useMsal from "~/hooks/useMsal";
 import { auth } from "~/utilties/auth.server";
 import { like, eq } from "drizzle-orm";
@@ -14,6 +14,13 @@ import {
   adminTable,
 } from "~/utilties/schema.server";
 import { Form } from "@remix-run/react";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: Login" },
+    { name: "Vivo: Login", content: "Login to Vivo" },
+  ];
+};
 
 export async function action({ request }: LoaderFunctionArgs) {
   const formData = await request.formData();

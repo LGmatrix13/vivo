@@ -18,7 +18,8 @@ export const MasterCSV = z.object({
   phoneNumber: z.string().optional(),
   emailAddress: z
     .string({ message: "Email is required." })
-    .email({ message: "Email is not formatted correctly." }),
+    .email({ message: "Email is not formatted correctly." })
+    .transform((value) => value.toUpperCase()),
   mailbox: z.string().optional(),
   class: z.string({ message: "Class is required." }),
   gender: z
