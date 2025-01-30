@@ -33,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createUpperCampus(request, user.id, values);
     case "create.colonialDouble":
       return await createColonialDouble(request, user.id, values);
-    case "create.colonialQuad":
+    case "create.colonialQusad":
       return await createColonialQuad(request, user.id, values);
   }
 }

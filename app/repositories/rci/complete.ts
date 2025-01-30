@@ -1,4 +1,4 @@
-import { desc, eq, sql, and, count, ne } from "drizzle-orm";
+import { desc, eq, sql, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
 import {
