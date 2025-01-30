@@ -1,5 +1,3 @@
-import { Dispatch } from "react";
-
 interface TextareaProps {
   label: string;
   name: string;
@@ -9,12 +7,11 @@ interface TextareaProps {
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;
-  setState?: Dispatch<string>;
   [key: string]: any;
 }
 
 export default function Textarea(props: TextareaProps) {
-  const { name, label, required, setState } = props;
+  const { name, label, required, defaultValue } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
@@ -25,7 +22,6 @@ export default function Textarea(props: TextareaProps) {
       <textarea
         {...props}
         className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
-        onChange={(e) => setState && setState(e.target.value)}
       />
     </div>
   );

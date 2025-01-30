@@ -8,9 +8,10 @@ import { delay } from "~/utilties/delay.server";
 import { auth } from "~/utilties/auth.server";
 import {
   createConversation,
+  deleteConversation,
   readConversationReportsAsRA,
   updateConversation,
-} from "~/repositories/reports/conversations";
+} from "~/repositories/reports/conversation";
 import {
   DrawerButton,
   DrawerContent,
@@ -19,6 +20,8 @@ import {
 import { IUser } from "~/models/user";
 import ConversationForm from "~/components/forms/ConversationForm";
 import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
+import DeleteForm from "~/components/forms/DeleteForm";
+import { IConversationReportAsRA } from "~/models/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const ra = await auth.readUser(request, ["ra"]);
@@ -45,6 +48,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createConversation(conversation, request);
     case "update":
       return await updateConversation(values, request);
+    case "delete":
+      return await deleteConversation(values, request);
   }
 }
 
@@ -66,7 +71,7 @@ export default function AdminReportsRoundPage() {
   };
 
   return (
-    <Table
+    <Table<IConversationReportAsRA>
       columnKeys={columnKeys}
       rows={data.conversations}
       search={{
@@ -94,6 +99,20 @@ export default function AdminReportsRoundPage() {
           <FileSearch className="w-7 h-7" />
           <h2 className="text-xl font-bold">First Select a Conversation</h2>
         </div>
+      )}
+      EditComponent={({ row }) => (
+        <ConversationForm
+          residentsDropdown={data.residentsDropdown}
+          conversation={row}
+          zoneId={context.user.id}
+        />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title="Delete Event"
+          prompt="Are you sure you want to delete this event?"
+        />
       )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">

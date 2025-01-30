@@ -13,19 +13,19 @@ export default function EventForm(props: EventFormProps) {
   return (
     <Form button="Save Event" intent={event ? "update" : "create"}>
       <h2 className="font-bold text-xl">
-        {event ? `Edit Event: ${event.id}` : "Add Event"}
+        {event ? "Edit Event" : "Add Event"}
       </h2>
       {event && <input name="id" type="hidden" value={event.id} />}
       <input name="zoneId" type="hidden" value={zoneId} />
-      <Input
-        label="Time"
-        placeholder="Time"
-        name="time"
-        type="datetime-local"
-        defaultValue={event?.time || new Date().toISOString().slice(0, 16)}
-        step=".01"
-        required
-      />
+      {!event && (
+        <Input
+          label="Time"
+          placeholder="Time"
+          name="time"
+          type="datetime-local"
+          required
+        />
+      )}
       <Input
         label="Attendance"
         placeholder="Attendance"
@@ -38,9 +38,7 @@ export default function EventForm(props: EventFormProps) {
       <Textarea
         label="Description"
         name="description"
-        type="string"
         defaultValue={event?.description}
-        step=".01"
         required
       />
     </Form>

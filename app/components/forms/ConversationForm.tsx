@@ -1,12 +1,13 @@
-import { IConversationReport } from "~/models/reports";
+import { IConversationReport, IConversationReportAsRA } from "~/models/reports";
 import Form from "../common/Form";
 import Textarea from "../common/Textarea";
 import Select from "../common/Select";
+import { IResidentDropdown } from "~/models/people";
 
 interface ConversationFormProps {
   zoneId: number;
-  residentsDropdown: IRADropdown[];
-  conversation?: IConversationReport;
+  residentsDropdown: IResidentDropdown[];
+  conversation?: IConversationReportAsRA;
 }
 
 export default function ConversationForm(props: ConversationFormProps) {
@@ -50,9 +51,7 @@ export default function ConversationForm(props: ConversationFormProps) {
       intent={conversation ? "update" : "create"}
     >
       <h2 className="font-bold text-xl">
-        {conversation
-          ? `Edit Conversation: ${conversation.id}`
-          : "Add Conversation"}
+        {conversation ? "Edit Conversation" : "Add Conversation"}
       </h2>
       {conversation && (
         <input name="id" type="hidden" value={conversation.id} />

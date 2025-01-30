@@ -6,6 +6,7 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import {
   createEvent,
+  deleteEvent,
   readEventReportsRA,
   updateEvent,
 } from "~/repositories/reports/event";
@@ -20,6 +21,8 @@ import {
 } from "~/components/common/Drawer";
 import EventForm from "~/components/forms/EventForm";
 import { IUser } from "~/models/user";
+import DeleteForm from "~/components/forms/DeleteForm";
+import RoundForm from "~/components/forms/RoundForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -41,6 +44,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createEvent(values, request);
     case "update":
       return await updateEvent(values, request);
+    case "delete":
+      return await deleteEvent(values, request);
   }
 }
 
@@ -70,6 +75,16 @@ export default function RAReportsEventPage() {
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an Event Report" />
       )}
+      EditComponent={({ row }) => (
+        <EventForm event={row} zoneId={context.user.id} />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title="Delete Event"
+          prompt="Are you sure you want to delete this event?"
+        />
+      )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">
           <DrawerProvider>
@@ -83,7 +98,7 @@ export default function RAReportsEventPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download([], "events", rowKeys);
+              csv.download(rows, "events", columnKeys);
             }}
           >
             Export Events

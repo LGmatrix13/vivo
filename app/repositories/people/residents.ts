@@ -212,7 +212,7 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
 }
 
 export async function createResident(values: Values, request: Request) {
-  return db.insert(request, residentTable, RD, values, {
+  return db.insert(request, residentTable, RD, values, true, {
     message: "Created Resident",
     level: "success",
   });

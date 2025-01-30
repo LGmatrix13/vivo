@@ -17,9 +17,9 @@ import { IBuildingDropdown } from "~/models/housing";
 import {
   updateConversation,
   createConversation,
+  readConversationReports,
   readConversationReportsAsRD,
-} from "~/repositories/reports/conversations";
-import { readConversationReports } from "~/repositories/reports/conversations";
+} from "~/repositories/reports/conversation";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { createReadReport } from "~/repositories/read/reports";
 

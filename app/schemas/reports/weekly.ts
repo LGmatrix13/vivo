@@ -3,7 +3,6 @@ import { z } from "zod";
 export const Weekly = z.object({
   id: z.coerce.number(),
   zoneId: z.coerce.number(),
-  submittedOn: z.string(),
   outstandingWorkOrders: z.string(),
   raResponsibilities: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
   academics: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),

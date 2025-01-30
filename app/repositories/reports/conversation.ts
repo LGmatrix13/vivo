@@ -146,3 +146,16 @@ export async function updateConversation(values: Values, request: Request) {
     }
   );
 }
+
+export async function deleteConversation(values: Values, request: Request) {
+  return db.delete(
+    request,
+    consverationReportTable,
+    values,
+    (id) => eq(consverationReportTable.id, id),
+    {
+      message: "Conversation Deleted",
+      level: "success",
+    }
+  );
+}

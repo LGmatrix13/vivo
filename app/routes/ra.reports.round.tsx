@@ -6,6 +6,7 @@ import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
 import {
   createRound,
+  deleteRound,
   readRoundReportsAsRA,
   updateRound,
 } from "~/repositories/reports/round";
@@ -18,12 +19,16 @@ import {
   DrawerContent,
   DrawerProvider,
 } from "~/components/common/Drawer";
-import RoundForm from "~/components/forms/Roundform";
 import { IUser } from "~/models/user";
+import RoundForm from "~/components/forms/RoundForm";
+import DeleteForm from "~/components/forms/DeleteForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const [rounds] = await Promise.all([readRoundReportsAsRA(user.id), delay(100)]);
+  const [rounds] = await Promise.all([
+    readRoundReportsAsRA(user.id),
+    delay(100),
+  ]);
 
   return json({
     rounds,
@@ -41,6 +46,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createRound(values, request);
     case "update":
       return await updateRound(values, request);
+    case "delete":
+      return await deleteRound(values, request);
   }
 }
 
@@ -50,8 +57,7 @@ export default function RAReportsRoundPage() {
     user: IUser;
   }>();
   const columnKeys = {
-    submitted: "Date",
-    time: "Time",
+    submitted: "Submitted",
     ra: "RA",
   };
   const rowKeys = {
@@ -69,6 +75,16 @@ export default function RAReportsRoundPage() {
       }}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select a Round Report" />
+      )}
+      EditComponent={({ row }) => (
+        <RoundForm round={row} zoneId={context.user.id} />
+      )}
+      DeleteComponent={({ row }) => (
+        <DeleteForm
+          id={row.id}
+          title="Delete Round"
+          prompt="Are you sure you want to delete this round?"
+        />
       )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">

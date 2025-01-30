@@ -1,5 +1,5 @@
 import { sql, eq, desc, and } from "drizzle-orm";
-import { CreatedRound, Round } from "~/schemas/reports/round";
+import { CreatedRound, Round, UpdatedRound } from "~/schemas/reports/round";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -126,7 +126,7 @@ export async function readRoundReportsAsRA(id: number) {
   const formattedData = data.map((round) => {
     return {
       ...round,
-      time: formatDate(round.submitted, true),
+      submitted: formatDate(round.submitted, true),
     };
   });
 
@@ -144,11 +144,24 @@ export async function updateRound(values: Values, request: Request) {
   return db.update(
     request,
     roundReportTable,
-    Round,
+    UpdatedRound,
     values,
     (values) => eq(roundReportTable.id, values.id),
     {
       message: "Round Created",
+      level: "success",
+    }
+  );
+}
+
+export async function deleteRound(values: Values, request: Request) {
+  return db.delete(
+    request,
+    roundReportTable,
+    values,
+    (id) => eq(roundReportTable.id, id),
+    {
+      message: "Round Deleted",
       level: "success",
     }
   );
