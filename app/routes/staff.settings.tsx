@@ -4,6 +4,7 @@ import IconButton from "~/components/common/IconButton";
 import { Logout } from "~/components/common/Icons";
 import UserInfo from "~/components/common/UserInfo";
 import { IUser } from "~/models/user";
+import ModeToggle from "~/components/common/ModeToggle";
 import { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
@@ -25,6 +26,7 @@ export default function StaffSettings() {
             Logout
           </IconButton>
         </Link>
+        <ModeToggle></ModeToggle>
         <CollaspableContent title="User Info" collasped>
           <UserInfo user={context.user} />
         </CollaspableContent>

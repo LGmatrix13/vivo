@@ -218,13 +218,13 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
 export const zoneShiftTable = pgTable("ZoneShift", {
   id: serial("id").notNull().primaryKey(),
   zoneId: integer().references(() => zoneTable.id),
-  date: timestamp("date").notNull(),
+  date: date("date").notNull(),
 });
 
 export const staffShiftTable = pgTable("StaffShift", {
   id: serial("id").notNull().primaryKey(),
   staffId: integer().references(() => staffTable.id),
-  date: timestamp("date").notNull(),
+  date: date("date").notNull(),
 });
 
 export const RCITable = pgTable("RCI", {
