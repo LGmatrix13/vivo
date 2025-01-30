@@ -2,7 +2,10 @@ import {
   readEventReportsAdmin,
   readEventReportsRA,
 } from "~/repositories/reports/event";
-import { readConversationReports } from "~/repositories/reports/conversations";
+import {
+  readConversationReports,
+  readConversationReportsAsRA,
+} from "~/repositories/reports/conversation";
 import { readWeeklyReports } from "~/repositories/reports/weekly";
 import { readRoundReports } from "~/repositories/reports/round";
 import { readUpperRCIReports } from "~/repositories/reports/upperRCI";
@@ -19,12 +22,13 @@ export type IConversationReport = Awaited<
   ReturnType<typeof readConversationReports>
 >[number];
 
+export type IConversationReportAsRA = Awaited<
+  ReturnType<typeof readConversationReportsAsRA>
+>[number];
 export type IWeeklyReport = Awaited<
   ReturnType<typeof readWeeklyReports>
 >[number];
 
-export type IUpperRCI = Awaited<
-  ReturnType<typeof readUpperRCIReports>
->[];
-
 export type IRoundReport = Awaited<ReturnType<typeof readRoundReports>>[number];
+
+export type IUpperRCI = Awaited<ReturnType<typeof readUpperRCIReports>>[];

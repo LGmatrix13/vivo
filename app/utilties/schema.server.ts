@@ -20,9 +20,9 @@ export const sentimentEnum = pgEnum("sentiment", [
   "NEGATIVE",
 ]);
 export const statusEnum = pgEnum("status", [
-  "INCOMPLETE",
-  "SUBMITTED_BY_RESIDENT",
+  "IN_PROGRESS",
   "APPROVED",
+  "SENT_TO_LIMBLE",
 ]);
 export const ratingEnum = pgEnum("rating", [
   "GREAT",
@@ -44,11 +44,11 @@ export const personTypeEnum = pgEnum("personType", [
   "ASSISTANT_STAFF",
   "ADMIN",
 ]);
-export const rciTypeEnum = pgEnum("rciType", [
+export const roomTypeEnum = pgEnum("roomType", [
   "UPPER_CAMPUS",
-  "APT_DOUBLE",
-  "APT_TRIPLE",
-  "APT_QUAD"
+  "COLONIAL_DOUBLE",
+  "COLONIAL_TRIPLE",
+  "COLONIAL_QUAD",
 ]);
 
 export const residentTable = pgTable("Resident", {
@@ -81,104 +81,7 @@ export const roomTable = pgTable("Room", {
     .references(() => buildingTable.id),
   zoneId: integer("zone_id").references(() => zoneTable.id),
   capacity: integer("capacity").notNull(),
-});
-
-export const roomConditionItemsTable = pgTable("RoomConditionItems", {
-  emergencyItems: varchar("emergency_items", { length: 225 }).notNull(),
-  doorsLocks: varchar("doors_locks", { length: 225 }).notNull(),
-  walls: varchar("walls", { length: 225 }).notNull(),
-  floor: varchar("floor", { length: 225 }).notNull(),
-  ceiling: varchar("ceiling", { length: 225 }).notNull(),
-  lightsFixtures: varchar("lights_fixtures", { length: 225 }).notNull(),
-  closetWardrobeMirror: varchar("closet_wardrobe_mirror", {
-    length: 225,
-  }).notNull(),
-  windowsScreens: varchar("windows_screens", { length: 225 }).notNull(),
-  curtainsRods: varchar("curtains_rods", { length: 225 }).notNull(),
-  deskChair: varchar("desk_chair", { length: 225 }).notNull(),
-  bedMattress: varchar("bed_mattress", { length: 225 }).notNull(),
-  dresser: varchar("dresser", { length: 225 }).notNull(),
-  bathroom: varchar("bathroom", { length: 225 }).notNull(),
-  towelbarRings: varchar("towelbar_rings", { length: 225 }).notNull(),
-  entryDoor: varchar("entry_door", { length: 225 }).notNull(),
-  sinkDisposal: varchar("sink_disposal", { length: 225 }).notNull(),
-  countertops: varchar("countertops", { length: 225 }).notNull(),
-  dishwasher: varchar("dishwasher", { length: 225 }).notNull(),
-  washerDryer: varchar("washer_dryer", { length: 225 }).notNull(),
-  refrigerator: varchar("refrigerator", { length: 225 }).notNull(),
-  stoveOven: varchar("stove_oven", { length: 225 }).notNull(),
-  wallCabinets: varchar("wall_cabinets", { length: 225 }).notNull(),
-  table: varchar("table", { length: 225 }).notNull(),
-  chairs: varchar("chairs", { length: 225 }).notNull(),
-  fireExtinguisher: varchar("fire_extinguisher", { length: 225 }).notNull(),
-  livingRoomCeiling: varchar("living_room_ceiling", { length: 225 }).notNull(),
-  livingRoomFloorCarpet: varchar("living_room_floor_carpet", {
-    length: 225,
-  }).notNull(),
-  livingRoomWalls: varchar("living_room_walls", { length: 225 }).notNull(),
-  sofa: varchar("sofa", { length: 225 }).notNull(),
-  chair: varchar("chair", { length: 225 }).notNull(),
-  sideTable: varchar("side_table", { length: 225 }).notNull(),
-  tvStand: varchar("tv_stand", { length: 225 }).notNull(),
-  windowBlinds: varchar("window_blinds", { length: 225 }).notNull(),
-  bathroomEntryDoor: varchar("bathroom_entry_door", { length: 225 }).notNull(),
-  bathroomCeiling: varchar("bathroom_ceiling", { length: 225 }).notNull(),
-  bathroomFloor: varchar("bathroom_floor", { length: 225 }).notNull(),
-  bathroomWalls: varchar("bathroom_walls", { length: 225 }).notNull(),
-  bathroomCabinets: varchar("bathroom_cabinets", { length: 225 }).notNull(),
-  bathroomMirror: varchar("bathroom_mirror", { length: 225 }).notNull(),
-  sinkCounter: varchar("sink_counter", { length: 225 }).notNull(),
-  tubShowerCurtain: varchar("tub_shower_curtain", { length: 225 }).notNull(),
-  toilet: varchar("toilet", { length: 225 }).notNull(),
-  bedroomLeftEntryDoor: varchar("bedroom_left_entry_door", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftCeiling: varchar("bedroom_left_ceiling", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftFloorCarpet: varchar("bedroom_left_floor_carpet", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftWalls: varchar("bedroom_left_walls", { length: 225 }).notNull(),
-  bedroomLeftBedMattress: varchar("bedroom_left_bed_mattress", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftClosetMirror: varchar("bedroom_left_closet_mirror", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftDeskChair: varchar("bedroom_left_desk_chair", {
-    length: 225,
-  }).notNull(),
-  bedroomLeftDresser: varchar("bedroom_left_dresser", {
-    length: 225,
-  }).notNull(),
-  bedroomRightEntryDoor: varchar("bedroom_right_entry_door", {
-    length: 225,
-  }).notNull(),
-  bedroomRightCeiling: varchar("bedroom_right_ceiling", {
-    length: 225,
-  }).notNull(),
-  bedroomRightFloorCarpet: varchar("bedroom_right_floor_carpet", {
-    length: 225,
-  }).notNull(),
-  bedroomRightWalls: varchar("bedroom_right_walls", { length: 225 }).notNull(),
-  bedroomRightBedMattress: varchar("bedroom_right_bed_mattress", {
-    length: 225,
-  }).notNull(),
-  bedroomRightClosetMirror: varchar("bedroom_right_closet_mirror", {
-    length: 225,
-  }).notNull(),
-  bedroomRightDeskChair: varchar("bedroom_right_desk_chair", {
-    length: 225,
-  }).notNull(),
-  bedroomRightDresser: varchar("bedroom_right_dresser", {
-    length: 225,
-  }).notNull(),
-
-  studentSignature: varchar("student_signature", { length: 225 }).notNull(),
-  RASignature: varchar("ra_signature", { length: 225 }).notNull(),
-  studentDate: varchar("student_date", { length: 225 }).notNull(),
-  RADate: varchar("ra_date", { length: 225 }).notNull(),
+  roomType: roomTypeEnum().notNull(),
 });
 
 export const assistantStaffTable = pgTable("AssistantStaff", {
@@ -226,9 +129,22 @@ export const roundReportTable = pgTable("RoundReport", {
   submitted: date("submitted").notNull().defaultNow(),
   time: timestamp("time").notNull(),
   description: varchar("description", { length: 225 }).notNull(),
+  violations: varchar("violations", { length: 225 }),
+  outstandingWorkOrders: varchar("outstanding_work_orders", {
+    length: 225,
+  }),
+  s,
 });
 
 export const violationTable = pgTable("Violation", {
+  id: serial("id").notNull().primaryKey(),
+  roundReportId: integer("round_report_id")
+    .notNull()
+    .references(() => roundReportTable.id),
+  description: varchar("description", { length: 225 }).notNull(),
+});
+
+export const facilityConcernTable = pgTable("FacilityConcern", {
   id: serial("id").notNull().primaryKey(),
   roundReportId: integer("round_report_id")
     .notNull()
@@ -316,11 +232,8 @@ export const RCITable = pgTable("RCI", {
   id: serial("id").notNull().primaryKey(),
   residentId: integer("resident_id")
     .notNull()
-    .references(() => residentTable.id), // Assumes there's a Residents table
-  submittedOn: date("submitted_on").defaultNow().notNull(),
-  issues: json().default({}),
+    .references(() => residentTable.id),
+  issues: json().notNull().default({}),
+  submitted: date().defaultNow().notNull(),
   status: statusEnum().notNull(),
-  signedOn: date("signed_on").defaultNow(),
-  sentToLimble: boolean("sent_to_limble").notNull().default(false),
-  rciType: rciTypeEnum().notNull()
 });

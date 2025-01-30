@@ -1,5 +1,4 @@
-import { sql, eq, desc, and } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { sql, eq, and } from "drizzle-orm";
 import {
   Conversation,
   CreatedConversation,
@@ -17,38 +16,29 @@ import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
 export async function readConversationReports() {
-  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName:
-        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-          "residentName"
-        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
       zoneId: consverationReportTable.zoneId,
       sentiment: consverationReportTable.sentiment,
       highPriority: consverationReportTable.highPriority,
-      ra: sql<string>`${raInfoTable.firstName} || ' ' || ${raInfoTable.lastName}`.as(
+      ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
       ),
-      buildingId: buildingTable.id,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),
+      buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(
-      residentTable,
-      eq(residentTable.id, consverationReportTable.residentId)
-    )
+    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .leftJoin(
       readTable,
       and(
@@ -57,7 +47,7 @@ export async function readConversationReports() {
         eq(readTable.reportType, "CONVERSATION")
       )
     )
-    .orderBy(desc(consverationReportTable.submitted));
+    .orderBy(consverationReportTable.submitted);
 
   const formattedData = data.map((event) => {
     return {
@@ -70,15 +60,10 @@ export async function readConversationReports() {
 }
 
 export async function readConversationReportsAsRD(id: number) {
-  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName:
-        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-          "residentName"
-        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -88,30 +73,27 @@ export async function readConversationReportsAsRD(id: number) {
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
       ),
-      buildingId: buildingTable.id,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),
+      buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
+    //add inner joins here
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(
-      residentTable,
-      eq(residentTable.id, consverationReportTable.residentId)
-    )
+    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .leftJoin(
       readTable,
       and(
         eq(readTable.reportId, consverationReportTable.id),
-        eq(readTable.personType, "ADMIN"),
+        eq(readTable.personType, "STAFF"),
         eq(readTable.reportType, "CONVERSATION")
       )
     )
     .where(eq(staffTable.id, id))
-    .orderBy(desc(consverationReportTable.submitted));
+    .orderBy(consverationReportTable.submitted);
 
   const formattedData = data.map((event) => {
     return {
@@ -124,15 +106,10 @@ export async function readConversationReportsAsRD(id: number) {
 }
 
 export async function readConversationReportsAsRA(id: number) {
-  const raInfoTable = alias(residentTable, "raInfoTable");
   const data = await db.client
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
-      residentName:
-        sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-          "residentName"
-        ),
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -149,13 +126,9 @@ export async function readConversationReportsAsRA(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
-    .innerJoin(
-      residentTable,
-      eq(residentTable.id, consverationReportTable.residentId)
-    )
+    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(zoneTable.id, id))
-    .orderBy(desc(consverationReportTable.submitted));
+    .orderBy(consverationReportTable.submitted);
 
   const formattedData = data.map((conversation) => {
     return {
@@ -191,6 +164,19 @@ export async function updateConversation(values: Values, request: Request) {
     (values) => eq(consverationReportTable.id, values.id),
     {
       message: "Conversation Created",
+      level: "success",
+    }
+  );
+}
+
+export async function deleteConversation(values: Values, request: Request) {
+  return db.delete(
+    request,
+    consverationReportTable,
+    values,
+    (id) => eq(consverationReportTable.id, id),
+    {
+      message: "Conversation Deleted",
       level: "success",
     }
   );

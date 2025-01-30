@@ -12,3 +12,6 @@ export const CreatedEvent = Event.extend({
   id: z.undefined(),
 });
 
+export const UpdatedEvent = Event.extend({
+  time: z.undefined(),
+});

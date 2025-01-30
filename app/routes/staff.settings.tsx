@@ -5,6 +5,14 @@ import { Logout } from "~/components/common/Icons";
 import UserInfo from "~/components/common/UserInfo";
 import { IUser } from "~/models/user";
 import ModeToggle from "~/components/common/ModeToggle";
+import { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: Settings" },
+    { name: "Vivo: Settings", content: "Settings page" },
+  ];
+};
 
 export default function StaffSettings() {
   const context = useOutletContext<{

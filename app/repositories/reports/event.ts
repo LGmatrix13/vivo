@@ -1,5 +1,5 @@
 import { sql, eq, desc, and } from "drizzle-orm";
-import { CreatedEvent, Event } from "~/schemas/reports/event";
+import { CreatedEvent, Event, UpdatedEvent } from "~/schemas/reports/event";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -144,11 +144,24 @@ export async function updateEvent(values: Values, request: Request) {
   return db.update(
     request,
     eventReportTable,
-    Event,
+    UpdatedEvent,
     values,
     (values) => eq(eventReportTable.id, values.id),
     {
       message: "Event Updated",
+      level: "success",
+    }
+  );
+}
+
+export async function deleteEvent(values: Values, request: Request) {
+  return db.delete(
+    request,
+    eventReportTable,
+    values,
+    (id) => eq(eventReportTable.id, id),
+    {
+      message: "Event Deleted",
       level: "success",
     }
   );

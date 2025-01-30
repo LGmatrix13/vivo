@@ -3,12 +3,13 @@ import { useState } from "react";
 interface AcknowledgeIssueRadioProps {
   title: string;
   children: React.ReactElement;
+  yes?: boolean;
 }
 
 export default function AcknowledgeIssueRadio(
   props: AcknowledgeIssueRadioProps
 ) {
-  const [hasProblem, setHasProblem] = useState<boolean>();
+  const [hasProblem, setHasProblem] = useState<boolean | undefined>(props.yes);
 
   return (
     <div className="space-y-3">
@@ -16,13 +17,14 @@ export default function AcknowledgeIssueRadio(
         {props.title} <span className="text-red-600">*</span>
       </label>
       <div className="space-y-3 flex flex-col">
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 accent-blue-600">
           <div className="space-x-2">
             <input
               type="radio"
               id="yes"
               name={"condition" + props.title}
               value={hasProblem ? "yes" : "no"}
+              checked={hasProblem}
               onClick={() => setHasProblem(true)}
               required
             />
@@ -35,6 +37,7 @@ export default function AcknowledgeIssueRadio(
               name={"condition" + props.title}
               value={hasProblem ? "yes" : "no"}
               onClick={() => setHasProblem(false)}
+              checked={hasProblem === false}
               required
             />
             <label htmlFor="no">No Issues</label>

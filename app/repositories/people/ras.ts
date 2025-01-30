@@ -145,7 +145,7 @@ export async function readRAsDropdownAsRD(id: number) {
 }
 
 export async function createRA(values: Values, request: Request) {
-  return db.insert(request, zoneTable, CreatedRA, values, {
+  return db.insert(request, zoneTable, CreatedRA, values, true, {
     message: "Resident Created",
     level: "success",
   });

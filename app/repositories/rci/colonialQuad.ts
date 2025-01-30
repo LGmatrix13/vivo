@@ -1,25 +1,27 @@
 import {
-  CreatedUpperCampus,
-  UpperCampusIssues,
-} from "~/schemas/rcis/upperCampus";
+  ColonialQuadIssues,
+  CreatedColonialQuad,
+} from "~/schemas/rcis/colonialQuad";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createUpperCampus(
+export async function createColonialQuad(
   request: Request,
   residentId: number,
   values: Values
 ) {
-  const result = CreatedUpperCampus.safeParse(values);
-  const issues = UpperCampusIssues.safeParse(values);
+  const result = CreatedColonialQuad.safeParse(values);
+  const issues = ColonialQuadIssues.safeParse(values);
 
   if (result.success && issues.success) {
-    await db.client
-      .insert(RCITable)
-      .values({ residentId, issues: issues.data, status: "IN_PROGRESS" });
+    await db.client.insert(RCITable).values({
+      residentId,
+      issues: issues.data,
+      status: "IN_PROGRESS",
+    });
 
     return mutate(request.url, {
       message: "Saved Check-in form",

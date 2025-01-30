@@ -1,12 +1,15 @@
-import { json, Outlet, useLoaderData } from "@remix-run/react";
+import { json, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
 import { Calendar, Door } from "~/components/common/Icons";
+import { toast } from "~/utilties/toast.server";
+import Loading from "~/components/common/Loading";
+import { Toast } from "~/components/common/Toast";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const resident = await auth.readUser(request, ["resident"]);
-  return json({
+  return toast(request, {
     resident,
   });
 }
@@ -28,19 +31,23 @@ export default function AdminLayout() {
     },
   ];
   const settings = {
-    user: data.resident,
+    user: data.extra.resident,
     path: "/resident/settings",
   };
+  const { state } = useNavigation();
 
   return (
     <>
       <Header root="/resident/on-duty" routes={routes} settings={settings} />
-      <main className="max-w-screen-2xl mx-auto px-10 mb-7">
-        <Outlet
-          context={{
-            user: data.resident,
-          }}
-        />
+      <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
+        {state == "loading" ? (
+          <Loading />
+        ) : (
+          <Outlet context={{ user: data.extra.resident }} />
+        )}
+        {data.toast && (
+          <Toast level={data.toast.level}>{data.toast.message}</Toast>
+        )}
       </main>
     </>
   );

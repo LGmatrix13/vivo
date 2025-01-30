@@ -1,7 +1,7 @@
 import { sql, eq, asc, notExists, SQL } from "drizzle-orm";
 import { alias, PgTable } from "drizzle-orm/pg-core";
 import { IResident } from "~/models/people";
-import { RD } from "~/schemas/people/rd";
+import { CreatedResident, Resident } from "~/schemas/people/resident";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -212,7 +212,7 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
 }
 
 export async function createResident(values: Values, request: Request) {
-  return db.insert(request, residentTable, RD, values, {
+  return db.insert(request, residentTable, CreatedResident, values, true, {
     message: "Created Resident",
     level: "success",
   });
@@ -222,7 +222,7 @@ export async function updateResident(values: Values, request: Request) {
   return db.update(
     request,
     residentTable,
-    RD,
+    Resident,
     values,
     (values) => eq(residentTable.id, values.id),
     {

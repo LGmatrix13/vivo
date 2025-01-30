@@ -106,7 +106,7 @@ export async function updateRoom(values: Values, request: Request) {
 }
 
 export async function createRoom(values: Values, request: Request) {
-  return db.insert(request, roomTable, CreatedRoom, values, {
+  return db.insert(request, roomTable, CreatedRoom, values, true, {
     message: "Created Room",
     level: "success",
   });

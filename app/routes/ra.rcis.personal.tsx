@@ -10,28 +10,23 @@ import {
 import { ISubmittedRCI } from "~/models/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import { readSubmittedRCI } from "~/repositories/rci/complete";
+import {
+  readSubmittedRCI,
+  readSubmittedRCIAsRA,
+} from "~/repositories/rci/complete";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
-import { MetaFunction } from "@remix-run/node";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Vivo: Check-In" },
-    { name: "Vivo: Check-In", content: "Check-in page" },
-  ];
-};
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["resident"]);
-  const submittedRCI = await readSubmittedRCI(user.id);
+  const user = await auth.readUser(request, ["ra"]);
+  const submittedRCI = await readSubmittedRCIAsRA(user.id);
   return json({
     submittedRCI,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const user = await auth.readUser(request, ["resident"]);
+  const user = await auth.readUser(request, ["ra"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -46,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function ResidentCheckInPage() {
+export default function RARCIsPersonalPage() {
   const data = useLoaderData<typeof loader>();
   const action = data.submittedRCI.id ? "update" : "create";
 

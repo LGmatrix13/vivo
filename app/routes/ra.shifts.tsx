@@ -31,7 +31,6 @@ export default function RAShiftsLayout() {
   const context = useOutletContext<{
     user: IUser;
   }>();
-  const ra = context.user.role === "ra";
   const raPages = [
     {
       name: "On Duty",

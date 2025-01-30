@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import SelectedRow from "./SelectedRow";
 import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
@@ -8,7 +8,7 @@ import Filter from "./Filter";
 interface TableProps<T> {
   columnKeys: Record<string, string>;
   rows: T[];
-  rowKeys: Record<string, string>;
+  rowKeys?: Record<string, string>;
   search?: {
     placeholder: string;
   };
@@ -29,6 +29,7 @@ interface TableProps<T> {
   InstructionComponent?: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
   DeleteComponent?: (props: { row: T }) => React.ReactElement;
+  SelectedRowComponent?: (props: { row: T }) => React.ReactElement;
   onRowRead?: (args: { row: T }) => void;
 }
 
@@ -45,6 +46,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     InstructionComponent,
     DeleteComponent,
     EditComponent,
+    SelectedRowComponent,
     mixins = {},
     onRowRead = () => {},
     enableReads = false,
@@ -251,7 +253,11 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                 <Close />
               </button>
             </div>
-            <SelectedRow keys={rowKeys} row={sortedRows[opened]} />
+            {SelectedRowComponent ? (
+              <SelectedRowComponent row={sortedRows[opened]} />
+            ) : rowKeys ? (
+              <SelectedRow row={sortedRows[opened]} keys={rowKeys} />
+            ) : null}
           </div>
         )}
       </div>
