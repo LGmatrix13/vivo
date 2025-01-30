@@ -139,6 +139,14 @@ export const violationTable = pgTable("Violation", {
   description: varchar("description", { length: 225 }).notNull(),
 });
 
+export const facilityConcernTable = pgTable("FacilityConcern", {
+  id: serial("id").notNull().primaryKey(),
+  roundReportId: integer("round_report_id")
+    .notNull()
+    .references(() => roundReportTable.id),
+  description: varchar("description", { length: 225 }).notNull(),
+});
+
 export const consverationReportTable = pgTable("ConversationReport", {
   id: serial("id").notNull().primaryKey(),
   residentId: integer()

@@ -5,6 +5,8 @@ export const Round = z.object({
   zoneId: z.coerce.number(),
   time: z.coerce.date(),
   description: z.string(),
+  violations: z.string(),
+  facilityConcerns: z.string()
 });
 
 export const CreatedRound = Round.extend({
