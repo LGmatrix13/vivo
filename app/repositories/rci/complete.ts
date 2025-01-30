@@ -1,6 +1,7 @@
 import { desc, eq, sql, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/connection.server";
+import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,
   RCITable,
@@ -40,6 +41,7 @@ export async function readCompleteRCIsAdmin() {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
+      submitted: RCITable.submitted,
       status: RCITable.status,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
@@ -68,6 +70,7 @@ export async function readCompleteRCIsAdmin() {
     return {
       ...rci,
       totalIssues: Object.keys(rci.issues).length,
+      submitted: formatDate(rci.submitted),
     };
   });
   return formattedData;
@@ -85,6 +88,7 @@ export async function readCompleteRCIsRD(id: number) {
       status: RCITable.status,
       buildingId: buildingTable.id,
       issues: sql<Object>`${RCITable.issues}`,
+      submitted: RCITable.submitted,
       roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
@@ -112,6 +116,7 @@ export async function readCompleteRCIsRD(id: number) {
     return {
       ...rci,
       totalIssues: Object.keys(rci.issues).length,
+      submitted: formatDate(rci.submitted),
     };
   });
   return formattedData;
