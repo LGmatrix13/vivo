@@ -34,7 +34,7 @@ export async function loader({ request }: ActionFunctionArgs) {
   ]);
 
   return json({
-    round,
+    rounds,
   });
 }
 
@@ -69,7 +69,7 @@ export default function RAReportsRoundPage() {
   return (
     <Table<IRoundReport>
       columnKeys={columnKeys}
-      rows={data.round as IRoundReport[]}
+      rows={data.rounds as IRoundReport[]}
       search={{
         placeholder: "Search for a round report...",
       }}
@@ -78,7 +78,7 @@ export default function RAReportsRoundPage() {
         <Instruction Icon={FileSearch} title="First Select a Round Report" />
       )}
       EditComponent={({ row }) => (
-        <RoundForm round={row} zoneId={context.user.id} />
+        <RoundForm round={row} zoneId={Number(context.user.id)} />
       )}
       DeleteComponent={({ row }) => (
         <DeleteForm

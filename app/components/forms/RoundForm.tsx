@@ -12,22 +12,11 @@ interface ConversationFormProps {
 
 export default function RoundForm(props: ConversationFormProps) {
     const { round, zoneId } = props;
-    const [extraTextareasViolations, setExtraTextareasViolations] = useState<string[]>([]);
-    const [extraTextareasFacility, setExtraTextareasFacility] = useState<string[]>([]);
-
-    const addTextareaViolations = () => {
-        setExtraTextareasViolations([...extraTextareasViolations, ""]);
-    };
-
-    const addTextareaFacility = () => {
-        setExtraTextareasFacility([...extraTextareasFacility, ""]);
-    };
-
     const [formData, setFormData] = useState({
         time: round?.time || "",
         description: round?.description || "",
-        violations: extraTextareasViolations,
-        facilityConcerns: extraTextareasFacility,
+        violation: round?.violation || "",
+        facilityConcerns: round?.facilityConcerns || "",
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +29,7 @@ export default function RoundForm(props: ConversationFormProps) {
 
     return (
         <Form button="Save Round Report" intent={round ? "update" : "create"}>
-            <h2>
+            <h2 className="font-bold text-xl">
             {round ? `Edit Round Report: ${round.id}` : "Add Round"}
             </h2>
             {round && <input name="id" type="hidden" value={round.id} />}
@@ -63,34 +52,20 @@ export default function RoundForm(props: ConversationFormProps) {
                 required
                 type=""
             />
-            <h3 className="font-bold text-lg">Violations</h3>
-            <button type="button" onClick={addTextareaViolations}>
-                Add Violation
-            </button>
-            {extraTextareasViolations.map((_, index) => (
-                <Input
-                    key={index}
-                    name={`violations[${index}]`}
-                    value={formData.violations[index]}
-                    onChange={handleInputChange}
-                    label={`Violation ${index + 1}`}
-                    placeholder="Describe the violation"
-                    required type={""}                />
-            ))}
-            <h3 className="font-bold text-lg">Facility Concerns / Maintenance Requests</h3>
-            <button type="button" onClick={addTextareaFacility}>
-                Add Facility Concerns
-            </button>
-            {extraTextareasFacility.map((_, index) => (
-                <Input
-                    key={index}
-                    name={`facilityConcerns[${index}]`}
-                    value={formData.facilityConcerns[index]}
-                    onChange={handleInputChange}
-                    label={`Facility Concern ${index + 1}`}
-                    placeholder="Describe the facility concern"
-                    required type={""}                />
-            ))}
+            <Input
+                label="Violations"
+                name="violation"
+                value={formData.violation}
+                placeholder="Explain any violations you saw"
+                type=""
+            />
+            <Input
+                label="Facility Concerns / Maintenance Requests"
+                name="facilityConcerns"
+                value={formData.facilityConcerns}
+                placeholder="Explain any facility concerns or maintenace requests"
+                type=""
+            />                
         </Form>
     );
 }
