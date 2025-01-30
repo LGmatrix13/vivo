@@ -13,7 +13,6 @@ import { delay } from "~/utilties/delay.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const ra = user.role === "ra";
   const [shifts] = await Promise.all([readShiftsRAAsRA(user.id), delay(100)]);
   return json({
     shifts,
@@ -27,14 +26,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
-    case "upload":
-    // TODO
     case "create":
       return await createRAShift(request, values);
-    case "update":
-      return await updateRAShift(request, values);
-    case "delete":
-      return await deleteRAShift(request, values);
   }
 }
 
