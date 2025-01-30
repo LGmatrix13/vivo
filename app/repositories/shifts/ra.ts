@@ -47,6 +47,7 @@ export async function readShiftsRAAsRA(id: number) {
     .where(
       and(
         sql`${zoneShiftTable.date} >= CURRENT_DATE`,
+        eq(zoneTable.staffId, buildingTable.staffId),
         exists(
           db.client
             .select()
