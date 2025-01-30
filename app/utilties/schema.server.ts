@@ -133,7 +133,6 @@ export const roundReportTable = pgTable("RoundReport", {
   outstandingWorkOrders: varchar("outstanding_work_orders", {
     length: 225,
   }),
-  s,
 });
 
 export const violationTable = pgTable("Violation", {
