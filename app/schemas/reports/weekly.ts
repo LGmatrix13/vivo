@@ -3,7 +3,8 @@ import { z } from "zod";
 export const Weekly = z.object({
   id: z.coerce.number(),
   zoneId: z.coerce.number(),
-  outstandingWorkOrders: z.string(),
+  submittedOn: z.string(),
+  outstandingWorkOrders: z.string().optional(),
   raResponsibilities: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
   academics: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
   spiritualHealth: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
@@ -12,6 +13,7 @@ export const Weekly = z.object({
   personalLife: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
   technologyAndMedia: z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]),
   explainChoices: z.string(),
+  time: z.coerce.date(),
 });
 
 export const CreatedWeekly = Weekly.extend({
