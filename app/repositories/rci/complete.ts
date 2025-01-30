@@ -12,6 +12,27 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
+export async function readSubmittedRCIAsRA(zoneId: number) {
+  const data = await db.client
+    .select({
+      id: RCITable.id,
+      roomType: roomTable.roomType,
+      roomId: roomTable.id,
+      issues: RCITable.issues,
+    })
+    .from(roomTable)
+    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .leftJoin(RCITable, eq(roomTable.id, residentTable.roomId))
+    .where(eq(zoneTable.id, zoneId));
+
+  const rci = data[0];
+  return {
+    ...rci,
+    issues: rci.issues as Record<string, string> | undefined,
+  };
+}
+
 export async function readSubmittedRCI(residentId: number) {
   const data = await db.client
     .select({

@@ -129,6 +129,10 @@ export const roundReportTable = pgTable("RoundReport", {
   submitted: date("submitted").notNull().defaultNow(),
   time: timestamp("time").notNull(),
   description: varchar("description", { length: 225 }).notNull(),
+  violations: varchar("violations", { length: 225 }),
+  outstandingWorkOrders: varchar("outstanding_work_orders", {
+    length: 225,
+  }),
 });
 
 export const violationTable = pgTable("Violation", {
