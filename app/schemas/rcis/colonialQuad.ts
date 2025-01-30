@@ -69,10 +69,5 @@ export const ColonialQuadIssues = z.object({
 });
 
 export const CreatedColonialQuad = ColonialQuadIssues.extend({
-  roomId: z.coerce.number(),
   studentSignature: z.string(),
-});
-
-export const UpdatedColonialQuad = CreatedColonialQuad.extend({
-  id: z.coerce.number(),
 });

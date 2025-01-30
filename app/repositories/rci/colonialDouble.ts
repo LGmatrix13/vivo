@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm";
 import {
   ColonialDoubleIssues,
   CreatedColonialDouble,
-  UpdatedColonialDouble,
 } from "~/schemas/rcis/colonialDouble";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
@@ -10,42 +9,20 @@ import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
-export async function createColonialDouble(request: Request, values: Values) {
+export async function createColonialDouble(
+  request: Request,
+  residentId: number,
+  values: Values
+) {
   const result = CreatedColonialDouble.safeParse(values);
   const issues = ColonialDoubleIssues.safeParse(values);
 
   if (result.success && issues.success) {
     await db.client.insert(RCITable).values({
-      roomId: result.data.roomId,
+      residentId,
       issues: issues.data,
-      status: "SUBMITTED_BY_RESIDENT",
+      status: "IN_PROGRESS",
     });
-
-    return mutate(request.url, {
-      message: "Saved Check-in form",
-      level: "success",
-    });
-  }
-
-  return mutate(request.url, {
-    message: "System error occured",
-    level: "failure",
-  });
-}
-
-export async function updateColonialDouble(request: Request, values: Values) {
-  const result = UpdatedColonialDouble.safeParse(values);
-  const issues = ColonialDoubleIssues.safeParse(values);
-
-  if (result.success && issues.success) {
-    await db.client
-      .update(RCITable)
-      .set({
-        roomId: result.data.roomId,
-        issues: issues.data,
-        status: "SUBMITTED_BY_RESIDENT",
-      })
-      .where(eq(RCITable.id, result.data.id));
 
     return mutate(request.url, {
       message: "Saved Check-in form",

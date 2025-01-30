@@ -20,9 +20,9 @@ export const sentimentEnum = pgEnum("sentiment", [
   "NEGATIVE",
 ]);
 export const statusEnum = pgEnum("status", [
-  "INCOMPLETE",
-  "SUBMITTED_BY_RESIDENT",
+  "IN_PROGRESS",
   "APPROVED",
+  "SENT_TO_LIMBLE",
 ]);
 export const ratingEnum = pgEnum("rating", [
   "GREAT",
@@ -217,12 +217,10 @@ export const staffShiftTable = pgTable("StaffShift", {
 
 export const RCITable = pgTable("RCI", {
   id: serial("id").notNull().primaryKey(),
-  roomId: integer("room_id")
+  residentId: integer("resident_id")
     .notNull()
-    .references(() => roomTable.id),
-  submittedOn: date("submitted_on").defaultNow().notNull(),
-  issues: json().default({}),
+    .references(() => residentTable.id),
+  issues: json().notNull().default({}),
+  submitted: date().defaultNow().notNull(),
   status: statusEnum().notNull(),
-  signedOn: date("signed_on").defaultNow(),
-  sentToLimble: boolean("sent_to_limble").notNull().default(false),
 });

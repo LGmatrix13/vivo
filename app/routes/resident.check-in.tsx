@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import RCIProgress from "~/components/common/RCIProgress";
 import RCIForm from "~/components/forms/RCIForm";
 import {
   colonialDoubleMapping,
@@ -7,19 +8,10 @@ import {
   upperCampusMapping,
 } from "~/mappings/rci";
 import { ISubmittedRCI } from "~/models/rci";
-import {
-  createColonialDouble,
-  updateColonialDouble,
-} from "~/repositories/rci/colonialDouble";
-import {
-  createColonialQuad,
-  updateColonialQuad,
-} from "~/repositories/rci/colonialQuad";
+import { createColonialDouble } from "~/repositories/rci/colonialDouble";
+import { createColonialQuad } from "~/repositories/rci/colonialQuad";
 import { readSubmittedRCI } from "~/repositories/rci/complete";
-import {
-  createUpperCampus,
-  updateUpperCampus,
-} from "~/repositories/rci/upperCampus";
+import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -31,30 +23,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["resident"]);
+  const user = await auth.readUser(request, ["resident"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
   switch (intent) {
     case "create.upperCampus":
-      return await createUpperCampus(request, values);
+      return await createUpperCampus(request, user.id, values);
     case "create.colonialDouble":
-      return await createColonialDouble(request, values);
+      return await createColonialDouble(request, user.id, values);
     case "create.colonialQuad":
-      return await createColonialQuad(request, values);
-    case "update.upperCampus":
-      return await updateUpperCampus(request, values);
-    case "update.colonialDouble":
-      return await updateColonialDouble(request, values);
-    case "update.colonialQuad":
-      return await updateColonialQuad(request, values);
+      return await createColonialQuad(request, user.id, values);
   }
 }
 
 export default function ResidentCheckInPage() {
   const data = useLoaderData<typeof loader>();
   const action = data.submittedRCI.id ? "update" : "create";
+
+  if (data.submittedRCI.id) {
+    return <RCIProgress />;
+  }
 
   switch (data.submittedRCI.roomType) {
     case "UPPER_CAMPUS":
