@@ -1,4 +1,4 @@
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, and } from "drizzle-orm";
 import {
   Conversation,
   CreatedConversation,
@@ -9,6 +9,7 @@ import {
   buildingTable,
   staffTable,
   consverationReportTable,
+  readTable,
 } from "~/utilties/schema.server";
 import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
@@ -28,6 +29,9 @@ export async function readConversationReports() {
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
       ),
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
       buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
@@ -35,7 +39,14 @@ export async function readConversationReports() {
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    //add inner joins here
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, consverationReportTable.id),
+        eq(readTable.personType, "ADMIN"),
+        eq(readTable.reportType, "CONVERSATION")
+      )
+    )
     .orderBy(consverationReportTable.submitted);
 
   const formattedData = data.map((event) => {
@@ -62,6 +73,9 @@ export async function readConversationReportsAsRD(id: number) {
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
       ),
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
+        "read"
+      ),
       buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
@@ -70,6 +84,14 @@ export async function readConversationReportsAsRD(id: number) {
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .leftJoin(
+      readTable,
+      and(
+        eq(readTable.reportId, consverationReportTable.id),
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, "CONVERSATION")
+      )
+    )
     .where(eq(staffTable.id, id))
     .orderBy(consverationReportTable.submitted);
 
