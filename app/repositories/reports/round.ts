@@ -30,7 +30,7 @@ export async function readRoundReports() {
         "read"
       ),
       violation: roundReportTable.violations,
-      facilityConcerns: roundReportTable.outstandingWorkOrders
+      facilityConcerns: roundReportTable.outstandingWorkOrders,
     })
     .from(roundReportTable)
     .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
@@ -122,7 +122,6 @@ export async function readRoundReportsAsRA(id: number) {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(zoneTable.id, id))
-    //add inner joins here
     .orderBy(desc(roundReportTable.submitted));
 
   const formattedData = data.map((round) => {

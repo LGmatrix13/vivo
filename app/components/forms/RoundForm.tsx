@@ -37,8 +37,8 @@ export default function RoundForm(props: ConversationFormProps) {
         defaultValue={round?.violation || ""}
       />
       <Textarea
-        label="Facility Concerns"
-        name="facilityConcerns"
+        label="Outstanding Work Orders"
+        name="outstandingWorkOrders"
         defaultValue={round?.facilityConcerns || ""}
       />
     </Form>
