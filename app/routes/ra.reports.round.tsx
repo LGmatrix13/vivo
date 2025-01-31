@@ -1,13 +1,10 @@
 import { json, useLoaderData, useOutletContext } from "@remix-run/react";
-import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
-import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 import {
   createRound,
   deleteRound,
@@ -54,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
-  const context = useOutletContext<{ user: { id: string } }>();
+  const context = useOutletContext<{ user: IUser }>();
   const columnKeys = {
     submitted: "Submitted",
     ra: "RA",

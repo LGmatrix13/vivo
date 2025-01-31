@@ -4,6 +4,7 @@ import Input from "../common/Input";
 import Textarea from "../common/Textarea";
 import AcknowledgeWorkOrderRadio from "../common/AcknowledgeWorkOrderRadio";
 import { z } from "zod";
+import Select from "../common/Select";
 
 interface WeeklyFormProps {
   zoneId: number;
@@ -12,18 +13,27 @@ interface WeeklyFormProps {
 
 export default function WeeklyForm(props: WeeklyFormProps) {
   const { weekly, zoneId } = props;
-  const ratings = z.enum(["GREAT", "GOOD", "OK", "ROUGH", "REALLY_ROUGH"]);
-  const ratingOptions = ratings.options.map((option) => (
-    <option key={option} value={option}>
-      {option}
-    </option>
-  ));
-
+  const ratingOptions = [
+    {
+      key: "Great",
+      value: "GREAT",
+    },
+    {
+      key: "Good",
+      value: "GOOD",
+    },
+    {
+      key: "Ok",
+      value: "OK",
+    },
+    { key: "Rough", value: "ROUGH" },
+    { key: "Really Rough", value: "REALLY_ROUGH" },
+  ];
 
   return (
     <Form button="Save Weekly Report" intent={weekly ? "update" : "create"}>
       <h2 className="font-bold text-xl">
-        {weekly ? `Edit Weekly Report: ${weekly.id}` : "Add Weekly Report"}
+        {weekly ? `Edit Weekly` : "Add Weekly Report"}
       </h2>
       {weekly && <input name="id" type="hidden" value={weekly.id} />}
       <input name="zoneId" type="hidden" value={zoneId} />
@@ -32,31 +42,22 @@ export default function WeeklyForm(props: WeeklyFormProps) {
         placeholder="Time"
         name="time"
         type="datetime-local"
-        defaultValue={weekly?.time || new Date().toISOString().slice(0, 16)}
-        step=".01"
         required
       />
-      <Input
-        label="Social Events from this past week"
-        placeholder="Describe any social events from this past week"
+      <Textarea
+        label="Describe Social Events this Past Week"
         name="socialEvents"
-        type="string"
       />
-      <Input
-        label="Social Events I'd like to do this coming week"
-        placeholder="Describe any social events you'd like to do this coming week"
+      <Textarea
+        label="Social Events Plsanned this Coming Week"
         name="possibleSocialEvents"
-        type="string"
       />
-      <h3 className="font-bold text-lg">Business Items</h3>
-      <AcknowledgeWorkOrderRadio
-      title =  "Are there any outstanding work orders?"
-      >
+      <AcknowledgeWorkOrderRadio title="Are there any outstanding work orders?">
         <Textarea
-        label = "Explain"
-        name = 'workOrderArea'
-        placeholder = "Explain"
-        required
+          label="Explain"
+          name="workOrderArea"
+          placeholder="Explain"
+          required
         />
       </AcknowledgeWorkOrderRadio>
       <Input
@@ -65,61 +66,51 @@ export default function WeeklyForm(props: WeeklyFormProps) {
         name="staffMeetingSuggestions"
         type="string"
       />
-      <h3 className="font-bold text-lg">Self Assessment</h3>
-      <h3 className="font text-lg">Indicate how you are doing in the following areas:</h3>
-      <label>
-        RA Responsibilities
-        <select name="raResponsibilities" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Academic Responsibilties
-        <select name="academics" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Spiritual Health
-        <select name="spiritualHealth" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Physical Health
-        <select name="physicalHealth" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Mental Health
-        <select name="mentalHealth" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Personal Life
-        <select name="personalLife" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <label>
-        Relationship with Technology & Media
-        <select name="technologyAndMedia" required>
-          {ratingOptions}
-        </select>
-      </label>
-      <Input
-      label="Explain your choices above"
-      name="choicesAbove"
-      type="string"
-      required
+      <Select
+        label={"Self Assess RA Responsibilities"}
+        name={"responsibilities"}
+        options={ratingOptions}
       />
-      <Input
-      label="List and Describe some goals to assist and improvement on the areas above"
-      name="choicesAbove"
-      type="string"
-      required
+      <Select
+        label={"Self Assess Academic Responsibilities"}
+        name={"academics"}
+        options={ratingOptions}
+      />
+      <Select
+        label={"Self Assess Spiritual Health"}
+        name={"spiritualHealth"}
+        options={ratingOptions}
+      />
+      <Select
+        label={"Self Assess Physical Health"}
+        name={"physicalHealth"}
+        options={ratingOptions}
+      />
+      <Select
+        label={"Self Assess Mental Health"}
+        name={"mentalHealth"}
+        options={ratingOptions}
+      />
+      <Select
+        label={"Self Assess Person Life"}
+        name={"personalLife"}
+        options={ratingOptions}
+      />
+      <Select
+        label={"Self Assess Technology & Media"}
+        name={"personalLife"}
+        options={ratingOptions}
+      />
+      <Textarea
+        label="Explain your choices above"
+        name="choicesAbove"
+        required
+      />
+      <Textarea
+        label="List and Describe some goals to assist and improvement on the areas above"
+        name="choicesAbove"
+        type="string"
+        required
       />
     </Form>
   );
