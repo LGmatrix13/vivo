@@ -12,8 +12,6 @@ import {
   updateRound,
 } from "~/repositories/reports/round";
 import { IRoundReport } from "~/models/reports";
-import IconButton from "~/components/common/IconButton";
-import { csv } from "~/utilties/csv";
 import {
   DrawerButton,
   DrawerContent,
@@ -36,7 +34,7 @@ export async function loader({ request }: ActionFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["ra", "admin"]);
+  await auth.rejectUnauthorized(request, ["ra"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);

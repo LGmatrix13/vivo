@@ -116,7 +116,7 @@ export default function StaffHousingRoomsPage() {
           toast={`Deleted ${row.building} ${row.roomNumber}`}
         />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -134,7 +134,7 @@ export default function StaffHousingRoomsPage() {
               className="md:flex hidden"
               Icon={Download}
               onClick={() => {
-                csv.download(data.rooms, "rooms", rowKeys);
+                csv.download(rows, "rooms", rowKeys);
               }}
             >
               Export Rooms

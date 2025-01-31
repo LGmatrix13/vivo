@@ -108,7 +108,7 @@ export default function StaffAdminPeopleResidentsPage() {
           toast={`Deleted ${row.fullName}`}
         />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -124,7 +124,7 @@ export default function StaffAdminPeopleResidentsPage() {
             Icon={Download}
             className="md:flex hidden"
             onClick={() => {
-              csv.download(data.residents, "Residents", rowKeys);
+              csv.download(rows, "Residents", rowKeys);
             }}
           >
             Export Residents

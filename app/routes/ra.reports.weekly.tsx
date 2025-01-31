@@ -14,7 +14,11 @@ import {
   updateWeekly,
 } from "~/repositories/reports/weekly";
 import { IWeeklyReport } from "~/models/reports";
-import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
 import WeeklyForm from "~/components/forms/WeeklyForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
@@ -31,7 +35,7 @@ export async function loader({ request }: ActionFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+  await auth.rejectUnauthorized(request, ["ra"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -48,7 +52,6 @@ export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
     submittedOn: "Date",
-    ra: "RA",
   };
   const rowKeys = {
     ...columnKeys,
@@ -65,7 +68,7 @@ export default function StaffReportsWeeklyPage() {
   return (
     <Table<IWeeklyReport>
       columnKeys={columnKeys}
-      rows={data.weekly}
+      rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
       }}
@@ -75,15 +78,15 @@ export default function StaffReportsWeeklyPage() {
       )}
       ActionButtons={({ rows }) => (
         <div className="ml-auto order-2 flex space-x-3 h-12">
-            <DrawerProvider>
+          <DrawerProvider>
             <DrawerButton>
               <IconButton Icon={Plus}>Weekly Report</IconButton>
             </DrawerButton>
             <DrawerContent>
-              <WeeklyForm zoneId={0} />
+              <WeeklyForm zoneId={data.user.id} />
             </DrawerContent>
-            </DrawerProvider>
-            <IconButton
+          </DrawerProvider>
+          <IconButton
             Icon={Download}
             onClick={() => {
               csv.download(rows, "Weeklys", rowKeys);
