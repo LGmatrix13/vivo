@@ -24,6 +24,24 @@ export default function RoomForm(props: RoomFormProps) {
       value: option.id,
     };
   });
+  const roomTypeOptions = [
+    {
+      key: "Upper Campus",
+      value: "UPPER_CAMPUS",
+    },
+    {
+      key: "Colonial Quad",
+      value: "COLONIAL_QUAD",
+    },
+    {
+      key: "Colonial Triple",
+      value: "COLONIAL_TRIPLE",
+    },
+    {
+      key: "Colonial Double",
+      value: "COLONIAL_DOUBLE",
+    },
+  ];
   return (
     <Form button="Save Room" intent={room ? "update" : "create"}>
       <h2 className="font-bold text-xl">
@@ -35,6 +53,13 @@ export default function RoomForm(props: RoomFormProps) {
         name="buildingId"
         options={buildingOptions}
         selected={room?.buildingId}
+        required
+      />
+      <Select
+        label="Room Type"
+        name="roomType"
+        options={roomTypeOptions}
+        selected={room?.roomType}
         required
       />
       <Select
