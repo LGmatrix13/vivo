@@ -21,7 +21,6 @@ import { IUser } from "~/models/user";
 import RoundForm from "~/components/forms/RoundForm";
 import DeleteForm from "~/components/forms/DeleteForm";
 import IconButton from "~/components/common/IconButton";
-import { facilityConcernTable } from "~/utilties/schema.server";
 import { csv } from "~/utilties/csv";
 
 export async function loader({ request }: ActionFunctionArgs) {
@@ -56,13 +55,13 @@ export default function RAReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<{ user: IUser }>();
   const columnKeys = {
-    submitted: "Submitted",
+    time: "Time",
   };
   const rowKeys = {
     ...columnKeys,
     description: "Description",
     violations: "Violations",
-    facilityConcerns: "Facility Concerns",
+    outstandingWorkOrders: "Outstanding Work Orders",
   };
 
   return (
@@ -77,7 +76,7 @@ export default function RAReportsRoundPage() {
         <Instruction Icon={FileSearch} title="First Select a Round Report" />
       )}
       EditComponent={({ row }) => (
-        <RoundForm round={row} zoneId={Number(context.user.id)} />
+        <RoundForm round={row} zoneId={context.user.id} />
       )}
       DeleteComponent={({ row }) => (
         <DeleteForm

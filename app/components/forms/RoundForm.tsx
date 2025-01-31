@@ -12,19 +12,21 @@ export default function RoundForm(props: ConversationFormProps) {
   const { round, zoneId } = props;
 
   return (
-    <Form button="Save Round Report" intent={round ? "supdate" : "create"}>
+    <Form button="Save Round Report" intent={round ? "update" : "create"}>
       <h2 className="font-bold text-xl">
         {round ? "Edit Round" : "Add Round"}
       </h2>
-      {round && <input name="ids" type="hidden" value={round.id} />}
+      {round && <input name="id" type="hidden" value={round.id} />}
       <input name="zoneId" type="hidden" value={zoneId} />
-      <Input
-        label="Time"
-        placeholder="Time"
-        name="time"
-        type="datetime-local"
-        required
-      />
+      {!round && (
+        <Input
+          label="Time"
+          placeholder="Time"
+          name="time"
+          type="datetime-local"
+          required
+        />
+      )}
       <Textarea
         label="Round Description"
         name="description"
