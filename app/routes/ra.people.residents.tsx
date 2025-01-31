@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useLoaderData } from "@remix-run/react";
 import {
   DrawerButton,
   DrawerContent,
@@ -31,22 +31,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     residents,
   });
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["ra"]);
-
-  const formData = await request.formData();
-  const { intent, ...values } = Object.fromEntries(formData);
-
-  switch (intent) {
-    case "create":
-      return await createResident(values, request);
-    case "update":
-      return await updateResident(values, request);
-    case "delete":
-      return await deleteResident(values, request);
-  }
 }
 
 export default function RAResidentsPage() {
@@ -89,16 +73,6 @@ export default function RAResidentsPage() {
       )}
       ActionButtons={() => (
         <div className="flex space-x-3">
-          <DrawerProvider>
-            <DrawerContent>
-              <ResidentForm />
-            </DrawerContent>
-            <DrawerButton>
-              <IconButton Icon={Plus} className="md:w-fit w-full">
-                Resident
-              </IconButton>
-            </DrawerButton>
-          </DrawerProvider>
           <IconButton
             Icon={Download}
             className="md:flex hidden"
