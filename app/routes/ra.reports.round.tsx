@@ -20,6 +20,9 @@ import {
 import { IUser } from "~/models/user";
 import RoundForm from "~/components/forms/RoundForm";
 import DeleteForm from "~/components/forms/DeleteForm";
+import IconButton from "~/components/common/IconButton";
+import { facilityConcernTable } from "~/utilties/schema.server";
+import { csv } from "~/utilties/csv";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -54,11 +57,12 @@ export default function RAReportsRoundPage() {
   const context = useOutletContext<{ user: IUser }>();
   const columnKeys = {
     submitted: "Submitted",
-    ra: "RA",
   };
   const rowKeys = {
     ...columnKeys,
     description: "Description",
+    violations: "Violations",
+    facilityConcerns: "Facility Concerns",
   };
 
   return (
@@ -89,7 +93,7 @@ export default function RAReportsRoundPage() {
               <IconButton Icon={Plus}>Round Report</IconButton>
             </DrawerButton>
             <DrawerContent>
-              <RoundForm zoneId={Number(context.user.id)} />
+              <RoundForm zoneId={context.user.id} />
             </DrawerContent>
           </DrawerProvider>
           <IconButton
