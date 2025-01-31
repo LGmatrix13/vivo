@@ -18,6 +18,7 @@ export async function readIncompleteRCIsAsAdmin() {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })
     .from(roomTable)
     .where(
@@ -35,7 +36,8 @@ export async function readIncompleteRCIsAsAdmin() {
     )
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
-    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId));
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id));
 
   return data;
 }
@@ -49,6 +51,7 @@ export async function readIncompleteRCIsAsRD(id: number) {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })
     .from(roomTable)
     .where(
@@ -71,6 +74,7 @@ export async function readIncompleteRCIsAsRD(id: number) {
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
     .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
     .orderBy(desc(roomTable.id));
 
   return data;
