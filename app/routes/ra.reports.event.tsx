@@ -98,7 +98,7 @@ export default function RAReportsEventPage() {
           <IconButton
             Icon={Download}
             onClick={() => {
-              csv.download(rows, "events", columnKeys);
+              csv.download(rows, "events", rowKeys);
             }}
           >
             Export Events
