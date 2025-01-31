@@ -4,17 +4,9 @@ import {
   Outlet,
   useLoaderData,
   useNavigation,
-  useOutletContext,
 } from "@remix-run/react";
 import Loading from "~/components/common/Loading";
-import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
-import { IUser } from "~/models/user";
-import {
-  readBuildingsDropdownAsAdmin,
-  readBuildingsDropdownAsRD,
-} from "~/repositories/housing/buildings";
-import { auth } from "~/utilties/auth.server";
 import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
