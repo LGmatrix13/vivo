@@ -113,7 +113,7 @@ export default function StaffAdminPeopleRDsPage() {
           <li>New rooms will be added as appropriate.</li>
           <li>
             Ensure your upload is formatted correctly. Compare with our{" "}
-            <a href="/template.csv" className="text-blue-600">
+            <a href="/Resident Template.csv" className="text-blue-600">
               template
             </a>{" "}
             to see if it is correct.

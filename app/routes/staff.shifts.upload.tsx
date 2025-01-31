@@ -103,7 +103,7 @@ export default function StaffAdminPeopleRDsPage() {
           </li>
           <li>
             Ensure your upload is formatted correctly. Compare with our{" "}
-            <a href="/schedule.csv" className="text-blue-600">
+            <a href="/Schedule Template.csv" className="text-blue-600">
               template
             </a>{" "}
             to see if it is correct.
