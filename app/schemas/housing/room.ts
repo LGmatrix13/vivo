@@ -6,6 +6,7 @@ export const Room = z.object({
   buildingId: z.coerce.number(),
   zoneId: z.coerce.number(),
   capacity: z.coerce.number(),
+  roomType: z.enum(["UPPER_CAMPUS", "COLONIAL_QUAD", "COLONIAL_TRIPLE","COLONIAL_DOUBLE"])
 });
 
 export const CreatedRoom = Room.extend({

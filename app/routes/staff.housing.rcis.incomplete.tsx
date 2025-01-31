@@ -58,7 +58,6 @@ export default function StaffHousingRCIsIncompletePage() {
     buildingsDropdown: IBuildingDropdown[];
   }>();
   const data = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
   const columnKeys = {
     ra: "RA",
     resident: "Resident",
