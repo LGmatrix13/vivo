@@ -117,7 +117,7 @@ export default function StaffAdminPeopleARDsPage() {
       EditComponent={({ row }) => (
         <ARDForm rdDropdown={data.rdsDropdown} ard={row} />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -136,7 +136,7 @@ export default function StaffAdminPeopleARDsPage() {
             Icon={Download}
             className="md:flex hidden"
             onClick={() => {
-              csv.download(data.ards, "ARDs", rowKeys);
+              csv.download(rows, "ARDs", rowKeys);
             }}
           >
             Export ARDs

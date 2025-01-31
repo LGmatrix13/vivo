@@ -83,7 +83,7 @@ export default function StaffAdminHousingBuildingsPage() {
           toast={`Deleted ${row.name}`}
         />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -98,7 +98,7 @@ export default function StaffAdminHousingBuildingsPage() {
               Icon={Download}
               className="md:flex hidden"
               onClick={() => {
-                csv.download(data.buildings, "buildings", rowKeys);
+                csv.download(rows, "buildings", rowKeys);
               }}
             >
               Export Buildings

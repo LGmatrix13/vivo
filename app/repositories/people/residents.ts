@@ -199,7 +199,7 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
   const rds = await db.client
     .select({
       id: residentTable.id,
-      resident:
+      name:
         sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
           "rd"
         ),

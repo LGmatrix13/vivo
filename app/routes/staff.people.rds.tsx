@@ -75,7 +75,7 @@ export default function StaffAdminPeopleRDsPage() {
           toast={`Deleted ${row.fullName}`}
         />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex flex-row space-x-3">
           <DrawerProvider>
             <DrawerContent>
@@ -91,7 +91,7 @@ export default function StaffAdminPeopleRDsPage() {
             Icon={Download}
             className="md:flex hidden"
             onClick={() => {
-              csv.download(data.rds, "RDs", rowKeys);
+              csv.download(rows, "RDs", rowKeys);
             }}
           >
             Export RDs
