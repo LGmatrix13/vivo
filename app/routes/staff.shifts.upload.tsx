@@ -12,7 +12,7 @@ import { uploadDutyScheduleForRD } from "~/repositories/shifts/rd";
 import { uploadDutyScheduleForRAs } from "~/repositories/shifts/ra";
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin","rd"]);
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
 
@@ -20,17 +20,15 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
     case "upload":
-        if(admin){
-            return await uploadDutyScheduleForRD(values, request);
-        }
-        else{
-            return await uploadDutyScheduleForRAs(values,request);
-        }         
+      if (admin) {
+        return await uploadDutyScheduleForRD(values, request);
+      } else {
+        return await uploadDutyScheduleForRAs(values, request);
+      }
   }
 }
 
 export default function StaffAdminPeopleRDsPage() {
-
   const fetcher = useFetcher<typeof uploadDutyScheduleForRD>();
   const columnKeys = {
     rowNumber: "Row Number",
@@ -84,8 +82,8 @@ export default function StaffAdminPeopleRDsPage() {
     >
       <div className="space-y-3">
         <p>
-          Upload a schedule CSV which contains the Duty Schedule information for your staff.
-          Before proceeding understand the following:
+          Upload a schedule CSV which contains the Duty Schedule information for
+          your staff. Before proceeding understand the following:
         </p>
         <ul className="list-disc ms-10 space-y-2">
           <li>
@@ -101,8 +99,7 @@ export default function StaffAdminPeopleRDsPage() {
             to learn how to convert from Excel to a CSV.
           </li>
           <li>
-            All scheuling information, names, dates,
-            etc., will be "archived".
+            All scheuling information, names, dates, etc., will be "archived".
           </li>
           <li>
             Ensure your upload is formatted correctly. Compare with our{" "}
@@ -110,7 +107,6 @@ export default function StaffAdminPeopleRDsPage() {
               template
             </a>{" "}
             to see if it is correct.
-
           </li>
         </ul>
         <p>
