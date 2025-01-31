@@ -1,6 +1,6 @@
 import { sql, eq, asc } from "drizzle-orm";
 import { IRD } from "~/models/people";
-import { RD } from "~/schemas/people/rd";
+import { CreatedRD, RD } from "~/schemas/people/rd";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import { staffTable, buildingTable, zoneTable } from "~/utilties/schema.server";
@@ -47,7 +47,7 @@ export async function readRDsDropdown() {
 }
 
 export async function createRD(values: Values, request: Request) {
-  return db.insert(request, staffTable, RD, values, {
+  return db.insert(request, staffTable, CreatedRD, values, true, {
     message: "RD Created",
     level: "success",
   });
@@ -77,6 +77,18 @@ export async function deleteRD(values: Values, request: Request) {
   if (rasAssigned.length) {
     return mutate(request.url, {
       message: "RD has assigned RAs",
+      level: "failure",
+    });
+  }
+
+  const buildingsAssigned = await db.client
+    .select()
+    .from(buildingTable)
+    .where(eq(buildingTable.staffId, id));
+
+  if (buildingsAssigned.length) {
+    return mutate(request.url, {
+      message: "RD has assigned buildings",
       level: "failure",
     });
   }

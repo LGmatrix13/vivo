@@ -20,7 +20,7 @@ export default function ARDForm(props: ARDFormProps) {
 
   const residentOptions = residentDropdown?.map((option) => {
     return {
-      key: option.resident,
+      key: option.name,
       value: option.id,
     };
   });
