@@ -1,6 +1,7 @@
 import { sql, eq, desc, and } from "drizzle-orm";
 import { CreatedWeekly, Weekly } from "~/schemas/reports/weekly";
 import { db } from "~/utilties/connection.server";
+import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,
   readTable,
@@ -17,7 +18,6 @@ export async function readWeeklyReports() {
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
       submittedOn: weeklyReportTable.submittedOn,
-      outstandingWorkOrders: weeklyReportTable.outstandWorkOrders,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -78,7 +78,6 @@ export async function readWeeklyReportsAsRD(id: number) {
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
       submittedOn: weeklyReportTable.submittedOn,
-      outstandingWorkOrders: weeklyReportTable.outstandWorkOrders,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -140,7 +139,6 @@ export async function readWeeklyReportsAsRA(id: number) {
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
       submittedOn: weeklyReportTable.submittedOn,
-      outstandingWorkOrders: weeklyReportTable.outstandWorkOrders,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -153,24 +151,13 @@ export async function readWeeklyReportsAsRA(id: number) {
         "raName"
       ),
       buildingId: buildingTable.id,
-      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
-        "read"
-      ),
     })
     .from(weeklyReportTable)
     .innerJoin(zoneTable, eq(weeklyReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .leftJoin(
-      readTable,
-      and(
-        eq(readTable.reportId, weeklyReportTable.id),
-        eq(readTable.personType, "STAFF"),
-        eq(readTable.reportType, "WEEKLY")
-      )
-    )
-    .where(eq(staffTable.id, id))
+    .where(eq(zoneTable.id, id))
     .orderBy(desc(weeklyReportTable.submittedOn));
 
   const formattedStatus = {
@@ -183,6 +170,7 @@ export async function readWeeklyReportsAsRA(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
+      submittedOn: formatDate(weekly.submittedOn),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],

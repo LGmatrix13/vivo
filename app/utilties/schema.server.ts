@@ -203,8 +203,8 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),
-  submittedOn: date("submitted_on").defaultNow(),
-  outstandWorkOrders: varchar({ length: 225 }),
+  submittedOn: date("submitted_on").defaultNow().notNull(),
+  staffMeetingSuggestions: varchar({ length: 225 }),
   raResponsibilities: ratingEnum().notNull(),
   academics: ratingEnum().notNull(),
   spiritualHealth: ratingEnum().notNull(),
