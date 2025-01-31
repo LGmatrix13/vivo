@@ -12,6 +12,7 @@ import {
   buildingTable,
   roomTable,
   staffTable,
+  roomTypeEnum,
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
@@ -259,6 +260,21 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           triple: 3,
           quad: 4,
         };
+        var roomTypeValue
+        if (buildingName.toLowerCase() === "colonial") {
+          if (stringToNumberMap[result.data.roomType.toLowerCase()] <= 2) {
+            roomTypeValue = roomTypeEnum.enumValues[1]
+          }
+          else if (stringToNumberMap[result.data.roomType.toLowerCase()] == 3) {
+            roomTypeValue = roomTypeEnum.enumValues[2]
+          }
+          else {
+            roomTypeValue = roomTypeEnum.enumValues[3]
+          }
+        }
+        else {
+          roomTypeValue = roomTypeEnum.enumValues[0]
+        }
         const roomInfo = {
           roomNumber: roomNumber,
           buildingId: (
@@ -268,6 +284,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
               .where(eq(buildingTable.name, buildingName))
           )[0].id, //TODO: this could throw an error if building not found
           capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0,
+          roomType: roomTypeValue
         };
         room = await db.client
           .insert(roomTable)
