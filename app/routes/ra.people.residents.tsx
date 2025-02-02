@@ -21,15 +21,18 @@ import {
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
+import { readRoomsDropdown } from "~/repositories/housing/rooms";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const [residents] = await Promise.all([
+  const [residents, roomsDropdown] = await Promise.all([
     readResidentsAsRA(user.id),
+    readRoomsDropdown(),
     delay(100),
   ]);
   return json({
     residents,
+    roomsDropdown,
   });
 }
 
@@ -62,7 +65,10 @@ export default function RAResidentsPage() {
       InstructionComponent={() => (
         <Instruction Icon={UserSearch} title="First Select a Resident" />
       )}
-      EditComponent={({ row }) => <ResidentForm resident={row} />}
+      EditComponent={({ row }) => <ResidentForm
+        resident={row}
+        roomsDropdown={data.roomsDropdown}
+      />}
       DeleteComponent={({ row }) => (
         <DeleteForm
           id={row.id}

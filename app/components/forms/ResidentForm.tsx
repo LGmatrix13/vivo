@@ -2,13 +2,27 @@ import { IResident } from "~/models/people";
 import Form from "../common/Form";
 import Input from "../common/Input";
 import Select from "../common/Select";
+import { IRoomDropdown } from "~/models/housing";
 
 interface ResidentFormProps {
   resident?: IResident;
+  roomsDropdown: IRoomDropdown[];
 }
 
 export default function ResidentForm(props: ResidentFormProps) {
-  const { resident } = props;
+  const { resident, roomsDropdown } = props;
+  const roomOptions = [
+    {
+      value: null,
+      key: "Unassigned",
+    },
+    ...roomsDropdown.map((option) => {
+      return {
+        key: option.room,
+        value: option.id,
+      };
+    })
+  ];
   return (
     <Form button="Save Resident" intent={resident ? "update" : "create"}>
       <h2 className="font-bold text-xl">
@@ -30,6 +44,12 @@ export default function ResidentForm(props: ResidentFormProps) {
         type="text"
         defaultValue={resident?.lastName}
         required
+      />
+      <Select
+        label="Room"
+        name="roomId"
+        options={roomOptions}
+        selected={resident?.roomId}
       />
       <Input
         label="Email Address"

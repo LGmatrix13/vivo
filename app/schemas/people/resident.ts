@@ -4,6 +4,7 @@ export const Resident = z.object({
   id: z.coerce.number(),
   firstName: z.string(),
   lastName: z.string(),
+  roomId: z.union([z.literal("null").transform(() => null), z.coerce.number()]),
   emailAddress: z.string().email().transform((value) => value.toUpperCase()),
   city: z.string(),
   state: z.string(),

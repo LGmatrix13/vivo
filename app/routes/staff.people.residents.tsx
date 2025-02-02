@@ -22,17 +22,20 @@ import {
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
+import { IBuildingDropdown, IRoomDropdown } from "~/models/housing";
+import { readRoomsDropdown } from "~/repositories/housing/rooms";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
-  const [residents] = await Promise.all([
+  const [residents, roomsDropdown] = await Promise.all([
     admin ? readResidentsAsAdmin() : readResidentsAsRD(user.id),
+    readRoomsDropdown(),
     delay(100),
   ]);
   return json({
     residents,
+    roomsDropdown,
   });
 }
 
@@ -99,7 +102,12 @@ export default function StaffAdminPeopleResidentsPage() {
       InstructionComponent={() => (
         <Instruction Icon={UserSearch} title="First Select a Resident" />
       )}
-      EditComponent={({ row }) => <ResidentForm resident={row} />}
+      EditComponent={({ row }) => (
+        <ResidentForm 
+          resident={row}
+          roomsDropdown={data.roomsDropdown}
+        />
+      )}
       DeleteComponent={({ row }) => (
         <DeleteForm
           id={row.id}
@@ -112,7 +120,7 @@ export default function StaffAdminPeopleResidentsPage() {
         <div className="flex space-x-3">
           <DrawerProvider>
             <DrawerContent>
-              <ResidentForm />
+              <ResidentForm roomsDropdown={data.roomsDropdown}/>
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus} className="md:w-fit w-full">

@@ -9,9 +9,24 @@ import {
   buildingTable,
   zoneTable,
   staffTable,
+  roomTypeEnum,
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
+
+export async function readRoomsDropdown() {
+  const rooms = await db.client
+    .select({
+      id: roomTable.id,
+      room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+    })
+    .from(roomTable)
+    .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+    .groupBy(roomTable.id, buildingTable.id)
+    .orderBy(buildingTable.name, roomTable.roomNumber);
+
+  return rooms;
+}
 
 export async function readRoomsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
@@ -26,6 +41,7 @@ export async function readRoomsAsAdmin() {
       raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       roomNumber: roomTable.roomNumber,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      roomType: roomTable.roomType,
       capacity: roomTable.capacity,
       zoneId: zoneTable.id,
     })
@@ -52,6 +68,7 @@ export async function readRoomsAsRD(id: number) {
       raFullName: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       roomNumber: roomTable.roomNumber,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      roomType: roomTable.roomType,
       capacity: roomTable.capacity,
       zoneId: zoneTable.id,
     })

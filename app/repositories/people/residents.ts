@@ -47,6 +47,7 @@ export async function readResidentsAsAdmin() {
           "hometown"
         ),
       class: residentTable.class,
+      roomId: roomTable.id,
       roomBuilding:
         sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
@@ -88,6 +89,7 @@ export async function readResidentsAsRD(id: number) {
           "hometown"
         ),
       class: residentTable.class,
+      roomId: roomTable.id,
       roomBuilding:
         sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
@@ -131,6 +133,7 @@ export async function readResidentsAsRA(id: number) {
           "hometown"
         ),
       class: residentTable.class,
+      roomId: roomTable.id,
       roomBuilding:
         sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
@@ -174,6 +177,7 @@ export async function readResidents() {
           "hometown"
         ),
       class: residentTable.class,
+      roomId: roomTable.id,
       roomBuilding:
         sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`.as(
           "roomBuilding"
