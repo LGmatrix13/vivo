@@ -55,6 +55,14 @@ export default function RoomForm(props: RoomFormProps) {
         selected={room?.buildingId}
         required
       />
+      <Input
+        label="Room Number"
+        placeholder="Room Number"
+        name="roomNumber"
+        type="String"
+        defaultValue={room?.roomNumber || undefined}
+        required
+      />
       <Select
         label="Room Type"
         name="roomType"
@@ -67,14 +75,6 @@ export default function RoomForm(props: RoomFormProps) {
         name="zoneId"
         options={raOptions}
         selected={room?.zoneId}
-        required
-      />
-      <Input
-        label="Room Number"
-        placeholder="Room Number"
-        name="roomNumber"
-        type="String"
-        defaultValue={room?.roomNumber || undefined}
         required
       />
       <Input
