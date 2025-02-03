@@ -26,7 +26,7 @@ export default function StaffSettings() {
             Logout
           </IconButton>
         </Link>
-        <ModeToggle></ModeToggle>
+        {/* <ModeToggle></ModeToggle> */}
         <CollaspableContent title="User Info" collasped>
           <UserInfo user={context.user} />
         </CollaspableContent>
