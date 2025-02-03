@@ -6,7 +6,7 @@ export default function StaffInsightsShifts() {
       <Insight level="SUCCESS" title="All staff have submitted their report" />
 
       <Insight
-        level="DANGER"
+        level="TIME_SENSITIVE"
         title="All staff have submitted their report"
         explanation="Something..."
       />

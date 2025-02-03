@@ -677,6 +677,29 @@ export function UserSearch(props: IconProps) {
   );
 }
 
+export function Stopwatch(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`${props.className || "w-5 h-5"}`}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M5 13a7 7 0 1 0 14 0a7 7 0 0 0 -14 0z" />
+      <path d="M14.5 10.5l-2.5 2.5" />
+      <path d="M17 8l1 -1" />
+      <path d="M14 3h-4" />
+    </svg>
+  );
+}
+
 export function Upload(props: IconProps) {
   return (
     <svg
