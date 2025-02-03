@@ -39,8 +39,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function RAResidentsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First",
+    lastName: "Last",
     roomBuilding: "Room",
   };
   const rowKeys = {

@@ -69,8 +69,8 @@ export default function StaffAdminPeopleRAsPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First",
+    lastName: "Last",
     building: "Building",
     alias: "Hall",
   };

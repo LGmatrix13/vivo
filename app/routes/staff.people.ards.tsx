@@ -24,7 +24,6 @@ import { readRDsDropdown } from "~/repositories/people/rds";
 import { readResidentsDropdown } from "~/repositories/people/residents";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 
 export async function loader() {
@@ -62,8 +61,8 @@ export default function StaffAdminPeopleARDsPage() {
   const context = useOutletContext<IBuildingDropdown[]>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First",
+    lastName: "Last",
     building: "Building",
     rd: "RD",
   };

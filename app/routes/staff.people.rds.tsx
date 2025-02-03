@@ -45,8 +45,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffAdminPeopleRDsPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First",
+    lastName: "Last",
     buildings: "Building",
   };
   const rowKeys = {
