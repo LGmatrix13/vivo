@@ -59,8 +59,8 @@ export default function StaffAdminPeopleResidentsPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
-    firstName: "Firstname",
-    lastName: "Lastname",
+    firstName: "First",
+    lastName: "Last",
     roomBuilding: "Room",
   };
   const rowKeys = {
