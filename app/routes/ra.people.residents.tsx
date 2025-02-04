@@ -77,13 +77,13 @@ export default function RAResidentsPage() {
           toast={`Deleted ${row.fullName}`}
         />
       )}
-      ActionButtons={() => (
+      ActionButtons={({rows}) => (
         <div className="flex space-x-3">
           <IconButton
             Icon={Download}
             className="md:flex hidden"
             onClick={() => {
-              csv.download(data.residents, "Residents", rowKeys);
+              csv.download(rows, "Residents", rowKeys);
             }}
           >
             Export Residents
