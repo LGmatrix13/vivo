@@ -32,7 +32,7 @@ export default function UploadAvatarForm() {
         {fetcher.state !== "idle" ? (
           <Loading title="Submitting..." />
         ) : (
-          "Continue"
+          "Upload"
         )}
       </WideButton>
     </fetcher.Form>
