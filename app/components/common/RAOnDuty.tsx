@@ -14,7 +14,7 @@ export default function RAOnDuty(props: RAOnDutyProps) {
     <div className="border rounded-lg divide-y">
       <div className="p-5 space-x-5 flex items-center">
         <img
-          src={""}
+          src={`/avatars/ra_${raOnDuty.zoneId}.webp`}
           alt={`${name}'s profile picture`}
           className="w-14 h-14 rounded-full"
         />

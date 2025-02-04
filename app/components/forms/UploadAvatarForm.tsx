@@ -1,10 +1,9 @@
 import { useFetcher } from "@remix-run/react";
-import WideButton from "../common/WideButton";
 import Loading from "../common/Loading";
-import { uploadMasterCSV } from "~/repositories/people/ras";
+import WideButton from "../common/WideButton";
 
-export default function UploadMasterCSVForm() {
-  const fetcher = useFetcher<typeof uploadMasterCSV>();
+export default function UploadAvatarForm() {
+  const fetcher = useFetcher();
 
   return (
     <fetcher.Form
@@ -12,14 +11,13 @@ export default function UploadMasterCSVForm() {
       encType="multipart/form-data"
       className="space-y-5"
     >
-      <h2 className="font-bold text-xl">Upload Master CSV</h2>
       <label htmlFor="file" className="sr-only">
-        Choose File
+        Choose Image
       </label>
       <input
         type="file"
         name="file"
-        accept=".csv"
+        accept="image/*"
         className="w-full file:border-0 file:bg-gray-50 file:text-black border rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
         required
       />

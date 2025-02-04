@@ -1,4 +1,5 @@
 import { IUser } from "~/models/user";
+import UploadAvatarForm from "../forms/UploadAvatarForm";
 
 interface IUserInfoProps {
   user: IUser;
@@ -28,6 +29,10 @@ export default function UserInfo(props: IUserInfoProps) {
       <div className="space-y-3">
         <h3 className="font-bold">Role</h3>
         <p>{formattedRoles[user.role]}</p>
+      </div>
+      <div className="spacee-y-3">
+        <h3 className="font-bold">Avatar</h3>
+        <UploadAvatarForm />
       </div>
     </>
   );
