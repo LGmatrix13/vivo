@@ -1,4 +1,4 @@
-import { json, Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
@@ -6,13 +6,14 @@ import { File, Chart, Users, Home, Clock } from "~/components/common/Icons";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
-  return json({
+  return {
     user,
-  });
+  };
 }
 
 export default function StaffLayout() {
   const data = useLoaderData<typeof loader>();
+  const admin = data.user.role === "admin";
   const routes = [
     {
       name: "Shifts",
@@ -41,7 +42,7 @@ export default function StaffLayout() {
     {
       name: "Housing",
       Icon: Home,
-      default: `/staff/housing/rooms`,
+      default: admin ? `/staff/housing/buildings` : `/staff/housing/rooms`,
       parent: `/staff/housing`,
     },
   ];
