@@ -27,7 +27,7 @@ export default function StaffSettings() {
           </IconButton>
         </Link>
         {/* <ModeToggle></ModeToggle> */}
-        <CollaspableContent title="User Info" collasped>
+        <CollaspableContent title="User Info">
           <UserInfo user={context.user} />
         </CollaspableContent>
       </section>
