@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { auth } from "./auth.server";
 import { fileURLToPath } from "url";
+import { Role } from "~/models/role";
 
 async function upload(request: Request) {
   const formData = await request.formData();
@@ -41,6 +42,18 @@ async function upload(request: Request) {
   });
 }
 
+function exists(userId: number, role: Role) {
+  const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+  const __dirname = path.dirname(__filename); // get the name of the directo
+  const potentialPath = path.join(
+    __dirname,
+    `../../public/avatars`,
+    `${role}_${userId}.webp`
+  );
+  return fs.existsSync(potentialPath);
+}
+
 export const avatar = {
   upload,
+  exists,
 };
