@@ -33,7 +33,7 @@ export default function UserInfo(props: IUserInfoProps) {
       <div className="space-y-3">
         <h3 className="font-bold">Avatar</h3>
         <img
-          src={`/avatars/${user.role}_${user.id}.webp`}
+          src={`/avatars/${user.role}/${user.id}`}
           className="w-7 h-7 rounded-full"
         />
         <UploadAvatarForm />
