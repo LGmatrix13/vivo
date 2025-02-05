@@ -7,7 +7,6 @@ import { IUser } from "~/models/user";
 import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
-import UploadAvatarForm from "~/components/forms/UserInfoForm";
 
 export const meta: MetaFunction = () => {
   return [
