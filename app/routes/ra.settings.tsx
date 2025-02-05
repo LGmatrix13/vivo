@@ -7,7 +7,7 @@ import { IUser } from "~/models/user";
 import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
-import UploadAvatarForm from "~/components/forms/UploadAvatarForm";
+import UploadAvatarForm from "~/components/forms/UserInfoForm";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +17,15 @@ export const meta: MetaFunction = () => {
 };
 
 export async function action({ request }: ActionFunctionArgs) {
-  return avatar.upload(request);
+  await auth.rejectUnauthorized(request, ["ra"]);
+
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "update.userInfo":
+      return avatar.upload(request, values);
+  }
 }
 
 export default function StaffSettings() {

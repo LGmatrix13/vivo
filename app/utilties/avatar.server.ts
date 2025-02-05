@@ -7,10 +7,11 @@ import { auth } from "./auth.server";
 import { fileURLToPath } from "url";
 import { Role } from "~/models/role";
 import { Readable } from "stream";
-import { error } from "console";
 
-async function upload(request: Request) {
-  const formData = await request.formData();
+async function upload(
+  request: Request,
+  values: Record<string, FormDataEntryValue>
+) {
   const user = await auth.readUser(request, [
     "admin",
     "admin",
@@ -20,15 +21,16 @@ async function upload(request: Request) {
     "resident",
   ]);
 
-  if (!formData.get("avatar")) {
+  const { avatar } = values;
+
+  if (!avatar) {
     return mutate(request.url, {
       message: "System error occured",
       level: "failure",
     });
   }
 
-  const avatarFile = formData.get("avatar") as File;
-  const buffer = await avatarFile.arrayBuffer();
+  const buffer = await (avatar as File).arrayBuffer();
   const imageBuffer = Buffer.from(buffer);
   const processedImage = await sharp(imageBuffer).resize(100).webp().toBuffer();
   const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file

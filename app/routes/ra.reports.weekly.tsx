@@ -28,10 +28,10 @@ export async function loader({ request }: ActionFunctionArgs) {
     delay(100),
   ]);
 
-  return json({
+  return {
     weekly,
     user,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {

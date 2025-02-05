@@ -1,5 +1,7 @@
 import { IUser } from "~/models/user";
-import UploadAvatarForm from "../forms/UploadAvatarForm";
+import UploadAvatarForm from "../forms/UserInfoForm";
+import WideButton from "./WideButton";
+import { DrawerButton, DrawerContent, DrawerProvider } from "./Drawer";
 
 interface IUserInfoProps {
   user: IUser;
@@ -36,8 +38,16 @@ export default function UserInfo(props: IUserInfoProps) {
           src={`/avatars/${user.role}/${user.id}`}
           className="w-7 h-7 rounded-full"
         />
-        <UploadAvatarForm />
       </div>
+      <DrawerProvider>
+        <DrawerContent>
+          <h1 className="font-bold text-xl">Edit User Info</h1>
+          <UploadAvatarForm />
+        </DrawerContent>
+        <DrawerButton>
+          <WideButton>Edit User Info</WideButton>
+        </DrawerButton>
+      </DrawerProvider>
     </>
   );
 }
