@@ -72,7 +72,7 @@ export default function StaffAdminPeopleRDsPage() {
             >
               Download Errored Rows
             </IconButton>
-            <Link to="/staff/admin/people/upload">
+            <Link to="/staff/people/upload">
               <IconButton Icon={Upload}>Upload Again</IconButton>
             </Link>
           </div>
