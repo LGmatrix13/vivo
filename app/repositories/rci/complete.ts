@@ -65,7 +65,7 @@ export async function readCompleteRCIsAdmin() {
       submitted: RCITable.submitted,
       status: RCITable.status,
       buildingId: buildingTable.id,
-      issues: sql<Object>`${RCITable.issues}`,
+      issues: sql<Record<string, string>>`${RCITable.issues}`,
       roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
@@ -109,7 +109,7 @@ export async function readCompleteRCIsAsRA(zoneId: number) {
       submitted: RCITable.submitted,
       status: RCITable.status,
       buildingId: buildingTable.id,
-      issues: sql<Object>`${RCITable.issues}`,
+      issues: sql<Record<string, string>>`${RCITable.issues}`,
       roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
@@ -152,7 +152,7 @@ export async function readCompleteRCIsRD(id: number) {
       building: buildingTable.name,
       status: RCITable.status,
       buildingId: buildingTable.id,
-      issues: sql<Object>`${RCITable.issues}`,
+      issues: sql<Record<string, string>>`${RCITable.issues}`,
       submitted: RCITable.submitted,
       roomType: roomTable.roomType,
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
