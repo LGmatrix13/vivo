@@ -42,6 +42,41 @@ export async function readIncompleteRCIsAsAdmin() {
   return data;
 }
 
+export async function readIncompleteRCIsAsRA(zoneId: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
+  const innerRoomTable = alias(roomTable, "innerRoomTable");
+  const data = await db.client
+    .select({
+      ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
+      room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      buildingId: buildingTable.id,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
+    })
+    .from(roomTable)
+    .where(
+      and(
+        notExists(
+          db.client
+            .select({ id: RCITable.id })
+            .from(RCITable)
+            .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+            .innerJoin(
+              innerRoomTable,
+              eq(residentTable.roomId, innerRoomTable.id)
+            )
+            .where(eq(roomTable.id, innerRoomTable.id))
+        ),
+        eq(roomTable.zoneId, zoneId)
+      )
+    )
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
+    .innerJoin(raInfoTable, eq(raInfoTable.id, zoneTable.residentId))
+    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id));
+
+  return data;
+}
+
 export async function readIncompleteRCIsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const innerRoomTable = alias(roomTable, "innerRoomTable");
