@@ -32,27 +32,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin"]);
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const admin = user.role === "admin";
-  const formData = await request.formData();
-  const { intent, ...values } = Object.fromEntries(formData);
-
-  switch (intent) {
-    case "create.read":
-      return await createReadReport(
-        {
-          ...values,
-          personId: user.id,
-          reportType: "RCI",
-          personType: admin ? "ADMIN" : "STAFF",
-        },
-        request
-      );
-  }
-}
-
 export default function StaffHousingRCIsIncompletePage() {
   const context = useOutletContext<{
     buildingsDropdown: IBuildingDropdown[];
