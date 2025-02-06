@@ -11,16 +11,12 @@ interface HeaderProps {
     default: string;
     parent: string;
   }[];
-  settings: {
-    path: string;
-    user: IUser;
-  };
 }
 
 export default function Header(props: HeaderProps) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const { routes, root, settings } = props;
+  const { routes, root } = props;
 
   function isActivePage(path: string) {
     return currentPath.startsWith(path) ? "border-b-2 border-blue-600" : "";
@@ -48,16 +44,6 @@ export default function Header(props: HeaderProps) {
                 </button>
               </Link>
             ))}
-            <Link to={settings.path}>
-              <button
-                className={`${isActivePage(
-                  settings.path
-                )} md:py-7 py-5 flex items-center space-x-2`}
-              >
-                <UserCircle />
-                <span className="font-bold">{settings.user.firstName}</span>
-              </button>
-            </Link>
           </div>
         </div>
       </nav>
