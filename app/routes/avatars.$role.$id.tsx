@@ -12,7 +12,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
       return new Response(stream, {
         headers: {
           "Content-Type": "image/webp",
-          "Cache-Control": "public, max-age=86400", // Cache for 1 day
         },
       });
     }
@@ -22,7 +21,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return new Response(stream, {
     headers: {
       "Content-Type": "image/webp",
-      "Cache-Control": "public, max-age=86400", // Cache for 1 day
     },
   });
 }
