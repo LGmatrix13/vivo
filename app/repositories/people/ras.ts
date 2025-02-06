@@ -381,7 +381,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
     });
   }
 
-  return mutate("/staff/admin/people/residents", {
+  return mutate("/staff/people/residents", {
     message: "Upload Successful",
     level: "success",
   });
