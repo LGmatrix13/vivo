@@ -20,7 +20,7 @@ export default function Filter(props: FilterProps) {
         onChange={(e) => {
           handleFilter(Number(e.target.value));
         }}
-        title="Filter"
+        aria-label="Filter"
       >
         {options.map((option, index) => (
           <option

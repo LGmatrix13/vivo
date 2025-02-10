@@ -53,36 +53,27 @@ export default function ResidentCheckInPage() {
   switch (data.submittedRCI.roomType) {
     case "UPPER_CAMPUS":
       return (
-        <>
-          <h1 className="hidden">Check-in</h1>
-          <RCIForm
-            intent={`${action}.upperCampus`}
-            mapping={upperCampusMapping}
-            submittedRCI={data.submittedRCI as ISubmittedRCI}
-          />
-        </>
+        <RCIForm
+          intent={`${action}.upperCampus`}
+          mapping={upperCampusMapping}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
+        />
       );
     case "COLONIAL_DOUBLE":
       return (
-        <>
-          <h1 className="hidden">Check-in</h1>
-          <RCIForm
-            intent={`${action}.colonialDouble`}
-            mapping={upperCampusMapping}
-            submittedRCI={data.submittedRCI as ISubmittedRCI}
-          />
-        </>
+        <RCIForm
+          intent={`${action}.colonialDouble`}
+          mapping={upperCampusMapping}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
+        />
       );
     case "COLONIAL_QUAD":
       return (
-        <>
-          <h1 className="hidden">Check-in</h1>
-          <RCIForm
-            intent={`${action}.colonialQusad`}
-            mapping={colonialQuadMapping}
-            submittedRCI={data.submittedRCI as ISubmittedRCI}
-          />
-        </>
+        <RCIForm
+          intent={`${action}.colonialQusad`}
+          mapping={colonialQuadMapping}
+          submittedRCI={data.submittedRCI as ISubmittedRCI}
+        />
       );
   }
 }
