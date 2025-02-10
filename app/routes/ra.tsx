@@ -40,16 +40,16 @@ export default function AdminLayout() {
       parent: "/ra/insights",
     },
     {
-      name: "RCIs",
-      Icon: Door,
-      default: "/ra/rcis/complete",
-      parent: "/ra/rcis",
-    },
-    {
       name: "Residents",
       Icon: Users,
       default: "/ra/people/residents",
       parent: "/ra/people/residents",
+    },
+    {
+      name: "RCIs",
+      Icon: Door,
+      default: "/ra/rcis/complete",
+      parent: "/ra/rcis",
     },
     {
       name: "Settings",
