@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "@remix-run/react";
-import { Logo, UserCircle } from "./Icons";
-import { IUser } from "~/models/user";
+import { Logo } from "./Icons";
 
 interface HeaderProps {
   root: string;
@@ -25,7 +24,7 @@ export default function Header(props: HeaderProps) {
   return (
     <header className="border-b mb-7">
       <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-10 md:justify-between">
-        <Link to={root}>
+        <Link to={root} data-discover="true" title={routes[0].name}>
           <div className="md:p-0 px-7 pt-5">
             <Logo />
           </div>
@@ -33,7 +32,12 @@ export default function Header(props: HeaderProps) {
         <div className="space-x-7 flex items-center overflow-x-auto md:px-0 px-7">
           <div className="flex space-x-5 md:text-lg">
             {routes.map((route, index) => (
-              <Link to={route.default} key={index}>
+              <Link
+                to={route.default}
+                key={index}
+                data-discover="true"
+                title={route.name}
+              >
                 <button
                   className={`${isActivePage(
                     route.parent
