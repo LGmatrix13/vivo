@@ -5,29 +5,6 @@ import { uploadMasterCSV } from "~/repositories/people/ras";
 
 export default function UploadMasterCSVForm() {
   const fetcher = useFetcher<typeof uploadMasterCSV>();
-  const data = fetcher.data;
-
-  if (data) {
-    return (
-      <div className="space-y-5">
-        <h2 className="font-bold text-xl">Upload Master CSV</h2>
-        {data.errors.map((error) => (
-          <div className="space-y-3">
-            <p className="font-bold">Errors on Row {error.rowNumber}</p>
-            <ul className="list-disc ml-5 space-y-2">
-              {data.errors.map((error) => (
-                <>
-                  {error.errors.map((error) => (
-                    <li>{error.message}</li>
-                  ))}
-                </>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   return (
     <fetcher.Form

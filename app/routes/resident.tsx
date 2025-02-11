@@ -2,7 +2,7 @@ import { json, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
-import { Calendar, Door } from "~/components/common/Icons";
+import { Calendar, Door, Settings } from "~/components/common/Icons";
 import { toast } from "~/utilties/toast.server";
 import Loading from "~/components/common/Loading";
 import { Toast } from "~/components/common/Toast";
@@ -29,16 +29,19 @@ export default function AdminLayout() {
       default: "/resident/check-in",
       parent: "/resident/check-in",
     },
+    {
+      name: "Settings",
+      Icon: Settings,
+      default: "/resident/settings",
+      parent: "/resident/settings",
+    },
   ];
-  const settings = {
-    user: data.extra.resident,
-    path: "/resident/settings",
-  };
+
   const { state } = useNavigation();
 
   return (
     <>
-      <Header root="/resident/on-duty" routes={routes} settings={settings} />
+      <Header root="/resident/on-duty" routes={routes} />
       <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
         {state == "loading" ? (
           <Loading />

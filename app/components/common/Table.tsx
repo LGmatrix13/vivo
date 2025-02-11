@@ -132,11 +132,12 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
           className={`md:w-3/5 w-full md:overflow-y-auto ${
             opened >= 0 ? "hidden md:block" : ""
           }`}
+          tabIndex={0}
         >
           <table className="text-left table-fixed w-full">
             <thead className="uppercase border-b">
               <tr>
-                {enableReads && <th scope="col" className="w-[2px]" />}
+                {enableReads && <td className="w-[2px]" />}
                 {originalColumnKeys.map((originalColumnKey, index) => (
                   <th
                     scope="col"
@@ -162,12 +163,10 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                     </div>
                   </th>
                 ))}
-                {EditComponent && <th scope="col" className="w-5" />}
-                {EditComponent && DeleteComponent && (
-                  <th scope="col" className="w-2" />
-                )}
-                {DeleteComponent && <th scope="col" className="w-5" />}
-                {DeleteComponent && <th scope="col" className="w-5" />}
+                {EditComponent && <td className="w-5" />}
+                {EditComponent && DeleteComponent && <td className="w-2" />}
+                {DeleteComponent && <td className="w-5" />}
+                {DeleteComponent && <td className="w-5" />}
               </tr>
             </thead>
             <tbody className="divide-y">

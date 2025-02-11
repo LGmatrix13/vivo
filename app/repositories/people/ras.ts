@@ -296,7 +296,22 @@ export async function uploadMasterCSV(values: Values, request: Request) {
         roomId: room[0].roomId,
       };
 
-      await db.client.insert(residentTable).values(residentData);
+      const existingResident = await db.client
+        .select({
+          studentId: residentTable.studentId,
+        })
+        .from(residentTable)
+        .where(eq(residentTable.studentId, residentData.studentId));
+      
+      if (existingResident.length > 0) {
+        await db.client
+          .update(residentTable)
+          .set(residentData)
+          .where(eq(residentTable.studentId, residentData.studentId));
+      }
+      else {
+        await db.client.insert(residentTable).values(residentData);
+      }
 
       if (
         result.data.ra == `${result.data.lastName}, ${result.data.firstName}`

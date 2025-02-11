@@ -2,7 +2,14 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
-import { File, Chart, Users, Home, Clock } from "~/components/common/Icons";
+import {
+  File,
+  Chart,
+  Users,
+  Home,
+  Clock,
+  Settings,
+} from "~/components/common/Icons";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -45,18 +52,17 @@ export default function StaffLayout() {
       default: admin ? `/staff/housing/buildings` : `/staff/housing/rooms`,
       parent: `/staff/housing`,
     },
+    {
+      name: "Settings",
+      Icon: Settings,
+      default: `/staff/settings`,
+      parent: `/staff/settings`,
+    },
   ];
-  const settings = {
-    user: data.user,
-    path: "/staff/settings",
-  };
+
   return (
     <>
-      <Header
-        root="/staff/shifts/on-duty"
-        routes={routes}
-        settings={settings}
-      />
+      <Header root="/staff/shifts/on-duty" routes={routes} />
       <Outlet context={data} />
     </>
   );

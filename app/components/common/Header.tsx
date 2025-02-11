@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "@remix-run/react";
-import { Logo, UserCircle } from "./Icons";
-import { IUser } from "~/models/user";
+import { Logo } from "./Icons";
 
 interface HeaderProps {
   root: string;
@@ -11,53 +10,52 @@ interface HeaderProps {
     default: string;
     parent: string;
   }[];
-  settings: {
-    path: string;
-    user: IUser;
-  };
 }
 
 export default function Header(props: HeaderProps) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const { routes, root, settings } = props;
+  const { routes, root } = props;
 
   function isActivePage(path: string) {
-    return currentPath.startsWith(path) ? "border-b-2 border-blue-600" : "";
+    return;
   }
 
   return (
     <header className="border-b mb-7">
       <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-10 md:justify-between">
-        <Link to={root}>
+        <Link to={root} data-discover="true" title={routes[0].name}>
           <div className="md:p-0 px-7 pt-5">
             <Logo />
           </div>
         </Link>
         <div className="space-x-7 flex items-center overflow-x-auto md:px-0 px-7">
           <div className="flex space-x-5 md:text-lg">
-            {routes.map((route, index) => (
-              <Link to={route.default} key={index}>
-                <button
-                  className={`${isActivePage(
-                    route.parent
-                  )} md:py-7 py-5 flex items-center space-x-2`}
+            {routes.map((route, index) => {
+              const active = currentPath.startsWith(route.parent);
+
+              return (
+                <Link
+                  to={route.default}
+                  key={index}
+                  data-discover="true"
+                  title={route.name}
                 >
-                  <route.Icon />
-                  <p className="font-bold">{route.name}</p>
-                </button>
-              </Link>
-            ))}
-            <Link to={settings.path}>
-              <button
-                className={`${isActivePage(
-                  settings.path
-                )} md:py-7 py-5 flex items-center space-x-2`}
-              >
-                <UserCircle />
-                <span className="font-bold">{settings.user.firstName}</span>
-              </button>
-            </Link>
+                  <button
+                    className={`${
+                      active ? "border-b-2 border-blue-600" : ""
+                    } md:py-7 py-5 flex items-center space-x-2`}
+                  >
+                    <route.Icon />
+                    {active ? (
+                      <h1 className="font-bold">{route.name}</h1>
+                    ) : (
+                      <span className="font-bold">{route.name}</span>
+                    )}
+                  </button>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </nav>
