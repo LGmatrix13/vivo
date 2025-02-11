@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node";
+import { MetaFunction, redirect } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
   return [

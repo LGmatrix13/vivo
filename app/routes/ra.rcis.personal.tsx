@@ -10,10 +10,7 @@ import {
 import { ISubmittedRCI } from "~/models/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import {
-  readSubmittedRCI,
-  readSubmittedRCIAsRA,
-} from "~/repositories/rci/complete";
+import { readSubmittedRCIAsRA } from "~/repositories/rci/complete";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
