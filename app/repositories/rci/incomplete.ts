@@ -47,7 +47,6 @@ export async function readIncompleteRCIsAsRA(zoneId: number) {
   const innerRoomTable = alias(roomTable, "innerRoomTable");
   const data = await db.client
     .select({
-      ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,

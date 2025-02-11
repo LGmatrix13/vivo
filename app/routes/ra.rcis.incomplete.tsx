@@ -13,7 +13,7 @@ import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["admin", "rd"]);
+  const user = await auth.readUser(request, ["ra"]);
   const [incompleteRCIs] = await Promise.all([
     readIncompleteRCIsAsRA(user.id),
     delay(100),
@@ -23,50 +23,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const formData = await request.formData();
-  const { intent, ...values } = Object.fromEntries(formData);
-
-  switch (intent) {
-    case "create.read":
-      return await createReadReport(
-        {
-          ...values,
-          personId: user.id,
-          reportType: "RCI",
-          personType: "RA",
-        },
-        request
-      );
-  }
-}
-
 export default function RARCIsIncompletePage() {
-  const context = useOutletContext<{
-    buildingsDropdown: IBuildingDropdown[];
-  }>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    ra: "RA",
     resident: "Resident",
     room: "Room",
   };
   const rowKeys = {
     ...columnKeys,
   };
-  const buildingOptions = [
-    {
-      value: 0,
-      key: "All",
-    },
-    ...context.buildingsDropdown.map((building) => {
-      return {
-        value: building.id,
-        key: building.name,
-      };
-    }),
-  ];
 
   return (
     <Table<IIncompleteRCI>
@@ -74,11 +39,6 @@ export default function RARCIsIncompletePage() {
       rows={data.incompleteRCIs}
       search={{
         placeholder: "Search for an incomplete RCI...",
-      }}
-      filter={{
-        key: "buildingId",
-        selected: "All",
-        options: buildingOptions,
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (

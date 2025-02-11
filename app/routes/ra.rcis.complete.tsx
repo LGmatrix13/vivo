@@ -12,13 +12,8 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
-import {
-  readCompleteRCIsAdmin,
-  readCompleteRCIsAsRA,
-  readCompleteRCIsRD,
-} from "~/repositories/rci/complete";
+import { readCompleteRCIsAsRA } from "~/repositories/rci/complete";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
 import {
   colonialDoubleMapping,
@@ -28,20 +23,18 @@ import {
 import SelectedRow from "~/components/common/SelectedRow";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["admin", "rd"]);
+  const user = await auth.readUser(request, ["ra"]);
   const [completeRCIs] = await Promise.all([
     readCompleteRCIsAsRA(user.id),
     delay(100),
   ]);
-  return json({
+  return {
     completeRCIs,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const admin = user.role === "admin";
+  const user = await auth.readUser(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
@@ -52,7 +45,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ...values,
           personId: user.id,
           reportType: "RCI",
-          personType: admin ? "ADMIN" : "STAFF",
+          personType: "RA",
         },
         request
       );
@@ -60,29 +53,13 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function RARCIsCompletePage() {
-  const context = useOutletContext<{
-    buildingsDropdown: IBuildingDropdown[];
-  }>();
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Submitted",
-    ra: "RA",
     room: "Room",
     totalIssues: "Issues",
   };
-  const buildingOptions = [
-    {
-      value: 0,
-      key: "All",
-    },
-    ...context.buildingsDropdown.map((building) => {
-      return {
-        value: building.id,
-        key: building.name,
-      };
-    }),
-  ];
 
   return (
     <Table<ICompleteRCI>
@@ -90,11 +67,6 @@ export default function RARCIsCompletePage() {
       rows={data.completeRCIs}
       search={{
         placeholder: "Search for a complete RCI...",
-      }}
-      filter={{
-        selected: "All",
-        key: "buildingId",
-        options: buildingOptions,
       }}
       enableReads={true}
       mixins={{

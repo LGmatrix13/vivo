@@ -103,7 +103,6 @@ export async function readCompleteRCIsAsRA(zoneId: number) {
   const data = await db.client
     .select({
       id: RCITable.id,
-      ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
