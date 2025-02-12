@@ -149,23 +149,53 @@ export async function uploadDutyScheduleForRAs(
   const erroredRows: Record<string, string>[] = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
+
+    //error check rows here
+    if (!row["Email"] || !row["Date"]) {
+      errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      continue;
+    }
+    
+    
     const formattedRow = {
-      zoneId: row["ID"].trim(),
-      date: row["Date"].trim(),
+      email: row["Email"].trim(),
+      date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
-    if (result.success) {
+
+    const zoneRecord = await db.client
+    .select({ zoneId: zoneTable.id })
+    .from(zoneTable)
+    .where(eq(residentTable.emailAddress, formattedRow.email))
+    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .limit(1);
+
+  if (zoneRecord.length === 0) {
+    errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
+    continue;
+  }
+
+  const zoneId = zoneRecord[0].zoneId;
+
+  const newRow = {
+          zoneId : zoneId,
+          date : formattedRow.date
+        }
+  const newResult = RAScheduleCSV.safeParse(newRow);
+
+    console.log(newRow)
+    if (newResult.success) {
       const formattedData = {
         ...result.data,
+        zoneId,
         date:
-          result.data.date instanceof Date
-            ? result.data.date.toISOString()
-            : result.data.date,
+          newResult.data.date instanceof Date
+            ? newResult.data.date.toISOString()
+            : newResult.data.date, // Ensure date is a string
       };
       await db.client.insert(zoneShiftTable).values(formattedData);
-      console.log("row added");
-    } else {
+    }else {
       console.log("The row was not a success");
     }
   }
@@ -178,7 +208,7 @@ export async function uploadDutyScheduleForRAs(
   }
 
   return mutate("/staff/shifts/upload", {
-    message: "Upload Successful",
-    level: "success",
-  });
+      message: "Upload Successful",
+      level: "success",
+    });
 }

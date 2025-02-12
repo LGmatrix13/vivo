@@ -82,21 +82,49 @@ export async function uploadDutyScheduleForRD(
     error: string;
   }[] = [];
   const erroredRows: Record<string, string>[] = [];
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data.length-1; i++) {
     const row = data[i];
+
+    //check to see if row has the correct data
+    if (!row["Email"] || !row["Date"]) {
+      errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      continue;
+    }
+
     const formattedRow = {
-      staffId: row["ID"].trim(),
-      date: row["Date"].trim(),
+      email: row["Email"].trim(),
+      date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
 
-    if (result.success) {
+        //get staffId based on email
+        const staffRecord = await db.client
+        .select({ staffId: staffTable.id })
+        .from(staffTable)
+        .where(eq(staffTable.emailAddress, formattedRow.email))
+        .limit(1);
+  
+      if (staffRecord.length === 0) {
+        errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
+        continue;
+      }
+  
+      const staffId = staffRecord[0].staffId;
+      
+      const newRow = {
+        staffId : staffId,
+        date : formattedRow.date
+      }
+      const newResult = RDScheduleCSV.safeParse(newRow);
+
+    if (newResult.success) {
       const formattedData = {
         ...result.data,
+        staffId,
         date:
-          result.data.date instanceof Date
-            ? result.data.date.toISOString()
-            : result.data.date,
+          newResult.data.date instanceof Date
+            ? newResult.data.date.toISOString()
+            : newResult.data.date,
       };
       await db.client.insert(staffShiftTable).values(formattedData);
       console.log("row added");

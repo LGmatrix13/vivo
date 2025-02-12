@@ -103,15 +103,39 @@ export async function uploadDutyScheduleForRD(
   const erroredRows: Record<string, string>[] = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
+
+
+    //check to see if row has the correct data
+    if (!row["Email"] || !row["Date"]) {
+      errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      continue;
+    }
+
     const formattedRow = {
-      staffId: row["ID"].trim(),
+      email: row["Email"].trim(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
 
+    //get staffId based on email
+    const staffRecord = await db.client
+      .select({ staffId: staffTable.id })
+      .from(staffTable)
+      .where(eq(staffTable.emailAddress, formattedRow.email))
+      .limit(1);
+
+    if (staffRecord.length === 0) {
+      errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
+      continue;
+    }
+
+    const staffId = staffRecord[0].staffId;
+
+    //add that info for inserting into the db
     if (result.success) {
       const formattedData = {
         ...result.data,
+        staffId,
         date:
           result.data.date instanceof Date
             ? result.data.date.toISOString()
@@ -144,15 +168,38 @@ export async function uploadDutyScheduleForRAs(
   const erroredRows: Record<string, string>[] = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
+
+    //error check rows here
+    if (!row["Email"] || !row["Date"]) {
+      errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      continue;
+    }
+    
+    
     const formattedRow = {
-      zoneId: row["ID"].trim(),
+      email: row["Email"].trim(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
+
+    const zoneRecord = await db.client
+    .select({ id: residentTable.id })
+    .from(residentTable)
+    .where(eq(residentTable.emailAddress, formattedRow.email))
+    .limit(1);
+
+  if (zoneRecord.length === 0) {
+    errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
+    continue;
+  }
+
+  const zoneId = zoneRecord[0].id;
+
     if (result.success) {
       const formattedData = {
         ...result.data,
+        zoneId,
         date:
           result.data.date instanceof Date
             ? result.data.date.toISOString()
