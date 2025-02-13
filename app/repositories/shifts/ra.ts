@@ -128,10 +128,7 @@ export async function deleteRAShift(request: Request, values: Values) {
 }
 
 //rds do this
-export async function uploadDutyScheduleForRAs(
-  values: Values,
-  request: Request
-) {
+export async function uploadDutyScheduleForRAs( values: Values, request: Request, id: number) {
   const file = values["file"] as File;
 
   if (!(file instanceof File)) {
@@ -167,7 +164,10 @@ export async function uploadDutyScheduleForRAs(
     const zoneRecord = await db.client
     .select({ zoneId: zoneTable.id })
     .from(zoneTable)
-    .where(eq(residentTable.emailAddress, formattedRow.email))
+    .where(and(
+      eq(residentTable.emailAddress, formattedRow.email),
+      eq(zoneTable.staffId, id)
+    ))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .limit(1);
 

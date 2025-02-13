@@ -23,7 +23,7 @@ export async function action({ request }: ActionFunctionArgs) {
       if (admin) {
         return await uploadDutyScheduleForRD(values, request);
       } else {
-        return await uploadDutyScheduleForRAs(values, request);
+        return await uploadDutyScheduleForRAs(values, request, user.id);
       }
   }
 }
