@@ -29,7 +29,7 @@ export default function QueryForm(props: IQueryFormProps) {
     <div className="flex flex-col space-y-3">
       <form onSubmit={handleSubmit} className="space-y-3">
         <Textarea
-          name={"query"}
+          name="query"
           placeholder="Ask me anything"
           setState={setQuery}
           required
