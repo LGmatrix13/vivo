@@ -6,15 +6,11 @@ import {
   useNavigation,
   useOutletContext,
 } from "@remix-run/react";
+import { name } from "node_modules/@azure/msal-browser/dist/packageMetadata";
 import Loading from "~/components/common/Loading";
 import SubHeader from "~/components/common/SubHeader";
 import { Toast } from "~/components/common/Toast";
 import { IUser } from "~/models/user";
-import {
-  readBuildingsDropdownAsAdmin,
-  readBuildingsDropdownAsRD,
-} from "~/repositories/housing/buildings";
-import { auth } from "~/utilties/auth.server";
 import { toast } from "~/utilties/toast.server";
 
 export const meta: MetaFunction = () => {
@@ -29,7 +25,6 @@ export default function StaffInsightsLayout() {
   const context = useOutletContext<{
     user: IUser;
   }>();
-  const admin = context.user.role === "admin";
   const data = useLoaderData<typeof loader>();
   const pages = [
     {
@@ -43,6 +38,10 @@ export default function StaffInsightsLayout() {
     {
       name: "Shifts",
       path: "/staff/insights/shifts",
+    },
+    {
+      name: "Ask Merrick",
+      path: "/staff/merrick",
     },
   ];
 
