@@ -6,7 +6,7 @@ export default function StaffMerrick() {
   const [responses, setResponses] = useState<string[]>([]);
 
   return (
-    <div className="h-[calc(100vh_-_124.4px)] flex flex-col justify-between px-7 pb-7">
+    <div className="h-[calc(100vh_-_124px)] flex flex-col justify-between px-7 pb-7">
       {!queries.length && (
         <div className="flex-grow flex flex-col justify-center items-center">
           <div className="text-center w-[300px] space-y-3">
