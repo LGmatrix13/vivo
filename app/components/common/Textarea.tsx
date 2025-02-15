@@ -1,5 +1,5 @@
 interface TextareaProps {
-  label: string;
+  label?: string;
   name: string;
   defaultValue?: string;
   rows?: number;
@@ -7,20 +7,27 @@ interface TextareaProps {
   required?: boolean;
   readonly?: boolean;
   disabled?: boolean;
+  setState?: (value: string) => void;
   [key: string]: any;
 }
 
 export default function Textarea(props: TextareaProps) {
-  const { name, label, required, defaultValue } = props;
+  const { name, label, required, defaultValue, setState } = props;
 
   return (
     <div className="space-y-3 flex flex-col">
-      <label htmlFor={name} className="font-bold">
-        {label}
-        <span className="text-red-600 text-sm"> {required ? "*" : ""}</span>
-      </label>
+      {label && (
+        <label htmlFor={name} className="font-bold">
+          {label}
+          <span className="text-red-600 text-sm"> {required ? "*" : ""}</span>
+        </label>
+      )}
       <textarea
         {...props}
+        defaultValue={defaultValue}
+        onChange={(e) => {
+          setState && setState(e.target.value);
+        }}
         className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
       />
     </div>
