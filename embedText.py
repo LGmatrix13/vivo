@@ -11,3 +11,7 @@ def embed(text: str, model):
     if vectors:
         return np.mean(vectors, axis=0).tolist()
     return None
+ 
+def create_chunks(text: str):
+    chunk_size = 200
+    
