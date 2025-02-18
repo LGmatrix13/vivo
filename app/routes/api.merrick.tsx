@@ -1,22 +1,22 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import axios from "axios";
+import { Ollama } from 'ollama';
 
 const OLLAMA_SERVER = 'http://10.18.101.96:11434';
 const OLLAMA_MODEL = 'llama3.2:1b';
 
+const ollama = new Ollama({host: OLLAMA_SERVER});
+
 export async function action({ request }: ActionFunctionArgs) {
 
   const query = await request.text();
-  console.log(`Query is ${query}`);
 
   try {
-    console.log(`${OLLAMA_SERVER}/api/generate`);
-    const response = await axios.post(`${OLLAMA_SERVER}/api/generate`, {
-        model: OLLAMA_MODEL,
-        prompt: query,
-        stream: false,
+    const response = await ollama.chat({
+      model: OLLAMA_MODEL,
+      messages: [{ role: 'user', content: query}],
+      stream: false,
     });
-    return response.data.response;
+    return response.message.content;
   } catch (error) {
     console.error('Error querying Ollama:', error);
   }
