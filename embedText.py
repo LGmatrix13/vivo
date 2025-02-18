@@ -5,9 +5,8 @@ import gensim.downloader as api
 import numpy as np
 from nltk.tokenize import word_tokenize
 
-punkt_path = nltk.data.find('tokenizers/punkt')
-shutil.rmtree(punkt_path)  # Deletes the punkt data
-nltk.download('punkt')  # Re-download it
+nltk.download('punkt')
+nltk.download('punkt_tab')
 model = api.load("word2vec-google-news-300")
 
 def embed(text: str, model):
@@ -40,10 +39,11 @@ def main():
     output_path = 'Crimson_Output.json'  # Change this to your output file path
     
     chunks = split_text_into_chunks(file_path)
-    embedded_chunks = {f"chunk_{i+1}": embed(chunk, model) for i, chunk in enumerate(chunks)}
+    embedded_chunks = [{f"chunk_{i+1}": embed(chunk, model), "text": chunks[i]} for i, chunk in enumerate(chunks)]
     
     with open(output_path, 'w', encoding='utf-8') as outfile:
-        json.dump(embedded_chunks, outfile, indent=4)
+        dump = json.dump(embedded_chunks, outfile, indent=4)
+        outfile.write(dump)
 
 if __name__ == "__main__":
     main()
