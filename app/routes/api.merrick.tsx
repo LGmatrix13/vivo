@@ -21,5 +21,5 @@ export async function action({ request }: ActionFunctionArgs) {
     console.error('Error querying Ollama:', error);
   }
 
-  return Response("I am not working yet");
+  return "I am not working yet";
 }
