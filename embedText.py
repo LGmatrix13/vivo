@@ -31,8 +31,8 @@ def split_text_into_chunks(file_path, num_chunks=200):
     return chunks
 
 def main():
-    file_path = 'RA Manual 2024.txt'  # Change this to your text file path
-    output_path = 'RAManual_output.json'  # Change this to your output file path
+    file_path = 'Crimson_2024-25.txt'  # Change this to your text file path
+    output_path = 'Crimson_Output.json'  # Change this to your output file path
     
     chunks = split_text_into_chunks(file_path)
     embedded_chunks = [{f"chunk_{i+1}": embed(chunk), "text": chunks[i]} for i, chunk in enumerate(chunks)]
