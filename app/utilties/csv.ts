@@ -21,7 +21,11 @@ function download(
 }
 
 function parse(content: string) {
-  const lines = content.split("\n");
+  let lines = content.split("\n");
+
+  if (lines[lines.length-1] == "") {
+    lines = lines.slice(0, lines.length-1);
+  }
 
   // Helper function to parse a CSV line while respecting quoted fields
   function parseLine(line: string): string[] {
