@@ -41,15 +41,15 @@ export async function readSubmittedRCI(residentId: number) {
       roomId: roomTable.id,
       issues: RCITable.issues,
     })
-    .from(roomTable)
-    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(RCITable, eq(roomTable.id, residentTable.roomId))
+    .from(residentTable)
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .leftJoin(RCITable, eq(RCITable.residentId, residentTable.id)) // Fix: Use RCITable.roomId
     .where(eq(residentTable.id, residentId));
 
   const rci = data[0];
   return {
     ...rci,
-    issues: rci.issues as Record<string, string> | undefined,
+    issues: rci?.issues as Record<string, string> | undefined,
   };
 }
 

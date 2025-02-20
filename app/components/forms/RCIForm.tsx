@@ -4,6 +4,8 @@ import { Form } from "@remix-run/react";
 import AcknowledgeIssueRadio from "../common/AcknowledgeIssueRadio";
 import WideButton from "../common/WideButton";
 import { ISubmittedRCI } from "~/models/rci";
+import Indication from "../common/Indication";
+import { Home } from "../common/Icons";
 
 interface RCIFormProps {
   intent: string;
@@ -19,7 +21,11 @@ export default function RCIForm(props: RCIFormProps) {
       {submittedRCI?.id && (
         <input name="id" type="hidden" value={submittedRCI.id} />
       )}
-      <input name="roomId" type="hidden" value={submittedRCI?.roomId} />
+      <input
+        name="roomId"
+        type="hidden"
+        value={submittedRCI?.roomId as number}
+      />
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}

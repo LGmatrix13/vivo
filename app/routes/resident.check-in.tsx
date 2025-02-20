@@ -10,6 +10,8 @@ import { readSubmittedRCI } from "~/repositories/rci/complete";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 import { MetaFunction } from "@remix-run/node";
+import Indication from "~/components/common/Indication";
+import { Home } from "~/components/common/Icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -73,6 +75,15 @@ export default function ResidentCheckInPage() {
           intent={`${action}.colonialQusad`}
           mapping={colonialQuadMapping}
           submittedRCI={data.submittedRCI as ISubmittedRCI}
+        />
+      );
+    default:
+      return (
+        <Indication
+          level="warning"
+          title="You don't have a room"
+          message="Looks like you are not assigned a room."
+          Icon={Home}
         />
       );
   }
