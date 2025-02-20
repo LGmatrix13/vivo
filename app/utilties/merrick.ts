@@ -5,24 +5,24 @@ import { IChunk } from "~/models/merrick";
 export function get_context(query_vector: number[]): string {
     let closest_cos = -1;
     let closest_txt = "";
-    const man_data = manual_data as IChunk[]
+    const man_data = manual_data as IChunk[];
     for (let i = 0; i < man_data.length; i++) {
-        const cos = cosine_similarity(query_vector, man_data[i].context);
+        const cos = cosine_similarity(query_vector, man_data[i].chunk);
         if (cos > closest_cos) {
             closest_cos = cos;
             closest_txt = man_data[i].text;
         }
     }
 
-    const crim_data = crimson_data as IChunk[]
+    const crim_data = crimson_data as IChunk[];
     for (let i = 0; i < crim_data.length; i++) {
-        const cos = cosine_similarity(query_vector, crim_data[i].context);
+        const cos = cosine_similarity(query_vector, crim_data[i].chunk);
         if (cos > closest_cos) {
             closest_cos = cos;
             closest_txt = crim_data[i].text;
         }
     }
-
+    console.log(closest_txt)
     return closest_txt;
 }
 

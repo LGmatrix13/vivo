@@ -1,4 +1,4 @@
 export type IChunk = {
-    context: number[],
+    chunk: number[],
     text: string,
 }
