@@ -64,7 +64,7 @@ export default function RARCIsCompletePage() {
   return (
     <Table<ICompleteRCI>
       columnKeys={columnKeys}
-      rows={data.completeRCIs}
+      rows={data.completeRCIs as ICompleteRCI[]}
       search={{
         placeholder: "Search for a complete RCI...",
       }}
