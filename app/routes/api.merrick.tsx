@@ -19,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const response = await ollama.chat({
       model: OLLAMA_MODEL,
       messages: [
-        { role: 'system', content: "You are an AI assistant to answer questions. You are given context to answer questions. Only answer questions based on the given context."},
+        { role: 'system', content: "You are an AI assistant to answer questions. You are given context to answer questions. Only answer questions based on the given context. Keep responses less than three sentences and avoid using text formatting."},
         { role: 'user', content: `Answer the question based on the given context.\n\nContext: ${context}\n\nQuestion: ${query}`}],
       stream: false,
     });

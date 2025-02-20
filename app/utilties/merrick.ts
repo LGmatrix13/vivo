@@ -2,28 +2,47 @@ import manual_data from "RAManual_output.json";
 import crimson_data from "Crimson_Output.json";
 import { IChunk } from "~/models/merrick";
 
-export function get_context(query_vector: number[]): string {
-    let closest_cos = -1;
-    let closest_txt = "";
-    const man_data = manual_data as IChunk[];
-    for (let i = 0; i < man_data.length; i++) {
-        const cos = cosine_similarity(query_vector, man_data[i].chunk);
-        if (cos > closest_cos) {
-            closest_cos = cos;
-            closest_txt = man_data[i].text;
-        }
-    }
+// export function get_context(query_vector: number[]): string {
+//     let closest_cos = -1;
+//     let closest_txt = "";
+//     const man_data = manual_data as IChunk[];
+//     for (let i = 0; i < man_data.length; i++) {
+//         const cos = cosine_similarity(query_vector, man_data[i].chunk);
+//         if (cos > closest_cos) {
+//             closest_cos = cos;
+//             closest_txt = man_data[i].text;
+//         }
+//     }
 
-    const crim_data = crimson_data as IChunk[];
-    for (let i = 0; i < crim_data.length; i++) {
-        const cos = cosine_similarity(query_vector, crim_data[i].chunk);
-        if (cos > closest_cos) {
-            closest_cos = cos;
-            closest_txt = crim_data[i].text;
-        }
-    }
-    console.log(closest_txt)
-    return closest_txt;
+//     const crim_data = crimson_data as IChunk[];
+//     for (let i = 0; i < crim_data.length; i++) {
+//         const cos = cosine_similarity(query_vector, crim_data[i].chunk);
+//         if (cos > closest_cos) {
+//             closest_cos = cos;
+//             closest_txt = crim_data[i].text;
+//         }
+//     }
+//     console.log(closest_txt)
+//     return closest_txt;
+// }
+
+export function get_context(query_vector: number[]): string[] {
+    const all_data = [...(manual_data as IChunk[]), ...(crimson_data as IChunk[])];
+    
+    // Compute cosine similarity for each chunk
+    const scoredChunks = all_data.map(chunk => ({
+        text: chunk.text,
+        similarity: cosine_similarity(query_vector, chunk.chunk)
+    }));
+    
+    // Sort by similarity in descending order
+    scoredChunks.sort((a, b) => b.similarity - a.similarity);
+    
+    // Get the top 10 chunks
+    const topChunks = scoredChunks.slice(0, 10).map(chunk => chunk.text);
+    
+    console.log(topChunks);
+    return topChunks;
 }
 
 function cosine_similarity(v1: number[], v2: number[]): number {
