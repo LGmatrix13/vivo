@@ -3,7 +3,7 @@ import { Ollama } from 'ollama';
 import { get_context } from "~/utilties/merrick";
 
 const OLLAMA_SERVER = 'http://10.18.101.96:11434';
-const OLLAMA_MODEL = 'llama3.2';
+const OLLAMA_MODEL = 'llama3.1';
 
 const ollama = new Ollama({host: OLLAMA_SERVER});
 
@@ -19,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const response = await ollama.chat({
       model: OLLAMA_MODEL,
       messages: [
-        { role: 'system', content: "You are an AI assistant to answer questions. You are given context to answer questions. Only answer questions based on the given context. Keep responses less than three sentences and avoid using text formatting."},
+        { role: 'system', content: "You are an AI assistant to answer questions. You are given context to answer questions. Only answer questions based on the given context. Keep responses short and avoid using text formatting."},
         { role: 'user', content: `Answer the question based on the given context.\n\nContext: ${context}\n\nQuestion: ${query}`}],
       stream: false,
     });
