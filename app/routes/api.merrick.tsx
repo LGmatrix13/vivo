@@ -3,7 +3,7 @@ import { Ollama } from 'ollama';
 import { get_context } from "~/utilties/merrick";
 
 const OLLAMA_SERVER = 'http://10.18.101.96:11434';
-const OLLAMA_MODEL = 'llama3.2:1b';
+const OLLAMA_MODEL = 'llama3.2';
 
 const ollama = new Ollama({host: OLLAMA_SERVER});
 
