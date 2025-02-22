@@ -1,5 +1,13 @@
+import { MetaFunction } from "@remix-run/react";
 import { useState } from "react";
 import QueryForm from "~/components/forms/QueryForm";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: Merrick" },
+    { name: "Vivo: Merrick", content: "Interactive chat bot" },
+  ];
+};
 
 export default function StaffMerrick() {
   const [queries, setQueries] = useState<string[]>([]);

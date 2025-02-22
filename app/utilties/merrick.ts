@@ -2,6 +2,10 @@ import manual_data from "RAManual_output.json";
 import crimson_data from "Crimson_Output.json";
 import { IChunk } from "~/models/merrick";
 
+export function clean_output(s: string): string {
+    return s//.substring(1, s.length-1);
+}
+
 export function get_context(query_vector: number[]): string[] {
     const all_data = [...(manual_data as IChunk[]), ...(crimson_data as IChunk[])];
     
