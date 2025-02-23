@@ -1,39 +1,29 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Filter from "~/components/common/Filter";
 import RAOnDuty from "~/components/common/RAOnDuty";
 import RDOnDuty from "~/components/common/RDOnDuty";
-import useLocation from "~/hooks/useLocation";
-import {
-  readBuildingsDropdownAsAdmin,
-  readBuildingsDropdownAsRD,
-} from "~/repositories/housing/buildings";
+import { readBuildingsDropdownAsAdmin } from "~/repositories/housing/buildings";
 import {
   readOnDutyRAAsAdmin,
-  readOnDutyRAAsRD,
   readOnDutyRD,
 } from "~/repositories/shifts/onDuty";
 
-import { auth } from "~/utilties/auth.server";
-import { delay } from "~/utilties/delay.server";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["ra"]);
-  const ra = user.role === "ra";
+export async function loader() {
   const [rasOnDuty, rdsOnDuty, buildingsDropdown] = await Promise.all([
-    readOnDutyRAAsAdmin(), readOnDutyRD(), readBuildingsDropdownAsAdmin()
+    readOnDutyRAAsAdmin(),
+    readOnDutyRD(),
+    readBuildingsDropdownAsAdmin(),
   ]);
-  return json({
+  return {
     rasOnDuty,
     rdsOnDuty,
-    buildingsDropdown
-  });
+    buildingsDropdown,
+  };
 }
 
 export default function RASchedulesOnDutyPage() {
   const data = useLoaderData<typeof loader>();
-  const { location } = useLocation();
   const [selected, setSelected] = useState(0);
 
   const buildingOptions = [
