@@ -4,6 +4,7 @@ import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 import Search from "./Search";
 import Filter from "./Filter";
+import Instruction from "./Instruction";
 
 interface TableProps<T> {
   columnKeys: Record<string, string>;
@@ -26,7 +27,7 @@ interface TableProps<T> {
   };
   enableReads?: boolean;
   ActionButtons?: (props: { rows: T[] }) => React.ReactElement;
-  InstructionComponent?: () => React.ReactElement;
+  InstructionComponent: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
   DeleteComponent?: (props: { row: T }) => React.ReactElement;
   SelectedRowComponent?: (props: { row: T }) => React.ReactElement;
