@@ -3,27 +3,8 @@ import { db } from "~/utilties/connection.server";
 import { and, eq, sql } from "drizzle-orm";
 
 
-export async function viewConversationReportInsightsRA() {
-    const data = await db.client
-        .select({
-          id: consverationReportTable.id,
-          residentId: consverationReportTable.residentId,
-          submitted: consverationReportTable.submitted,
-          explanation: consverationReportTable.explanation,
-          level: consverationReportTable.level,
-          zoneId: consverationReportTable.zoneId,
-          sentiment: consverationReportTable.sentiment,
-          highPriority: consverationReportTable.highPriority,
-          ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-            "raName"
-          ),
-          read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
-            "read"
-          ),
-          buildingId: buildingTable.id,
-        })
-        .from(consverationReportTable)
-}
+
+//for RDS and ADMIN based on building ID
 export async function conversationInsights(buildingId: number) {
     //filter by building
     const conversationCount = await db.client
@@ -66,8 +47,29 @@ export async function conversationInsights(buildingId: number) {
           )
         )
 
+  return {
+    conversationCount: conversationCount[0]?.conversationCount || 0,
+    highPriorityCount: highPriorityCount[0]?.highPriorityCount || 0,
+    level3Count: level3Count[0]?.level3Count || 0
+  };
+
 }
 
-export async function lastConversation(){
-  
+
+//FOR RAS ONLY AT THIS TIME
+export async function lastConversation(zoneId: number){
+    const data = await db.client
+      .select({
+          firstName: residentTable.firstName,
+          lastName: residentTable.lastName,
+          daysSinceLastConvo: sql`DATE_PART('day', NOW() - MAX(${consverationReportTable.submitted}))`
+      })
+      .from(consverationReportTable)
+      .innerJoin(residentTable, eq(consverationReportTable.residentId, residentTable.id))
+      .where(eq(consverationReportTable.zoneId, zoneId))
+      .groupBy(residentTable.id)
+      .having(sql`DATE_PART('day', NOW() - MAX(${consverationReportTable.submitted})) > 30`);
+
+
+      return data
 }
