@@ -13,6 +13,7 @@ export default function QueryForm(props: IQueryFormProps) {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!query.trim()) return;
     setQueryState(query);
     setQuery("");
     fetch(`/api/merrick`, {
@@ -25,13 +26,23 @@ export default function QueryForm(props: IQueryFormProps) {
     });
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if ((e.key === "Enter" && e.ctrlKey) || (e.key === "Enter" && e.metaKey)) {
+      // Submit form on Ctrl + Enter
+      e.preventDefault();
+      handleSubmit(e as any);
+    }
+  }
+
   return (
     <div className="flex flex-col space-y-3">
       <form onSubmit={handleSubmit} className="space-y-3">
         <Textarea
           name="query"
           placeholder="Ask me anything"
+          value={query}
           setState={setQuery}
+          onKeyDown={handleKeyDown}
           required
         />
         <WideButton
