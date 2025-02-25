@@ -27,7 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
         }
       ]
     });
-    console.log(response.response.text());
     return clean_output(response.response.text());
   } catch (error) {
     console.error('Error querying Gemini:', error);
