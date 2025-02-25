@@ -21,7 +21,7 @@ export async function conversationInsights(buildingId: number) {
 
         const highPriorityCount = await db.client
         .select({
-            highPriorityCount: sql`SUM(${consverationReportTable.highPriority})`,
+            highPriorityCount: sql`SUM(CASE WHEN ${consverationReportTable.highPriority} THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("highPriorityCount"),
         }).from(consverationReportTable)
         .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
         .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
@@ -35,14 +35,14 @@ export async function conversationInsights(buildingId: number) {
 
         const level3Count = await db.client
         .select({
-            level3Count: sql`SUM(${consverationReportTable.level})`,
+            level3Count: sql`SUM(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("level3Count"),
         }).from(consverationReportTable)
         .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
         .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
         .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
         .where(
           and(
-              eq(consverationReportTable.level, "3"),
+              eq(consverationReportTable.level, '3'),
               eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
           )
         )
