@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const Event = z.object({
   id: z.coerce.number(),
-  description: z.string(),
-  zoneId: z.coerce.number(),
-  attendance: z.coerce.number(),
-  time: z.coerce.date(),
+  description: z.string({ message: "Description is required" }),
+  zoneId: z.coerce.number({ message: "Zone ID is required" }),
+  attendance: z.coerce.number({ message: "Attendance is required" }),
+  time: z.coerce.date({ message: "Valid date is required" }),
 });
 
 export const CreatedEvent = Event.extend({

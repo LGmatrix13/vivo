@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export const Round = z.object({
-  id: z.coerce.number(),
-  zoneId: z.coerce.number(),
-  time: z.coerce.date(),
-  description: z.string(),
-  violations: z.string().optional(),
-  outstandingWorkOrders: z.string().optional(),
+  id: z.coerce.number({ message: "Id is required" }),
+  zoneId: z.coerce.number({ message: "Zone Id is required" }),
+  time: z.coerce.date({ message: "Time is required" }),
+  description: z.string({ message: "Description is required" }),
+  violations: z.string().optional().nullable(),
+  outstandingWorkOrders: z.string().optional().nullable(),
 });
 
 export const CreatedRound = Round.extend({
