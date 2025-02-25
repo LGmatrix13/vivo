@@ -44,11 +44,13 @@ export default function StaffInsightsLayout() {
     }),
   ];
 
+
   const rows = insights.map((insight) => {
     // Check that the `convoData` is in the expected shape
     const { conversationCount, highPriorityCount, level3Count } = insight.convoData;
 
     return {
+      buildingId: insight.buildingId,
       category: `Conversations - ${insight.buildingName}`,
       insights: [
         {
@@ -66,6 +68,8 @@ export default function StaffInsightsLayout() {
       ],
     };
   });
+
+  const filteredRows = []
 
   return (
     <InsightsTable
