@@ -1,6 +1,6 @@
-import { buildingTable, consverationReportTable, readTable, residentTable } from "~/utilties/schema.server";
+import { buildingTable, consverationReportTable, readTable, residentTable, roomTable, zoneTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/connection.server";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 
 export async function viewConversationReportInsightsRA() {
@@ -30,12 +30,44 @@ export async function conversationInsights(buildingId: number) {
         .select({
             conversationCount: sql`COUNT(*)`.mapWith(Number).as('conversationCount')
         }).from(consverationReportTable)
+        .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
+        .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
+        .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+        .where(
+              eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
+        )
 
-        //needs filter for when true and by building
+
         const highPriorityCount = await db.client
         .select({
-            highPriorityCount: sql`SUM(${consverationReportTable.highPriority})`
+            highPriorityCount: sql`SUM(${consverationReportTable.highPriority})`,
         }).from(consverationReportTable)
+        .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
+        .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
+        .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+        .where(
+          and(
+              eq(consverationReportTable.highPriority, true),
+              eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
+          )
+        )
 
+        const level3Count = await db.client
+        .select({
+            level3Count: sql`SUM(${consverationReportTable.level})`,
+        }).from(consverationReportTable)
+        .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
+        .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
+        .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+        .where(
+          and(
+              eq(consverationReportTable.level, "3"),
+              eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
+          )
+        )
 
+}
+
+export async function lastConversation(){
+  
 }
