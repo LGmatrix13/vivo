@@ -52,7 +52,7 @@ export default function StaffMerrick() {
           setQueries((prev) => [...prev, query]);
         }}
         setReponseState={(response) => {
-          const cleanResponse = response.replace(/\\n/g, ' ').replace(/^"|"$/g, ''); // cleans up text output
+          const cleanResponse = response.replace(/\\n/g, ' ').replace(/^"|"$/g, '').replace(/\\/g, '');; // cleans up text output
           setResponses((prev) => [...prev, cleanResponse]);
         }}
       />
