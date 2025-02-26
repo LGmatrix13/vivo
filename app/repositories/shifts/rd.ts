@@ -82,7 +82,7 @@ export async function uploadDutyScheduleForRD(
     error: string;
   }[] = [];
   const erroredRows: Record<string, string>[] = [];
-  for (let i = 0; i < data.length-1; i++) {
+  for (let i = 0; i < data.length; i++) {
     const row = data[i];
 
     //check to see if row has the correct data
@@ -127,7 +127,7 @@ export async function uploadDutyScheduleForRD(
             : newResult.data.date,
       };
       await db.client.insert(staffShiftTable).values(formattedData);
-      console.log(`row added: ${formattedData.date}: ${formattedData.staffId}`);
+      console.log("row added");
     } else {
       console.log("The row was not a success");
     }
