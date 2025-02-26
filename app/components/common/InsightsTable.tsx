@@ -42,7 +42,7 @@ export default function InsightsTable(props: IInsightsTable) {
         },
       }}
       SelectedRowComponent={({ row }) => (
-        <div>
+        <div className="space-y-5">
           {row.insights.map((insight) => (
             <Insight insight={insight} />
           ))}
