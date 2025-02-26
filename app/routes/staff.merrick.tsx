@@ -26,7 +26,7 @@ export default function StaffMerrick() {
           </div>
         </div>
       )}
-      <div className="space-y-3 overflow-y-auto">
+      <div className="space-y-3 overflow-y-auto scrollbar-none p-3" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
         {queries.map((query, index) => (
           <>
             <div className="space-y-2 text-right">
