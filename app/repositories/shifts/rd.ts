@@ -92,7 +92,7 @@ export async function uploadDutyScheduleForRD(
     }
 
     const formattedRow = {
-      email: row["Email"].trim(),
+      email: row["Email"].trim().toUpperCase(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
@@ -127,7 +127,7 @@ export async function uploadDutyScheduleForRD(
             : newResult.data.date,
       };
       await db.client.insert(staffShiftTable).values(formattedData);
-      console.log("row added");
+      console.log(`row added: ${formattedData.date}: ${formattedData.staffId}`);
     } else {
       console.log("The row was not a success");
     }
