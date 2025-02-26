@@ -1,30 +1,82 @@
-import { roundReportTable, readTable, buildingTable } from "~/utilties/schema.server";
+import { roundReportTable, readTable, buildingTable, zoneTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/connection.server";
 import { and, eq, sql } from "drizzle-orm";
 import { formatDate } from "~/utilties/formatDate";
 
-export async function viewRoundReportInsights() {
-    const data = await db.client
+export async function RoundReportInsightsAsRD(buildingId: number) {
+    const violationCount = await db.client
         .select({
-            id: roundReportTable.id,
-            zoneId: roundReportTable.zoneId,
-            submitted: roundReportTable.submitted,
-            description: roundReportTable.description,
-            violations: roundReportTable.violations,
-            outstandingWorkOrders: roundReportTable.outstandingWorkOrders,
-            read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as("read"),
-            buildingId: buildingTable.id,
+            violationCount: sql`
+            COUNT(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 END)`.mapWith(Number).as('violationCount'),
         })
         .from(roundReportTable)
         .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
-        .orderBy(roundReportTable.submitted);
+        .where(eq(buildingTable.id,buildingId))
 
-    const formattedData = data.map((event) => {
-        return {
-            ...event,
-            time: formatDate(event.submitted, true),
-        };
-    });
+    const OutstandingWorkOrderCount = await db.client
+        .select({
+            outstandingWorkOrderCount: sql`
+            COUNT(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 END)`.mapWith(Number).as('outstandingWorkOrderCount'),        
+        })
+        .from(roundReportTable)
+        .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
+        .where(eq(buildingTable.id,buildingId))
 
-    return formattedData;
+
+
+    return {
+        violationCount: violationCount[0]?.violationCount, 
+        OutstandingWorkOrderCount: OutstandingWorkOrderCount[0]?.outstandingWorkOrderCount,
+    };
+}
+
+export async function RoundReportInsightsAsADMIN() {
+    const violationCount = await db.client
+        .select({
+            violationCount: sql`SUM(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 ELSE 0 END)::integer`.mapWith(Number).as('violationCount'),
+        })
+        .from(roundReportTable)
+        .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
+
+
+    const OutstandingWorkOrderCount = await db.client
+        .select({
+            outstandingWorkOrderCount: sql`
+            SUM(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 ELSE 0 END)::integer`.mapWith(Number).as('outstandingWorkOrderCount'),        
+        })
+        .from(roundReportTable)
+        .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
+
+
+    return {
+        violationCount: violationCount[0]?.violationCount, 
+        OutstandingWorkOrderCount: OutstandingWorkOrderCount[0]?.outstandingWorkOrderCount,
+    };
+}
+
+export async function RoundReportInsightsAsRA(zoneId: number) {
+    const violationCount = await db.client
+        .select({
+            violationCount: sql`
+            COUNT(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 END)`.mapWith(Number).as('violationCount'),
+        })
+        .from(roundReportTable)
+        .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
+        .where(eq(zoneTable.id,zoneId))
+
+    const OutstandingWorkOrderCount = await db.client
+        .select({
+            outstandingWorkOrderCount: sql`
+            COUNT(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 END)`.mapWith(Number).as('outstandingWorkOrderCount'),        
+        })
+        .from(roundReportTable)
+        .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
+        .where(eq(zoneTable.id,zoneId))
+
+
+
+    return {
+        violationCount: violationCount[0]?.violationCount, 
+        OutstandingWorkOrderCount: OutstandingWorkOrderCount[0]?.outstandingWorkOrderCount,
+    };
 }
