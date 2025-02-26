@@ -4,7 +4,6 @@ import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 import Search from "./Search";
 import Filter from "./Filter";
-import Instruction from "./Instruction";
 
 interface TableProps<T> {
   columnKeys: Record<string, string>;
