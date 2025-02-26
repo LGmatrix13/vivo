@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const ZoneTelegramChat = z
   .object({
-    zoneId: z.number(),
-    chatLink: z.string().url(),
+    zoneId: z.number({ message: "Zone Id is required" }),
+    chatLink: z.string().url({ message: "Chat Link is required" }),
   })
   .transform((zoneTelegramChat) => ({
     ...zoneTelegramChat,

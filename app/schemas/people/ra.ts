@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const RA = z.object({
   id: z.coerce.number(),
-  alias: z.string(),
-  residentId: z.coerce.number(),
-  staffId: z.coerce.number(),
+  alias: z.string({ message: "Alias is required" }),
+  residentId: z.coerce.number({ message: "Resident ID is required" }),
+  staffId: z.coerce.number({ message: "Staff ID is required" }),
 });
 
 export const UpdatedRA = RA.extend({

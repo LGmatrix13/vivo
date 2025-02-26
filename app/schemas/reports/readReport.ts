@@ -1,8 +1,8 @@
 import {z} from "zod"
 
 export const ReadReport = z.object({
-reportType : z.enum(["RCI", "CONVERSATION", "WEEKLY", "ROUND", "EVENT"]),
-personType : z.enum(["ZONE", "STAFF", "ASSISTANT_STAFF", "ADMIN"]),
-reportId : z.coerce.number(),
-personId : z.coerce.number(),
-});
+    reportType: z.enum(["RCI", "CONVERSATION", "WEEKLY", "ROUND", "EVENT"], { message: "Report Type is required" }),
+    personType: z.enum(["ZONE", "STAFF", "ASSISTANT_STAFF", "ADMIN"], { message: "Person Type is required" }),
+    reportId: z.coerce.number({ message: "Report ID is required" }),
+    personId: z.coerce.number({ message: "Person ID is required" }),
+  });

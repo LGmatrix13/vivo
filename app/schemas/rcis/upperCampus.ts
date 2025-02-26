@@ -18,5 +18,5 @@ export const UpperCampusIssues = z.object({
 });
 
 export const CreatedUpperCampus = UpperCampusIssues.extend({
-  studentSignature: z.string(),
+  studentSignature: z.string({ message: "Student Signature is required" }),
 });
