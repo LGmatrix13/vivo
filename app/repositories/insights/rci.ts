@@ -42,6 +42,7 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 END)::integer`,
+      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -49,20 +50,24 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     .where(eq(roomTable.zoneId, zoneId))
     .groupBy(residentTable.id);
 
-  const { completeRCIs, approvedRCIs } = data[0];
+  const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
 
   return [
     {
       title: `${completeRCIs} completed RCIs`,
       level: calculateLevelCompleteRCI(completeRCIs, 1),
-      action: {
-        title: "View Complete RCIs",
-        href: "/ra/rcis/complete",
-      },
     },
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
+    },
+    {
+      title: `${approvedRCIs} RCIs send to limble`,
+      level: calculateLevelSentToLimble(sentToLimble, 1),
+      action: {
+        title: "View Complete RCIs",
+        href: "/ra/rcis/complete",
+      },
     },
   ];
 }
@@ -97,6 +102,10 @@ export async function readRCIInsightsAsRD(
     {
       title: `${approvedRCIs} RCIs send to limble`,
       level: calculateLevelSentToLimble(sentToLimble, 5),
+      action: {
+        title: "View Complete RCIs",
+        href: "/staff/housing/rcis/complete",
+      },
     },
   ];
 }
