@@ -1,8 +1,4 @@
-import {
-  zoneTable,
-  residentTable,
-  weeklyReportTable,
-} from "~/utilties/schema.server";
+import { zoneTable, weeklyReportTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/connection.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
@@ -10,220 +6,210 @@ import { IInsight } from "~/models/insights";
 export async function readRAHealthInsightsAsRD(staffId: number) {
   const data = await db.client
     .select({
-      greatMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GREAT' THEN 1 END)`,
-      goodMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GOOD' THEN 1 END)`,
-      okMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'OK' THEN 1 END)`,
-      roughMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'ROUGH' THEN 1 END)`,
-      reallyRoughMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'REALLY_ROUGH' THEN 1 END)`,
-      greatPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GREAT' THEN 1 END)`,
-      goodPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GOOD' THEN 1 END)`,
-      okPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'OK' THEN 1 END)`,
-      roughPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'ROUGH' THEN 1 END)`,
-      reallyRoughPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'REALLY_ROUGH' THEN 1 END)`,
-      greatSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GREAT' THEN 1 END)`,
-      goodSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GOOD' THEN 1 END)`,
-      okSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'OK' THEN 1 END)`,
-      roughSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'ROUGH' THEN 1 END)`,
-      reallySpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'REALLY_ROUGH' THEN 1 END)`,
+      greatMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallyRoughMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      greatPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallyRoughPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      greatSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallySpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
     })
     .from(weeklyReportTable)
     .innerJoin(zoneTable, eq(zoneTable.id, weeklyReportTable.zoneId))
     .where(eq(zoneTable.staffId, staffId));
-  const {
-    greatMentalHealth,
-    goodMentalHealth,
-    okMentalHealth,
-    roughMentalHealth,
-    reallyRoughMentalHealth,
-    greatPersonalLife,
-    goodPersonalLife,
-    okPersonalLife,
-    roughPersonalLife,
-    reallyRoughPersonalLife,
-    greatSpiritualHealth,
-    goodSpiritualHealth,
-    okSpiritualHealth,
-    roughSpiritualHealth,
-    reallySpiritualHealth,
-  } = data[0];
 
-  const insights = [
-    {
-      title: `${greatMentalHealth} reported great mental health`,
-      level: "great",
-      value: greatMentalHealth,
-    },
-    {
-      title: `${goodMentalHealth} reported good mental health`,
-      level: "great",
-      value: goodMentalHealth,
-    },
-    {
-      title: `${okMentalHealth} reported ok mental health`,
-      level: "warning",
-      value: okMentalHealth,
-    },
-    {
-      title: `${
-        roughMentalHealth + reallyRoughMentalHealth
-      } reported rough or really rough mental health`,
-      level: "danger",
-      value: roughMentalHealth + reallyRoughMentalHealth,
-    },
-    {
-      title: `${greatPersonalLife} reported great personal life`,
-      level: "great",
-      value: greatPersonalLife,
-    },
-    {
-      title: `${goodPersonalLife} reported good personal life`,
-      level: "good",
-      value: goodPersonalLife,
-    },
-    {
-      title: `${okPersonalLife} reported ok personal life`,
-      level: "warning",
-      value: okPersonalLife,
-    },
-    {
-      title: `${
-        roughPersonalLife + reallyRoughPersonalLife
-      } reported rough or really rough personal life`,
-      level: "danger",
-      value: roughPersonalLife + reallyRoughPersonalLife,
-    },
-    {
-      title: `${greatSpiritualHealth} reported great spiritual health`,
-      level: "great",
-      value: greatSpiritualHealth,
-    },
-    {
-      title: `${goodSpiritualHealth} reported good spiritual health`,
-      level: "good",
-      value: goodSpiritualHealth,
-    },
-    {
-      title: `${okSpiritualHealth} reported ok spiritual health`,
-      level: "warning",
-      value: okSpiritualHealth,
-    },
-    {
-      title: `${
-        roughSpiritualHealth + reallySpiritualHealth
-      } reported rough or really rough spiritual health`,
-      level: "danger",
-      value: roughSpiritualHealth + reallySpiritualHealth,
-    },
-  ];
-
-  return insights.filter((insight) => insight.value > 0) as IInsight[];
+  return processInsights(data[0]);
 }
 
 export async function readRAHealthInsightsAsAdmin() {
   const data = await db.client
     .select({
-      greatMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GREAT' THEN 1 END)`,
-      goodMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GOOD' THEN 1 END)`,
-      okMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'OK' THEN 1 END)`,
-      roughMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'ROUGH' THEN 1 END)`,
-      reallyRoughMentalHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'REALLY_ROUGH' THEN 1 END)`,
-      greatPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GREAT' THEN 1 END)`,
-      goodPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GOOD' THEN 1 END)`,
-      okPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'OK' THEN 1 END)`,
-      roughPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'ROUGH' THEN 1 END)`,
-      reallyRoughPersonalLife: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'REALLY_ROUGH' THEN 1 END)`,
-      greatSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GREAT' THEN 1 END)`,
-      goodSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GOOD' THEN 1 END)`,
-      okSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'OK' THEN 1 END)`,
-      roughSpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'ROUGH' THEN 1 END)`,
-      reallySpiritualHealth: sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'REALLY_ROUGH' THEN 1 END)`,
+      greatMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallyRoughMentalHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.mentalHealth} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      greatPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallyRoughPersonalLife:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.personalLife} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      greatSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GREAT' THEN 1 END)`.mapWith(
+          Number
+        ),
+      goodSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'GOOD' THEN 1 END)`.mapWith(
+          Number
+        ),
+      okSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'OK' THEN 1 END)`.mapWith(
+          Number
+        ),
+      roughSpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
+      reallySpiritualHealth:
+        sql<number>`COUNT(CASE WHEN ${weeklyReportTable.spiritualHealth} = 'REALLY_ROUGH' THEN 1 END)`.mapWith(
+          Number
+        ),
     })
     .from(weeklyReportTable);
 
-  const {
-    greatMentalHealth,
-    goodMentalHealth,
-    okMentalHealth,
-    roughMentalHealth,
-    reallyRoughMentalHealth,
-    greatPersonalLife,
-    goodPersonalLife,
-    okPersonalLife,
-    roughPersonalLife,
-    reallyRoughPersonalLife,
-    greatSpiritualHealth,
-    goodSpiritualHealth,
-    okSpiritualHealth,
-    roughSpiritualHealth,
-    reallySpiritualHealth,
-  } = data[0];
+  return processInsights(data[0]);
+}
 
+function processInsights(data: any): IInsight[] {
   const insights = [
     {
-      title: `${greatMentalHealth} reported great mental health`,
+      title: `${data.greatMentalHealth} reported great mental health`,
       level: "great",
-      value: greatMentalHealth,
+      value: data.greatMentalHealth,
     },
     {
-      title: `${goodMentalHealth} reported good mental health`,
+      title: `${data.goodMentalHealth} reported good mental health`,
       level: "great",
-      value: goodMentalHealth,
+      value: data.goodMentalHealth,
     },
     {
-      title: `${okMentalHealth} reported ok mental health`,
+      title: `${data.okMentalHealth} reported ok mental health`,
       level: "warning",
-      value: okMentalHealth,
+      value: data.okMentalHealth,
     },
     {
       title: `${
-        roughMentalHealth + reallyRoughMentalHealth
+        data.roughMentalHealth + data.reallyRoughMentalHealth
       } reported rough or really rough mental health`,
       level: "danger",
-      value: roughMentalHealth + reallyRoughMentalHealth,
+      value: data.roughMentalHealth + data.reallyRoughMentalHealth,
     },
     {
-      title: `${greatPersonalLife} reported great personal life`,
+      title: `${data.greatPersonalLife} reported great personal life`,
       level: "great",
-      value: greatPersonalLife,
+      value: data.greatPersonalLife,
     },
     {
-      title: `${goodPersonalLife} reported good personal life`,
+      title: `${data.goodPersonalLife} reported good personal life`,
       level: "good",
-      value: goodPersonalLife,
+      value: data.goodPersonalLife,
     },
     {
-      title: `${okPersonalLife} reported ok personal life`,
+      title: `${data.okPersonalLife} reported ok personal life`,
       level: "warning",
-      value: okPersonalLife,
+      value: data.okPersonalLife,
     },
     {
       title: `${
-        roughPersonalLife + reallyRoughPersonalLife
+        data.roughPersonalLife + data.reallyRoughPersonalLife
       } reported rough or really rough personal life`,
       level: "danger",
-      value: roughPersonalLife + reallyRoughPersonalLife,
+      value: data.roughPersonalLife + data.reallyRoughPersonalLife,
     },
     {
-      title: `${greatSpiritualHealth} reported great spiritual health`,
+      title: `${data.greatSpiritualHealth} reported great spiritual health`,
       level: "great",
-      value: greatSpiritualHealth,
+      value: data.greatSpiritualHealth,
     },
     {
-      title: `${goodSpiritualHealth} reported good spiritual health`,
+      title: `${data.goodSpiritualHealth} reported good spiritual health`,
       level: "good",
-      value: goodSpiritualHealth,
+      value: data.goodSpiritualHealth,
     },
     {
-      title: `${okSpiritualHealth} reported ok spiritual health`,
+      title: `${data.okSpiritualHealth} reported ok spiritual health`,
       level: "warning",
-      value: okSpiritualHealth,
+      value: data.okSpiritualHealth,
     },
     {
       title: `${
-        roughSpiritualHealth + reallySpiritualHealth
+        data.roughSpiritualHealth + data.reallySpiritualHealth
       } reported rough or really rough spiritual health`,
       level: "danger",
-      value: roughSpiritualHealth + reallySpiritualHealth,
+      value: data.roughSpiritualHealth + data.reallySpiritualHealth,
     },
   ];
 

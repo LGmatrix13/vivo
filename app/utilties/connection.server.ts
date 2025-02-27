@@ -34,7 +34,7 @@ async function insert<T extends z.ZodTypeAny>(
 
   if (triggerMutate) {
     return mutate(request.url, {
-      message: "System error occured",
+      message: result.error?.issues[0].message as string,
       level: "failure",
     });
   }

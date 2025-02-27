@@ -52,6 +52,10 @@ export default function QueryForm(props: IQueryFormProps) {
         >
           Ask
         </WideButton>
+        <p className="text-center text-sm">
+          Merrick can make mistakes. Do not share private/sensitive information
+          with Merrick.
+        </p>
       </form>
     </div>
   );

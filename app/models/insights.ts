@@ -1,7 +1,10 @@
 export interface IInsight {
   title: string;
   level: "great" | "warning" | "danger";
-  href?: string;
+  action?: {
+    href: string;
+    title: string;
+  };
 }
 
 export interface IInsights {

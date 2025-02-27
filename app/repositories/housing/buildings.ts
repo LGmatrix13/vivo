@@ -59,7 +59,7 @@ export async function readBuildingsDropdownAsRD(id: number) {
 }
 
 export async function createBuilding(values: Values, request: Request) {
-  return db.insert(request, buildingTable, CreatedBuiling, values, {
+  return db.insert(request, buildingTable, CreatedBuiling, values, undefined, {
     message: "Created Building",
     level: "success",
   });
