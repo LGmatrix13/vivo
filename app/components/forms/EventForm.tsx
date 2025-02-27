@@ -32,8 +32,8 @@ export default function EventForm(props: EventFormProps) {
         name="attendance"
         type="number"
         defaultValue={event?.attendance}
-        step=".01"
         required
+        min = "0"
       />
       <Textarea
         label="Description"
