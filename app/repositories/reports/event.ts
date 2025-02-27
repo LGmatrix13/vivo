@@ -16,9 +16,7 @@ export async function readEventReportsAdmin() {
   const data = await db.client
     .select({
       id: eventReportTable.id,
-      time: sql<string>`TO_CHAR(${eventReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: eventReportTable.time,
       description: eventReportTable.description,
       attendance: eventReportTable.attendance,
       zoneId: eventReportTable.zoneId,
@@ -59,9 +57,7 @@ export async function readEventReportsRD(id: number) {
   const data = await db.client
     .select({
       id: eventReportTable.id,
-      time: sql<string>`TO_CHAR(${eventReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: eventReportTable.time,
       description: eventReportTable.description,
       attendance: eventReportTable.attendance,
       zoneId: eventReportTable.zoneId,
@@ -103,9 +99,7 @@ export async function readEventReportsRA(id: number) {
   const data = await db.client
     .select({
       id: eventReportTable.id,
-      time: sql<string>`TO_CHAR(${eventReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: eventReportTable.time,
       description: eventReportTable.description,
       attendance: eventReportTable.attendance,
       zoneId: eventReportTable.zoneId,

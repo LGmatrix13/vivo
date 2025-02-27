@@ -14,7 +14,7 @@ export function formatDate(
   const diffMonths = today.getMonth() - date.getMonth();
   const diffYears = today.getFullYear() - date.getFullYear();
   const time = date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
     timeZone: "America/New_York",
   });
