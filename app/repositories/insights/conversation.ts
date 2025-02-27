@@ -109,7 +109,7 @@ export async function readConversationInsightsLevelThreeCountAsRD(
     title: `${count} level 3 conversations`,
     level: "great",
     action: {
-      title: "View Conversations",
+      title: "View Your Buildings Conversations",
       href: "/staff/reports/conversation",
     },
   };
@@ -197,10 +197,6 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   return {
     title: `${count} level 3 conversations`,
     level: "warning",
-    action: {
-      title: "View Conversations",
-      href: "/staff/reports/conversation",
-    },
   };
 }
 

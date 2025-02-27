@@ -40,7 +40,7 @@ export async function readRoundReportInsightsViolationsAsRD(
     title: `${count} violations`,
     level: calculateLevelViolation(count),
     action: {
-      title: "View Rounds",
+      title: "View Your Buildings Rounds",
       href: "/staff/reports/round",
     },
   };
@@ -77,10 +77,6 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
-    action: {
-      title: "View Rounds",
-      href: "/staff/reports/round",
-    },
   };
 }
 
