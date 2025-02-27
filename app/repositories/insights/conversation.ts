@@ -230,6 +230,10 @@ export async function readConversationInsightsLastConversatonsAsRA(
       ({
         title: `${insight.daysSinceLastConvo} days since your last conversation with ${insight.name}`,
         level: calculateLevel(insight.daysSinceLastConvo),
+        action: {
+          title: "Create a Conversation",
+          href: "/ra/reports/conversation",
+        },
       } as IInsight)
   );
 }
