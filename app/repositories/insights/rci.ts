@@ -72,7 +72,7 @@ export async function readRCIInsightsAsRD(
 ): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      completeRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`,
+      completeRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`,
       approvedRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 ELSE 0 END)::integer`,
       sentToLimble: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 ELSE 0 END)::integer`,
     })
@@ -105,7 +105,7 @@ export async function readRCIInsightsAsRD(
 export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      completeRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`,
+      completeRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`,
       approvedRCIs: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 ELSE 0 END)::integer`,
       sentToLimble: sql<number>`SUM(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 ELSE 0 END)::integer`,
     })
