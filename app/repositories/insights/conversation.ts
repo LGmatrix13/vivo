@@ -45,11 +45,11 @@ export async function readConversationInsightsCountAsRD(
 }
 
 export async function readConversationInsightsHighPriorityCountAsRD(
-  buildingId: number
+  staffId: number
 ): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${consverationReportTable.highPriority} THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.highPriority} THEN 1 END)::integer`,
     })
     .from(consverationReportTable)
     .innerJoin(
@@ -61,12 +61,11 @@ export async function readConversationInsightsHighPriorityCountAsRD(
     .where(
       and(
         eq(consverationReportTable.highPriority, true),
-        eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
+        eq(buildingTable.staffId, staffId)
       )
     );
 
   const { count } = data[0];
-
   function calculateLevel() {
     if (count == 0) {
       return "great";
@@ -88,7 +87,7 @@ export async function readConversationInsightsLevelThreeCountAsRD(
 ): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 END)::integer`,
     })
     .from(consverationReportTable)
     .innerJoin(
@@ -146,7 +145,7 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
 export async function readConversationInsightsHighPriorityCountAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${consverationReportTable.highPriority} THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.highPriority} THEN 1 END)::integer`,
     })
     .from(consverationReportTable)
     .innerJoin(
@@ -178,7 +177,7 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
 export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 END)::integer`,
     })
     .from(consverationReportTable)
     .innerJoin(
@@ -197,13 +196,12 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   };
 }
 
-//FOR RAS ONLY AT THIS TIME
 export async function readConversationInsightsLastConversatonsAsRA(
   zoneId: number
 ): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      name: sql<string>`CONCAT(${residentTable.lastName}, ' ', ${residentTable.firstName})`,
+      name: sql<string>`CONCAT(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       daysSinceLastConvo: sql<number>`DATE_PART('day', NOW() - MAX(${consverationReportTable.submitted}))`,
     })
     .from(consverationReportTable)
