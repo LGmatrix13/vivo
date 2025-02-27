@@ -22,7 +22,7 @@ export default function StaffMerrick() {
           <div className="text-center w-[300px] space-y-3">
             <h2 className="text-2xl font-bold">👋 Hi, I'm Merrick!</h2>
             <p className="text-lg">
-              Ask me questions about the Crimison or RA manual for quick
+              Ask me questions about the Crimson or RA manual for quick
               answers.
             </p>
           </div>
