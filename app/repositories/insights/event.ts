@@ -116,6 +116,10 @@ export async function readEventInsightsAttendanceAsRD(
   return {
     title: `${sum} residents have attended Events`,
     level: calculateLevel(),
+    action: {
+      title: "View Building Events",
+      href: "/staff/reports/event",
+    },
   };
 }
 
@@ -192,5 +196,9 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
   return {
     title: `${difference} days since your last event`,
     level: calculateLevel(),
+    action: {
+        title: "Create an Event Report",
+        href: "/ra/reports/event",
+      },
   };
 }
