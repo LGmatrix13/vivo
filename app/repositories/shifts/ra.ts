@@ -153,10 +153,17 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
       continue;
     }
     
+
+    const parsedDate = new Date(row["Date"].trim()); 
+    const midnightUTC = new Date(Date.UTC(
+      parsedDate.getUTCFullYear(),
+      parsedDate.getUTCMonth(),
+      parsedDate.getUTCDate()
+    ));
     
     const formattedRow = {
       email: row["Email"].trim().toUpperCase(),
-      date: new Date(row["Date"].trim()).toISOString(),
+      date: midnightUTC.toISOString(),
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
