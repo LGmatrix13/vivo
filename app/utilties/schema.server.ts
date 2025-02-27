@@ -126,8 +126,8 @@ export const roundReportTable = pgTable("RoundReport", {
   zoneId: integer("zone_id")
     .notNull()
     .references(() => zoneTable.id),
-  submitted: timestamp("submitted").notNull().defaultNow(),
-  time: timestamp("time").notNull(),
+  submitted: timestamp("submitted", { mode: "string" }).notNull().defaultNow(),
+  time: timestamp("time", { mode: "string" }).notNull(),
   description: varchar("description", { length: 225 }).notNull(),
   violations: varchar("violations", { length: 225 }),
   outstandingWorkOrders: varchar("outstanding_work_orders", {
@@ -143,7 +143,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),
-  submitted: timestamp("submitted").notNull().defaultNow(),
+  submitted: timestamp("submitted", { mode: "string" }).notNull().defaultNow(),
   explanation: varchar({ length: 225 }).notNull(),
   level: levelEnum().notNull(),
   sentiment: sentimentEnum().notNull(),
@@ -152,7 +152,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
 
 export const eventReportTable = pgTable("EventReport", {
   id: serial("id").notNull().primaryKey(),
-  time: timestamp("time").notNull(),
+  time: timestamp("time", { mode: "string" }).notNull(),
   description: varchar("description", { length: 225 }).notNull(),
   attendance: integer().notNull(),
   zoneId: integer("zone_id")
@@ -187,7 +187,7 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),
-  submitted: timestamp("submitted").defaultNow().notNull(),
+  submitted: timestamp("submitted", { mode: "string" }).defaultNow().notNull(),
   staffMeetingSuggestions: varchar({ length: 225 }),
   raResponsibilities: ratingEnum().notNull(),
   academics: ratingEnum().notNull(),
@@ -208,7 +208,7 @@ export const zoneShiftTable = pgTable("ZoneShift", {
 export const staffShiftTable = pgTable("StaffShift", {
   id: serial("id").notNull().primaryKey(),
   staffId: integer().references(() => staffTable.id),
-  date: date("date").notNull(),
+  date: date("date", { mode: "date" }).notNull(),
 });
 
 export const RCITable = pgTable("RCI", {
@@ -217,6 +217,6 @@ export const RCITable = pgTable("RCI", {
     .notNull()
     .references(() => residentTable.id),
   issues: json().notNull().default({}),
-  submitted: timestamp().defaultNow().notNull(),
+  submitted: timestamp({ mode: "string" }).defaultNow().notNull(),
   status: statusEnum().notNull(),
 });

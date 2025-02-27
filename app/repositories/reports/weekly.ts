@@ -59,7 +59,7 @@ export async function readWeeklyReports() {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      submitted: formatDate(weekly.submitted.toDateString(), true),
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
@@ -121,7 +121,7 @@ export async function readWeeklyReportsAsRD(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      time: formatDate(weekly.submitted.toDateString(), true),
+      time: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
@@ -172,7 +172,7 @@ export async function readWeeklyReportsAsRA(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      submitted: formatDate(weekly.submitted.toDateString(), true),
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],

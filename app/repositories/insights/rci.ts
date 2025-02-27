@@ -130,7 +130,6 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
     },
-
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelSentToLimble(sentToLimble, 45),
