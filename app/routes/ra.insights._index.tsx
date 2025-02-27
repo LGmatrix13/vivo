@@ -67,7 +67,7 @@ export default function RAInsightsPage() {
     <InsightsTable
       rows={[
         {
-          category: "Conversatons",
+          category: "Conversations",
           insights: lastConversatonsInsights,
         },
         {
