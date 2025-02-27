@@ -196,7 +196,7 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
 
   return {
     title: `${count} level 3 conversations`,
-    level: "warning",
+    level: "great",
   };
 }
 
