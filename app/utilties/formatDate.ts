@@ -13,7 +13,7 @@ export function formatDate(
     hour: "2-digit",
     minute: "2-digit",
   });
-  const days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+  const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
   if (diffYears === 0 && diffDays === 0 && diffMonths === 0) {
     return `Today${includeTime ? `, ${time}` : ""}`;

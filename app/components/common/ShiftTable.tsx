@@ -48,7 +48,7 @@ export default function ShiftTable<T extends Shift>(
     "Monday",
     "Tuesday",
     "Wednesday",
-    "Thrusday",
+    "Thursday",
     "Friday",
     "Saturday",
   ];

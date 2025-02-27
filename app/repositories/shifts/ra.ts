@@ -155,7 +155,7 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
     
     
     const formattedRow = {
-      email: row["Email"].trim(),
+      email: row["Email"].trim().toUpperCase(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RAScheduleCSV.safeParse(formattedRow);

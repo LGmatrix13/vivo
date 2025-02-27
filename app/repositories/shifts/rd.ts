@@ -82,7 +82,7 @@ export async function uploadDutyScheduleForRD(
     error: string;
   }[] = [];
   const erroredRows: Record<string, string>[] = [];
-  for (let i = 0; i < data.length-1; i++) {
+  for (let i = 0; i < data.length; i++) {
     const row = data[i];
 
     //check to see if row has the correct data
@@ -92,7 +92,7 @@ export async function uploadDutyScheduleForRD(
     }
 
     const formattedRow = {
-      email: row["Email"].trim(),
+      email: row["Email"].trim().toUpperCase(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
