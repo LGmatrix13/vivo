@@ -78,8 +78,8 @@ export async function readRCIInsightsAsRD(
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
-    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .innerJoin(roomTable, eq(roomTable.zoneId, zoneTable.id))
+    .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
+    .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .where(eq(zoneTable.staffId, staffId))
     .groupBy(residentTable.id);
 
@@ -94,9 +94,8 @@ export async function readRCIInsightsAsRD(
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
     },
-
     {
-      title: `${approvedRCIs} approved RCIs`,
+      title: `${approvedRCIs} RCIs send to limble`,
       level: calculateLevelSentToLimble(sentToLimble, 5),
     },
   ];
