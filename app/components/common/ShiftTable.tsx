@@ -12,6 +12,7 @@ import {
 } from "./Icons";
 import Table from "./Table";
 import Instruction from "./Instruction";
+import { csv } from "~/utilties/csv";
 
 type Shift = {
   date: string;
@@ -57,7 +58,7 @@ export default function ShiftTable<T extends Shift>(
     return {
       ...shift,
       date,
-      day: `${days[date.getDay()]}, ${date.getMonth()+1}/${date.getDate()}`,
+      day: `${days[date.getDay()]}, ${date.getMonth() + 1}/${date.getDate()}`,
     };
   });
 
@@ -151,7 +152,6 @@ export default function ShiftTable<T extends Shift>(
                 </DrawerButton>
                 <DrawerContent>
                   <h2 className="font-bold text-xl">Upload RD Schedule</h2>
-                  {/* add form for upload here */}
                 </DrawerContent>
               </DrawerProvider>
             )}
@@ -165,7 +165,17 @@ export default function ShiftTable<T extends Shift>(
                 </DrawerContent>
               </DrawerProvider>
             )}
-            <IconButton Icon={Download}>Export</IconButton>
+            <IconButton
+              Icon={Download}
+              onClick={() => {
+                csv.download(filteredShifts, "Shifts", {
+                  day: "Day",
+                  name: "Name",
+                });
+              }}
+            >
+              Export Shifts
+            </IconButton>
           </div>
         )}
       />
