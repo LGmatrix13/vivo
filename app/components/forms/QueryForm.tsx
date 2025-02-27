@@ -1,27 +1,30 @@
-import { FormEvent, useState } from "react";
+import React, { Dispatch, FormEvent, useState } from "react";
 import Textarea from "../common/Textarea";
 import WideButton from "../common/WideButton";
 
 interface IQueryFormProps {
-  setQueryState: (query: string) => void;
-  setReponseState: (response: string) => void;
+  setLoading: Dispatch<boolean>;
+  onQuery: (query: string) => void;
+  onReponse: (response: string) => void;
 }
 
 export default function QueryForm(props: IQueryFormProps) {
-  const { setQueryState, setReponseState } = props;
+  const { setLoading, onQuery, onReponse } = props;
   const [query, setQuery] = useState("");
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!query.trim()) return;
-    setQueryState(query);
+    onQuery(query);
     setQuery("");
+    setLoading(true);
     fetch(`/api/merrick`, {
       method: "POST",
       body: query,
     }).then((response) => {
       response.text().then((text) => {
-        setReponseState(text);
+        setLoading(false);
+        onReponse(text);
       });
     });
   }

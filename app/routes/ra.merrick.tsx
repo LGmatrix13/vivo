@@ -1,5 +1,7 @@
 import { MetaFunction } from "@remix-run/react";
 import { useState } from "react";
+import { Loader } from "~/components/common/Icons";
+import Loading from "~/components/common/Loading";
 import QueryForm from "~/components/forms/QueryForm";
 
 export const meta: MetaFunction = () => {
@@ -12,7 +14,7 @@ export const meta: MetaFunction = () => {
 export default function RAMerrick() {
   const [queries, setQueries] = useState<string[]>([]);
   const [responses, setResponses] = useState<string[]>([]);
-
+  const [loading, setLoading] = useState(false);
   return (
     <div className="h-[calc(100vh_-_124px)] flex flex-col justify-between px-7 pb-7">
       {!queries.length && (
@@ -38,6 +40,12 @@ export default function RAMerrick() {
                 {query}
               </div>
             </div>
+            {loading && (
+              <div className="space-x-2 flex items-center">
+                <Loader className="animate-spin" />
+                <span>Thinking...</span>
+              </div>
+            )}
             {responses.length > index && (
               <div className="space-y-2">
                 <span className="text-sm font-bold">Merrick</span>
@@ -49,12 +57,12 @@ export default function RAMerrick() {
           </>
         ))}
       </div>
-      <div></div>
       <QueryForm
-        setQueryState={(query) => {
+        onQuery={(query) => {
           setQueries((prev) => [...prev, query]);
         }}
-        setReponseState={(response) => {
+        setLoading={setLoading}
+        onReponse={(response) => {
           const cleanResponse = response
             .replace(/\\n/g, " ")
             .replace(/^"|"$/g, "")
