@@ -6,26 +6,30 @@ import { conversationInsightsAsRD, conversationInsightsAsADMIN } from "~/reposit
 import { RoundReportInsightsAsADMIN, RoundReportInsightsAsRD } from "~/repositories/insights/roundInsights";
 import { auth } from "~/utilties/auth.server";
 import { roundReportTable } from "~/utilties/schema.server";
+import { eventInsightsAsADMIN, eventInsightsAsRD } from "~/repositories/insights/eventInsights";
+import { rciInsightsAsADMIN, rciInsightsAsRD } from "~/repositories/insights/rciInsights";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
   // TODO: get insights from database
 
-  const [ConversationInsights, RoundInsights] = await Promise.all([
+  const [ConversationInsights, RoundInsights, eventInsights, rciInsights] = await Promise.all([
       admin ? conversationInsightsAsADMIN() : conversationInsightsAsRD(user.id),
-      admin ? RoundReportInsightsAsADMIN() : RoundReportInsightsAsRD(user.id)
+      admin ? RoundReportInsightsAsADMIN() : RoundReportInsightsAsRD(user.id),
       //ADD OTHER INSIGHTS HERE JACK
+      admin ? eventInsightsAsADMIN() : eventInsightsAsRD(user.id),
+      admin ? rciInsightsAsADMIN() : rciInsightsAsRD(user.id)
 
   ]);
 
-  return {ConversationInsights, RoundInsights};
+  return {ConversationInsights, RoundInsights, eventInsights, rciInsights};
   // TODO: return the data from the database and return
 }
 
 export default function StaffInsightsLayout() {
   const data = useLoaderData<typeof loader>();
-  const {ConversationInsights, RoundInsights} = useLoaderData<typeof loader>();
+  const {ConversationInsights, RoundInsights, eventInsights, rciInsights} = useLoaderData<typeof loader>();
 
 
   const formattedRows = [{
@@ -56,6 +60,26 @@ export default function StaffInsightsLayout() {
       title: `Total Outstanding Work Orders: ${RoundInsights.outstandingWorkOrderCount}`,
     },]
     },
+
+    {
+      category: `Events`,
+      insights: [{
+        level: "warning" as "warning", // You can set the level dynamically based on data conditions
+        title: `Total Events: ${eventInsights.eventCount}`,
+      },
+      {
+        level: "danger" as "danger",
+        title: `Total Attendance: ${eventInsights.totalAttendance}`,
+      },]
+    },
+
+    {
+      category: `RCI`,
+      insights: [{
+        level: "warning" as "warning", // You can set the level dynamically based on data conditions
+        title: `Incomplete RCI's: ${rciInsights.incompleteRCICount}`,
+      },]
+    }
   ];
 
   return (

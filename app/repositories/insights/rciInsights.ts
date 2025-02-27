@@ -8,7 +8,7 @@ export async function rciInsightsAsRA(zoneId: number) {
             firstName: residentTable.firstName,
             lastName: residentTable.lastName,
             completedRCIs: sql`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("completedRCIs"),
-            uncompletedRCIs: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("uncompletedRCIs")
+            incompleteRCICount: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("incompleteRCICount")
         })
         .from(RCITable)
         .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -17,7 +17,10 @@ export async function rciInsightsAsRA(zoneId: number) {
         .where(eq(zoneTable.id, zoneId))
         .groupBy(residentTable.id)
 
-    return rciDataRA;
+        return {
+            rciDataRA,
+            incompleteRCICount: rciDataRA[0]?.incompleteRCICount,
+        };
 }
 
 export async function rciInsightsAsRD(buildingId: number) {
@@ -25,8 +28,8 @@ export async function rciInsightsAsRD(buildingId: number) {
         .select({
             firstName: residentTable.firstName,
             lastName: residentTable.lastName,
-            completedRCIs: sql`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("completedRCIs"),
-            uncompletedRCIs: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("uncompletedRCIs")
+            completeRCICount: sql`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("completeRCICount"),
+            incompleteRCICount: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("incompleteRCICount")
         })
         .from(RCITable)
         .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -34,7 +37,10 @@ export async function rciInsightsAsRD(buildingId: number) {
         .where(eq(roomTable.buildingId, buildingId))
         .groupBy(residentTable.id)
 
-    return rciDataRD;
+        return {
+            rciDataRD,
+            incompleteRCICount: rciDataRD[0]?.incompleteRCICount,
+        };
 }
 
 export async function rciInsightsAsADMIN() {
@@ -42,12 +48,15 @@ export async function rciInsightsAsADMIN() {
         .select({
             firstName: residentTable.firstName,
             lastName: residentTable.lastName,
-            completedRCIs: sql`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("completedRCIs"),
-            uncompletedRCIs: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("uncompletedRCIs")
+            completeRCICount: sql`SUM(CASE WHEN ${RCITable.status} != 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("completeRCICount"),
+            incompleteRCICount: sql`SUM(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("incompleteRCICount")
         })
         .from(RCITable)
         .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
         .groupBy(residentTable.id)
         
-    return rciDataADMIN;
+    return {
+        rciDataADMIN,
+        incompleteRCICount: rciDataADMIN[0]?.incompleteRCICount,
+    };
 }
