@@ -108,6 +108,10 @@ export async function readConversationInsightsLevelThreeCountAsRD(
   return {
     title: `${count} level 3 conversations`,
     level: "great",
+    action: {
+      title: "View Your Buildings Conversations",
+      href: "/staff/reports/conversation",
+    },
   };
 }
 
