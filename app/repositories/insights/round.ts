@@ -39,6 +39,10 @@ export async function readRoundReportInsightsViolationsAsRD(
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
+    action: {
+      title: "View Rounds",
+      href: "/staff/reports/round",
+    },
   };
 }
 
@@ -73,6 +77,10 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
+    action: {
+      title: "View Rounds",
+      href: "/staff/reports/round",
+    },
   };
 }
 
@@ -104,6 +112,11 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
+    action: {
+      title: "View Rounds",
+      href: "/ra/reports/round",
+    },
+    
   };
 }
 
