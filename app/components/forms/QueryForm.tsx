@@ -30,8 +30,8 @@ export default function QueryForm(props: IQueryFormProps) {
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if ((e.key === "Enter" && e.ctrlKey) || (e.key === "Enter" && e.metaKey)) {
-      // Submit form on Ctrl + Enter
+    if ((e.key === "Enter")) {
+      // Submit form on Enter
       e.preventDefault();
       handleSubmit(e as any);
     }
