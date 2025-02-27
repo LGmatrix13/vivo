@@ -1,37 +1,39 @@
-import { eventReportTable } from "~/utilties/schema.server";
+import { eventReportTable, residentTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/connection.server";
 import { eq, sql } from "drizzle-orm";
 
 
-export async function viewEventInsightsRA() {
-    const data = await db.client
+export async function eventInsightsAsRA(zoneId: number) {
+    const eventDataRA = await db.client
+        .select({
+            eventCount: sql`COUNT(${eventReportTable.zoneId})`,
+            totalAttendance: sql`SUM(${eventReportTable.attendance})`,
+        })
+        .from(eventReportTable)
+        .where(eq(eventReportTable.zoneId, zoneId));
+
+    return eventDataRA;
+}
+
+export async function eventInsightsAsRD(buildingId: number) {
+    const eventDataRD = await db.client
         .select({
             id: eventReportTable.id,
-            description: eventReportTable.description,
-            zoneId: eventReportTable.zoneId,
             attendance: eventReportTable.attendance,
         })
         .from(eventReportTable)
+        .where(eq(eventReportTable.id, buildingId));
 
-    const formattedData = data.map((event) => {
-        return {
-            ...event,
-        };
-    });
-
-    return formattedData;
+    return eventDataRD;
 }
-export async function eventInsights(buildingId: number) {
-    const data = await db.client
-        .select({
-            eventCount: sql`COUNT(*)`.mapWith(Number).as('eventCount'),
-            totalAttendance: sql`SUM(${eventReportTable.attendance})`.as('totalAttendance')
-        })
-        .from(eventReportTable)
-        .where(eq(eventReportTable.zoneId, buildingId));
 
-    return {
-        eventCount: data[0].eventCount,
-        totalAttendance: data[0].totalAttendance,
-    };
+export async function eventInsightsAsADMIN() {
+    const eventDataADMIN = await db.client
+        .select({
+            id: eventReportTable.id,
+            attendance: eventReportTable.attendance,
+        })
+        .from(eventReportTable);
+
+    return eventDataADMIN;
 }
