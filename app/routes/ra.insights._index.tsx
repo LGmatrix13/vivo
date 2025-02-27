@@ -4,6 +4,7 @@ import InsightsTable from "~/components/common/InsightsTable";
 import { readBuildingsDropdownAsAdmin } from "~/repositories/housing/buildings";
 import { lastConversation } from "~/repositories/insights/conversationInsights";
 import { auth } from "~/utilties/auth.server";
+import { rciInsightsAsRA } from "~/repositories/insights/rciInsights";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -20,24 +21,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ]);
 
   // TODO: return the data from the database and return
-  return {insights };
+  return {insights};
 }
 
 export default function RAInsightsPage() {
   const data = useLoaderData<typeof loader>();
-  const {insights} = useLoaderData<typeof loader>();
+  const {insights } = useLoaderData<typeof loader>();
 
-  const rows = insights.map((insight) =>{
-      return{
-          category: "Conversations with " + insight.firstName + " " + insight.lastName,
-          insights: [{
-              level: "warning" as "warning",
-              title: "You havent had a conversation with this individual in over 30 days"
-          }]
-
-      }
-  })
-
+  const rows = insights.map((insight) => {
+    return {
+      category: "Conversations with " + insight.firstName + " " + insight.lastName,
+      insights: [
+        {
+          level: "warning" as "warning",
+          title: "You haven't had a conversation with this individual in over 30 days",
+        },
+      ],
+    };
+   }); 
 
   return (
     <InsightsTable
