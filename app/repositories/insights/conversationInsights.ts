@@ -3,8 +3,6 @@ import { db } from "~/utilties/connection.server";
 import { and, eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
-
-
 //for RDS
 export async function conversationInsightsAsRD(buildingId: number) {
     //filter by building
@@ -64,33 +62,31 @@ export async function conversationInsightsAsADMIN() {
       }).from(consverationReportTable)
       .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
       .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-      .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+      .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId));
 
-
-      const highPriorityCount = await db.client
+  const highPriorityCount = await db.client
       .select({
           highPriorityCount: sql`SUM(CASE WHEN ${consverationReportTable.highPriority} THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("highPriorityCount"),
       }).from(consverationReportTable)
       .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
       .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
       .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-      .where(eq(consverationReportTable.highPriority, true))
+      .where(eq(consverationReportTable.highPriority, true));
 
-      const level3Count = await db.client
+  const level3Count = await db.client
       .select({
           level3Count: sql`SUM(CASE WHEN ${consverationReportTable.level} = '3' THEN 1 ELSE 0 END)::integer`.mapWith(Number).as("level3Count"),
       }).from(consverationReportTable)
       .innerJoin(residentTable, eq(residentTable.id, consverationReportTable.residentId))
       .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
       .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-      .where(eq(consverationReportTable.level, '3'))
+      .where(eq(consverationReportTable.level, '3'));
 
-return {
-  conversationCount: conversationCount[0]?.conversationCount || 0,
-  highPriorityCount: highPriorityCount[0]?.highPriorityCount || 0,
-  level3Count: level3Count[0]?.level3Count || 0
-};
-
+  return {
+    conversationCount: conversationCount[0]?.conversationCount || 0,
+    highPriorityCount: highPriorityCount[0]?.highPriorityCount || 0,
+    level3Count: level3Count[0]?.level3Count || 0
+  };
 }
 
 

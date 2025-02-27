@@ -53,16 +53,10 @@ export default function StaffInsightsLayout() {
     },
     {
       level: "danger" as "danger",
-      title: `Total Outstanding Work Orders: ${RoundInsights.OutstandingWorkOrderCount}`,
+      title: `Total Outstanding Work Orders: ${RoundInsights.outstandingWorkOrderCount}`,
     },]
     },
-  
-  
   ];
-
-
-  
-
 
   return (
     <InsightsTable
