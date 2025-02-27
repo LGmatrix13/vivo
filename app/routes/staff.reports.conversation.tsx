@@ -72,7 +72,7 @@ export default function StaffReportsConversationPage() {
   }));
 
   const columnKeys = {
-    submitted: "Date",
+    time: "Date",
     ra: "RA",
     residentName: "Resident",
     level: "Level",

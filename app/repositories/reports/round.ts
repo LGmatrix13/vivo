@@ -50,7 +50,7 @@ export async function readRoundReports() {
   const formattedData = data.map((round) => {
     return {
       ...round,
-      time: formatDate(round.submitted, true),
+      time: formatDate(round.submitted.toDateString(), true),
     };
   });
 
@@ -94,7 +94,7 @@ export async function readRoundReportsAsRD(id: number) {
   const formattedData = data.map((round) => {
     return {
       ...round,
-      time: formatDate(round.submitted, true),
+      time: formatDate(round.submitted.toDateString(), true),
     };
   });
 
@@ -107,9 +107,7 @@ export async function readRoundReportsAsRA(id: number) {
       id: roundReportTable.id,
       zoneId: roundReportTable.zoneId,
       submitted: roundReportTable.submitted,
-      time: sql<string>`TO_CHAR(${roundReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: roundReportTable.time,
       description: roundReportTable.description,
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
@@ -129,7 +127,7 @@ export async function readRoundReportsAsRA(id: number) {
   const formattedData = data.map((round) => {
     return {
       ...round,
-      time: formatDate(round.time, true),
+      time: formatDate(round.time.toDateString(), true),
     };
   });
 

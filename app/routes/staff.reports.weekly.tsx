@@ -69,7 +69,7 @@ export default function StaffReportsWeeklyPage() {
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
   const columnKeys = {
-    submittedOn: "Date",
+    time: "Date",
     ra: "RA",
   };
   const rowKeys = {
@@ -99,7 +99,7 @@ export default function StaffReportsWeeklyPage() {
   return (
     <Table<IWeeklyReport>
       columnKeys={columnKeys}
-      rows={data.weekly}
+      rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
       }}

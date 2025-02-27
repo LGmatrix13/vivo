@@ -21,7 +21,6 @@ import {
 } from "~/repositories/reports/round";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IRoundReport } from "~/models/reports";
-import { useState } from "react";
 import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
@@ -68,8 +67,7 @@ export default function StaffReportsRoundPage() {
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
   const columnKeys = {
-    submitted: "Date",
-    time: "Time",
+    time: "Date",
     ra: "RA",
   };
   const rowKeys = {

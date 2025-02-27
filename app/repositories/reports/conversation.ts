@@ -52,7 +52,7 @@ export async function readConversationReports() {
   const formattedData = data.map((event) => {
     return {
       ...event,
-      time: formatDate(event.submitted, true),
+      time: formatDate(event.submitted.toDateString(), true),
     };
   });
 
@@ -98,7 +98,7 @@ export async function readConversationReportsAsRD(id: number) {
   const formattedData = data.map((event) => {
     return {
       ...event,
-      time: formatDate(event.submitted, true),
+      time: formatDate(event.submitted.toDateString(), true),
     };
   });
 
@@ -134,7 +134,7 @@ export async function readConversationReportsAsRA(id: number) {
     return {
       ...conversation,
       highPriority: conversation.highPriority ? "Yes" : "No",
-      submitted: formatDate(conversation.submitted, true),
+      submitted: formatDate(conversation.submitted.toDateString(), true),
     };
   });
 

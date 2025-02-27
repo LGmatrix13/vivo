@@ -64,7 +64,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
 export async function readRoundReportInsightsViolationsAsAdmin() {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 END)::integer`,
     })
     .from(roundReportTable);
 
@@ -79,7 +79,7 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
 export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
   const data = await db.client
     .select({
-      sum: sql<number>`SUM(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 ELSE 0 END)::integer`,
+      sum: sql<number>`COUNT(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 END)::integer`,
     })
     .from(roundReportTable);
 
@@ -94,7 +94,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
 export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
   const data = await db.client
     .select({
-      count: sql<number>`SUM(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 ELSE 0 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${roundReportTable.violations} IS NOT NULL THEN 1 END)::integer`,
     })
     .from(roundReportTable)
     .where(eq(roundReportTable.zoneId, zoneId));
@@ -112,7 +112,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRA(
 ) {
   const data = await db.client
     .select({
-      sum: sql<number>`SUM(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 ELSE 0 END)::integer`,
+      sum: sql<number>`COUNT(CASE WHEN ${roundReportTable.outstandingWorkOrders} IS NOT NULL THEN 1 END)::integer`,
     })
     .from(roundReportTable)
     .where(eq(roundReportTable.zoneId, zoneId));
