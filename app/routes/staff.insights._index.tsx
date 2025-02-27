@@ -29,7 +29,6 @@ import {
 } from "~/repositories/insights/rci";
 import {
   readRoundReportInsightsOutstandingWorkOrdersAsAdmin,
-  readRoundReportInsightsOutstandingWorkOrdersAsRA,
   readRoundReportInsightsOutstandingWorkOrdersAsRD,
   readRoundReportInsightsViolationsAsAdmin,
   readRoundReportInsightsViolationsAsRD,

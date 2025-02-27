@@ -220,12 +220,10 @@ export async function readConversationInsightsLastConversatonsAsRA(
     );
 
   function calculateLevel(daysSinceLastConvo: number) {
-    if (daysSinceLastConvo > 10) {
+    if (daysSinceLastConvo > 40) {
       return "danger";
-    } else if (daysSinceLastConvo > 5) {
-      return "warning";
     } else {
-      return "great";
+      return "warning";
     }
   }
 

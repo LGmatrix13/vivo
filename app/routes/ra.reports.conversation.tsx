@@ -44,8 +44,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      const conversation = { submitted: new Date().toDateString(), ...values };
-      return await createConversation(conversation, request);
+      return await createConversation(values, request);
     case "update":
       return await updateConversation(values, request);
     case "delete":
@@ -110,8 +109,8 @@ export default function AdminReportsRoundPage() {
       DeleteComponent={({ row }) => (
         <DeleteForm
           id={row.id}
-          title="Delete Event"
-          prompt="Are you sure you want to delete this event?"
+          title="Delete Conversation"
+          prompt="Are you sure you want to delete this conversation?"
         />
       )}
       ActionButtons={({ rows }) => (

@@ -47,10 +47,7 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
     .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .where(eq(roomTable.zoneId, zoneId))
-    //.groupBy(roomTable.zoneId);
-
-    console.log(data[0])
+    .where(eq(roomTable.zoneId, zoneId));
   const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
 
   return [
@@ -86,8 +83,7 @@ export async function readRCIInsightsAsRD(
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
-    .where(eq(zoneTable.staffId, staffId))
-    .groupBy(residentTable.id);
+    .where(eq(zoneTable.staffId, staffId));
 
   const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
 
