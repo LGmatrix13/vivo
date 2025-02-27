@@ -57,7 +57,9 @@ export default function ShiftTable<T extends Shift>(
     return {
       ...shift,
       date,
-      day: days[date.getUTCDay()],
+      day: `${date.getUTCDate()}/${date.getUTCDay() + 1}, ${
+        days[date.getUTCDay()]
+      }`,
     };
   });
 

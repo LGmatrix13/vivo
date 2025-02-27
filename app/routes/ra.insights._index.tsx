@@ -84,7 +84,7 @@ export default function RAInsightsPage() {
         },
       ]}
       ActionButtons={() => (
-        <Link to="/staff/merrick">
+        <Link to="/ra/merrick">
           <IconButton Icon={Sparkles}>Ask Merrick</IconButton>
         </Link>
       )}

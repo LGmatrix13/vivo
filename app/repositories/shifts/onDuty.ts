@@ -59,8 +59,6 @@ export async function readOnDutyRAAsRD(id: number) {
   return data;
 }
 
-
-
 export async function readOnDutyRD() {
   const data = await db.client
     .select({
@@ -104,7 +102,6 @@ export async function uploadDutyScheduleForRD(
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
 
-
     //check to see if row has the correct data
     if (!row["Email"] || !row["Date"]) {
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
@@ -125,7 +122,10 @@ export async function uploadDutyScheduleForRD(
       .limit(1);
 
     if (staffRecord.length === 0) {
-      errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
+      errors.push({
+        rowNumber: i + 1,
+        error: `No staff found for email: ${formattedRow.email}`,
+      });
       continue;
     }
 
@@ -174,27 +174,28 @@ export async function uploadDutyScheduleForRAs(
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
       continue;
     }
-    
-    
+
     const formattedRow = {
       email: row["Email"].trim(),
       date: new Date(row["Date"].trim()).toISOString(),
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
-
     const zoneRecord = await db.client
-    .select({ id: residentTable.id })
-    .from(residentTable)
-    .where(eq(residentTable.emailAddress, formattedRow.email))
-    .limit(1);
+      .select({ id: residentTable.id })
+      .from(residentTable)
+      .where(eq(residentTable.emailAddress, formattedRow.email))
+      .limit(1);
 
-  if (zoneRecord.length === 0) {
-    errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
-    continue;
-  }
+    if (zoneRecord.length === 0) {
+      errors.push({
+        rowNumber: i + 1,
+        error: `No staff found for email: ${formattedRow.email}`,
+      });
+      continue;
+    }
 
-  const zoneId = zoneRecord[0].id;
+    const zoneId = zoneRecord[0].id;
 
     if (result.success) {
       const formattedData = {
