@@ -17,8 +17,8 @@ function readContext(query_vector: number[]): string[] {
   // Sort by similarity in descending order
   scoredChunks.sort((a, b) => b.similarity - a.similarity);
 
-  // Get the top 10 chunks
-  const topChunks = scoredChunks.slice(0, 10).map((chunk) => chunk.text);
+  // Get the top 5 chunks
+  const topChunks = scoredChunks.slice(0, 5).map((chunk) => chunk.text);
 
   return topChunks;
 }
