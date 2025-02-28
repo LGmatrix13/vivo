@@ -163,7 +163,7 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
     
     const formattedRow = {
       email: row["Email"].trim().toUpperCase(),
-      date: midnightUTC.toISOString(),
+      date: midnightUTC,
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
@@ -198,7 +198,7 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
         zoneId,
         date:
           newResult.data.date instanceof Date
-            ? newResult.data.date.toISOString()
+            ? newResult.data.date
             : newResult.data.date, // Ensure date is a string
       };
       await db.client.insert(zoneShiftTable).values(formattedData);

@@ -15,7 +15,7 @@ import Instruction from "./Instruction";
 import { csv } from "~/utilties/csv";
 
 type Shift = {
-  date: string;
+  date: Date;
 };
 
 interface IScheduleTableProps<T> {

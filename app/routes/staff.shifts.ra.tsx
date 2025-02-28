@@ -71,9 +71,14 @@ export default function StaffShiftsRAPage() {
     }),
   ];
 
+  const parsedShifts = data.shifts.map((shift) => ({
+    ...shift,
+    date: new Date(shift.date), // Convert string back to Date
+  }));
+
   return (
     <ScheduleTable<IZoneShift>
-      shifts={data.shifts}
+      shifts={parsedShifts}
       filter={{
         options: buildingOptions,
       }}
