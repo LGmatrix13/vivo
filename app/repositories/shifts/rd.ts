@@ -98,10 +98,11 @@ export async function uploadDutyScheduleForRD(
       parsedDate.getUTCMonth(),
       parsedDate.getUTCDate()
     ));
+    console.log(midnightUTC)
 
     const formattedRow = {
       email: row["Email"].trim().toUpperCase(),
-      date: midnightUTC.toISOString(),
+      date: midnightUTC,
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
 
@@ -131,7 +132,7 @@ export async function uploadDutyScheduleForRD(
         staffId,
         date:
           newResult.data.date instanceof Date
-            ? newResult.data.date.toISOString()
+            ? newResult.data.date
             : newResult.data.date,
       };
       await db.client.insert(staffShiftTable).values(formattedData);
