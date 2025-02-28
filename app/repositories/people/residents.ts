@@ -203,10 +203,9 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
   const rds = await db.client
     .select({
       id: residentTable.id,
-      name:
-        sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
-          "rd"
-        ),
+      name: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`.as(
+        "rd"
+      ),
     })
     .from(residentTable)
     .where(notExists(db.client.select().from(table).where(predicate)))
@@ -216,10 +215,17 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
 }
 
 export async function createResident(values: Values, request: Request) {
-  return db.insert(request, residentTable, CreatedResident, values, true, {
-    message: "Created Resident",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    residentTable,
+    CreatedResident,
+    values,
+    true,
+    {
+      message: "Created Resident",
+      level: "success",
+    }
+  );
 }
 
 export async function updateResident(values: Values, request: Request) {

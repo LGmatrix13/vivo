@@ -1,16 +1,14 @@
-import { useLoaderData, useOutletContext } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { csv } from "~/utilties/csv";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { IIncompleteRCI } from "~/models/rci";
 import { readIncompleteRCIsAsRA } from "~/repositories/rci/incomplete";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
-import { createReadReport } from "~/repositories/read/reports";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -36,7 +34,7 @@ export default function RARCIsIncompletePage() {
   return (
     <Table<IIncompleteRCI>
       columnKeys={columnKeys}
-      rows={data.incompleteRCIs}
+      rows={data.incompleteRCIs as IIncompleteRCI[]}
       search={{
         placeholder: "Search for an incomplete RCI...",
       }}

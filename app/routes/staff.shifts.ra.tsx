@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin"]);
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
@@ -71,14 +71,9 @@ export default function StaffShiftsRAPage() {
     }),
   ];
 
-  const parsedShifts = data.shifts.map((shift) => ({
-    ...shift,
-    date: new Date(shift.date), // Convert string back to Date
-  }));
-
   return (
     <ScheduleTable<IZoneShift>
-      shifts={parsedShifts}
+      shifts={data.shifts}
       filter={{
         options: buildingOptions,
       }}

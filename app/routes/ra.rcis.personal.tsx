@@ -8,6 +8,7 @@ import {
   upperCampusMapping,
 } from "~/mappings/rci";
 import { ISubmittedRCI } from "~/models/rci";
+import { readResidentIdAsRA } from "~/repositories/people/ras";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
 import { readSubmittedRCIAsRA } from "~/repositories/rci/complete";
@@ -17,9 +18,9 @@ import { auth } from "~/utilties/auth.server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
   const submittedRCI = await readSubmittedRCIAsRA(user.id);
-  return json({
+  return {
     submittedRCI,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -27,14 +28,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
+  const { residentId } = await readResidentIdAsRA(user.id);
   switch (intent) {
     case "create.upperCampus":
-      return await createUpperCampus(request, user.id, values);
+      return await createUpperCampus(request, residentId, values);
     case "create.colonialDouble":
-      return await createColonialDouble(request, user.id, values);
+      return await createColonialDouble(request, residentId, values);
     case "create.colonialQusad":
-      return await createColonialQuad(request, user.id, values);
+      return await createColonialQuad(request, residentId, values);
   }
 }
 

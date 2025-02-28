@@ -17,6 +17,21 @@ import {
 
 type Values = { [key: string]: any };
 
+export async function readResidentIdAsRA(zoneId: number) {
+  const data = await db.client
+    .select({
+      residentId: residentTable.id,
+    })
+    .from(residentTable)
+    .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
+    .where(eq(zoneTable.id, zoneId));
+
+  const { residentId } = data[0];
+  return {
+    residentId,
+  };
+}
+
 export async function readRAsAsAdmin() {
   const ras = await db.client
     .select({
@@ -146,7 +161,7 @@ export async function readRAsDropdownAsRD(id: number) {
 }
 
 export async function createRA(values: Values, request: Request) {
-  return db.insert(request, zoneTable, CreatedRA, values, true, {
+  return await db.insert(request, zoneTable, CreatedRA, values, true, {
     message: "Resident Created",
     level: "success",
   });
@@ -260,20 +275,19 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           triple: 3,
           quad: 4,
         };
-        var roomTypeValue
+        var roomTypeValue;
         if (buildingName.toLowerCase() === "colonial") {
           if (stringToNumberMap[result.data.roomType.toLowerCase()] <= 2) {
-            roomTypeValue = roomTypeEnum.enumValues[1]
+            roomTypeValue = roomTypeEnum.enumValues[1];
+          } else if (
+            stringToNumberMap[result.data.roomType.toLowerCase()] == 3
+          ) {
+            roomTypeValue = roomTypeEnum.enumValues[2];
+          } else {
+            roomTypeValue = roomTypeEnum.enumValues[3];
           }
-          else if (stringToNumberMap[result.data.roomType.toLowerCase()] == 3) {
-            roomTypeValue = roomTypeEnum.enumValues[2]
-          }
-          else {
-            roomTypeValue = roomTypeEnum.enumValues[3]
-          }
-        }
-        else {
-          roomTypeValue = roomTypeEnum.enumValues[0]
+        } else {
+          roomTypeValue = roomTypeEnum.enumValues[0];
         }
         const roomInfo = {
           roomNumber: roomNumber,
@@ -284,7 +298,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
               .where(eq(buildingTable.name, buildingName))
           )[0].id, //TODO: this could throw an error if building not found
           capacity: stringToNumberMap[result.data.roomType.toLowerCase()] || 0,
-          roomType: roomTypeValue
+          roomType: roomTypeValue,
         };
         room = await db.client
           .insert(roomTable)
@@ -302,14 +316,13 @@ export async function uploadMasterCSV(values: Values, request: Request) {
         })
         .from(residentTable)
         .where(eq(residentTable.studentId, residentData.studentId));
-      
+
       if (existingResident.length > 0) {
         await db.client
           .update(residentTable)
           .set(residentData)
           .where(eq(residentTable.studentId, residentData.studentId));
-      }
-      else {
+      } else {
         await db.client.insert(residentTable).values(residentData);
       }
 

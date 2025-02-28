@@ -54,10 +54,17 @@ export async function readARDs() {
 }
 
 export async function createARD(values: Values, request: Request) {
-  return db.insert(request, assistantStaffTable, CreatedARD, values, true, {
-    message: "ARD Created",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    assistantStaffTable,
+    CreatedARD,
+    values,
+    true,
+    {
+      message: "ARD Created",
+      level: "success",
+    }
+  );
 }
 
 export async function updateARD(values: Values, request: Request) {

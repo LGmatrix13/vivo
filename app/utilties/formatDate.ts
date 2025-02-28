@@ -18,7 +18,15 @@ export function formatDate(
     minute: "2-digit",
     timeZone: "America/New_York",
   });
-  const days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   if (diffYears === 0 && diffDays === 0 && diffMonths === 0) {
     return `Today${includeTime ? `, ${time}` : ""}`;

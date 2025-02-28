@@ -12,6 +12,7 @@ import {
 } from "~/utilties/schema.server";
 import { json } from "@remix-run/node";
 import mutate from "~/utilties/mutate.server";
+import { formatDate } from "~/utilties/formatDate";
 type Values = { [key: string]: any };
 
 export async function readShiftsRAAsAdmin() {
@@ -31,7 +32,11 @@ export async function readShiftsRAAsAdmin() {
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .orderBy(asc(zoneShiftTable.date));
 
-  return data;
+  const formattedData = data.map((shift) => ({
+    ...shift,
+    day: formatDate(shift.date, false, true),
+  }));
+  return formattedData;
 }
 
 export async function readShiftsRAAsRA(id: number) {
@@ -63,7 +68,11 @@ export async function readShiftsRAAsRA(id: number) {
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .orderBy(asc(zoneShiftTable.date));
 
-  return data;
+  const formattedData = data.map((shift) => ({
+    ...shift,
+    day: formatDate(shift.date, false, true),
+  }));
+  return formattedData;
 }
 
 export async function readShiftsRAAsRD(id: number) {
@@ -88,20 +97,30 @@ export async function readShiftsRAAsRD(id: number) {
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .orderBy(asc(zoneShiftTable.date));
 
-  return data;
+  const formattedData = data.map((shift) => ({
+    ...shift,
+    day: formatDate(shift.date, false, true),
+  }));
+
+  return formattedData;
 }
 
-
-
 export async function createRAShift(request: Request, values: Values) {
-  return db.insert(request, zoneShiftTable, CreatedZoneShift, values, true,{
-    message: "Created shift",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    zoneShiftTable,
+    CreatedZoneShift,
+    values,
+    true,
+    {
+      message: "Created shift",
+      level: "success",
+    }
+  );
 }
 
 export async function updateRAShift(request: Request, values: Values) {
-  return db.update(
+  return await db.update(
     request,
     zoneShiftTable,
     UpdatedZoneShift,
@@ -115,7 +134,7 @@ export async function updateRAShift(request: Request, values: Values) {
 }
 
 export async function deleteRAShift(request: Request, values: Values) {
-  return db.delete(
+  return await db.delete(
     request,
     zoneShiftTable,
     values,
@@ -128,7 +147,7 @@ export async function deleteRAShift(request: Request, values: Values) {
 }
 
 //rds do this
-export async function uploadDutyScheduleForRAs( values: Values, request: Request, id: number) {
+export async function uploadDutyScheduleForRAs(values: Values, id: number) {
   const file = values["file"] as File;
 
   if (!(file instanceof File)) {
@@ -152,57 +171,58 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
       continue;
     }
-    
 
-    const parsedDate = new Date(row["Date"].trim()); 
-    const midnightUTC = new Date(Date.UTC(
-      parsedDate.getUTCFullYear(),
-      parsedDate.getUTCMonth(),
-      parsedDate.getUTCDate()
-    ));
-    
+    const parsedDate = new Date(row["Date"].trim());
+    const midnightUTC = new Date(
+      Date.UTC(
+        parsedDate.getUTCFullYear(),
+        parsedDate.getUTCMonth(),
+        parsedDate.getUTCDate()
+      )
+    );
+
     const formattedRow = {
       email: row["Email"].trim().toUpperCase(),
       date: midnightUTC,
     };
     const result = RAScheduleCSV.safeParse(formattedRow);
 
-
     const zoneRecord = await db.client
-    .select({ zoneId: zoneTable.id })
-    .from(zoneTable)
-    .where(and(
-      eq(residentTable.emailAddress, formattedRow.email),
-      eq(zoneTable.staffId, id)
-    ))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .limit(1);
+      .select({ zoneId: zoneTable.id })
+      .from(zoneTable)
+      .where(
+        and(
+          eq(residentTable.emailAddress, formattedRow.email),
+          eq(zoneTable.staffId, id)
+        )
+      )
+      .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+      .limit(1);
 
-  if (zoneRecord.length === 0) {
-    errors.push({ rowNumber: i + 1, error: `No staff found for email: ${formattedRow.email}` });
-    continue;
-  }
+    if (zoneRecord.length === 0) {
+      errors.push({
+        rowNumber: i + 1,
+        error: `No staff found for email: ${formattedRow.email}`,
+      });
+      continue;
+    }
 
-  const zoneId = zoneRecord[0].zoneId;
+    const zoneId = zoneRecord[0].zoneId;
 
-  const newRow = {
-          zoneId : zoneId,
-          date : formattedRow.date
-        }
-  const newResult = RAScheduleCSV.safeParse(newRow);
+    const newRow = {
+      zoneId: zoneId,
+      date: formattedRow.date,
+    };
+    const newResult = RAScheduleCSV.safeParse(newRow);
 
-    console.log(newRow)
+    console.log(newRow);
     if (newResult.success) {
       const formattedData = {
-        ...result.data,
+        ...newResult.data,
         zoneId,
-        date:
-          newResult.data.date instanceof Date
-            ? newResult.data.date
-            : newResult.data.date, // Ensure date is a string
       };
       await db.client.insert(zoneShiftTable).values(formattedData);
-    }else {
+    } else {
       console.log("The row was not a success");
     }
   }
@@ -214,8 +234,8 @@ export async function uploadDutyScheduleForRAs( values: Values, request: Request
     });
   }
 
-  return mutate("/staff/shifts/upload", {
-      message: "Upload Successful",
-      level: "success",
-    });
+  return mutate("/staff/shifts/ra", {
+    message: "Upload Successful",
+    level: "success",
+  });
 }
