@@ -22,7 +22,7 @@ export default function RDOnDuty(props: RDOnDutyProps) {
             <p>{building}</p>
           </div>
           <div className="space-x-2 flex">
-            <EmailButton email={email}>{email}</EmailButton>
+            <EmailButton email={email}></EmailButton>
           </div>
         </div>
       </div>

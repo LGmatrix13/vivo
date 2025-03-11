@@ -24,7 +24,7 @@ export default function RAOnDuty(props: RAOnDutyProps) {
             <p>{room}</p>
           </div>
           <div className="space-x-2 flex">
-            <EmailButton email={email}>{email}</EmailButton>
+            <EmailButton email={email}></EmailButton>
             {phoneNumber && (
               <PhoneButton phoneNumber={phoneNumber}>{phoneNumber.substring(0, 3)}-{phoneNumber.substring(3, 6)}-{phoneNumber.substring(6)}</PhoneButton>
             )}
