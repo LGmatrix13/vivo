@@ -18,7 +18,7 @@ export default function RDOnDuty(props: RDOnDutyProps) {
           className="w-14 h-14 rounded-full"
         />
         <div className="space-y-3">
-          <div className="space-x-2 flex items-center">
+          <div className="flex flex-col space-y-1">
             <h2 className="font-bold">{name}</h2>
             <p>{building}</p>
           </div>
