@@ -78,10 +78,6 @@ export async function deleteRDShift(request: Request, values: Values) {
 export async function uploadDutyScheduleForRD(values: Values) {
   const file = values["file"] as File;
 
-  if (!(file instanceof File)) {
-    throw new Error("Uploaded value is not a valid file.");
-  }
-
   const arrayBuffer = await file.arrayBuffer();
   const content = new TextDecoder("utf-8").decode(arrayBuffer);
   const data = csv.parse(content);
