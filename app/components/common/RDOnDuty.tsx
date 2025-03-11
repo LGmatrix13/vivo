@@ -1,5 +1,6 @@
 import { EmailButton } from "./EmailButton";
 import { IRDOnDuty } from "~/models/shifts";
+import { PhoneButton } from "./PhoneButton";
 
 interface RDOnDutyProps {
   rdOnDuty: IRDOnDuty;
@@ -23,6 +24,7 @@ export default function RDOnDuty(props: RDOnDutyProps) {
           </div>
           <div className="space-x-2 flex">
             <EmailButton email={email}></EmailButton>
+            <PhoneButton phoneNumber={'7249672120'}>RD On Call</PhoneButton>
           </div>
         </div>
       </div>
