@@ -21,6 +21,7 @@ import {
   upperCampusMapping,
 } from "~/mappings/rci";
 import SelectedRow from "~/components/common/SelectedRow";
+import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -114,7 +115,13 @@ export default function RARCIsCompletePage() {
               ? colonialDoubleMapping
               : colonialQuadMapping
           }
-        />
+        >
+          <div className="space-y-3">
+            <h2 className="font-bold">Actions</h2>
+            <WideButton>Send to Limble</WideButton>
+            <WideButton>Approve</WideButton>
+          </div>
+        </SelectedRow>
       )}
       onRowRead={({ row }) => {
         fetcher.submit(

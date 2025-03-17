@@ -5,11 +5,13 @@ interface SelectedRowProps {
   keys: {
     [translation: string]: string;
   };
+  children?: React.ReactNode;
 }
 
 export default function SelectedRow(props: SelectedRowProps) {
-  const { row, keys } = props;
+  const { row, keys, children } = props;
   const originalKeys = Object.keys(keys);
+
   return (
     <div className="space-y-5">
       {originalKeys.map((originalKey, index) => (
@@ -22,6 +24,7 @@ export default function SelectedRow(props: SelectedRowProps) {
           </p>
         </div>
       ))}
+      {children}
     </div>
   );
 }
