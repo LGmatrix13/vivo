@@ -40,15 +40,14 @@ function calculateLevelSentToLimble(sentToLimble: number, scale: number) {
 export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 END)::integer`,
-      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 END)::integer`,
-      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 END)::integer`,
+      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
+      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
     .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .where(eq(roomTable.zoneId, zoneId));
-  const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
+  const { completeRCIs, approvedRCIs } = data[0];
 
   return [
     {
@@ -58,14 +57,6 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
-    },
-    {
-      title: `${approvedRCIs} RCIs send to limble`,
-      level: calculateLevelSentToLimble(sentToLimble, 1),
-      action: {
-        title: "View Complete RCIs",
-        href: "/ra/rcis/complete",
-      },
     },
   ];
 }
