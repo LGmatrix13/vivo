@@ -85,7 +85,7 @@ export const roomTable = pgTable("Room", {
   zoneId: integer("zone_id").references(() => zoneTable.id),
   capacity: integer("capacity").notNull(),
   roomType: roomTypeEnum().notNull(),
-  issuesRCI: json().notNull().default({}),
+  issuesRCI: json("issues_RCI").notNull().default({}),
 });
 
 export const assistantStaffTable = pgTable("AssistantStaff", {
