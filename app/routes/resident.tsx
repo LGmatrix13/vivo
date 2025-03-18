@@ -2,7 +2,7 @@ import { json, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
-import { Calendar, Door, Settings } from "~/components/common/Icons";
+import { Calendar, User, Door, Settings } from "~/components/common/Icons";
 import { toast } from "~/utilties/toast.server";
 import Loading from "~/components/common/Loading";
 import { Toast } from "~/components/common/Toast";
@@ -22,6 +22,12 @@ export default function AdminLayout() {
       Icon: Calendar,
       default: "/resident/on-duty",
       parent: "/resident/on-duty",
+    },
+    {
+      name: "My RA",
+      Icon: User,
+      default: "/resident/my-ra",
+      parent: "/resident/my-ra",
     },
     {
       name: "Check-in",
