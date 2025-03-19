@@ -3,8 +3,8 @@ Live, Laugh, Love, Vivo.
 
 ## Authors
 [Jack Crawford](https://github.com/jackcrawford90),
-[Liam Grossman](https://liamgrossman.com/),
-[Austin Hensley](https://github.com/hensleyas21),
+[Liam Grossman](https://liamgrossman.com),
+[Austin Hensley](https://austinhensley.com),
 [Ethan Kesterholt](https://github.com/Kesterholtem21)
 
 ## Development
