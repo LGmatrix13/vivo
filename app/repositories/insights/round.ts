@@ -40,6 +40,7 @@ export async function readRoundReportInsightsViolationsAsRD(
     title: `${count} violations`,
     level: calculateLevelViolation(count),
     action: {
+      //TODO show reports with violations greater than 0
       title: "View Your Buildings Rounds",
       href: "/staff/reports/round",
     },
@@ -109,6 +110,7 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
     action: {
+      //TODO show reports with violations greater than 0
       title: "View Rounds",
       href: "/ra/reports/round",
     },
