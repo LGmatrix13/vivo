@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function RARCIsApproveCheckInPage() {
+export default function RARCIsApproveCheckOutPage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {

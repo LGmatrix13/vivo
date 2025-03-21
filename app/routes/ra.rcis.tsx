@@ -27,7 +27,7 @@ export default function RARCIsLayout() {
     },
     {
       name: "Approve Checkout",
-      path: "/ra/rcis/approve-checkout",
+      path: "/ra/rcis/approve-check-out",
     },
     {
       name: "Incomplete",
