@@ -109,8 +109,8 @@ export async function readConversationInsightsLevelThreeCountAsRD(
     title: `${count} level 3 conversations`,
     level: "great",
     action: {
-      title: "View Your Buildings Conversations",
-      href: "/staff/reports/conversation",
+      title: "View Level 3 Conversations",
+      href: `/staff/reports/conversation?search=3`,
     },
   };
 }
@@ -235,7 +235,7 @@ export async function readConversationInsightsLastConversatonsAsRA(
         action: {
           title: "Create a Conversation",
           //TODO add search parameter by the students name
-          href: "/ra/reports/conversation",
+          href: `/ra/reports/conversation?search=${encodeURIComponent(insight.name)}`,
         },
       } as IInsight)
   );
