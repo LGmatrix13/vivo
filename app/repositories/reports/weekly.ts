@@ -121,7 +121,7 @@ export async function readWeeklyReportsAsRD(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      time: formatDate(weekly.submitted, true),
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
