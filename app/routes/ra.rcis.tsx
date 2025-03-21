@@ -22,11 +22,15 @@ export default function RARCIsLayout() {
   const { state } = useNavigation();
   const pages = [
     {
-      name: "Complete RCIs",
-      path: "/ra/rcis/complete",
+      name: "Awaiting Approval",
+      path: "/ra/rcis/awaiting-approval",
     },
     {
-      name: "Incomplete RCIs",
+      name: "Active",
+      path: "/ra/rcis/active",
+    },
+    {
+      name: "Incomplete",
       path: "/ra/rcis/incomplete",
     },
     {

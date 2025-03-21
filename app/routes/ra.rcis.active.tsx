@@ -62,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function RARCIsCompletePage() {
+export default function RARCIsAwaitingApprovalPage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
@@ -81,7 +81,7 @@ export default function RARCIsCompletePage() {
       enableReads={true}
       mixins={{
         cells: {
-          totalIssues: (row) => {
+          totalIssues: (row: ICompleteRCI) => {
             const { totalIssues } = row;
             const color =
               totalIssues > 3

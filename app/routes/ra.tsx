@@ -48,7 +48,7 @@ export default function AdminLayout() {
     {
       name: "RCIs",
       Icon: Door,
-      default: "/ra/rcis/complete",
+      default: "/ra/rcis/awaiting-approval",
       parent: "/ra/rcis",
     },
     {
