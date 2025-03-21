@@ -35,7 +35,8 @@ export const ratingEnum = pgEnum("rating", [
   "REALLY_ROUGH",
 ]);
 export const reportTypeEnum = pgEnum("reportType", [
-  "RCI",
+  "RCI_ACTIVE",
+  "RCI_CHECKED_OUT",
   "CONVERSATION",
   "WEEKLY",
   "ROUND",

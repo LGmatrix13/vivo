@@ -23,9 +23,8 @@ import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-
   const [completeRCIs] = await Promise.all([
-    readSubmittedRCIsAsRA(user.id, "ACTIVE"),
+    readSubmittedRCIsAsRA(user.id, "RA_CHECKOUT"),
     delay(100),
   ]);
   return {
@@ -34,19 +33,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const user = await auth.readUser(request, ["ra"]);
+  await auth.rejectUnauthorized(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
     case "update.status":
       return await updateSubmittedRCIStatus(request, values);
-    case "update.sendToLimble":
-      console.log("sent to limble");
-      return null;
   }
 }
 
-export default function RARCIsAwaitingApprovalPage() {
+export default function RARCIsApproveCheckInPage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
@@ -60,11 +56,11 @@ export default function RARCIsAwaitingApprovalPage() {
       columnKeys={columnKeys}
       rows={data.completeRCIs as ICompleteRCI[]}
       search={{
-        placeholder: "Search for an active RCI...",
+        placeholder: "Search for an RCI awaiting check-in approval...",
       }}
       mixins={{
         cells: {
-          totalIssues: (row: ICompleteRCI) => {
+          totalIssues: (row) => {
             const { totalIssues } = row;
             const color =
               totalIssues > 3
@@ -108,55 +104,22 @@ export default function RARCIsAwaitingApprovalPage() {
               : colonialQuadMapping
           }
         >
-          <div className="space-y-3">
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.status",
-                    id: row.id,
-                    status: "AWAITING_RA",
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Set back to Awaiting Approval
-            </WideButton>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.status",
-                    id: row.id,
-                    status: "RESIDENT_CHECKOUT",
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Release for Checkout
-            </WideButton>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.sendToLimble",
-                    id: row.id,
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Send to Limble
-            </WideButton>
-          </div>
+          <WideButton
+            onClick={() => {
+              fetcher.submit(
+                {
+                  intent: "update.status",
+                  id: row.id,
+                  status: "CHECKED_OUT",
+                },
+                {
+                  method: "POST",
+                }
+              );
+            }}
+          >
+            Approve Checkout
+          </WideButton>
         </SelectedRow>
       )}
     />

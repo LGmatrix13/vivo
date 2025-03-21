@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -7,9 +7,11 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
-
+import {
+  readSubmittedRCIsAsRA,
+  updateSubmittedRCIStatus,
+} from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
-import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
 import {
   colonialDoubleMapping,
@@ -17,20 +19,12 @@ import {
   upperCampusMapping,
 } from "~/mappings/rci";
 import SelectedRow from "~/components/common/SelectedRow";
-import {
-  readSubmittedRCIsAsAdmin,
-  readSubmittedRCIsAsRD,
-  updateSubmittedRCIStatus,
-} from "~/repositories/rci/submitted";
 import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const admin = user.role === "admin";
+  const user = await auth.readUser(request, ["ra"]);
   const [completeRCIs] = await Promise.all([
-    admin
-      ? readSubmittedRCIsAsAdmin("ACTIVE")
-      : readSubmittedRCIsAsRD(user.id, "ACTIVE"),
+    readSubmittedRCIsAsRA(user.id, "AWAITING_RA"),
     delay(100),
   ]);
   return {
@@ -39,66 +33,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
-  const user = await auth.readUser(request, ["admin", "rd"]);
-  const admin = user.role === "admin";
+  const user = await auth.readUser(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
   switch (intent) {
-    case "create.read":
-      return await createReadReport(
-        {
-          ...values,
-          personId: user.id,
-          reportType: "RCI_ACTIVE",
-          personType: admin ? "ADMIN" : "STAFF",
-        },
-        request
-      );
     case "update.status":
       return await updateSubmittedRCIStatus(request, values);
   }
 }
 
-export default function StaffHousingRCIsActivePage() {
-  const context = useOutletContext<{
-    buildingsDropdown: IBuildingDropdown[];
-  }>();
+export default function RARCIsApproveCheckInPage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Submitted",
-    ra: "RA",
     room: "Room",
     totalIssues: "Issues",
   };
-  const buildingOptions = [
-    {
-      value: 0,
-      key: "All",
-    },
-    ...context.buildingsDropdown.map((building) => {
-      return {
-        value: building.id,
-        key: building.name,
-      };
-    }),
-  ];
 
   return (
     <Table<ICompleteRCI>
       columnKeys={columnKeys}
-      rows={data.completeRCIs}
+      rows={data.completeRCIs as ICompleteRCI[]}
       search={{
-        placeholder: "Search for an active RCI...",
+        placeholder: "Search for an RCI awaiting check-in approval...",
       }}
-      filter={{
-        selected: "All",
-        key: "buildingId",
-        options: buildingOptions,
-      }}
-      enableReads={true}
       mixins={{
         cells: {
           totalIssues: (row) => {
@@ -145,38 +104,24 @@ export default function StaffHousingRCIsActivePage() {
               : colonialQuadMapping
           }
         >
-          <div className="space-y-3">
-            <WideButton onClick={() => {}}>Send to Limble</WideButton>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.status",
-                    id: row.id,
-                    status: "RESIDENT_CHECKOUT",
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Release for Checkout
-            </WideButton>
-          </div>
+          <WideButton
+            onClick={() => {
+              fetcher.submit(
+                {
+                  intent: "update.status",
+                  id: row.id,
+                  status: "ACTIVE",
+                },
+                {
+                  method: "POST",
+                }
+              );
+            }}
+          >
+            Set to Active
+          </WideButton>
         </SelectedRow>
       )}
-      onRowRead={({ row }) => {
-        fetcher.submit(
-          {
-            intent: "create.read",
-            reportId: row.id,
-          },
-          {
-            method: "POST",
-          }
-        );
-      }}
     />
   );
 }

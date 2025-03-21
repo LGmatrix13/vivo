@@ -22,12 +22,12 @@ export default function RARCIsLayout() {
   const { state } = useNavigation();
   const pages = [
     {
-      name: "Awaiting Approval",
-      path: "/ra/rcis/awaiting-approval",
+      name: "Approve Check-in",
+      path: "/ra/rcis/approve-check-in",
     },
     {
-      name: "Active",
-      path: "/ra/rcis/active",
+      name: "Approve Checkout",
+      path: "/ra/rcis/approve-checkout",
     },
     {
       name: "Incomplete",

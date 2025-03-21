@@ -1,5 +1,5 @@
 import { desc, eq, sql, and } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { alias, PgSelect } from "drizzle-orm/pg-core";
 import { UpdatedSubmittedRCI } from "~/schemas/rcis/submitted";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -56,7 +56,7 @@ export async function readSubmittedRCI(residentId: number) {
   };
 }
 
-export async function readCompleteRCIsAsAdmin() {
+export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const data = await db.client
@@ -85,9 +85,10 @@ export async function readCompleteRCIsAsAdmin() {
       and(
         eq(readTable.reportId, RCITable.id),
         eq(readTable.personType, "ADMIN"),
-        eq(readTable.reportType, "RCI")
+        eq(readTable.reportType, `RCI_${type}`)
       )
     )
+    .where(eq(RCITable.status, type))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
@@ -102,7 +103,7 @@ export async function readCompleteRCIsAsAdmin() {
 
 export async function readSubmittedRCIsAsRA(
   zoneId: number,
-  status: "AWAITING_RA" | "ACTIVE"
+  status: "AWAITING_RA" | "ACTIVE" | "RA_CHECKOUT"
 ) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -116,9 +117,6 @@ export async function readSubmittedRCIsAsRA(
       buildingId: buildingTable.id,
       issues: sql<Record<string, string>>`${RCITable.issues}`,
       roomType: roomTable.roomType,
-      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
-        "read"
-      ),
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
@@ -126,14 +124,6 @@ export async function readSubmittedRCIsAsRA(
     .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
     .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
     .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
-    .leftJoin(
-      readTable,
-      and(
-        eq(readTable.reportId, RCITable.id),
-        eq(readTable.personType, "ZONE"),
-        eq(readTable.reportType, "RCI")
-      )
-    )
     .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, status)))
     .orderBy(desc(RCITable.id));
 
@@ -164,7 +154,10 @@ export async function updateSubmittedRCIStatus(
   );
 }
 
-export async function readCompleteRCIsRD(id: number) {
+export async function readSubmittedRCIsAsRD(
+  id: number,
+  type: "ACTIVE" | "CHECKED_OUT"
+) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const data = await db.client
@@ -193,8 +186,8 @@ export async function readCompleteRCIsRD(id: number) {
       readTable,
       and(
         eq(readTable.reportId, RCITable.id),
-        eq(readTable.personType, "ADMIN"),
-        eq(readTable.reportType, "RCI")
+        eq(readTable.personType, "STAFF"),
+        eq(readTable.reportType, `RCI_${type}`)
       )
     )
     .where(eq(staffTable.id, id))
