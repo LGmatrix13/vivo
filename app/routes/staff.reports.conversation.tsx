@@ -3,6 +3,7 @@ import {
   useFetcher,
   useLoaderData,
   useOutletContext,
+  useSearchParams,
 } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
@@ -66,6 +67,8 @@ export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const formattedRows = data.conversation.map((conversation) => ({
     ...conversation,
     highPriority: conversation.highPriority ? "Yes" : "No",
@@ -102,6 +105,7 @@ export default function StaffReportsConversationPage() {
       rows={formattedRows}
       search={{
         placeholder: "Search for a conversation...",
+        initial: searchQuery,
       }}
       filter={{
         key: "buildingId",

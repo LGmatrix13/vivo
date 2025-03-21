@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -61,6 +61,8 @@ export default function StaffReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
     time: "Date",
     ra: "RA",
@@ -88,6 +90,7 @@ export default function StaffReportsRoundPage() {
       rows={data.round as IRoundReport[]}
       search={{
         placeholder: "Search for a round...",
+        initial: searchQuery,
       }}
       filter={{
         key: "buildingId",
