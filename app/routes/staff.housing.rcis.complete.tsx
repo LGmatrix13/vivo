@@ -8,7 +8,7 @@ import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
 import {
-  readSubmittedRCIsAdmin,
+  readCompleteRCIsAsAdmin,
   readCompleteRCIsRD,
 } from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
@@ -25,7 +25,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
   const [completeRCIs] = await Promise.all([
-    admin ? readSubmittedRCIsAdmin() : readCompleteRCIsRD(user.id),
+    admin ? readCompleteRCIsAsAdmin() : readCompleteRCIsRD(user.id),
     delay(100),
   ]);
   return {

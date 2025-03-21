@@ -56,7 +56,7 @@ export async function readSubmittedRCI(residentId: number) {
   };
 }
 
-export async function readCompleteRCIsAdmin() {
+export async function readCompleteRCIsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const data = await db.client

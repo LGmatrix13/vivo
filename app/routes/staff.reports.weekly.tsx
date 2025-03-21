@@ -69,7 +69,7 @@ export default function StaffReportsWeeklyPage() {
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
   const columnKeys = {
-    time: "Date",
+    submitted: "Date",
     ra: "RA",
   };
   const rowKeys = {

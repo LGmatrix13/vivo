@@ -115,7 +115,7 @@ export default function RARCIsAwaitingApprovalPage() {
                   {
                     intent: "update.status",
                     id: row.id,
-                    status: "RESIDENT_CHECKOUT",
+                    status: "AWAITING_RA",
                   },
                   {
                     method: "POST",
@@ -123,7 +123,7 @@ export default function RARCIsAwaitingApprovalPage() {
                 );
               }}
             >
-              Set to Active
+              Set back to Awaiting Approval
             </WideButton>
             <WideButton
               onClick={() => {
@@ -138,7 +138,7 @@ export default function RARCIsAwaitingApprovalPage() {
                 );
               }}
             >
-              Set to Active
+              Send to Limble
             </WideButton>
           </div>
         </SelectedRow>

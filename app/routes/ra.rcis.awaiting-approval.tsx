@@ -23,8 +23,6 @@ import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  console.log(user);
-
   const [completeRCIs] = await Promise.all([
     readSubmittedRCIsAsRA(user.id, "AWAITING_RA"),
     delay(100),
@@ -45,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ...values,
           personId: user.id,
           reportType: "RCI",
-          personType: "RA",
+          personType: "ZONE",
         },
         request
       );
