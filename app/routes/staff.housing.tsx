@@ -47,8 +47,8 @@ export default function StaffHousingLayout() {
       path: "/staff/housing/rooms",
     },
     {
-      name: "Complete RCIs",
-      path: "/staff/housing/rcis/complete",
+      name: "Active RCIs",
+      path: "/staff/housing/rcis/active",
     },
     {
       name: "Incomplete RCIs",

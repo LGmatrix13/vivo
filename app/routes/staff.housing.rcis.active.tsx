@@ -54,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function StaffHousingRCIsCompletePage() {
+export default function StaffHousingRCIsActivePage() {
   const context = useOutletContext<{
     buildingsDropdown: IBuildingDropdown[];
   }>();
@@ -84,7 +84,7 @@ export default function StaffHousingRCIsCompletePage() {
       columnKeys={columnKeys}
       rows={data.completeRCIs}
       search={{
-        placeholder: "Search for a complete RCI...",
+        placeholder: "Search for an active RCI...",
       }}
       filter={{
         selected: "All",

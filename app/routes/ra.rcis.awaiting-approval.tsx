@@ -66,7 +66,7 @@ export default function RARCIsAwaitingApprovalPage() {
       columnKeys={columnKeys}
       rows={data.completeRCIs as ICompleteRCI[]}
       search={{
-        placeholder: "Search for a complete RCI...",
+        placeholder: "Search for an RCI awaiting approval...",
       }}
       enableReads={true}
       mixins={{
