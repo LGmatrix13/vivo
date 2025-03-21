@@ -129,6 +129,22 @@ export default function RARCIsAwaitingApprovalPage() {
               onClick={() => {
                 fetcher.submit(
                   {
+                    intent: "update.status",
+                    id: row.id,
+                    status: "RESIDENT_CHECKOUT",
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Release for Checkout
+            </WideButton>
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
                     intent: "update.sendToLimble",
                     id: row.id,
                   },
