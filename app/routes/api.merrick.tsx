@@ -16,6 +16,7 @@ const chat = model.startChat({
                    If the query pertains to the given context, answer appropriately and concisely based on the context and the chat history.
                    If the query does not pertain to the given context, pretend you are a normal person and give an answer.
                    If someone says "campo", they are referring to campus safety.
+                   Wax melters may not have a hot plate, otherwise they are allowed.
                    Respond like a normal person.`,
         },
       ],

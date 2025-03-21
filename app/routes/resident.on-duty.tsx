@@ -1,9 +1,17 @@
+import { MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Filter from "~/components/common/Filter";
 import RAOnDuty from "~/components/common/RAOnDuty";
 import { readBuildingsDropdownAsAdmin } from "~/repositories/housing/buildings";
 import { readOnDutyRAAsAdmin } from "~/repositories/shifts/onDuty";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Vivo: On Duty" },
+    { name: "Vivo: On Duty", content: "RAs on duty page" },
+  ];
+};
 
 export async function loader() {
   const [rasOnDuty, buildingsDropdown] = await Promise.all([

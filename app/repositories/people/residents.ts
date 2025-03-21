@@ -254,3 +254,26 @@ export async function deleteResident(values: Values, request: Request) {
     }
   );
 }
+
+export async function myRA(resident_id: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
+  const raRoomTable = alias(roomTable, "raRoomTable");
+  const raBuildingTable = alias(buildingTable, "raBuildingTable");
+  const ra = await db.client
+    .select({
+      zoneId: zoneTable.id,
+      name: sql<string>`CONCAT(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
+      email: raInfoTable.emailAddress,
+      phoneNumber: raInfoTable.phoneNumber,
+      room: sql<string>`CONCAT(${raBuildingTable.name}, ' ', ${raRoomTable.roomNumber})`,
+      buildingId: raBuildingTable.id,
+    })
+    .from(residentTable)
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .leftJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
+    .leftJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
+    .leftJoin(raRoomTable, eq(raInfoTable.roomId, raRoomTable.id))
+    .leftJoin(raBuildingTable, eq(raRoomTable.buildingId, raBuildingTable.id))
+    .where(eq(residentTable.id, resident_id));
+  return ra[0];
+}

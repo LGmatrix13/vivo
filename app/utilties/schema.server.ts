@@ -19,10 +19,13 @@ export const sentimentEnum = pgEnum("sentiment", [
   "NEUTRAL",
   "NEGATIVE",
 ]);
-export const statusEnum = pgEnum("status", [
-  "IN_PROGRESS",
-  "APPROVED",
-  "SENT_TO_LIMBLE",
+export const RCIStatusEnum = pgEnum("status", [
+  "AWAITING_RESIDENT",
+  "AWAITING_RA",
+  "ACTIVE",
+  "RESIDENT_CHECKOUT",
+  "RA_CHECKOUT",
+  "CHECKED_OUT"
 ]);
 export const ratingEnum = pgEnum("rating", [
   "GREAT",
@@ -82,6 +85,7 @@ export const roomTable = pgTable("Room", {
   zoneId: integer("zone_id").references(() => zoneTable.id),
   capacity: integer("capacity").notNull(),
   roomType: roomTypeEnum().notNull(),
+  issuesRCI: json("issues_RCI").notNull().default({}),
 });
 
 export const assistantStaffTable = pgTable("AssistantStaff", {
@@ -217,6 +221,8 @@ export const RCITable = pgTable("RCI", {
     .notNull()
     .references(() => residentTable.id),
   issues: json().notNull().default({}),
+  checkoutIssues: json(),
   submitted: timestamp({ mode: "string" }).defaultNow().notNull(),
-  status: statusEnum().notNull(),
+  checkedOut: timestamp({ mode: "string" }),
+  status: RCIStatusEnum().notNull(),
 });

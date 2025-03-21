@@ -66,9 +66,9 @@ export async function readRCIInsightsAsRD(
 ): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 END)::integer`,
-      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 END)::integer`,
-      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 END)::integer`,
+      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
+      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
+      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RESIDENT' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -88,7 +88,7 @@ export async function readRCIInsightsAsRD(
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
     },
     {
-      title: `${approvedRCIs} RCIs send to limble`,
+      title: `${approvedRCIs} awaiting Residents`,
       level: calculateLevelSentToLimble(sentToLimble, 5),
       action: {
         title: "View Complete RCIs",
@@ -101,9 +101,9 @@ export async function readRCIInsightsAsRD(
 export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
   const data = await db.client
     .select({
-      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'IN_PROGRESS' THEN 1 END)::integer`,
-      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'APPROVED' THEN 1 END)::integer`,
-      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'SENT_TO_LIMBLE' THEN 1 END)::integer`,
+      completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
+      approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
+      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RESIDENT' THEN 1 END)::integer`,
     })
     .from(RCITable);
 
@@ -119,7 +119,7 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
     },
     {
-      title: `${approvedRCIs} approved RCIs`,
+      title: `${approvedRCIs} awaiting Residents`,
       level: calculateLevelSentToLimble(sentToLimble, 45),
     },
   ];
