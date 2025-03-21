@@ -1,12 +1,13 @@
 import { Search as SearchIcon } from "./Icons";
 
 interface SearchProps {
+  value?: string;
   handleSearch: (term: string) => void;
   placeholder?: string;
 }
 
 export default function Search(props: SearchProps) {
-  const { handleSearch, placeholder } = props;
+  const { handleSearch, placeholder, value } = props;
 
   return (
     <div className="relative md:w-96">
@@ -18,6 +19,7 @@ export default function Search(props: SearchProps) {
         className="h-12 w-full p-3 ps-10 text-sm text-gray-900 border rounded-lg focus:outline-none"
         placeholder={placeholder}
         onChange={(e) => handleSearch(e.target.value)}
+        value={value}
         required
       />
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectedRow from "./SelectedRow";
 import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
@@ -10,6 +10,7 @@ interface TableProps<T> {
   rows: T[];
   rowKeys?: Record<string, string>;
   search?: {
+    initial?: string;
     placeholder: string;
   };
   filter?: {
@@ -54,7 +55,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>(search?.initial || "");
   const [filterOption, setFilterOption] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -121,6 +122,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
               <Search
                 placeholder={search.placeholder}
                 handleSearch={handleSearch}
+                value={searchTerm}
               />
             )}
           </div>
