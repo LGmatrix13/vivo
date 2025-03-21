@@ -10,7 +10,7 @@ import type { ICompleteRCI } from "~/models/rci";
 import {
   readCompleteRCIsAdmin,
   readCompleteRCIsRD,
-} from "~/repositories/rci/complete";
+} from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";

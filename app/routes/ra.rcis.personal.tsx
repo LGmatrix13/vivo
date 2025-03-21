@@ -11,7 +11,7 @@ import { ISubmittedRCI } from "~/models/rci";
 import { readResidentIdAsRA } from "~/repositories/people/ras";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import { readSubmittedRCIAsRA } from "~/repositories/rci/complete";
+import { readSubmittedRCIAsRA } from "~/repositories/rci/submitted";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 

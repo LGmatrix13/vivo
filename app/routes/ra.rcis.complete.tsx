@@ -12,7 +12,10 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
-import { readCompleteRCIsAsRA } from "~/repositories/rci/complete";
+import {
+  readAwaitingRARCIsAsRA,
+  updateSubmittedRCIStatus,
+} from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
 import { createReadReport } from "~/repositories/read/reports";
 import {
@@ -25,8 +28,10 @@ import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
+  console.log(user);
+
   const [completeRCIs] = await Promise.all([
-    readCompleteRCIsAsRA(user.id),
+    readAwaitingRARCIsAsRA(user.id),
     delay(100),
   ]);
   return {
@@ -38,7 +43,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
   switch (intent) {
     case "create.read":
       return await createReadReport(
@@ -50,6 +54,11 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         request
       );
+    case "update.status":
+      return await updateSubmittedRCIStatus(request, values);
+    case "update.sendToLimble":
+      console.log("sent to limble");
+      return null;
   }
 }
 
@@ -118,8 +127,37 @@ export default function RARCIsCompletePage() {
         >
           <div className="space-y-3">
             <h2 className="font-bold">Actions</h2>
-            <WideButton>Send to Limble</WideButton>
-            <WideButton>Approve</WideButton>
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
+                    intent: "update.sendToLimble",
+                    id: row.id,
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Send to Limble
+            </WideButton>
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
+                    intent: "update.status",
+                    id: row.id,
+                    status: "ACTIVE",
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Set to Active
+            </WideButton>
           </div>
         </SelectedRow>
       )}

@@ -1,5 +1,6 @@
 import { desc, eq, sql, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { UpdatedSubmittedRCI } from "~/schemas/rcis/submitted";
 import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -11,6 +12,8 @@ import {
   staffTable,
   zoneTable,
 } from "~/utilties/schema.server";
+
+type Values = { [key: string]: any };
 
 export async function readSubmittedRCIAsRA(zoneId: number) {
   const data = await db.client
@@ -97,7 +100,7 @@ export async function readCompleteRCIsAdmin() {
   return formattedData;
 }
 
-export async function readCompleteRCIsAsRA(zoneId: number) {
+export async function readAwaitingRARCIsAsRA(zoneId: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const data = await db.client
@@ -128,7 +131,7 @@ export async function readCompleteRCIsAsRA(zoneId: number) {
         eq(readTable.reportType, "RCI")
       )
     )
-    .where(eq(zoneTable.id, zoneId))
+    .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, "AWAITING_RA")))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
@@ -140,6 +143,24 @@ export async function readCompleteRCIsAsRA(zoneId: number) {
   });
   return formattedData;
 }
+
+export async function updateSubmittedRCIStatus(
+  request: Request,
+  values: Values
+) {
+  return db.update(
+    request,
+    RCITable,
+    UpdatedSubmittedRCI,
+    values,
+    (values) => eq(RCITable.id, values.id),
+    {
+      message: "Updated RCI",
+      level: "success",
+    }
+  );
+}
+
 export async function readCompleteRCIsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
