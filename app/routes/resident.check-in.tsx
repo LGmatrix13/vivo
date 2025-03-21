@@ -6,7 +6,7 @@ import { colonialQuadMapping, upperCampusMapping } from "~/mappings/rci";
 import { ISubmittedRCI } from "~/models/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import { readSubmittedRCI } from "~/repositories/rci/complete";
+import { readSubmittedRCI } from "~/repositories/rci/submitted";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 import { MetaFunction } from "@remix-run/node";

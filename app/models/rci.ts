@@ -1,7 +1,7 @@
 import {
   readCompleteRCIsAdmin,
   readSubmittedRCI,
-} from "~/repositories/rci/complete";
+} from "~/repositories/rci/submitted";
 import { readIncompleteRCIsAsAdmin } from "~/repositories/rci/incomplete";
 
 export type ICompleteRCI = Awaited<

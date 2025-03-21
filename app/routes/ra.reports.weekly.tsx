@@ -51,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    submittedOn: "Date",
+    submitted: "Date",
   };
   const rowKeys = {
     ...columnKeys,

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { PgTable } from "drizzle-orm/pg-core";
-import { z, ZodRawShape } from "zod";
+import { z } from "zod";
 import mutate from "./mutate.server";
 import { SQL } from "drizzle-orm";
 

@@ -8,5 +8,5 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader() {
-  return redirect("/ra/rcis/complete");
+  return redirect("/ra/rcis/approve-check-in");
 }
