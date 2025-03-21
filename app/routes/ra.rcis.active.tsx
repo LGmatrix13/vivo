@@ -1,9 +1,4 @@
-import {
-  json,
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -13,7 +8,7 @@ import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
 import {
-  readAwaitingRARCIsAsRA,
+  readSubmittedRCIsAsRA,
   updateSubmittedRCIStatus,
 } from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
@@ -28,10 +23,9 @@ import WideButton from "~/components/common/WideButton";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  console.log(user);
 
   const [completeRCIs] = await Promise.all([
-    readAwaitingRARCIsAsRA(user.id),
+    readSubmittedRCIsAsRA(user.id, "ACTIVE"),
     delay(100),
   ]);
   return {
@@ -44,16 +38,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
-    case "create.read":
-      return await createReadReport(
-        {
-          ...values,
-          personId: user.id,
-          reportType: "RCI",
-          personType: "RA",
-        },
-        request
-      );
     case "update.status":
       return await updateSubmittedRCIStatus(request, values);
     case "update.sendToLimble":
@@ -78,7 +62,6 @@ export default function RARCIsAwaitingApprovalPage() {
       search={{
         placeholder: "Search for a complete RCI...",
       }}
-      enableReads={true}
       mixins={{
         cells: {
           totalIssues: (row: ICompleteRCI) => {
@@ -126,7 +109,22 @@ export default function RARCIsAwaitingApprovalPage() {
           }
         >
           <div className="space-y-3">
-            <h2 className="font-bold">Actions</h2>
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
+                    intent: "update.status",
+                    id: row.id,
+                    status: "RESIDENT_CHECKOUT",
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Set to Active
+            </WideButton>
             <WideButton
               onClick={() => {
                 fetcher.submit(
@@ -140,38 +138,11 @@ export default function RARCIsAwaitingApprovalPage() {
                 );
               }}
             >
-              Send to Limble
-            </WideButton>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.status",
-                    id: row.id,
-                    status: "ACTIVE",
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
               Set to Active
             </WideButton>
           </div>
         </SelectedRow>
       )}
-      onRowRead={({ row }) => {
-        fetcher.submit(
-          {
-            intent: "create.read",
-            reportId: row.id,
-          },
-          {
-            method: "POST",
-          }
-        );
-      }}
     />
   );
 }

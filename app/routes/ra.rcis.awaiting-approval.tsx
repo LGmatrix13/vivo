@@ -1,9 +1,4 @@
-import {
-  json,
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -13,7 +8,7 @@ import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import type { ICompleteRCI } from "~/models/rci";
 import {
-  readAwaitingRARCIsAsRA,
+  readSubmittedRCIsAsRA,
   updateSubmittedRCIStatus,
 } from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
@@ -31,7 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   console.log(user);
 
   const [completeRCIs] = await Promise.all([
-    readAwaitingRARCIsAsRA(user.id),
+    readSubmittedRCIsAsRA(user.id, "AWAITING_RA"),
     delay(100),
   ]);
   return {
@@ -56,9 +51,6 @@ export async function action({ request }: ActionFunctionArgs) {
       );
     case "update.status":
       return await updateSubmittedRCIStatus(request, values);
-    case "update.sendToLimble":
-      console.log("sent to limble");
-      return null;
   }
 }
 
@@ -125,40 +117,22 @@ export default function RARCIsAwaitingApprovalPage() {
               : colonialQuadMapping
           }
         >
-          <div className="space-y-3">
-            <h2 className="font-bold">Actions</h2>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.sendToLimble",
-                    id: row.id,
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Send to Limble
-            </WideButton>
-            <WideButton
-              onClick={() => {
-                fetcher.submit(
-                  {
-                    intent: "update.status",
-                    id: row.id,
-                    status: "ACTIVE",
-                  },
-                  {
-                    method: "POST",
-                  }
-                );
-              }}
-            >
-              Set to Active
-            </WideButton>
-          </div>
+          <WideButton
+            onClick={() => {
+              fetcher.submit(
+                {
+                  intent: "update.status",
+                  id: row.id,
+                  status: "ACTIVE",
+                },
+                {
+                  method: "POST",
+                }
+              );
+            }}
+          >
+            Set to Active
+          </WideButton>
         </SelectedRow>
       )}
       onRowRead={({ row }) => {

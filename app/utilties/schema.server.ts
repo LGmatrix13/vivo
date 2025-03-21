@@ -25,7 +25,7 @@ export const RCIStatusEnum = pgEnum("status", [
   "ACTIVE",
   "RESIDENT_CHECKOUT",
   "RA_CHECKOUT",
-  "CHECKED_OUT"
+  "CHECKED_OUT",
 ]);
 export const ratingEnum = pgEnum("rating", [
   "GREAT",

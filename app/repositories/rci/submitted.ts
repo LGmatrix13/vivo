@@ -100,7 +100,10 @@ export async function readCompleteRCIsAdmin() {
   return formattedData;
 }
 
-export async function readAwaitingRARCIsAsRA(zoneId: number) {
+export async function readSubmittedRCIsAsRA(
+  zoneId: number,
+  status: "AWAITING_RA" | "ACTIVE"
+) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
   const data = await db.client
@@ -127,11 +130,11 @@ export async function readAwaitingRARCIsAsRA(zoneId: number) {
       readTable,
       and(
         eq(readTable.reportId, RCITable.id),
-        eq(readTable.personType, "ADMIN"),
+        eq(readTable.personType, "ZONE"),
         eq(readTable.reportType, "RCI")
       )
     )
-    .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, "AWAITING_RA")))
+    .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, status)))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
