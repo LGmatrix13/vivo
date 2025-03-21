@@ -59,7 +59,7 @@ export default function AdminReportsRoundPage() {
   }>();
   const columnKeys = {
     submitted: "Submitted",
-    ra: "RA",
+    resident: "Resident",
     level: "Level",
     highPriority: "High Priority",
   };

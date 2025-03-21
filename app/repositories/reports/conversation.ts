@@ -115,6 +115,7 @@ export async function readConversationReportsAsRA(id: number) {
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
+      resident: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`,
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -131,7 +132,10 @@ export async function readConversationReportsAsRA(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
     .where(eq(zoneTable.id, id))
     .orderBy(consverationReportTable.submitted);
 
