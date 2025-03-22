@@ -11,6 +11,7 @@ import { ISubmittedRCI } from "~/models/rci";
 import { readResidentIdAsRA } from "~/repositories/people/ras";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
+import { getRAPersonalRCIDraftData } from "~/repositories/rci/incomplete";
 import { readSubmittedRCIAsRA } from "~/repositories/rci/submitted";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
@@ -18,8 +19,10 @@ import { auth } from "~/utilties/auth.server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
   const submittedRCI = await readSubmittedRCIAsRA(user.id);
+  const rciDraftData = await getRAPersonalRCIDraftData(user.id);
   return {
     submittedRCI,
+    rciDraftData
   };
 }
 
@@ -53,7 +56,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={upperCampusMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_DOUBLE":
@@ -61,7 +64,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={colonialDoubleMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_QUAD":
@@ -69,7 +72,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={colonialQuadMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
   }

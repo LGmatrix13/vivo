@@ -12,6 +12,7 @@ import { auth } from "~/utilties/auth.server";
 import { MetaFunction } from "@remix-run/node";
 import Indication from "~/components/common/Indication";
 import { Home } from "~/components/common/Icons";
+import { getResidentRCIDraftData } from "~/repositories/rci/incomplete";
 
 export const meta: MetaFunction = () => {
   return [
@@ -23,8 +24,10 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
   const submittedRCI = await readSubmittedRCI(user.id);
+  const rciDraftData = await getResidentRCIDraftData(user.id);
   return {
     submittedRCI,
+    rciDraftData
   };
 }
 
@@ -58,7 +61,7 @@ export default function ResidentCheckInPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={upperCampusMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_DOUBLE":
@@ -66,7 +69,7 @@ export default function ResidentCheckInPage() {
         <RCIForm
           intent={`${action}.colonialDouble`}
           mapping={upperCampusMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_QUAD":
@@ -74,7 +77,7 @@ export default function ResidentCheckInPage() {
         <RCIForm
           intent={`${action}.colonialQusad`}
           mapping={colonialQuadMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     default:
