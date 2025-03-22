@@ -113,3 +113,25 @@ export async function readIncompleteRCIsAsRD(id: number) {
 
   return data;
 }
+
+export async function getRCIDraftData(residentId: number) {
+  const data = await db.client
+    .select({
+      residentId: residentTable.id,
+      roomId: roomTable.id,
+      issuesRCI: roomTable.issuesRCI
+    })
+    .from(residentTable)
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .where(eq(residentTable.id, residentId));
+  
+  if (data.length > 0) {
+    return {
+      issues: data[0].issuesRCI
+    }
+  }
+  
+  return {
+    issues: {}
+  };
+}
