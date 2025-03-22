@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, notExists, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { ICompleteRCI } from "~/models/rci";
 import { db } from "~/utilties/connection.server";
 import {
   buildingTable,
@@ -112,4 +113,45 @@ export async function readIncompleteRCIsAsRD(id: number) {
     .orderBy(desc(roomTable.id));
 
   return data;
+}
+
+export async function getResidentRCIDraftData(residentId: number) {
+  const data = await db.client
+    .select({
+      issues: roomTable.issuesRCI || {}
+    })
+    .from(residentTable)
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .where(eq(residentTable.id, residentId));
+
+  if (data.length == 0) {
+    return {
+      issues: {} as Record<string, string>
+    };
+  }
+
+  return {
+    issues: data[0].issues as Record<string, string>
+  };
+}
+
+export async function getRAPersonalRCIDraftData(zoneId: number) {
+  const data = await db.client
+    .select({
+      issues: roomTable.issuesRCI || {}
+    })
+    .from(zoneTable)
+    .leftJoin(residentTable, eq(zoneTable.residentId, residentTable.id))
+    .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .where(eq(zoneTable.id, zoneId));
+
+  if (data.length == 0) {
+    return {
+      issues: {} as Record<string, string>
+    };
+  }
+
+  return {
+    issues: data[0].issues as Record<string, string>
+  };
 }
