@@ -10,6 +10,7 @@ interface TableProps<T> {
   columnKeys: Record<string, string>;
   rows: T[];
   rowKeys?: Record<string, string>;
+  searchKey?: string; // 🆕 New prop for filtering a specific column
   search?: {
     initial?: string;
     placeholder: string;
@@ -42,6 +43,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     rows,
     rowKeys,
     columnKeys,
+    searchKey, // 🆕 Use this prop
     search,
     filter,
     ActionButtons,
@@ -72,12 +74,25 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   const [readRows, setReadRows] = useState<number[]>(
     rows.filter((row) => row.read).map((row) => row.id)
   );
-  // Search rows based on the search query
-  const searchedRows = filteredRows.filter((row) =>
-    originalColumnKeys.some((key) =>
-      String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+ // Search rows based on the search query
+  // const searchedRows = filteredRows.filter((row) =>
+  //   originalColumnKeys.some((key) =>
+  //     String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
+  //   )
+  // );
+
+  const searchedRows = filteredRows.filter((row) => {
+    if (searchKey) {
+      // If a specific searchKey is provided, filter only by that column
+      return String(row[searchKey] || "").toLowerCase().includes(searchTerm.toLowerCase());
+    } else {
+      // Otherwise, search across all columns
+      return originalColumnKeys.some((key) =>
+        String(row[key] || "").toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  });
+
 
   // Sort rows based on the sortConfig
   const sortedRows = [...searchedRows].sort((a, b) => {

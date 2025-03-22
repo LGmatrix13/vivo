@@ -56,6 +56,7 @@ export default function AdminReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
+  const searchRow = searchParams.get("row")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{
     user: IUser;
   }>();
@@ -70,6 +71,8 @@ export default function AdminReportsRoundPage() {
     sentiment: "General Tone",
     explanation: "Description",
   };
+
+
 
   return (
     <Table<IConversationReportAsRA>
