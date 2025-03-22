@@ -4,6 +4,7 @@ import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 import Search from "./Search";
 import Filter from "./Filter";
+import { useSearchParams } from "@remix-run/react";
 
 interface TableProps<T> {
   columnKeys: Record<string, string>;
@@ -52,10 +53,12 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     onRowRead = () => {},
     enableReads = false,
   } = props;
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState<string>(search?.initial || "");
+  const [searchTerm, setSearchTerm] = useState<string>(searchQuery);
   const [filterOption, setFilterOption] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
