@@ -32,24 +32,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function ErrorBoundary() {
   const error = useRouteError();
+
   return (
-    <html>
-      <head>
-        <title>Oh no!</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {isRouteErrorResponse(error) && error.status == 404 && <NotFound />}
-        {isRouteErrorResponse(error) && error.status == 500 && (
-          <InternalServerError />
-        )}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
+    <>
+      {isRouteErrorResponse(error) && error.status == 404 && <NotFound />}
+      {isRouteErrorResponse(error) && error.status == 500 && (
+        <InternalServerError />
+      )}
+    </>
   );
 }
 
