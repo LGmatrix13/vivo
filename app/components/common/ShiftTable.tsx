@@ -12,10 +12,13 @@ import {
 } from "./Icons";
 import Table from "./Table";
 import Instruction from "./Instruction";
+import { csv } from "~/utilties/csv";
 
-type Shift = {
+interface IShift {
+  day: string;
   date: string;
-};
+  name: string;
+}
 
 interface IScheduleTableProps<T> {
   shifts: T[];
@@ -31,7 +34,7 @@ interface IScheduleTableProps<T> {
   EditShiftComponent?: (props: { shift: T }) => React.ReactElement;
 }
 
-export default function ShiftTable<T extends Shift>(
+export default function ShiftTable<T extends IShift>(
   props: IScheduleTableProps<T>
 ) {
   const {
@@ -43,21 +46,11 @@ export default function ShiftTable<T extends Shift>(
     DeleteShiftComponent,
   } = props;
   const [week, setWeek] = useState(1);
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thrusday",
-    "Friday",
-    "Saturday",
-  ];
   const formattedShifts = shifts.map((shift) => {
     const date = new Date(shift.date);
     return {
       ...shift,
       date,
-      day: days[date.getUTCDay()],
     };
   });
 
@@ -106,7 +99,7 @@ export default function ShiftTable<T extends Shift>(
           </IconButton>
         </div>
       </div>
-      <Table<Shift>
+      <Table<IShift>
         columnKeys={{
           day: "Day",
           name: "Name",
@@ -151,7 +144,6 @@ export default function ShiftTable<T extends Shift>(
                 </DrawerButton>
                 <DrawerContent>
                   <h2 className="font-bold text-xl">Upload RD Schedule</h2>
-                  {/* add form for upload here */}
                 </DrawerContent>
               </DrawerProvider>
             )}
@@ -165,7 +157,17 @@ export default function ShiftTable<T extends Shift>(
                 </DrawerContent>
               </DrawerProvider>
             )}
-            <IconButton Icon={Download}>Export</IconButton>
+            <IconButton
+              Icon={Download}
+              onClick={() => {
+                csv.download(filteredShifts, "Shifts", {
+                  day: "Day",
+                  name: "Name",
+                });
+              }}
+            >
+              Export Shifts
+            </IconButton>
           </div>
         )}
       />

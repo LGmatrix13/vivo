@@ -3,6 +3,7 @@ import {
   useFetcher,
   useLoaderData,
   useOutletContext,
+  useSearchParams,
 } from "@remix-run/react";
 
 import { Download, FileSearch } from "~/components/common/Icons";
@@ -66,6 +67,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function StaffReportsEventPage() {
   const data = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<IBuildingDropdown[]>();
   const columnKeys = {
     time: "Time",
@@ -95,6 +98,7 @@ export default function StaffReportsEventPage() {
       rows={data.events}
       search={{
         placeholder: "Search for an event...",
+        initial: searchQuery,
       }}
       filter={{
         key: "buildingId",

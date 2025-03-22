@@ -51,5 +51,5 @@ export const ColonialDoubleIssues = z.object({
 });
 
 export const CreatedColonialDouble = ColonialDoubleIssues.extend({
-  studentSignature: z.string(),
+  studentSignature: z.string({ message: "Student Signature is required" }),
 });

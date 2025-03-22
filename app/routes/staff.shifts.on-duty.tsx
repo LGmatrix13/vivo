@@ -11,7 +11,6 @@ import {
 } from "~/repositories/housing/buildings";
 import {
   readOnDutyRAAsAdmin,
-  readOnDutyRAAsRD,
   readOnDutyRD,
 } from "~/repositories/shifts/onDuty";
 
@@ -71,15 +70,27 @@ export default function StaffSchedulesOnDutyPage() {
       </div>
       <div className="space-y-3">
         <h2 className="font-bold text-lg">On Duty RD</h2>
-        {data.rdsOnDuty.map((rdOnDuty, index) => (
-          <RDOnDuty rdOnDuty={rdOnDuty} key={index} />
-        ))}
+        {data.rdsOnDuty.length ? (
+          <>
+            {data.rdsOnDuty.map((rdOnDuty, index) => (
+              <RDOnDuty rdOnDuty={rdOnDuty} key={index} />
+            ))}
+          </>
+        ) : (
+          <p>No RDs currently on duty</p>
+        )}
       </div>
       <div className="space-y-3">
         <h2 className="font-bold text-lg">On Duty RAs</h2>
-        {rasOnDutyFiltered.map((raOnDuty, index) => (
-          <RAOnDuty raOnDuty={raOnDuty} key={index} />
-        ))}
+        {rasOnDutyFiltered.length ? (
+          <>
+            {rasOnDutyFiltered.map((raOnDuty, index) => (
+              <RAOnDuty raOnDuty={raOnDuty} key={index} />
+            ))}
+          </>
+        ) : (
+          <p>No RAs currently on duty</p>
+        )}
       </div>
     </section>
   );

@@ -8,21 +8,22 @@ import {
   upperCampusMapping,
 } from "~/mappings/rci";
 import { ISubmittedRCI } from "~/models/rci";
+import { readResidentIdAsRA } from "~/repositories/people/ras";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import {
-  readSubmittedRCI,
-  readSubmittedRCIAsRA,
-} from "~/repositories/rci/complete";
+import { getRAPersonalRCIDraftData } from "~/repositories/rci/incomplete";
+import { readSubmittedRCIAsRA } from "~/repositories/rci/submitted";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
   const submittedRCI = await readSubmittedRCIAsRA(user.id);
-  return json({
+  const rciDraftData = await getRAPersonalRCIDraftData(user.id);
+  return {
     submittedRCI,
-  });
+    rciDraftData
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -30,14 +31,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
+  const { residentId } = await readResidentIdAsRA(user.id);
   switch (intent) {
     case "create.upperCampus":
-      return await createUpperCampus(request, user.id, values);
+      return await createUpperCampus(request, residentId, values);
     case "create.colonialDouble":
-      return await createColonialDouble(request, user.id, values);
+      return await createColonialDouble(request, residentId, values);
     case "create.colonialQusad":
-      return await createColonialQuad(request, user.id, values);
+      return await createColonialQuad(request, residentId, values);
   }
 }
 
@@ -55,7 +56,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={upperCampusMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_DOUBLE":
@@ -63,7 +64,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={colonialDoubleMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_QUAD":
@@ -71,7 +72,7 @@ export default function RARCIsPersonalPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={colonialQuadMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
   }

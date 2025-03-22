@@ -1,5 +1,5 @@
 {
-  "name": "my-remix-app",
+  "name": "vivo",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@azure/msal-browser": "^4.0.1",
     "@fontsource-variable/golos-text": "^5.1.0",
+    "@google/generative-ai": "^0.22.0",
     "@remix-run/node": "^2.13.1",
     "@remix-run/react": "^2.13.1",
     "@remix-run/serve": "^2.13.1",
@@ -20,9 +21,11 @@
     "drizzle-orm": "^0.36.0",
     "isbot": "^4.1.0",
     "jose": "^5.9.6",
+    "ollama": "^0.5.13",
     "pg": "^8.13.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sharp": "^0.33.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -1,5 +1,4 @@
 import { sql, eq, asc } from "drizzle-orm";
-import { IRD } from "~/models/people";
 import { CreatedRD, RD } from "~/schemas/people/rd";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";

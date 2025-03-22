@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin"]);
+  await auth.rejectUnauthorized(request, ["admin", "rd"]);
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);

@@ -69,5 +69,5 @@ export const ColonialQuadIssues = z.object({
 });
 
 export const CreatedColonialQuad = ColonialQuadIssues.extend({
-  studentSignature: z.string(),
+  studentSignature: z.string({ message: "Student Signature is required" }),
 });

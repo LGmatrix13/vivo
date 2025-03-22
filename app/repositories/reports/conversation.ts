@@ -1,4 +1,4 @@
-import { sql, eq, and } from "drizzle-orm";
+import { sql, eq, and, aliasedTable } from "drizzle-orm";
 import {
   Conversation,
   CreatedConversation,
@@ -16,6 +16,8 @@ import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
 export async function readConversationReports() {
+  const raTable = aliasedTable(residentTable, "ra"); // Alias residentTable for RA
+
   const data = await db.client
     .select({
       id: consverationReportTable.id,
@@ -26,19 +28,19 @@ export async function readConversationReports() {
       zoneId: consverationReportTable.zoneId,
       sentiment: consverationReportTable.sentiment,
       highPriority: consverationReportTable.highPriority,
-      ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-        "raName"
-      ),
-      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
-        "read"
-      ),
+      resident: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`,
+      ra: sql<string>`${raTable.firstName} || ' ' || ${raTable.lastName}`,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`,
       buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
-    .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
-    .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(raTable, eq(zoneTable.residentId, raTable.id)) // Join RA alias instead of staffTable
+    .innerJoin(buildingTable, eq(raTable.id, buildingTable.staffId)) // Ensure correct join with buildingTable
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    ) // Regular join for resident
     .leftJoin(
       readTable,
       and(
@@ -60,6 +62,8 @@ export async function readConversationReports() {
 }
 
 export async function readConversationReportsAsRD(id: number) {
+  const raTable = aliasedTable(residentTable, "ra"); // Alias residentTable for RA
+
   const data = await db.client
     .select({
       id: consverationReportTable.id,
@@ -70,12 +74,9 @@ export async function readConversationReportsAsRD(id: number) {
       zoneId: consverationReportTable.zoneId,
       sentiment: consverationReportTable.sentiment,
       highPriority: consverationReportTable.highPriority,
-      ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
-        "raName"
-      ),
-      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
-        "read"
-      ),
+      resident: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`,
+      ra: sql<string>`${raTable.firstName} || ' ' || ${raTable.lastName}`,
+      read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`,
       buildingId: buildingTable.id,
     })
     .from(consverationReportTable)
@@ -83,7 +84,11 @@ export async function readConversationReportsAsRD(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(raTable, eq(raTable.id, zoneTable.residentId))
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
     .leftJoin(
       readTable,
       and(
@@ -110,6 +115,7 @@ export async function readConversationReportsAsRA(id: number) {
     .select({
       id: consverationReportTable.id,
       residentId: consverationReportTable.residentId,
+      resident: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`,
       submitted: consverationReportTable.submitted,
       explanation: consverationReportTable.explanation,
       level: consverationReportTable.level,
@@ -126,7 +132,10 @@ export async function readConversationReportsAsRA(id: number) {
     .innerJoin(zoneTable, eq(consverationReportTable.zoneId, zoneTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
+    .innerJoin(
+      residentTable,
+      eq(residentTable.id, consverationReportTable.residentId)
+    )
     .where(eq(zoneTable.id, id))
     .orderBy(consverationReportTable.submitted);
 
@@ -142,7 +151,7 @@ export async function readConversationReportsAsRA(id: number) {
 }
 
 export async function createConversation(values: Values, request: Request) {
-  return db.insert(
+  return await db.insert(
     request,
     consverationReportTable,
     CreatedConversation,

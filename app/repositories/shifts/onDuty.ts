@@ -59,8 +59,6 @@ export async function readOnDutyRAAsRD(id: number) {
   return data;
 }
 
-
-
 export async function readOnDutyRD() {
   const data = await db.client
     .select({
@@ -81,84 +79,5 @@ export async function readOnDutyRD() {
   return data;
 }
 
-//admin does this
-export async function uploadDutyScheduleForRD(
-  values: Values,
-  request: Request
-) {
-  const file = values["file"] as File;
 
-  if (!(file instanceof File)) {
-    throw new Error("Uploaded value is not a valid file.");
-  }
 
-  const arrayBuffer = await file.arrayBuffer();
-  const content = new TextDecoder("utf-8").decode(arrayBuffer);
-  const data = csv.parse(content);
-
-  const errors: {
-    rowNumber: number;
-    error: string;
-  }[] = [];
-  const erroredRows: Record<string, string>[] = [];
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    const formattedRow = {
-      staffId: row["ID"].trim(),
-      date: new Date(row["Date"].trim()).toISOString(),
-    };
-    const result = RDScheduleCSV.safeParse(formattedRow);
-
-    if (result.success) {
-      const formattedData = {
-        ...result.data,
-        date:
-          result.data.date instanceof Date
-            ? result.data.date.toISOString()
-            : result.data.date,
-      };
-      await db.client.insert(staffShiftTable).values(formattedData);
-    }
-  }
-}
-
-//rds do this
-export async function uploadDutyScheduleForRAs(
-  values: Values,
-  request: Request
-) {
-  const file = values["file"] as File;
-
-  if (!(file instanceof File)) {
-    throw new Error("Uploaded value is not a valid file.");
-  }
-
-  const arrayBuffer = await file.arrayBuffer();
-  const content = new TextDecoder("utf-8").decode(arrayBuffer);
-  const data = csv.parse(content);
-
-  const errors: {
-    rowNumber: number;
-    error: string;
-  }[] = [];
-  const erroredRows: Record<string, string>[] = [];
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    const formattedRow = {
-      zoneId: row["ID"].trim(),
-      date: new Date(row["Date"].trim()).toISOString(),
-    };
-    const result = RAScheduleCSV.safeParse(formattedRow);
-
-    if (result.success) {
-      const formattedData = {
-        ...result.data,
-        date:
-          result.data.date instanceof Date
-            ? result.data.date.toISOString()
-            : result.data.date, // Ensure date is a string
-      };
-      await db.client.insert(zoneShiftTable).values(formattedData);
-    }
-  }
-}

@@ -20,7 +20,7 @@ export async function createColonialDouble(
     await db.client.insert(RCITable).values({
       residentId,
       issues: issues.data,
-      status: "IN_PROGRESS",
+      status: "AWAITING_RA",
     });
 
     return mutate(request.url, {

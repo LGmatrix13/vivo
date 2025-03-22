@@ -7,6 +7,7 @@ import {
 } from "~/schemas/shifts/staffShift";
 import { db } from "~/utilties/connection.server";
 import { csv } from "~/utilties/csv";
+import { formatDate } from "~/utilties/formatDate";
 import mutate from "~/utilties/mutate.server";
 import { staffShiftTable, staffTable } from "~/utilties/schema.server";
 
@@ -25,7 +26,12 @@ export async function readShiftsRDAsAdmin() {
     .innerJoin(staffTable, eq(staffShiftTable.staffId, staffTable.id))
     .orderBy(asc(staffShiftTable.date));
 
-  return data;
+  const formattedData = data.map((shift) => ({
+    ...shift,
+    day: formatDate(shift.date, false, true),
+  }));
+
+  return formattedData;
 }
 
 export async function updateRDShift(request: Request, values: Values) {
@@ -43,10 +49,17 @@ export async function updateRDShift(request: Request, values: Values) {
 }
 
 export async function createRDShift(request: Request, values: Values) {
-  return db.insert(request, staffShiftTable, CreatedStaffShift, values, true, {
-    message: "Created shift",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    staffShiftTable,
+    CreatedStaffShift,
+    values,
+    true,
+    {
+      message: "Created shift",
+      level: "success",
+    }
+  );
 }
 
 export async function deleteRDShift(request: Request, values: Values) {
@@ -62,15 +75,8 @@ export async function deleteRDShift(request: Request, values: Values) {
   );
 }
 
-export async function uploadDutyScheduleForRD(
-  values: Values,
-  request: Request
-) {
+export async function uploadDutyScheduleForRD(values: Values) {
   const file = values["file"] as File;
-
-  if (!(file instanceof File)) {
-    throw new Error("Uploaded value is not a valid file.");
-  }
 
   const arrayBuffer = await file.arrayBuffer();
   const content = new TextDecoder("utf-8").decode(arrayBuffer);
@@ -84,19 +90,56 @@ export async function uploadDutyScheduleForRD(
   const erroredRows: Record<string, string>[] = [];
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
+
+    //check to see if row has the correct data
+    if (!row["Email"] || !row["Date"]) {
+      errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      continue;
+    }
+
+    const parsedDate = new Date(row["Date"].trim());
+    const midnightUTC = new Date(
+      Date.UTC(
+        parsedDate.getUTCFullYear(),
+        parsedDate.getUTCMonth(),
+        parsedDate.getUTCDate()
+      )
+    );
+    console.log(midnightUTC);
+
     const formattedRow = {
-      staffId: row["ID"].trim(),
-      date: row["Date"].trim(),
+      email: row["Email"].trim().toUpperCase(),
+      date: midnightUTC,
     };
     const result = RDScheduleCSV.safeParse(formattedRow);
 
-    if (result.success) {
+    //get staffId based on email
+    const staffRecord = await db.client
+      .select({ staffId: staffTable.id })
+      .from(staffTable)
+      .where(eq(staffTable.emailAddress, formattedRow.email))
+      .limit(1);
+
+    if (staffRecord.length === 0) {
+      errors.push({
+        rowNumber: i + 1,
+        error: `No staff found for email: ${formattedRow.email}`,
+      });
+      continue;
+    }
+
+    const staffId = staffRecord[0].staffId;
+
+    const newRow = {
+      staffId: staffId,
+      date: formattedRow.date,
+    };
+    const newResult = RDScheduleCSV.safeParse(newRow);
+
+    if (newResult.success) {
       const formattedData = {
-        ...result.data,
-        date:
-          result.data.date instanceof Date
-            ? result.data.date.toISOString()
-            : result.data.date,
+        ...newResult.data,
+        staffId,
       };
       await db.client.insert(staffShiftTable).values(formattedData);
       console.log("row added");
@@ -112,7 +155,7 @@ export async function uploadDutyScheduleForRD(
     });
   }
 
-  return mutate("/staff/shifts/upload", {
+  return mutate("/staff/shifts/rd", {
     message: "Upload Successful",
     level: "success",
   });

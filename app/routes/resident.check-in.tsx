@@ -2,18 +2,17 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import RCIProgress from "~/components/common/RCIProgress";
 import RCIForm from "~/components/forms/RCIForm";
-import {
-  colonialDoubleMapping,
-  colonialQuadMapping,
-  upperCampusMapping,
-} from "~/mappings/rci";
+import { colonialQuadMapping, upperCampusMapping } from "~/mappings/rci";
 import { ISubmittedRCI } from "~/models/rci";
 import { createColonialDouble } from "~/repositories/rci/colonialDouble";
 import { createColonialQuad } from "~/repositories/rci/colonialQuad";
-import { readSubmittedRCI } from "~/repositories/rci/complete";
+import { readSubmittedRCI } from "~/repositories/rci/submitted";
 import { createUpperCampus } from "~/repositories/rci/upperCampus";
 import { auth } from "~/utilties/auth.server";
 import { MetaFunction } from "@remix-run/node";
+import Indication from "~/components/common/Indication";
+import { Home } from "~/components/common/Icons";
+import { getResidentRCIDraftData } from "~/repositories/rci/incomplete";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,9 +24,11 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["resident"]);
   const submittedRCI = await readSubmittedRCI(user.id);
-  return json({
+  const rciDraftData = await getResidentRCIDraftData(user.id);
+  return {
     submittedRCI,
-  });
+    rciDraftData
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -60,23 +61,32 @@ export default function ResidentCheckInPage() {
         <RCIForm
           intent={`${action}.upperCampus`}
           mapping={upperCampusMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_DOUBLE":
       return (
         <RCIForm
-          intent={`${action}.upperCampus`}
-          mapping={colonialDoubleMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          intent={`${action}.colonialDouble`}
+          mapping={upperCampusMapping}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
       );
     case "COLONIAL_QUAD":
       return (
         <RCIForm
-          intent={`${action}.upperCampus`}
+          intent={`${action}.colonialQusad`}
           mapping={colonialQuadMapping}
-          submittedRCI={data.submittedRCI as ISubmittedRCI}
+          submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
+        />
+      );
+    default:
+      return (
+        <Indication
+          level="warning"
+          title="You don't have a room"
+          message="Looks like you are not assigned a room."
+          Icon={Home}
         />
       );
   }

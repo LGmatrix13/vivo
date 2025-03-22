@@ -39,7 +39,7 @@ export function DrawerContent(props: DrawerContentProps) {
     <>
       {open && (
         <div
-          className="fixed pointer-events-auto bg-black/[.8] top-0 right-0 bottom-0 left-0 z-50 !m-0"
+          className="fixed pointer-events-auto bg-black/[.85] backdrop-blur-sm top-0 right-0 bottom-0 left-0 z-50 !m-0"
           id="Drawer"
         >
           <div className="relative bg-white p-7 space-y-5 md:w-1/3 min-w-96 flex flex-col h-full animate-drawer ml-auto overflow-y-auto">

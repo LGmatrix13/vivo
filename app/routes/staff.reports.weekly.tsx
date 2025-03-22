@@ -3,6 +3,7 @@ import {
   useFetcher,
   useLoaderData,
   useOutletContext,
+  useSearchParams,
 } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
@@ -68,8 +69,10 @@ export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
-    submittedOn: "Date",
+    submitted: "Date",
     ra: "RA",
   };
   const rowKeys = {
@@ -99,9 +102,10 @@ export default function StaffReportsWeeklyPage() {
   return (
     <Table<IWeeklyReport>
       columnKeys={columnKeys}
-      rows={data.weekly}
+      rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
+        initial: searchQuery
       }}
       enableReads={true}
       filter={{

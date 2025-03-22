@@ -1,14 +1,21 @@
-import { json, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import Header from "~/components/common/Header";
-import { File, Chart, Door, Users, Clock } from "~/components/common/Icons";
+import {
+  File,
+  Chart,
+  Door,
+  Users,
+  Clock,
+  Settings,
+} from "~/components/common/Icons";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const ra = await auth.readUser(request, ["ra"]);
-  return json({
+  return {
     ra,
-  });
+  };
 }
 
 export default function AdminLayout() {
@@ -33,27 +40,28 @@ export default function AdminLayout() {
       parent: "/ra/insights",
     },
     {
-      name: "RCIs",
-      Icon: Door,
-      default: "/ra/rcis/complete",
-      parent: "/ra/rcis",
-    },
-    {
       name: "Residents",
       Icon: Users,
       default: "/ra/people/residents",
       parent: "/ra/people/residents",
     },
+    {
+      name: "RCIs",
+      Icon: Door,
+      default: "/ra/rcis/approve-check-in",
+      parent: "/ra/rcis",
+    },
+    {
+      name: "Settings",
+      Icon: Settings,
+      default: "/ra/settings",
+      parent: "/ra/settings",
+    },
   ];
-
-  const settings = {
-    user: data.ra,
-    path: "/ra/settings",
-  };
 
   return (
     <>
-      <Header root="/ra/shifts/on-duty" routes={routes} settings={settings} />
+      <Header root="/ra/shifts/on-duty" routes={routes} />
       <Outlet context={{ user: data.ra }} />
     </>
   );

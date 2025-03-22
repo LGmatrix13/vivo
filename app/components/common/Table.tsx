@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectedRow from "./SelectedRow";
 import { ArrowNarrowDown, ArrowNarrowUp, Close, Pencil, Trash } from "./Icons";
 import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 import Search from "./Search";
 import Filter from "./Filter";
+import { useSearchParams } from "@remix-run/react";
 
 interface TableProps<T> {
   columnKeys: Record<string, string>;
   rows: T[];
   rowKeys?: Record<string, string>;
+  searchKey?: string; // 🆕 New prop for filtering a specific column
   search?: {
+    initial?: string;
     placeholder: string;
   };
   filter?: {
@@ -26,7 +29,7 @@ interface TableProps<T> {
   };
   enableReads?: boolean;
   ActionButtons?: (props: { rows: T[] }) => React.ReactElement;
-  InstructionComponent?: () => React.ReactElement;
+  InstructionComponent: () => React.ReactElement;
   EditComponent?: (props: { row: T }) => React.ReactElement;
   DeleteComponent?: (props: { row: T }) => React.ReactElement;
   SelectedRowComponent?: (props: { row: T }) => React.ReactElement;
@@ -40,6 +43,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     rows,
     rowKeys,
     columnKeys,
+    searchKey, // 🆕 Use this prop
     search,
     filter,
     ActionButtons,
@@ -51,10 +55,12 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     onRowRead = () => {},
     enableReads = false,
   } = props;
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>(searchQuery);
   const [filterOption, setFilterOption] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -68,12 +74,25 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   const [readRows, setReadRows] = useState<number[]>(
     rows.filter((row) => row.read).map((row) => row.id)
   );
-  // Search rows based on the search query
-  const searchedRows = filteredRows.filter((row) =>
-    originalColumnKeys.some((key) =>
-      String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+ // Search rows based on the search query
+  // const searchedRows = filteredRows.filter((row) =>
+  //   originalColumnKeys.some((key) =>
+  //     String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
+  //   )
+  // );
+
+  const searchedRows = filteredRows.filter((row) => {
+    if (searchKey) {
+      // If a specific searchKey is provided, filter only by that column
+      return String(row[searchKey] || "").toLowerCase().includes(searchTerm.toLowerCase());
+    } else {
+      // Otherwise, search across all columns
+      return originalColumnKeys.some((key) =>
+        String(row[key] || "").toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  });
+
 
   // Sort rows based on the sortConfig
   const sortedRows = [...searchedRows].sort((a, b) => {
@@ -121,22 +140,24 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
               <Search
                 placeholder={search.placeholder}
                 handleSearch={handleSearch}
+                value={searchTerm}
               />
             )}
           </div>
           {ActionButtons && <ActionButtons rows={sortedRows} />}
         </div>
       )}
-      <div className="flex flex-row border rounded-lg md:divide-x min-h-[500px]">
+      <div className="flex flex-row border rounded-lg md:divide-x h-[600px] overflow-y-auto">
         <div
           className={`md:w-3/5 w-full md:overflow-y-auto ${
             opened >= 0 ? "hidden md:block" : ""
           }`}
+          tabIndex={0}
         >
           <table className="text-left table-fixed w-full">
             <thead className="uppercase border-b">
               <tr>
-                {enableReads && <th scope="col" className="w-[2px]" />}
+                {enableReads && <td className="w-[2px]" />}
                 {originalColumnKeys.map((originalColumnKey, index) => (
                   <th
                     scope="col"
@@ -162,12 +183,10 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                     </div>
                   </th>
                 ))}
-                {EditComponent && <th scope="col" className="w-5" />}
-                {EditComponent && DeleteComponent && (
-                  <th scope="col" className="w-2" />
-                )}
-                {DeleteComponent && <th scope="col" className="w-5" />}
-                {DeleteComponent && <th scope="col" className="w-5" />}
+                {EditComponent && <td className="w-5" />}
+                {EditComponent && DeleteComponent && <td className="w-2" />}
+                {DeleteComponent && <td className="w-5" />}
+                {DeleteComponent && <td className="w-5" />}
               </tr>
             </thead>
             <tbody className="divide-y">

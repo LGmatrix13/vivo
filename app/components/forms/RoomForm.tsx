@@ -18,12 +18,18 @@ export default function RoomForm(props: RoomFormProps) {
       value: option.id,
     };
   });
-  const raOptions = rasDropdown.map((option) => {
-    return {
-      key: option.name,
-      value: option.id,
-    };
-  });
+  const raOptions = [
+    {
+      value: null,
+      key: "Unassigned",
+    },
+    ...rasDropdown.map((option) => {
+      return {
+        key: option.name,
+        value: option.id,
+      };
+    })
+  ];
   const roomTypeOptions = [
     {
       key: "Upper Campus",

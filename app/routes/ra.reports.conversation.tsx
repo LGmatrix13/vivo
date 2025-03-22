@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -44,8 +44,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create":
-      const conversation = { submitted: new Date().toDateString(), ...values };
-      return await createConversation(conversation, request);
+      return await createConversation(values, request);
     case "update":
       return await updateConversation(values, request);
     case "delete":
@@ -55,12 +54,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AdminReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
+  const searchRow = searchParams.get("row")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{
     user: IUser;
   }>();
   const columnKeys = {
     submitted: "Submitted",
-    ra: "RA",
+    resident: "Resident",
     level: "Level",
     highPriority: "High Priority",
   };
@@ -70,12 +72,15 @@ export default function AdminReportsRoundPage() {
     explanation: "Description",
   };
 
+
+
   return (
     <Table<IConversationReportAsRA>
       columnKeys={columnKeys}
       rows={data.conversations}
       search={{
         placeholder: "Search for a conversation...",
+        initial: searchQuery
       }}
       mixins={{
         cells: {
@@ -110,8 +115,8 @@ export default function AdminReportsRoundPage() {
       DeleteComponent={({ row }) => (
         <DeleteForm
           id={row.id}
-          title="Delete Event"
-          prompt="Are you sure you want to delete this event?"
+          title="Delete Conversation"
+          prompt="Are you sure you want to delete this conversation?"
         />
       )}
       ActionButtons={({ rows }) => (

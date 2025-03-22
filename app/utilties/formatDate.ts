@@ -4,32 +4,43 @@ export function formatDate(
   includeDay?: boolean
 ) {
   const date = new Date(Date.parse(dateString));
-  const today = new Date();
+  const today = new Date(
+    new Date().toLocaleString("en", {
+      timeZone: "America/New_York",
+    })
+  );
 
-  const diffDays = today.getUTCDate() - date.getUTCDate();
-  const diffMonths = today.getUTCMonth() - date.getUTCMonth();
-  const diffYears = today.getUTCFullYear() - date.getUTCFullYear();
-  const time = date.toLocaleTimeString(undefined, {
-    hour: "2-digit",
+  const diffDays = today.getDate() - date.getDate();
+  const diffMonths = today.getMonth() - date.getMonth();
+  const diffYears = today.getFullYear() - date.getFullYear();
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
     minute: "2-digit",
+    timeZone: "America/New_York",
   });
-  const days = ["Sun", "Mon", "Tues", "Wed", "Thrus", "Fri", "Sat"];
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   if (diffYears === 0 && diffDays === 0 && diffMonths === 0) {
     return `Today${includeTime ? `, ${time}` : ""}`;
   } else if (diffYears === 0 && diffDays === 1 && diffMonths === 0) {
     return includeTime ? `Yesterday, ${time}` : "Yesterday";
   } else if (includeTime && includeDay) {
-    return `${date.getUTCMonth() + 1}/${date.getUTCDate()}, ${
+    return `${date.getMonth() + 1}/${date.getDate()}, ${
       days[date.getDay()]
     }, ${time}`;
   } else if (includeDay) {
-    return `${date.getUTCMonth() + 1}/${date.getUTCDate()}, ${
-      days[date.getDay()]
-    }`;
+    return `${date.getMonth() + 1}/${date.getDate()}, ${days[date.getDay()]}`;
   } else if (includeTime) {
-    return `${date.getUTCMonth() + 1}/${date.getUTCDate()}, ${time}`;
+    return `${date.getMonth() + 1}/${date.getDate()}, ${time}`;
   } else {
-    return `${date.getUTCMonth() + 1}/${date.getUTCDate()}`;
+    return `${date.getMonth() + 1}/${date.getDate()}`;
   }
 }

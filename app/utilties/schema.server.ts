@@ -19,10 +19,13 @@ export const sentimentEnum = pgEnum("sentiment", [
   "NEUTRAL",
   "NEGATIVE",
 ]);
-export const statusEnum = pgEnum("status", [
-  "IN_PROGRESS",
-  "APPROVED",
-  "SENT_TO_LIMBLE",
+export const RCIStatusEnum = pgEnum("status", [
+  "AWAITING_RESIDENT",
+  "AWAITING_RA",
+  "ACTIVE",
+  "RESIDENT_CHECKOUT",
+  "RA_CHECKOUT",
+  "CHECKED_OUT",
 ]);
 export const ratingEnum = pgEnum("rating", [
   "GREAT",
@@ -32,7 +35,8 @@ export const ratingEnum = pgEnum("rating", [
   "REALLY_ROUGH",
 ]);
 export const reportTypeEnum = pgEnum("reportType", [
-  "RCI",
+  "RCI_ACTIVE",
+  "RCI_CHECKED_OUT",
   "CONVERSATION",
   "WEEKLY",
   "ROUND",
@@ -82,6 +86,7 @@ export const roomTable = pgTable("Room", {
   zoneId: integer("zone_id").references(() => zoneTable.id),
   capacity: integer("capacity").notNull(),
   roomType: roomTypeEnum().notNull(),
+  issuesRCI: json("issues_rci").notNull().default({}),
 });
 
 export const assistantStaffTable = pgTable("AssistantStaff", {
@@ -126,8 +131,8 @@ export const roundReportTable = pgTable("RoundReport", {
   zoneId: integer("zone_id")
     .notNull()
     .references(() => zoneTable.id),
-  submitted: date("submitted").notNull().defaultNow(),
-  time: timestamp("time").notNull(),
+  submitted: timestamp("submitted", { mode: "string" }).notNull().defaultNow(),
+  time: timestamp("time", { mode: "string" }).notNull(),
   description: varchar("description", { length: 225 }).notNull(),
   violations: varchar("violations", { length: 225 }),
   outstandingWorkOrders: varchar("outstanding_work_orders", {
@@ -143,7 +148,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),
-  submitted: date("submitted").notNull().defaultNow(),
+  submitted: timestamp("submitted", { mode: "string" }).notNull().defaultNow(),
   explanation: varchar({ length: 225 }).notNull(),
   level: levelEnum().notNull(),
   sentiment: sentimentEnum().notNull(),
@@ -152,7 +157,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
 
 export const eventReportTable = pgTable("EventReport", {
   id: serial("id").notNull().primaryKey(),
-  time: timestamp("time").notNull(),
+  time: timestamp("time", { mode: "string" }).notNull(),
   description: varchar("description", { length: 225 }).notNull(),
   attendance: integer().notNull(),
   zoneId: integer("zone_id")
@@ -187,7 +192,7 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),
-  submittedOn: date("submitted_on").defaultNow().notNull(),
+  submitted: timestamp("submitted", { mode: "string" }).defaultNow().notNull(),
   staffMeetingSuggestions: varchar({ length: 225 }),
   raResponsibilities: ratingEnum().notNull(),
   academics: ratingEnum().notNull(),
@@ -202,13 +207,13 @@ export const weeklyReportTable = pgTable("WeeklyReport", {
 export const zoneShiftTable = pgTable("ZoneShift", {
   id: serial("id").notNull().primaryKey(),
   zoneId: integer().references(() => zoneTable.id),
-  date: date("date").notNull(),
+  date: date("date", { mode: "string" }).notNull(),
 });
 
 export const staffShiftTable = pgTable("StaffShift", {
   id: serial("id").notNull().primaryKey(),
   staffId: integer().references(() => staffTable.id),
-  date: date("date").notNull(),
+  date: date("date", { mode: "string" }).notNull(),
 });
 
 export const RCITable = pgTable("RCI", {
@@ -217,6 +222,8 @@ export const RCITable = pgTable("RCI", {
     .notNull()
     .references(() => residentTable.id),
   issues: json().notNull().default({}),
-  submitted: date().defaultNow().notNull(),
-  status: statusEnum().notNull(),
+  checkoutIssues: json(),
+  submitted: timestamp({ mode: "string" }).defaultNow().notNull(),
+  checkedOut: timestamp({ mode: "string" }),
+  status: RCIStatusEnum().notNull(),
 });

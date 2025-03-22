@@ -12,7 +12,7 @@ import { uploadDutyScheduleForRD } from "~/repositories/shifts/rd";
 import { uploadDutyScheduleForRAs } from "~/repositories/shifts/ra";
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["admin", "rd"]);
+  console.log("ran");
   const user = await auth.readUser(request, ["admin", "rd"]);
   const admin = user.role === "admin";
 
@@ -21,9 +21,9 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "upload":
       if (admin) {
-        return await uploadDutyScheduleForRD(values, request);
+        return await uploadDutyScheduleForRD(values);
       } else {
-        return await uploadDutyScheduleForRAs(values, request);
+        return await uploadDutyScheduleForRAs(values, user.id);
       }
   }
 }
@@ -65,7 +65,7 @@ export default function StaffAdminPeopleRDsPage() {
             >
               Download Errored Rows
             </IconButton>
-            <Link to="/staff/shifts/admin/upload">
+            <Link to="/staff/shifts/upload">
               <IconButton Icon={Upload}>Upload Again</IconButton>
             </Link>
           </div>

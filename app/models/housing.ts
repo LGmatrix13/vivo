@@ -1,8 +1,8 @@
+import { readBuildings } from "~/repositories/housing/buildings";
 import {
-  readBuildings,
-  readBuildingsDropdown,
-} from "~/repositories/housing/buildings";
-import { readRoomsAsAdmin, readRoomsDropdown} from "~/repositories/housing/rooms";
+  readRoomsAsAdmin,
+  readRoomsDropdown,
+} from "~/repositories/housing/rooms";
 
 export type IBuilding = Awaited<ReturnType<typeof readBuildings>>[number];
 export type IBuildingDropdown = Awaited<

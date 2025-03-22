@@ -1,9 +1,4 @@
-import {
-  json,
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
+import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -21,7 +16,6 @@ import {
 } from "~/repositories/reports/round";
 import { readRAsAsAdmin, readRAsAsRD } from "~/repositories/people/ras";
 import { IRoundReport } from "~/models/reports";
-import { useState } from "react";
 import { createReadReport } from "~/repositories/read/reports";
 
 export async function loader({ request }: ActionFunctionArgs) {
@@ -32,10 +26,10 @@ export async function loader({ request }: ActionFunctionArgs) {
     admin ? readRAsAsAdmin() : readRAsAsRD(user.id),
     delay(100),
   ]);
-  return json({
+  return {
     round,
     ras,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -67,9 +61,10 @@ export default function StaffReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
-    submitted: "Date",
-    time: "Time",
+    time: "Date",
     ra: "RA",
   };
   const rowKeys = {
@@ -95,6 +90,7 @@ export default function StaffReportsRoundPage() {
       rows={data.round as IRoundReport[]}
       search={{
         placeholder: "Search for a round...",
+        initial: searchQuery,
       }}
       filter={{
         key: "buildingId",

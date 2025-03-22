@@ -1,23 +1,11 @@
-import { json, useLoaderData } from "@remix-run/react";
-import {
-  DrawerButton,
-  DrawerContent,
-  DrawerProvider,
-} from "~/components/common/Drawer";
+import { useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
-import { Download, Plus, UserSearch } from "~/components/common/Icons";
+import { Download, UserSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
-import DeleteForm from "~/components/forms/DeleteForm";
-import ResidentForm from "~/components/forms/ResidentForm";
 import { csv } from "~/utilties/csv";
 import { IResident } from "~/models/people";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import {
-  createResident,
-  updateResident,
-  deleteResident,
-  readResidentsAsRA,
-} from "~/repositories/people/residents";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { readResidentsAsRA } from "~/repositories/people/residents";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
 import { auth } from "~/utilties/auth.server";
@@ -30,10 +18,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     readRoomsDropdown(),
     delay(100),
   ]);
-  return json({
+  return {
     residents,
     roomsDropdown,
-  });
+  };
 }
 
 export default function RAResidentsPage() {
@@ -65,25 +53,13 @@ export default function RAResidentsPage() {
       InstructionComponent={() => (
         <Instruction Icon={UserSearch} title="First Select a Resident" />
       )}
-      EditComponent={({ row }) => <ResidentForm
-        resident={row}
-        roomsDropdown={data.roomsDropdown}
-      />}
-      DeleteComponent={({ row }) => (
-        <DeleteForm
-          id={row.id}
-          title={`Delete ${row.fullName}`}
-          prompt={`Are you sure you want to delete ${row.fullName}?`}
-          toast={`Deleted ${row.fullName}`}
-        />
-      )}
-      ActionButtons={() => (
+      ActionButtons={({ rows }) => (
         <div className="flex space-x-3">
           <IconButton
             Icon={Download}
             className="md:flex hidden"
             onClick={() => {
-              csv.download(data.residents, "Residents", rowKeys);
+              csv.download(rows, "Residents", rowKeys);
             }}
           >
             Export Residents

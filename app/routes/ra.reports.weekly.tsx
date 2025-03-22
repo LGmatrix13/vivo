@@ -1,4 +1,4 @@
-import { json, useLoaderData } from "@remix-run/react";
+import { json, useLoaderData, useSearchParams } from "@remix-run/react";
 
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
@@ -28,10 +28,10 @@ export async function loader({ request }: ActionFunctionArgs) {
     delay(100),
   ]);
 
-  return json({
+  return {
     weekly,
     user,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -50,8 +50,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
-    submittedOn: "Date",
+    submitted: "Date",
   };
   const rowKeys = {
     ...columnKeys,
@@ -71,6 +73,7 @@ export default function StaffReportsWeeklyPage() {
       rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
+        initial: searchQuery,
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (

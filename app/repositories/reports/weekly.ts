@@ -17,7 +17,7 @@ export async function readWeeklyReports() {
     .select({
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
-      submittedOn: weeklyReportTable.submittedOn,
+      submitted: weeklyReportTable.submitted,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -47,7 +47,7 @@ export async function readWeeklyReports() {
         eq(readTable.reportType, "WEEKLY")
       )
     )
-    .orderBy(desc(weeklyReportTable.submittedOn));
+    .orderBy(desc(weeklyReportTable.submitted));
 
   const formattedStatus = {
     GREAT: "Great",
@@ -59,6 +59,7 @@ export async function readWeeklyReports() {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
@@ -77,7 +78,7 @@ export async function readWeeklyReportsAsRD(id: number) {
     .select({
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
-      submittedOn: weeklyReportTable.submittedOn,
+      submitted: weeklyReportTable.submitted,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -108,7 +109,7 @@ export async function readWeeklyReportsAsRD(id: number) {
       )
     )
     .where(eq(staffTable.id, id))
-    .orderBy(desc(weeklyReportTable.submittedOn));
+    .orderBy(desc(weeklyReportTable.submitted));
 
   const formattedStatus = {
     GREAT: "Great",
@@ -120,6 +121,7 @@ export async function readWeeklyReportsAsRD(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
@@ -138,7 +140,7 @@ export async function readWeeklyReportsAsRA(id: number) {
     .select({
       id: weeklyReportTable.id,
       zoneId: weeklyReportTable.zoneId,
-      submittedOn: weeklyReportTable.submittedOn,
+      submitted: weeklyReportTable.submitted,
       raResponsibilities: weeklyReportTable.raResponsibilities,
       academics: weeklyReportTable.academics,
       spiritualHealth: weeklyReportTable.spiritualHealth,
@@ -158,7 +160,7 @@ export async function readWeeklyReportsAsRA(id: number) {
     .innerJoin(buildingTable, eq(staffTable.id, buildingTable.staffId))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .where(eq(zoneTable.id, id))
-    .orderBy(desc(weeklyReportTable.submittedOn));
+    .orderBy(desc(weeklyReportTable.submitted));
 
   const formattedStatus = {
     GREAT: "Great",
@@ -170,7 +172,7 @@ export async function readWeeklyReportsAsRA(id: number) {
   const formattedData = data.map((weekly) => {
     return {
       ...weekly,
-      submittedOn: formatDate(weekly.submittedOn),
+      submitted: formatDate(weekly.submitted, true),
       raResponsibilities: formattedStatus[weekly.raResponsibilities],
       academics: formattedStatus[weekly.academics],
       spiritualHealth: formattedStatus[weekly.spiritualHealth],
@@ -185,10 +187,17 @@ export async function readWeeklyReportsAsRA(id: number) {
 }
 
 export async function createWeekly(values: Values, request: Request) {
-  return db.insert(request, weeklyReportTable, CreatedWeekly, values, true, {
-    message: "Weekly Created",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    weeklyReportTable,
+    CreatedWeekly,
+    values,
+    true,
+    {
+      message: "Weekly Created",
+      level: "success",
+    }
+  );
 }
 
 export async function updateWeekly(values: Values, request: Request) {

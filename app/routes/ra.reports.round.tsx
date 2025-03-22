@@ -1,4 +1,4 @@
-import { json, useLoaderData, useOutletContext } from "@remix-run/react";
+import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -53,6 +53,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{ user: IUser }>();
   const columnKeys = {
     time: "Time",
@@ -70,6 +72,7 @@ export default function RAReportsRoundPage() {
       rows={data.rounds as IRoundReport[]}
       search={{
         placeholder: "Search for a round report...",
+        initial: searchQuery,
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (

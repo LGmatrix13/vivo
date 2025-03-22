@@ -18,9 +18,7 @@ export async function readRoundReports() {
       id: roundReportTable.id,
       zoneId: roundReportTable.zoneId,
       submitted: roundReportTable.submitted,
-      time: sql<string>`TO_CHAR(${roundReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: roundReportTable.time,
       description: roundReportTable.description,
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
@@ -63,9 +61,7 @@ export async function readRoundReportsAsRD(id: number) {
       id: roundReportTable.id,
       zoneId: roundReportTable.zoneId,
       submitted: roundReportTable.submitted,
-      time: sql<string>`TO_CHAR(${roundReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: roundReportTable.time,
       description: roundReportTable.description,
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
@@ -107,9 +103,7 @@ export async function readRoundReportsAsRA(id: number) {
       id: roundReportTable.id,
       zoneId: roundReportTable.zoneId,
       submitted: roundReportTable.submitted,
-      time: sql<string>`TO_CHAR(${roundReportTable.time}, 'YYYY-MM-DD HH12:MI AM')`.as(
-        "formattedTime"
-      ),
+      time: roundReportTable.time,
       description: roundReportTable.description,
       ra: sql<string>`${residentTable.firstName} || ' ' || ${residentTable.lastName}`.as(
         "raName"
@@ -129,7 +123,7 @@ export async function readRoundReportsAsRA(id: number) {
   const formattedData = data.map((round) => {
     return {
       ...round,
-      time: formatDate(round.time, true),
+      time: formatDate(round.submitted, true),
     };
   });
 
@@ -137,10 +131,17 @@ export async function readRoundReportsAsRA(id: number) {
 }
 
 export async function createRound(values: Values, request: Request) {
-  return db.insert(request, roundReportTable, CreatedRound, values, true, {
-    message: "Round Created",
-    level: "success",
-  });
+  return await db.insert(
+    request,
+    roundReportTable,
+    CreatedRound,
+    values,
+    true,
+    {
+      message: "Round Created",
+      level: "success",
+    }
+  );
 }
 
 export async function updateRound(values: Values, request: Request) {

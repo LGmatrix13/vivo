@@ -19,7 +19,11 @@ export default function RCIForm(props: RCIFormProps) {
       {submittedRCI?.id && (
         <input name="id" type="hidden" value={submittedRCI.id} />
       )}
-      <input name="roomId" type="hidden" value={submittedRCI?.roomId} />
+      <input
+        name="roomId"
+        type="hidden"
+        value={submittedRCI?.roomId as number}
+      />
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}
@@ -34,6 +38,10 @@ export default function RCIForm(props: RCIFormProps) {
           />
         </AcknowledgeIssueRadio>
       ))}
+      <div className="space-x-2 flex items-center">
+        <input type="checkbox" name="roomKeyRecieved" required />
+        <label htmlFor="roomKeyRecieved">Recieved Room Key</label>
+      </div>
       <Input
         label="Student Signature"
         placeholder="Signature"
