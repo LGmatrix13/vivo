@@ -16,6 +16,7 @@ interface IAsset {
 const USERNAME = process.env.LIMBLE_API_USERNAME!;
 const PASSWORD = process.env.LIMBLE_API_PASSWORD!;
 const CREDENTIALS = Buffer.from(`${USERNAME}:${PASSWORD}`).toString("base64");
+const LOCATION_ID = 18691;
 
 async function postTask(payload: ILimblePayload) {
   const response = await fetch("https://api.limblecmms.com:443/v2/tasks/", {
@@ -42,8 +43,6 @@ async function getAsset(name: string) {
   const data = (await response.json()) as IAsset;
   return data.assetID;
 }
-
-const LOCATION_ID = 18691;
 
 async function workOrder(
   building: string,
