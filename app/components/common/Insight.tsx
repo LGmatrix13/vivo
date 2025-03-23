@@ -39,15 +39,12 @@ export default function Insight(props: InsightProps) {
             )}
           </div>
           <div className="space-y-2 flex flex-col">
-            <h2 className="font-bold">{insight.title}</h2>
+            <h2 className="font-bold"><Link to={insight.action?.href || "#"} className="font-bold hover:underline">
+              {insight.title}
+          </Link></h2>
           </div>
         </div>
       </div>
-      {insight.action && (
-        <Link to={insight.action.href}>
-          <WideButton>{insight.action.title}</WideButton>
-        </Link>
-      )}
     </div>
   );
 }

@@ -41,6 +41,10 @@ export async function readConversationInsightsCountAsRD(
   return {
     title: `${count} conversations have been logged`,
     level: calculateLevel(),
+    action: {
+      title: "View Conversations",
+      href: `/staff/reports/conversation`,
+    },
   };
 }
 
@@ -79,6 +83,11 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   return {
     title: `${count} high priority conversations`,
     level: calculateLevel(),
+    //TODO fix this for high priority conversations
+    action: {
+      title: "View High Priority Conversations",
+      href: `/staff/reports/conversation?search=${encodeURIComponent(true)}&row=${encodeURIComponent("High Priority")}`,
+    },
   };
 }
 
@@ -143,6 +152,10 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
   return {
     title: `${count} conversations have been logged`,
     level: calculateLevel(),
+    action: {
+      title: "View Conversations",
+      href: `/staff/reports/conversation`,
+    },
   };
 }
 
@@ -175,6 +188,11 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   return {
     title: `${count} high priority conversations`,
     level: calculateLevel(),
+    //TODO fix this for high priority conversations
+    action: {
+      title: "View High Priority Conversations",
+      href: `/staff/reports/conversation?search=${encodeURIComponent(true)}&row=${encodeURIComponent("High Priority")}`,
+    },
   };
 }
 
@@ -197,6 +215,10 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   return {
     title: `${count} level 3 conversations`,
     level: "great",
+    action: {
+      title: "View Level 3 Conversations",
+      href: `/staff/reports/conversation?search=${encodeURIComponent(3)}&row=${encodeURIComponent("level")}`,
+    },
   };
 }
 
