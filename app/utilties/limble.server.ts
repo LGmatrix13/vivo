@@ -37,15 +37,11 @@ async function getAsset(room: string) {
     }
   );
 
-  if (!response.ok) {
-    return null;
-  }
+  if (!response.ok) return null;
 
   const data = (await response.json()) as IAsset[];
 
-  if (!data.length) {
-    return null;
-  }
+  if (!data.length) return null;
 
   const assetID = data[0].assetID;
   CACHE[room] = assetID;
