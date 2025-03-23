@@ -19,6 +19,15 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
+      <div className="bg-blue-600 h-12 justify-center text-white flex items-center">
+        <div className="flex items-center space-x-2 px-10 truncate">
+          <Sparkles />
+          <span className="truncate">
+            Try "Ask Merrick" to get quick answers on your Residence Life
+            documentation
+          </span>
+        </div>
+      </div>
       <nav className="flex items-center justify-between border-b px-10 py-7">
         <Logo />
         <Link to="/auth/login">
