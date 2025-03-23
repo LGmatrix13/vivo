@@ -38,8 +38,13 @@ async function getAsset(room: string) {
     return null;
   }
 
-  const data = (await response.json()) as IAsset;
-  return data.assetID;
+  const data = (await response.json()) as IAsset[];
+
+  if (!data.length) {
+    return null;
+  }
+
+  return data[0].assetID;
 }
 
 async function workOrder(
