@@ -1,6 +1,7 @@
 import { ITask, IAsset } from "~/models/limble";
 
 const LOCATION_ID = 18691;
+const CACHE: Record<string, number> = {};
 
 async function postTask(task: ITask) {
   const credentials = Buffer.from(
@@ -19,6 +20,8 @@ async function postTask(task: ITask) {
 }
 
 async function getAsset(room: string) {
+  if (CACHE[room]) return CACHE[room];
+
   const credentials = Buffer.from(
     `${process.env.LIMBLE_API_USERNAME}:${process.env.LIMBLE_API_PASSWORD}`
   ).toString("base64");
@@ -44,7 +47,9 @@ async function getAsset(room: string) {
     return null;
   }
 
-  return data[0].assetID;
+  const assetID = data[0].assetID;
+  CACHE[room] = assetID;
+  return assetID;
 }
 
 async function workOrder(
