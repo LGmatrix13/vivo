@@ -143,22 +143,36 @@ export async function readRAHealthInsightsAsAdmin() {
   return processInsights(data[0]);
 }
 
+//TODO: add search for data within reports to sort these reports by health
+
 function processInsights(data: any): IInsight[] {
   const insights = [
     {
       title: `${data.greatMentalHealth} reported great mental health`,
       level: "great",
       value: data.greatMentalHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.goodMentalHealth} reported good mental health`,
       level: "great",
       value: data.goodMentalHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.okMentalHealth} reported ok mental health`,
       level: "warning",
       value: data.okMentalHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${
@@ -166,21 +180,37 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough mental health`,
       level: "danger",
       value: data.roughMentalHealth + data.reallyRoughMentalHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.greatPersonalLife} reported great personal life`,
       level: "great",
       value: data.greatPersonalLife,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.goodPersonalLife} reported good personal life`,
       level: "good",
       value: data.goodPersonalLife,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.okPersonalLife} reported ok personal life`,
       level: "warning",
       value: data.okPersonalLife,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${
@@ -188,21 +218,37 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough personal life`,
       level: "danger",
       value: data.roughPersonalLife + data.reallyRoughPersonalLife,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.greatSpiritualHealth} reported great spiritual health`,
       level: "great",
       value: data.greatSpiritualHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.goodSpiritualHealth} reported good spiritual health`,
       level: "good",
       value: data.goodSpiritualHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${data.okSpiritualHealth} reported ok spiritual health`,
       level: "warning",
       value: data.okSpiritualHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
     {
       title: `${
@@ -210,6 +256,10 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough spiritual health`,
       level: "danger",
       value: data.roughSpiritualHealth + data.reallySpiritualHealth,
+      action: {
+        title: "View FILL IN THE BLANK health",
+        href: `/staff/reports/weekly`,
+      },
     },
   ];
 

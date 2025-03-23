@@ -53,10 +53,18 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     {
       title: `${completeRCIs} completed RCIs`,
       level: calculateLevelCompleteRCI(completeRCIs, 1),
+      action: {
+        title: "View Completed RCIs",
+        href: `/ra/rcis/approve-check-in`,
+      },
     },
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
+      action: {
+        title: "View Completed RCIs",
+        href: `/ra/rcis/approve-check-in`,
+      },
     },
   ];
 }
@@ -82,17 +90,25 @@ export async function readRCIInsightsAsRD(
     {
       title: `${completeRCIs} completed RCIs`,
       level: calculateLevelCompleteRCI(completeRCIs, 5),
+      action: {
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
+      },
     },
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
+      action: {
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
+      },
     },
     {
       title: `${approvedRCIs} awaiting Residents`,
       level: calculateLevelSentToLimble(sentToLimble, 5),
       action: {
-        title: "View Complete RCIs",
-        href: "/staff/housing/rcis/complete",
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
       },
     },
   ];
@@ -113,14 +129,26 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
     {
       title: `${completeRCIs} completed RCIs`,
       level: calculateLevelCompleteRCI(completeRCIs, 45),
+      action: {
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
+      },
     },
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
+      action: {
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
+      },
     },
     {
       title: `${approvedRCIs} awaiting Residents`,
       level: calculateLevelSentToLimble(sentToLimble, 45),
+      action: {
+        title: "View Completed RCIs",
+        href: `/staff/housing/rcis/active`,
+      },
     },
   ];
 }
