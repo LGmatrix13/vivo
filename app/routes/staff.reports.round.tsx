@@ -84,6 +84,18 @@ export default function StaffReportsRoundPage() {
     }),
   ];
 
+  // const filteredRows = data.round.filter((row) => {
+  //   const searchableValues = [
+  //     ...Object.values(row), // Include all row values
+  //     row.violations, // Add extra hidden fields manually
+  //     row.OutstandingWorkOrders, 
+  //   ].filter(Boolean); // Remove any null or undefined values
+  
+  //   return searchableValues.some((value) =>
+  //     value?.toString().toLowerCase().includes(searchQuery)
+  //   );
+  // });
+
   return (
     <Table<IRoundReport>
       columnKeys={columnKeys}
