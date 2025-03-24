@@ -61,8 +61,7 @@ export default function StaffReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
+  console.log(data)
   const columnKeys = {
     time: "Date",
     ra: "RA",
@@ -102,7 +101,6 @@ export default function StaffReportsRoundPage() {
       rows={data.round as IRoundReport[]}
       search={{
         placeholder: "Search for a round...",
-        initial: searchQuery,
       }}
       filter={{
         key: "buildingId",

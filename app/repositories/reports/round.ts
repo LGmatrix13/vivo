@@ -49,8 +49,12 @@ export async function readRoundReports() {
     return {
       ...round,
       time: formatDate(round.submitted, true),
+      hasViolations: !!round.violations,
+      hasOutstandingWorkOrders: !!round.outstandingWorkOrders
     };
   });
+
+  console.log('tes', formattedData)
 
   return formattedData;
 }

@@ -104,6 +104,8 @@ export default function StaffInsightsLayout() {
     raHealthInsights,
   } = useLoaderData<typeof loader>();
 
+  console.log(roundInsights)
+
   return (
     <InsightsTable
       rows={[
