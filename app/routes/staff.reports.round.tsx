@@ -1,4 +1,9 @@
-import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -87,9 +92,9 @@ export default function StaffReportsRoundPage() {
   //   const searchableValues = [
   //     ...Object.values(row), // Include all row values
   //     row.violations, // Add extra hidden fields manually
-  //     row.OutstandingWorkOrders, 
+  //     row.OutstandingWorkOrders,
   //   ].filter(Boolean); // Remove any null or undefined values
-  
+
   //   return searchableValues.some((value) =>
   //     value?.toString().toLowerCase().includes(searchQuery)
   //   );

@@ -56,36 +56,28 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [filterOption, setFilterOption] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
   } | null>(null);
-  
-  
+
   let prefilteredRows = rows;
-
   if (rows.length > 0) {
-    const filters: Record<string, string | null> = {}
+    const filters: Record<string, string | null> = {};
+
     for (const key of Object.keys(rows[0])) {
-      filters[key] = searchParams.get(key)
+      const param = searchParams.get(key);
+      if (param) filters[key] = param.toLowerCase();
     }
-  
-    prefilteredRows = rows.filter((row) => {
-      return Object.keys(filters).some((key) => {
-        if (key) {
-          return String(row[key]).toLowerCase().includes(filters[key] as string);
-        } else {
-          return true;
-        }
-      })
-    })
-    console.log(prefilteredRows)
+
+    prefilteredRows = rows.filter((row) =>
+      Object.entries(filters).every(([key, value]) =>
+        row[key]?.toString().toLowerCase().includes(value)
+      )
+    );
   }
-
-
-  // Filter rows based on the selected filter
 
   const filteredRows =
     filter && filterOption
@@ -95,14 +87,12 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     rows.filter((row) => row.read).map((row) => row.id)
   );
 
-  
- // Search rows based on the search query
+  // Search rows based on the search query
   const searchedRows = filteredRows.filter((row) =>
     originalColumnKeys.some((key) =>
       String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-
 
   // Sort rows based on the sortConfig
   const sortedRows = [...searchedRows].sort((a, b) => {
