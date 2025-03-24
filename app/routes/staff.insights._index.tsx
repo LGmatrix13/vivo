@@ -108,6 +108,14 @@ export default function StaffInsightsLayout() {
     <InsightsTable
       rows={[
         {
+          category: "On Duty",
+          insights: roundInsights,
+        },
+        {
+          category: "RA Health",
+          insights: raHealthInsights,
+        },
+        {
           category: "Conversations",
           insights: conversationInsights,
         },
@@ -116,16 +124,8 @@ export default function StaffInsightsLayout() {
           insights: eventInsights,
         },
         {
-          category: "On Duty",
-          insights: roundInsights,
-        },
-        {
           category: "RCIs",
           insights: rciInsights,
-        },
-        {
-          category: "RA Health",
-          insights: raHealthInsights,
         },
       ]}
       ActionButtons={() => (
