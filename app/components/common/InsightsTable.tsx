@@ -48,6 +48,7 @@ export default function InsightsTable(props: IInsightsTable) {
           {row.insights.map((insight) => (
             <Insight insight={insight} />
           ))}
+          {row.ActionButton && <row.ActionButton />}
         </div>
       )}
       filter={

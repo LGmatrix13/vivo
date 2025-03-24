@@ -1,8 +1,7 @@
 import { Link } from "@remix-run/react";
 import { Check, ExclamationMark } from "./Icons";
 import { IInsight } from "~/models/insights";
-import IconButton from "./IconButton";
-import WideButton from "./WideButton";
+import { channel } from "diagnostics_channel";
 
 interface InsightProps {
   insight: IInsight;
@@ -39,9 +38,15 @@ export default function Insight(props: InsightProps) {
             )}
           </div>
           <div className="space-y-2 flex flex-col">
-            <h2 className="font-bold"><Link to={insight.action?.href || "#"} className="font-bold hover:underline">
-              {insight.title}
-          </Link></h2>
+            <h2 className="font-bold">
+              {insight.href ? (
+                <Link to={insight.href} className="font-bold hover:underline">
+                  {insight.title}
+                </Link>
+              ) : (
+                <span>{insight.title}</span>
+              )}
+            </h2>
           </div>
         </div>
       </div>

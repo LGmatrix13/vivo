@@ -3,6 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Sparkles } from "~/components/common/Icons";
 import InsightsTable from "~/components/common/InsightsTable";
+import WideButton from "~/components/common/WideButton";
 import { IInsight } from "~/models/insights";
 import { readConversationInsightsLastConversatonsAsRA } from "~/repositories/insights/conversation";
 import {
@@ -69,10 +70,12 @@ export default function RAInsightsPage() {
         {
           category: "Conversations",
           insights: lastConversatonsInsights,
+          ActionButton: () => <WideButton>Submit a Conversation</WideButton>,
         },
         {
           category: "Rounds",
           insights: roundInsights,
+          ActionButton: () => <WideButton>Submit a Round</WideButton>,
         },
         {
           category: "RCIs",
@@ -81,6 +84,7 @@ export default function RAInsightsPage() {
         {
           category: "Events",
           insights: eventInsights,
+          ActionButton: () => <WideButton>Submit an Event</WideButton>,
         },
       ]}
       ActionButtons={() => (

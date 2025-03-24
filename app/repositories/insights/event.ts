@@ -28,10 +28,8 @@ export async function readEventInsightsCountAsRA(
   return {
     title: `You have had ${count} events`,
     level: calculateLevel(),
-    action: {
-      title: "View Your Events",
-      href: `/ra/reports/event`,
-    },
+
+    href: `/ra/reports/event`,
   };
 }
 
@@ -60,10 +58,8 @@ export async function readEventInsightsAttendanceAsRA(
   return {
     title: `${sum} residents have attended your events`,
     level: calculateLevel(),
-    action: {
-      title: "View Your Events",
-      href: `/ra/reports/event`,
-    },
+
+    href: `/ra/reports/event`,
   };
 }
 
@@ -94,10 +90,8 @@ export async function readEventInsightsCountAsRD(
   return {
     title: `You have had ${count} events`,
     level: calculateLevel(),
-    action: {
-      title: "View Your Buildings Events",
-      href: `/staff/reports/event`,
-    },
+
+    href: `/staff/reports/event`,
   };
 }
 
@@ -128,10 +122,8 @@ export async function readEventInsightsAttendanceAsRD(
   return {
     title: `${sum} residents have attended Events`,
     level: calculateLevel(),
-    action: {
-      title: "View Building Events",
-      href: "/staff/reports/event",
-    },
+
+    href: "/staff/reports/event",
   };
 }
 
@@ -157,10 +149,8 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   return {
     title: `${count} events have occured`,
     level: calculateLevel(),
-    action: {
-      title: "View All Events",
-      href: `/staff/reports/event`,
-    },
+
+    href: `/staff/reports/event`,
   };
 }
 
@@ -186,10 +176,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   return {
     title: `${sum} residents have attended events`,
     level: calculateLevel(),
-    action: {
-      title: "View All Events",
-      href: `/staff/reports/event`,
-    },
+    href: `/staff/reports/event`,
   };
 }
 
@@ -217,12 +204,12 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
     title: `${difference} days since your last event`,
     level: calculateLevel(),
     action: {
-        title: "Create an Event Report",
-        href: "/ra/reports/event",
-        action: {
-          title: "View Your Events",
-          href: `/ra/reports/event`,
-        },
+      title: "Create an Event Report",
+      href: "/ra/reports/event",
+      action: {
+        title: "View Your Events",
+        href: `/ra/reports/event`,
       },
+    },
   };
 }
