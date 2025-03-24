@@ -2,7 +2,6 @@ import Form from "../common/Form";
 import type { IRA, IRDDropdown, IResidentDropdown } from "~/models/people";
 import Select from "../common/Select";
 import Input from "../common/Input";
-import { IBuildingDropdown } from "~/models/housing";
 
 interface RAFormProps {
   ra?: IRA;
@@ -14,7 +13,7 @@ export default function RAForm(props: RAFormProps) {
   const { residentDropdown, rdsDropdown, ra } = props;
   const residentOptions = residentDropdown?.map((option) => {
     return {
-      key: option.resident,
+      key: option.name,
       value: option.id,
     };
   });
