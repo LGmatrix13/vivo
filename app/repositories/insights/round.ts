@@ -129,8 +129,7 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
       title: "View Rounds with Violations",
       href: "/ra/reports/round",
     },
-    
-  };
+  }
 }
 
 export async function readRoundReportInsightsOutstandingWorkOrdersAsRA(
