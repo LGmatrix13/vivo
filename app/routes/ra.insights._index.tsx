@@ -67,20 +67,20 @@ export default function RAInsightsPage() {
     <InsightsTable
       rows={[
         {
-          category: "Conversations",
-          insights: lastConversatonsInsights,
-        },
-        {
           category: "Rounds",
           insights: roundInsights,
         },
         {
-          category: "RCIs",
-          insights: rciInsights,
+          category: "Conversations",
+          insights: lastConversatonsInsights,
         },
         {
           category: "Events",
           insights: eventInsights,
+        },
+        {
+          category: "RCIs",
+          insights: rciInsights,
         },
       ]}
       ActionButtons={() => (
