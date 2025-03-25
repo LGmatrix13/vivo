@@ -1,5 +1,10 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { isRouteErrorResponse, Link, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  Link,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Sparkles } from "~/components/common/Icons";
 import InsightsTable from "~/components/common/InsightsTable";
@@ -17,7 +22,11 @@ import {
   readRoundReportInsightsViolationsAsRA,
 } from "~/repositories/insights/round";
 import { auth } from "~/utilties/auth.server";
-import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
 import ConversationForm from "~/components/forms/ConversationForm";
 import { IUser } from "~/models/user";
 import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
@@ -35,7 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     rciInsights,
     roundOutstandingWorkOrdersInsight,
     roundViolationsInsight,
-    residentsDropdown
+    residentsDropdown,
   ] = await Promise.all([
     readConversationInsightsLastConversatonsAsRA(user.id),
     readEventInsightsCountAsRA(user.id),
@@ -44,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     readRCIInsightsAsRA(user.id),
     readRoundReportInsightsOutstandingWorkOrdersAsRA(user.id),
     readRoundReportInsightsViolationsAsRA(user.id),
-    readResidentsDropdownAsRA(user.id)
+    readResidentsDropdownAsRA(user.id),
   ]);
 
   const eventInsights = [
@@ -62,7 +71,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     rciInsights,
     roundInsights,
     eventInsights,
-    residentsDropdown
+    residentsDropdown,
   };
 }
 
@@ -84,13 +93,13 @@ export default function RAInsightsPage() {
     rciInsights,
     roundInsights,
     eventInsights,
-    residentsDropdown
+    residentsDropdown,
   } = useLoaderData<typeof loader>();
 
   const context = useOutletContext<{
     user: IUser;
   }>();
-
+  console.log(context);
   return (
     <InsightsTable
       rows={[
@@ -102,21 +111,21 @@ export default function RAInsightsPage() {
               <DrawerButton>
                 <WideButton>Submit a Round Report</WideButton>
               </DrawerButton>
-                <DrawerContent>
-                  <RoundForm zoneId = {context.user.id} />
-                </DrawerContent>
+              <DrawerContent>
+                <RoundForm zoneId={context.user.id} />
+              </DrawerContent>
             </DrawerProvider>
-            ),
+          ),
         },
         {
           category: "Conversations",
           insights: lastConversatonsInsights,
           ActionButton: () => (
-          <DrawerProvider>
-            <DrawerButton>
-              <WideButton>Submit a Conversation Report</WideButton>
-            </DrawerButton>
-            <DrawerContent>
+            <DrawerProvider>
+              <DrawerButton>
+                <WideButton>Submit a Conversation Report</WideButton>
+              </DrawerButton>
+              <DrawerContent>
                 {context?.user?.id && residentsDropdown ? (
                   <ConversationForm
                     zoneId={context.user.id}
@@ -126,7 +135,7 @@ export default function RAInsightsPage() {
                   <p>Loading...</p>
                 )}
               </DrawerContent>
-          </DrawerProvider>
+            </DrawerProvider>
           ),
         },
         {

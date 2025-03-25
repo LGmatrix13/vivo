@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  json,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";
@@ -51,8 +56,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function RAReportsEventPage() {
   const data = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{
     user: IUser;
   }>();
@@ -73,7 +76,6 @@ export default function RAReportsEventPage() {
       rowKeys={rowKeys}
       search={{
         placeholder: "Search for an event report...",
-        initial: searchQuery,
       }}
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an Event Report" />
