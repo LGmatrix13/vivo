@@ -11,19 +11,21 @@ export default function useLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          setLoading(false);
+
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
         },
         (error) => {
+          setLoading(false);
           console.error("Error getting location:", error);
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
-    setLoading(false);
   }, []);
 
   return {
