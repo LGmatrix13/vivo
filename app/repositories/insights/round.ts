@@ -40,7 +40,7 @@ export async function readRoundReportInsightsViolationsAsRD(
     title: `${count} violations`,
     level: calculateLevelViolation(count),
 
-    href: "/staff/reports/round",
+    href: "/staff/reports/round?hasViolations=true",
   };
 }
 
@@ -60,7 +60,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
   return {
     title: `${count} outstanding work orders`,
     level: calculateLevelOutstandingWorkOrders(count),
-    href: "/staff/reports/round",
+    href: "/staff/reports/round?hasOutstandingWorkOrders=true",
   };
 }
 
@@ -99,7 +99,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
     action: {
       //TODO show reports with violations greater than 0
       title: "View Your Buildings Rounds",
-      href: "/staff/reports/round",
+      href: "/staff/reports/round?hasOutstandingWorkOrders=true",
     },
   };
 }
@@ -120,7 +120,7 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
     action: {
       //TODO show reports with violations greater than 0
       title: "View Rounds with Violations",
-      href: "/ra/reports/round",
+      href: "/ra/reports/round?hasViolations=true",
     },
   };
 }
@@ -143,7 +143,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRA(
     action: {
       //TODO show reports with violations greater than 0
       title: "View Your Outstanding Work Orders",
-      href: "/ra/reports/round",
+      href: "/ra/reports/round?hasOutstandingWorkOrders=true",
     },
   };
 }

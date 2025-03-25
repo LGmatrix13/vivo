@@ -54,9 +54,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AdminReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
-  const searchRow = searchParams.get("row")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{
     user: IUser;
   }>();
@@ -80,7 +77,6 @@ export default function AdminReportsRoundPage() {
       rows={data.conversations}
       search={{
         placeholder: "Search for a conversation...",
-        initial: searchQuery
       }}
       mixins={{
         cells: {

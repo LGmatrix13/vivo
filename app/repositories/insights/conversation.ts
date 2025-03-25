@@ -42,7 +42,7 @@ export async function readConversationInsightsCountAsRD(
     title: `${count} conversations have been logged`,
     level: calculateLevel(),
 
-    href: `/staff/reports/conversation`,
+    href: '/staff/reports/conversation',
   };
 }
 
@@ -81,9 +81,7 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   return {
     title: `${count} high priority conversations`,
     level: calculateLevel(),
-    href: `/staff/reports/conversation?search=${encodeURIComponent(
-      true
-    )}&row=${encodeURIComponent("High Priority")}`,
+    href: '/staff/reports/conversation?highPriority=true',
   };
 }
 
@@ -113,9 +111,7 @@ export async function readConversationInsightsLevelThreeCountAsRD(
   return {
     title: `${count} level 3 conversations`,
     level: "great",
-    href: `/staff/reports/conversation?search=${encodeURIComponent(
-      3
-    )}&row=${encodeURIComponent("level")}`,
+    href: "/staff/reports/conversation?level=3",
   };
 }
 
@@ -147,7 +143,7 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
   return {
     title: `${count} conversations have been logged`,
     level: calculateLevel(),
-    href: `/staff/reports/conversation`,
+    href: '/staff/reports/conversation',
   };
 }
 
@@ -180,9 +176,7 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   return {
     title: `${count} high priority conversations`,
     level: calculateLevel(),
-    href: `/staff/reports/conversation?search=${encodeURIComponent(
-      true
-    )}&row=${encodeURIComponent("High Priority")}`,
+    href: '/staff/reports/conversation?highPriority=Yes',
   };
 }
 
@@ -205,9 +199,7 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   return {
     title: `${count} level 3 conversations`,
     level: "great",
-    href: `/staff/reports/conversation?search=${encodeURIComponent(
-      3
-    )}&row=${encodeURIComponent("level")}`,
+    href: '/staff/reports/conversation?level=3',
   };
 }
 
@@ -246,9 +238,7 @@ export async function readConversationInsightsLastConversatonsAsRA(
         action: {
           title: "Create a Conversation",
           //TODO add search parameter by the students name
-          href: `/ra/reports/conversation?search=${encodeURIComponent(
-            insight.name
-          )}`,
+          href: `/ra/reports/conversation?name=${insight.name}`,
         },
       } as IInsight)
   );

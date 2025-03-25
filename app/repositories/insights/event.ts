@@ -29,7 +29,7 @@ export async function readEventInsightsCountAsRA(
     title: `You have had ${count} events`,
     level: calculateLevel(),
 
-    href: `/ra/reports/event`,
+    href: '/ra/reports/event',
   };
 }
 
@@ -59,7 +59,7 @@ export async function readEventInsightsAttendanceAsRA(
     title: `${sum} residents have attended your events`,
     level: calculateLevel(),
 
-    href: `/ra/reports/event`,
+    href: '/ra/reports/event',
   };
 }
 
@@ -91,7 +91,7 @@ export async function readEventInsightsCountAsRD(
     title: `You have had ${count} events`,
     level: calculateLevel(),
 
-    href: `/staff/reports/event`,
+    href: '/staff/reports/event',
   };
 }
 
@@ -150,7 +150,7 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
     title: `${count} events have occured`,
     level: calculateLevel(),
 
-    href: `/staff/reports/event`,
+    href: '/staff/reports/event',
   };
 }
 
@@ -176,7 +176,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   return {
     title: `${sum} residents have attended events`,
     level: calculateLevel(),
-    href: `/staff/reports/event`,
+    href: '/staff/reports/event',
   };
 }
 
@@ -208,7 +208,7 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
       href: "/ra/reports/event",
       action: {
         title: "View Your Events",
-        href: `/ra/reports/event`,
+        href: '/ra/reports/event',
       },
     },
   };

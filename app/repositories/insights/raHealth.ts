@@ -153,7 +153,7 @@ function processInsights(data: any): IInsight[] {
       value: data.greatMentalHealth,
       action: {
         title: "View FILL IN THE BLANK health",
-        href: `/staff/reports/weekly`,
+        href: '/staff/reports/weekly?mentalHealth=GREAT',
       },
     },
     {

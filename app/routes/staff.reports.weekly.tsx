@@ -69,8 +69,6 @@ export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
     submitted: "Date",
     ra: "RA",
@@ -105,7 +103,6 @@ export default function StaffReportsWeeklyPage() {
       rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
-        initial: searchQuery
       }}
       enableReads={true}
       filter={{
