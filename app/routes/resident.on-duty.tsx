@@ -5,6 +5,7 @@ import Filter from "~/components/common/Filter";
 import RAOnDuty from "~/components/common/RAOnDuty";
 import { readBuildingsDropdownAsAdmin } from "~/repositories/housing/buildings";
 import { readOnDutyRAAsAdmin } from "~/repositories/shifts/onDuty";
+import useLocation from "../hooks/useLocation";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,6 +26,10 @@ export async function loader() {
 }
 
 export default function ResidentOnDutyPage() {
+  const location = useLocation();
+  if (!location.loading) {
+    console.log(location.location);
+  }
   const data = useLoaderData<typeof loader>();
   const [selected, setSelected] = useState(0);
 
