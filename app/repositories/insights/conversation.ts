@@ -236,11 +236,6 @@ export async function readConversationInsightsLastConversatonsAsRA(
         title: `${insight.daysSinceLastConvo} days since your last conversation with ${insight.name}`,
         level: calculateLevel(insight.daysSinceLastConvo),
         href: `/ra/reports/conversation?name=${insight.name}`,
-        action: {
-          title: "Create a Conversation",
-          //TODO add search parameter by the students name
-          href: `/ra/reports/conversation?name=${insight.name}`,
-        },
       } as IInsight)
   );
 }
