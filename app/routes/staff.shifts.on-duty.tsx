@@ -16,6 +16,7 @@ import {
 
 import { auth } from "~/utilties/auth.server";
 import { delay } from "~/utilties/delay.server";
+import { sortByDistance} from "~/repositories/shifts/sortLocations";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -55,9 +56,17 @@ export default function StaffSchedulesOnDutyPage() {
     setSelected(id);
   }
 
-  const rasOnDutyFiltered = data.rasOnDuty.filter(
-    (raOnDuty) => !selected || raOnDuty.buildingId == selected
-  );
+  const rasOnDutyFiltered = data.rasOnDuty
+  .filter((raOnDuty) => !selected || raOnDuty.buildingId == selected);
+
+    // Sort only if location is available
+    const sortedRAs = location
+    ? sortByDistance(rasOnDutyFiltered, location.latitude, location.longitude)
+    : rasOnDutyFiltered;
+
+    console.log(location?.latitude)
+    console.log(location?.longitude)
+    console.log(sortedRAs)
 
   return (
     <section className="space-y-5">
@@ -84,7 +93,7 @@ export default function StaffSchedulesOnDutyPage() {
         <h2 className="font-bold text-lg">On Duty RAs</h2>
         {rasOnDutyFiltered.length ? (
           <>
-            {rasOnDutyFiltered.map((raOnDuty, index) => (
+            {sortedRAs.map((raOnDuty, index) => (
               <RAOnDuty raOnDuty={raOnDuty} key={index} />
             ))}
           </>
