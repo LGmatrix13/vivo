@@ -229,13 +229,12 @@ export async function readConversationInsightsLastConversatonsAsRA(
       return "warning";
     }
   }
-
   return data.map(
     (insight) =>
       ({
         title: `${insight.daysSinceLastConvo} days since your last conversation with ${insight.name}`,
         level: calculateLevel(insight.daysSinceLastConvo),
-        href: `/ra/reports/conversation?name=${insight.name}`,
+        href: `/ra/reports/conversation?resident=${insight.name}`,
       } as IInsight)
   );
 }
