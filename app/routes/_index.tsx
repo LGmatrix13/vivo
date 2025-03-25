@@ -84,7 +84,7 @@ export default function Index() {
               </h2>
             </div>
             <p>
-              An always seamless check-in and check-out processes. Fully digital
+              An always seamless check-in and check-out process. Fully digital
               RCIs. Integrates directly with Limble, enabling automatic work
               order creation for maintenance and repairs.
             </p>
