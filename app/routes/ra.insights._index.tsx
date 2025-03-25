@@ -32,6 +32,8 @@ import { IUser } from "~/models/user";
 import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
 import RoundForm from "~/components/forms/RoundForm";
 import { createRound } from "~/repositories/reports/round";
+import EventForm from "~/components/forms/EventForm";
+import { createEvent } from "~/repositories/reports/event";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -126,14 +128,10 @@ export default function RAInsightsPage() {
                 <WideButton>Submit a Conversation Report</WideButton>
               </DrawerButton>
               <DrawerContent>
-                {context?.user?.id && residentsDropdown ? (
-                  <ConversationForm
+              <ConversationForm
                     zoneId={context.user.id}
                     residentsDropdown={residentsDropdown}
                   />
-                ) : (
-                  <p>Loading...</p>
-                )}
               </DrawerContent>
             </DrawerProvider>
           ),
@@ -141,8 +139,16 @@ export default function RAInsightsPage() {
         {
           category: "Events",
           insights: eventInsights,
-          ActionButton: () => <WideButton>Submit an Event</WideButton>,
-        },
+          ActionButton: () => (
+            <DrawerProvider>
+              <DrawerButton>
+                <WideButton>Submit an Event Report</WideButton>
+              </DrawerButton>
+              <DrawerContent>
+                <EventForm zoneId={context.user.id} />
+              </DrawerContent>
+            </DrawerProvider>
+          ),        },
         {
           category: "RCIs",
           insights: rciInsights,
