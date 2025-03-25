@@ -36,7 +36,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function StaffSchedulesOnDutyPage() {
   const data = useLoaderData<typeof loader>();
-  const { location } = useLocation();
+  const location  = useLocation();
+  if (!location.loading) {
+    console.log(location.location);
+  }
   const [selected, setSelected] = useState(0);
 
   const buildingOptions = [
@@ -60,13 +63,11 @@ export default function StaffSchedulesOnDutyPage() {
   .filter((raOnDuty) => !selected || raOnDuty.buildingId == selected);
 
     // Sort only if location is available
+    const lat = location.location?.latitude
+    const long = location.location?.longitude
     const sortedRAs = location
-    ? sortByDistance(rasOnDutyFiltered, location.latitude, location.longitude)
+    ? sortByDistance(rasOnDutyFiltered, lat ?? 41.1551691, long ?? -80.0815913)
     : rasOnDutyFiltered;
-
-    console.log(location?.latitude)
-    console.log(location?.longitude)
-    console.log(sortedRAs)
 
   return (
     <section className="space-y-5">
