@@ -62,23 +62,24 @@ export async function action({ request }: ActionFunctionArgs) {
           createdWorkOrder.issues,
           MAPPINGS[createdWorkOrder.roomType]
         );
+
         if (taskId) {
-          await createWorkOrder(createdWorkOrder.roomID, taskId);
+          await createWorkOrder(createdWorkOrder.roomId, taskId);
           return mutate(request.url, {
-            message: "Sent to Limble",
+            message: "Submitted work order",
             level: "success",
           });
         }
 
         return mutate(request.url, {
           message: "Failed to create work",
-          level: "success",
+          level: "failure",
         });
       }
 
       return mutate(request.url, {
         message: "Failed to create work order",
-        level: "success",
+        level: "failure",
       });
 
     case "delete.workOrder":
@@ -90,15 +91,20 @@ export async function action({ request }: ActionFunctionArgs) {
         if (sucess) {
           return mutate(request.url, {
             message: "Canceled work order",
-            level: "failure",
+            level: "success",
           });
         }
 
         return mutate(request.url, {
           message: "Failed to cancel work order",
-          level: "success",
+          level: "failure",
         });
       }
+
+      return mutate(request.url, {
+        message: "Failed to cancel work order",
+        level: "failure",
+      });
   }
 }
 

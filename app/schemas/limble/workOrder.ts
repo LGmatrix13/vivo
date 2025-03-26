@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CreatedWorkOrder = z.object({
-  roomID: z.coerce.number(),
+  roomId: z.coerce.number(),
   room: z.string(),
   issues: z.string().transform((val) => JSON.parse(val)),
   roomType: z.enum([

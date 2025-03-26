@@ -12,7 +12,6 @@ async function postTask(task: ITask) {
     body: JSON.stringify(task),
   });
 
-  console.log(response.statusText);
   const data = await response.json();
   return data.taskID as number;
 }
@@ -28,10 +27,6 @@ async function deleteTask(id: number) {
       },
     }
   );
-
-  console.log(response.statusText);
-  const data = await response.json();
-  console.log(data);
 
   return response.ok;
 }
@@ -72,6 +67,7 @@ async function createWorkOrder(
 
   description += "This work order was generated via vivo.gcc.edu.";
   const assetID = await getAsset(room);
+
   if (!assetID) return null;
 
   const payload = {
