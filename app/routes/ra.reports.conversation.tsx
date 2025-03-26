@@ -1,5 +1,4 @@
 import {
-  json,
   useLoaderData,
   useOutletContext,
   useSearchParams,
@@ -35,10 +34,10 @@ export async function loader({ request }: ActionFunctionArgs) {
     readResidentsDropdownAsRA(ra.id),
     delay(100),
   ]);
-  return json({
+  return {
     conversations,
     residentsDropdown,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {

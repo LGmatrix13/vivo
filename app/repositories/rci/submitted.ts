@@ -5,6 +5,7 @@ import { db } from "~/utilties/connection.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,
+  LimbleTable,
   RCITable,
   readTable,
   residentTable,
@@ -89,6 +90,42 @@ export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
       )
     )
     .where(eq(RCITable.status, type))
+    .orderBy(desc(RCITable.id));
+
+  const formattedData = data.map((rci) => {
+    return {
+      ...rci,
+      totalIssues: Object.keys(rci.issues).length,
+      submitted: formatDate(rci.submitted),
+    };
+  });
+  return formattedData;
+}
+
+export async function readActiveRCIsAsRA(zoneId: number) {
+  const raInfoTable = alias(residentTable, "raInfoTable");
+
+  const data = await db.client
+    .select({
+      id: RCITable.id,
+      room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      building: buildingTable.name,
+      submitted: RCITable.submitted,
+      status: RCITable.status,
+      buildingId: buildingTable.id,
+      roomId: roomTable.id,
+      issues: sql<Record<string, string>>`${RCITable.issues}`,
+      roomType: roomTable.roomType,
+      limbleWorkOrderId: LimbleTable.workOrderId,
+    })
+    .from(RCITable)
+    .innerJoin(residentTable, eq(residentTable.id, RCITable.residentId))
+    .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
+    .innerJoin(buildingTable, eq(roomTable.buildingId, buildingTable.id))
+    .innerJoin(zoneTable, eq(roomTable.zoneId, zoneTable.id))
+    .innerJoin(raInfoTable, eq(zoneTable.residentId, raInfoTable.id))
+    .leftJoin(LimbleTable, eq(LimbleTable.roomId, roomTable.id))
+    .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, "ACTIVE")))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {

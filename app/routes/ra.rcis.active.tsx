@@ -6,9 +6,9 @@ import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import type { ISubmittedRCI } from "~/models/rci";
+import type { IActiveRCIsAsRA } from "~/models/rci";
 import {
-  readSubmittedRCIsAsRA,
+  readActiveRCIsAsRA,
   updateSubmittedRCIStatus,
 } from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
@@ -20,10 +20,13 @@ import {
 } from "~/mappings/rci";
 import SelectedRow from "~/components/common/SelectedRow";
 import WideButton from "~/components/common/WideButton";
-import { updateRoomIssues } from "~/repositories/housing/rooms";
 import { limble } from "~/utilties/limble.server";
-import { WorkOrder } from "~/schemas/limble/workOrder";
+import { CreatedWorkOrder, DeletedWorkOrder } from "~/schemas/limble/workOrder";
 import mutate from "~/utilties/mutate.server";
+import {
+  createWorkOrder,
+  deleteWorkOrder,
+} from "~/repositories/limble/workOrder";
 
 const MAPPINGS = {
   UPPER_CAMPUS: upperCampusMapping,
@@ -34,12 +37,12 @@ const MAPPINGS = {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
-  const [completeRCIs] = await Promise.all([
-    readSubmittedRCIsAsRA(user.id, "ACTIVE"),
+  const [activeRCIs] = await Promise.all([
+    readActiveRCIsAsRA(user.id),
     delay(100),
   ]);
   return {
-    completeRCIs,
+    activeRCIs,
   };
 }
 
@@ -49,37 +52,53 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
     case "update.status":
-      await updateRoomIssues(values);
       return await updateSubmittedRCIStatus(request, values);
-    case "update.sendToLimble":
-      const { data, success, error } = WorkOrder.safeParse(values);
-      if (success) {
-        const success = await limble.workOrder(
-          data.room,
-          data.issues,
-          MAPPINGS[data.roomType],
-          (test) => {
-            console.log(test);
-            return Promise.resolve(true);
-          }
+    case "create.workOrder":
+      const { data: createdWorkOrder, success: createdSuccess } =
+        CreatedWorkOrder.safeParse(values);
+      if (createdSuccess) {
+        const taskId = await limble.createWorkOrder(
+          createdWorkOrder.room,
+          createdWorkOrder.issues,
+          MAPPINGS[createdWorkOrder.roomType]
         );
-        if (success) {
+        if (taskId) {
+          await createWorkOrder(createdWorkOrder.roomID, taskId);
           return mutate(request.url, {
             message: "Sent to Limble",
             level: "success",
           });
-        } else {
-          return mutate(request.url, {
-            message: "Failed to send to Limble",
-            level: "success",
-          });
         }
+
+        return mutate(request.url, {
+          message: "Failed to create work",
+          level: "success",
+        });
       }
-      console.log(error);
+
       return mutate(request.url, {
-        message: "Failed to send to Limble",
+        message: "Failed to create work order",
         level: "success",
       });
+
+    case "delete.workOrder":
+      const { data: deletedWorkOrder, success: deletedSuccess } =
+        DeletedWorkOrder.safeParse(values);
+      if (deletedSuccess) {
+        const sucess = await limble.deleteWorkOrder(deletedWorkOrder.id);
+        await deleteWorkOrder(deletedWorkOrder.id);
+        if (sucess) {
+          return mutate(request.url, {
+            message: "Canceled work order",
+            level: "failure",
+          });
+        }
+
+        return mutate(request.url, {
+          message: "Failed to cancel work order",
+          level: "success",
+        });
+      }
   }
 }
 
@@ -93,9 +112,9 @@ export default function RARCIsApproveCheckInPage() {
   };
 
   return (
-    <Table<ISubmittedRCI>
+    <Table<IActiveRCIsAsRA>
       columnKeys={columnKeys}
-      rows={data.completeRCIs as ISubmittedRCI[]}
+      rows={data.activeRCIs as IActiveRCIsAsRA[]}
       search={{
         placeholder: "Search for an active RCI...",
       }}
@@ -136,23 +155,43 @@ export default function RARCIsApproveCheckInPage() {
       )}
       SelectedRowComponent={({ row }) => (
         <SelectedRow row={row.issues} keys={MAPPINGS[row.roomType]}>
-          <WideButton
-            onClick={() => {
-              fetcher.submit(
-                {
-                  intent: "update.sendToLimble",
-                  room: row.room,
-                  roomType: row.roomType,
-                  issues: JSON.stringify(row.issues),
-                },
-                {
-                  method: "POST",
-                }
-              );
-            }}
-          >
-            Send to Limble
-          </WideButton>
+          {row.limbleWorkOrderId ? (
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
+                    intent: "delete.workOrder",
+                    id: row.limbleWorkOrderId,
+                    issues: JSON.stringify(row.issues),
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Cancel Limble Request
+            </WideButton>
+          ) : (
+            <WideButton
+              onClick={() => {
+                fetcher.submit(
+                  {
+                    intent: "create.workOrder",
+                    room: row.room,
+                    roomId: row.roomId,
+                    roomType: row.roomType,
+                    issues: JSON.stringify(row.issues),
+                  },
+                  {
+                    method: "POST",
+                  }
+                );
+              }}
+            >
+              Send to Limble
+            </WideButton>
+          )}
         </SelectedRow>
       )}
     />
