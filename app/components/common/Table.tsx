@@ -10,9 +10,7 @@ interface TableProps<T> {
   columnKeys: Record<string, string>;
   rows: T[];
   rowKeys?: Record<string, string>;
-  searchKey?: string; // 🆕 New prop for filtering a specific column
   search?: {
-    initial?: string;
     placeholder: string;
   };
   filter?: {
@@ -43,7 +41,6 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     rows,
     rowKeys,
     columnKeys,
-    searchKey, // 🆕 Use this prop
     search,
     filter,
     ActionButtons,
@@ -56,43 +53,46 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     enableReads = false,
   } = props;
   const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState<string>(searchQuery);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [filterOption, setFilterOption] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
   } | null>(null);
-  // Filter rows based on the selected filter
+
+  let prefilteredRows = rows;
+  if (rows.length > 0) {
+    const filters: Record<string, string | null> = {};
+
+    for (const key of Object.keys(rows[0])) {
+      const param = searchParams.get(key);
+      if (param) filters[key] = param.toLowerCase();
+    }
+
+    prefilteredRows = rows.filter((row) =>
+      Object.entries(filters).every(([key, value]) =>
+        row[key]?.toString().toLowerCase().includes(value)
+      )
+    );
+  }
+
   const filteredRows =
     filter && filterOption
-      ? rows.filter((row) => row[filter.key] === filterOption)
-      : rows;
+      ? prefilteredRows.filter((row) => row[filter.key] === filterOption)
+      : prefilteredRows;
   const [readRows, setReadRows] = useState<number[]>(
     rows.filter((row) => row.read).map((row) => row.id)
   );
- // Search rows based on the search query
-  // const searchedRows = filteredRows.filter((row) =>
-  //   originalColumnKeys.some((key) =>
-  //     String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
-  //   )
-  // );
 
-  const searchedRows = filteredRows.filter((row) => {
-    if (searchKey) {
-      // If a specific searchKey is provided, filter only by that column
-      return String(row[searchKey] || "").toLowerCase().includes(searchTerm.toLowerCase());
-    } else {
-      // Otherwise, search across all columns
-      return originalColumnKeys.some((key) =>
-        String(row[key] || "").toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  });
-
+  // Search rows based on the search query
+  const searchedRows = filteredRows.filter((row) =>
+    originalColumnKeys.some((key) =>
+      String(row[key]).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   // Sort rows based on the sortConfig
   const sortedRows = [...searchedRows].sort((a, b) => {

@@ -11,7 +11,6 @@ import {
   zoneShiftTable,
   zoneTable,
 } from "~/utilties/schema.server";
-import { RAScheduleCSV } from "~/schemas/schedules/RAScheduleCSV";
 
 type Values = { [key: string]: any };
 
@@ -25,6 +24,8 @@ export async function readOnDutyRAAsAdmin() {
       phoneNumber: residentTable.phoneNumber,
       room: sql<string>`CONCAT(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
+      latitude: buildingTable.latitude,
+      longitude: buildingTable.longitude,
     })
     .from(zoneShiftTable)
     .innerJoin(zoneTable, eq(zoneShiftTable.zoneId, zoneTable.id))
@@ -32,7 +33,7 @@ export async function readOnDutyRAAsAdmin() {
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-    .where(sql`${zoneShiftTable.date} = CURRENT_DATE`);
+    .where(sql`${zoneShiftTable.date} = CURRENT_DATE - INTERVAL '1 day'`);
 
   return data;
 }
@@ -47,6 +48,8 @@ export async function readOnDutyRAAsRD(id: number) {
       phoneNumber: residentTable.phoneNumber,
       room: sql<string>`CONCAT(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
+      latitude: buildingTable.latitude,
+      longitude: buildingTable.longitude,
     })
     .from(zoneShiftTable)
     .innerJoin(zoneTable, eq(zoneShiftTable.zoneId, zoneTable.id))
@@ -78,6 +81,3 @@ export async function readOnDutyRD() {
 
   return data;
 }
-
-
-

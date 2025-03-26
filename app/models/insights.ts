@@ -1,13 +1,11 @@
 export interface IInsight {
   title: string;
   level: "great" | "warning" | "danger";
-  action?: {
-    href: string;
-    title: string;
-  };
+  href?: string;
 }
 
 export interface IInsights {
   category: string;
   insights: IInsight[];
+  ActionButton?: () => React.ReactNode;
 }
