@@ -11,10 +11,11 @@ interface FormProps {
     | "application/x-www-form-urlencoded"
     | "multipart/form-data"
     | "text/plain";
+    action?:string;
 }
 
 export default function Form(props: FormProps) {
-  const { children, button, encType, intent } = props;
+  const { children, button, encType, intent, action } = props;
   const navigation = useNavigation();
   const submit = useSubmit();
   const [, setOpen] = useDrawerContext();
@@ -27,6 +28,7 @@ export default function Form(props: FormProps) {
       }}
       encType={encType}
       className="space-y-5 flex flex-col"
+      action={action}
     >
       {children}
       <WideButton

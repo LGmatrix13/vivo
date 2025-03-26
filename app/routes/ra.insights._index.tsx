@@ -114,7 +114,7 @@ export default function RAInsightsPage() {
                 <WideButton>Submit a Round Report</WideButton>
               </DrawerButton>
               <DrawerContent>
-                <RoundForm zoneId={context.user.id} />
+                <RoundForm zoneId={context.user.id} action={"/ra/reports/round"} />
               </DrawerContent>
             </DrawerProvider>
           ),
@@ -131,6 +131,7 @@ export default function RAInsightsPage() {
               <ConversationForm
                     zoneId={context.user.id}
                     residentsDropdown={residentsDropdown}
+                    action={"/ra/reports/conversation"}
                   />
               </DrawerContent>
             </DrawerProvider>
@@ -145,7 +146,7 @@ export default function RAInsightsPage() {
                 <WideButton>Submit an Event Report</WideButton>
               </DrawerButton>
               <DrawerContent>
-                <EventForm zoneId={context.user.id} />
+                <EventForm zoneId={context.user.id} action={"/ra/reports/event"} />
               </DrawerContent>
             </DrawerProvider>
           ),        },
