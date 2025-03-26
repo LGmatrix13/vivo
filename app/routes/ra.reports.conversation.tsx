@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  json,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -72,15 +77,12 @@ export default function AdminReportsRoundPage() {
     explanation: "Description",
   };
 
-
-
   return (
     <Table<IConversationReportAsRA>
       columnKeys={columnKeys}
       rows={data.conversations}
       search={{
         placeholder: "Search for a conversation...",
-        initial: searchQuery
       }}
       mixins={{
         cells: {
