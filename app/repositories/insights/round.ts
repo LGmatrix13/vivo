@@ -39,7 +39,6 @@ export async function readRoundReportInsightsViolationsAsRD(
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
-
     href: "/staff/reports/round",
   };
 }
