@@ -1,5 +1,10 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  isRouteErrorResponse,
+  Link,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Sparkles } from "~/components/common/Icons";
 import InsightsTable from "~/components/common/InsightsTable";
@@ -17,6 +22,18 @@ import {
   readRoundReportInsightsViolationsAsRA,
 } from "~/repositories/insights/round";
 import { auth } from "~/utilties/auth.server";
+import {
+  DrawerButton,
+  DrawerContent,
+  DrawerProvider,
+} from "~/components/common/Drawer";
+import ConversationForm from "~/components/forms/ConversationForm";
+import { IUser } from "~/models/user";
+import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
+import RoundForm from "~/components/forms/RoundForm";
+import { createRound } from "~/repositories/reports/round";
+import EventForm from "~/components/forms/EventForm";
+import { createEvent } from "~/repositories/reports/event";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -29,6 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     rciInsights,
     roundOutstandingWorkOrdersInsight,
     roundViolationsInsight,
+    residentsDropdown,
   ] = await Promise.all([
     readConversationInsightsLastConversatonsAsRA(user.id),
     readEventInsightsCountAsRA(user.id),
@@ -37,6 +55,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     readRCIInsightsAsRA(user.id),
     readRoundReportInsightsOutstandingWorkOrdersAsRA(user.id),
     readRoundReportInsightsViolationsAsRA(user.id),
+    readResidentsDropdownAsRA(user.id),
   ]);
 
   const eventInsights = [
@@ -48,12 +67,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
     roundOutstandingWorkOrdersInsight,
     roundViolationsInsight,
   ] as IInsight[];
+
   return {
     lastConversatonsInsights,
     rciInsights,
     roundInsights,
     eventInsights,
+    residentsDropdown,
   };
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["ra"]);
+
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "create":
+      return await createRound(values, request);
+  }
 }
 
 export default function RAInsightsPage() {
@@ -62,29 +95,63 @@ export default function RAInsightsPage() {
     rciInsights,
     roundInsights,
     eventInsights,
+    residentsDropdown,
   } = useLoaderData<typeof loader>();
 
+  const context = useOutletContext<{
+    user: IUser;
+  }>();
+  console.log(context);
   return (
     <InsightsTable
       rows={[
         {
-          category: "Conversations",
-          insights: lastConversatonsInsights,
-          ActionButton: () => <WideButton>Submit a Conversation</WideButton>,
-        },
-        {
           category: "Rounds",
           insights: roundInsights,
-          ActionButton: () => <WideButton>Submit a Round</WideButton>,
+          ActionButton: () => (
+            <DrawerProvider>
+              <DrawerButton>
+                <WideButton>Submit a Round Report</WideButton>
+              </DrawerButton>
+              <DrawerContent>
+                <RoundForm zoneId={context.user.id} />
+              </DrawerContent>
+            </DrawerProvider>
+          ),
         },
         {
-          category: "RCIs",
-          insights: rciInsights,
+          category: "Conversations",
+          insights: lastConversatonsInsights,
+          ActionButton: () => (
+            <DrawerProvider>
+              <DrawerButton>
+                <WideButton>Submit a Conversation Report</WideButton>
+              </DrawerButton>
+              <DrawerContent>
+              <ConversationForm
+                    zoneId={context.user.id}
+                    residentsDropdown={residentsDropdown}
+                  />
+              </DrawerContent>
+            </DrawerProvider>
+          ),
         },
         {
           category: "Events",
           insights: eventInsights,
-          ActionButton: () => <WideButton>Submit an Event</WideButton>,
+          ActionButton: () => (
+            <DrawerProvider>
+              <DrawerButton>
+                <WideButton>Submit an Event Report</WideButton>
+              </DrawerButton>
+              <DrawerContent>
+                <EventForm zoneId={context.user.id} />
+              </DrawerContent>
+            </DrawerProvider>
+          ),        },
+        {
+          category: "RCIs",
+          insights: rciInsights,
         },
       ]}
       ActionButtons={() => (

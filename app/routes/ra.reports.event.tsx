@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  json,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { ActionFunctionArgs } from "@remix-run/node";

@@ -8,6 +8,8 @@ import {
   readOnDutyRAAsAdmin,
   readOnDutyRD,
 } from "~/repositories/shifts/onDuty";
+import useLocation from "../hooks/useLocation";
+import { sortByDistance } from "~/repositories/shifts/sortLocations";
 
 export async function loader() {
   const [rasOnDuty, rdsOnDuty, buildingsDropdown] = await Promise.all([
@@ -25,6 +27,10 @@ export async function loader() {
 export default function RASchedulesOnDutyPage() {
   const data = useLoaderData<typeof loader>();
   const [selected, setSelected] = useState(0);
+    const location  = useLocation();
+    if (!location.loading) {
+      console.log(location.location);
+    }
 
   const buildingOptions = [
     {
@@ -47,6 +53,13 @@ export default function RASchedulesOnDutyPage() {
     (raOnDuty) => !selected || raOnDuty.buildingId == selected
   );
 
+  // Sort only if location is available
+      const lat = location.location?.latitude
+      const long = location.location?.longitude
+      const sortedRAs = location
+      ? sortByDistance(rasOnDutyFiltered, lat ?? 41.1551691, long ?? -80.0815913)
+      : rasOnDutyFiltered;
+
   return (
     <section className="space-y-5">
       <div className="w-fit">
@@ -64,7 +77,7 @@ export default function RASchedulesOnDutyPage() {
       </div>
       <div className="space-y-3">
         <h2 className="font-bold text-lg">On Duty RAs</h2>
-        {rasOnDutyFiltered.map((raOnDuty, index) => (
+        {sortedRAs.map((raOnDuty, index) => (
           <RAOnDuty raOnDuty={raOnDuty} key={index} />
         ))}
       </div>

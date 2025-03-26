@@ -16,6 +16,7 @@ import {
 
 import { auth } from "~/utilties/auth.server";
 import { delay } from "~/utilties/delay.server";
+import { sortByDistance} from "~/repositories/shifts/sortLocations";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -35,7 +36,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function StaffSchedulesOnDutyPage() {
   const data = useLoaderData<typeof loader>();
-  const { location } = useLocation();
+  const location  = useLocation();
+  if (!location.loading) {
+    console.log(location.location);
+  }
   const [selected, setSelected] = useState(0);
 
   const buildingOptions = [
@@ -55,9 +59,15 @@ export default function StaffSchedulesOnDutyPage() {
     setSelected(id);
   }
 
-  const rasOnDutyFiltered = data.rasOnDuty.filter(
-    (raOnDuty) => !selected || raOnDuty.buildingId == selected
-  );
+  const rasOnDutyFiltered = data.rasOnDuty
+  .filter((raOnDuty) => !selected || raOnDuty.buildingId == selected);
+
+    // Sort only if location is available
+    const lat = location.location?.latitude
+    const long = location.location?.longitude
+    const sortedRAs = location
+    ? sortByDistance(rasOnDutyFiltered, lat ?? 41.1551691, long ?? -80.0815913)
+    : rasOnDutyFiltered;
 
   return (
     <section className="space-y-5">
@@ -84,7 +94,7 @@ export default function StaffSchedulesOnDutyPage() {
         <h2 className="font-bold text-lg">On Duty RAs</h2>
         {rasOnDutyFiltered.length ? (
           <>
-            {rasOnDutyFiltered.map((raOnDuty, index) => (
+            {sortedRAs.map((raOnDuty, index) => (
               <RAOnDuty raOnDuty={raOnDuty} key={index} />
             ))}
           </>

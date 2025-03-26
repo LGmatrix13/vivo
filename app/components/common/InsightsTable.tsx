@@ -32,12 +32,15 @@ export default function InsightsTable(props: IInsightsTable) {
         cells: {
           category: (row) => {
             const { category, insights } = row;
+            const count = insights.length;
             return (
               <div className="space-x-3 flex items-center">
                 <span>{category}</span>
-                <div className="bg-blue-600 w-6 h-6 rounded-full flex justify-center items-center">
-                  <span className="text-xs text-white">{insights.length}</span>
-                </div>
+                {count > 0 && (
+                  <div className="bg-blue-600 w-6 h-6 rounded-full flex justify-center items-center">
+                    <span className="text-xs text-white">!</span>
+                  </div>
+                )}
               </div>
             );
           },
