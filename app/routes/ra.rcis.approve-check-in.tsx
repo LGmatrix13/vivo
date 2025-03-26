@@ -118,7 +118,7 @@ export default function RARCIsApproveCheckInPage() {
               );
             }}
           >
-            Set to Active
+            Approve RCI
           </WideButton>
         </SelectedRow>
       )}

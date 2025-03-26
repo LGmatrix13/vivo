@@ -6,7 +6,7 @@ import RAOnDuty from "~/components/common/RAOnDuty";
 import { readBuildingsDropdownAsAdmin } from "~/repositories/housing/buildings";
 import { readOnDutyRAAsAdmin } from "~/repositories/shifts/onDuty";
 import useLocation from "../hooks/useLocation";
-import { sortByDistance } from "~/repositories/shifts/sortLocations";
+import { locataionSort } from "~/utilties/locationSort";
 
 export const meta: MetaFunction = () => {
   return [
@@ -27,10 +27,8 @@ export async function loader() {
 }
 
 export default function ResidentOnDutyPage() {
-  const location = useLocation();
-  if (!location.loading) {
-    console.log(location.location);
-  }
+  const { location, loading, locationGranted } = useLocation();
+
   const data = useLoaderData<typeof loader>();
   const [selected, setSelected] = useState(0);
 
@@ -55,28 +53,34 @@ export default function ResidentOnDutyPage() {
     (raOnDuty) => !selected || raOnDuty.buildingId == selected
   );
 
-  // Sort only if location is available
-        const lat = location.location?.latitude
-        const long = location.location?.longitude
-        const sortedRAs = location
-        ? sortByDistance(rasOnDutyFiltered, lat ?? 41.1551691, long ?? -80.0815913)
-        : rasOnDutyFiltered;
+  let sortedRAs = null;
+  if (!loading && locationGranted) {
+    sortedRAs = locataionSort(
+      rasOnDutyFiltered,
+      location.latitude,
+      location.longitude
+    );
+  } else if (!loading && !locationGranted) {
+    sortedRAs = rasOnDutyFiltered;
+  }
 
-  return (
-    <section className="space-y-5">
-      <div className="w-fit">
-        <Filter
-          options={buildingOptions}
-          selected={selected}
-          handleFilter={handleFilter}
-        />
-      </div>
-      <div className="space-y-3">
-        <h2 className="font-bold text-lg">On Duty RAs</h2>
-        {sortedRAs.map((raOnDuty, index) => (
-          <RAOnDuty raOnDuty={raOnDuty} key={index} />
-        ))}
-      </div>
-    </section>
-  );
+  if (sortedRAs) {
+    return (
+      <section className="space-y-5">
+        <div className="w-fit">
+          <Filter
+            options={buildingOptions}
+            selected={selected}
+            handleFilter={handleFilter}
+          />
+        </div>
+        <div className="space-y-3">
+          <h2 className="font-bold text-lg">On Duty RAs</h2>
+          {sortedRAs.map((raOnDuty, index) => (
+            <RAOnDuty raOnDuty={raOnDuty} key={index} />
+          ))}
+        </div>
+      </section>
+    );
+  }
 }
