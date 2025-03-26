@@ -1,4 +1,9 @@
-import { json, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  json,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -30,10 +35,10 @@ export async function loader({ request }: ActionFunctionArgs) {
     readResidentsDropdownAsRA(ra.id),
     delay(100),
   ]);
-  return json({
+  return {
     conversations,
     residentsDropdown,
-  });
+  };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -68,8 +73,6 @@ export default function AdminReportsRoundPage() {
     sentiment: "General Tone",
     explanation: "Description",
   };
-
-
 
   return (
     <Table<IConversationReportAsRA>
