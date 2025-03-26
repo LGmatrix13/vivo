@@ -227,3 +227,11 @@ export const RCITable = pgTable("RCI", {
   checkedOut: timestamp({ mode: "string" }),
   status: RCIStatusEnum().notNull(),
 });
+
+export const LimbleTable = pgTable("Limble", {
+  id: serial("id").notNull().primaryKey(),
+  roomId: integer("room_id")
+    .notNull()
+    .references(() => roomTable.id),
+  workOrderId: integer("work_order_id").notNull(),
+});

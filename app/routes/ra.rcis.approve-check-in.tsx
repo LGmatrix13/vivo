@@ -6,13 +6,12 @@ import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import type { ICompleteRCI } from "~/models/rci";
+import type { ISubmittedRCI } from "~/models/rci";
 import {
   readSubmittedRCIsAsRA,
   updateSubmittedRCIStatus,
 } from "~/repositories/rci/submitted";
 import { auth } from "~/utilties/auth.server";
-import { createReadReport } from "~/repositories/read/reports";
 import {
   colonialDoubleMapping,
   colonialQuadMapping,
@@ -52,9 +51,9 @@ export default function RARCIsApproveCheckInPage() {
   };
 
   return (
-    <Table<ICompleteRCI>
+    <Table<ISubmittedRCI>
       columnKeys={columnKeys}
-      rows={data.completeRCIs as ICompleteRCI[]}
+      rows={data.completeRCIs as ISubmittedRCI[]}
       search={{
         placeholder: "Search for an RCI awaiting check-in approval...",
       }}

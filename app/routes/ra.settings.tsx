@@ -13,6 +13,7 @@ import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
 import { toast } from "~/utilties/toast.server";
 import { Toast } from "~/components/common/Toast";
+import mutate from "~/utilties/mutate.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,7 +34,18 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "update.userInfo":
-      return avatar.upload(request, values);
+      const success = await avatar.upload(request, values);
+      if (success) {
+        return mutate(request.url, {
+          message: "Uploaded avatar",
+          level: "success",
+        });
+      } else {
+        return mutate(request.url, {
+          message: "Failed to upload avatar",
+          level: "failure",
+        });
+      }
   }
 }
 

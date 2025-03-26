@@ -26,6 +26,10 @@ export default function RARCIsLayout() {
       path: "/ra/rcis/approve-check-in",
     },
     {
+      name: "Active",
+      path: "/ra/rcis/active",
+    },
+    {
       name: "Approve Checkout",
       path: "/ra/rcis/approve-check-out",
     },

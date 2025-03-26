@@ -1,6 +1,6 @@
 import { sql, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { CreatedRoom, Room } from "~/schemas/housing/room";
+import { CreatedRoom, Room, UpdatedRoomIssues } from "~/schemas/housing/room";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -106,6 +106,17 @@ export async function deleteRoom(values: Values, request: Request) {
     message: "Room deleted",
     level: "success",
   });
+}
+
+export async function updateRoomIssues(values: Values) {
+  const { success, data } = UpdatedRoomIssues.safeParse(values);
+
+  if (success) {
+    await db.client
+      .update(roomTable)
+      .set({ issuesRCI: data.issuesRCI })
+      .where(eq(roomTable.id, data.id));
+  }
 }
 
 export async function updateRoom(values: Values, request: Request) {

@@ -24,10 +24,7 @@ async function upload(
   const { avatar } = values;
 
   if (!avatar) {
-    return mutate(request.url, {
-      message: "System error occured",
-      level: "failure",
-    });
+    return false;
   }
 
   const buffer = await (avatar as File).arrayBuffer();
@@ -41,10 +38,7 @@ async function upload(
     `${user.role}_${user.id}.webp`
   );
   fs.writeFileSync(outputPath, processedImage);
-  return mutate(request.url, {
-    message: "Uploaded avatar",
-    level: "success",
-  });
+  return true;
 }
 
 async function exists(userId: number, role: Role) {
