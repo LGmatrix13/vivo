@@ -122,8 +122,8 @@ export const buildingTable = pgTable("Building", {
   staffId: integer("staff_id")
     .notNull()
     .references(() => staffTable.id),
-  latitude: doublePrecision("latitude"),
-  longitude: doublePrecision("longitude"),
+  latitude: doublePrecision("latitude").notNull(),
+  longitude: doublePrecision("longitude").notNull(),
 });
 
 export const roundReportTable = pgTable("RoundReport", {
