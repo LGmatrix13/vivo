@@ -1,8 +1,4 @@
-import {
-  useLoaderData,
-  useOutletContext,
-  useSearchParams,
-} from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -58,9 +54,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AdminReportsRoundPage() {
   const data = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
-  const searchRow = searchParams.get("row")?.toLowerCase() || ""; // Get search term from URL
   const context = useOutletContext<{
     user: IUser;
   }>();

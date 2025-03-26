@@ -8,10 +8,11 @@ interface ConversationFormProps {
   zoneId: number;
   residentsDropdown: IResidentDropdown[];
   conversation?: IConversationReportAsRA;
+  action?:string;
 }
 
 export default function ConversationForm(props: ConversationFormProps) {
-  const { conversation, zoneId, residentsDropdown } = props;
+  const { conversation, zoneId, residentsDropdown,action } = props;
   const levelOptions = ["1", "2", "3"].map((option) => ({
     key: option,
     value: option,
@@ -49,6 +50,7 @@ export default function ConversationForm(props: ConversationFormProps) {
     <Form
       button="Save Conversation"
       intent={conversation ? "update" : "create"}
+      action={action}
     >
       <h2 className="font-bold text-xl">
         {conversation ? "Edit Conversation" : "Add Conversation"}

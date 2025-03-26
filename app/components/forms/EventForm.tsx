@@ -6,12 +6,13 @@ import Textarea from "../common/Textarea";
 interface EventFormProps {
   zoneId: number;
   event?: IEventReport;
+  action?:string;
 }
 
 export default function EventForm(props: EventFormProps) {
-  const { event, zoneId } = props;
+  const { event, zoneId, action} = props;
   return (
-    <Form button="Save Event" intent={event ? "update" : "create"}>
+    <Form button="Save Event" intent={event ? "update" : "create"} action={action}>
       <h2 className="font-bold text-xl">
         {event ? "Edit Event" : "Add Event"}
       </h2>

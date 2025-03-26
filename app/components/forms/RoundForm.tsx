@@ -6,13 +6,14 @@ import Textarea from "../common/Textarea";
 interface ConversationFormProps {
   zoneId: number;
   round?: IRoundReport;
+  action?:string;
 }
 
 export default function RoundForm(props: ConversationFormProps) {
-  const { round, zoneId } = props;
+  const { round, zoneId, action } = props;
 
   return (
-    <Form button="Save Round Report" intent={round ? "update" : "create"}>
+    <Form button="Save Round Report" intent={round ? "update" : "create"} action={action}>
       <h2 className="font-bold text-xl">
         {round ? "Edit Round" : "Add Round"}
       </h2>

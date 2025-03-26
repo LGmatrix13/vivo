@@ -67,9 +67,6 @@ export default function StaffReportsConversationPage() {
   const data = useLoaderData<typeof loader>();
   const context = useOutletContext<IBuildingDropdown[]>();
   const fetcher = useFetcher();
-  const [searchParams] = useSearchParams();
-  const searchRow = searchParams.get("row")?.toLowerCase() || ""; // Get search term from URL
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const formattedRows = data.conversation.map((conversation) => ({
     ...conversation,
     highPriority: conversation.highPriority ? "Yes" : "No",
@@ -106,9 +103,7 @@ export default function StaffReportsConversationPage() {
       rows={formattedRows}
       search={{
         placeholder: "Search for a conversation...",
-        initial: searchQuery,
       }}
-      searchKey={searchRow}
       filter={{
         key: "buildingId",
         options: buildingOptions,

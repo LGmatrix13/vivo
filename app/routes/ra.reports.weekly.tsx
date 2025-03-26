@@ -50,8 +50,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function StaffReportsWeeklyPage() {
   const data = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || ""; // Get search term from URL
   const columnKeys = {
     submitted: "Date",
   };
@@ -73,7 +71,6 @@ export default function StaffReportsWeeklyPage() {
       rows={data.weekly as IWeeklyReport[]}
       search={{
         placeholder: "Search for a weekly report...",
-        initial: searchQuery,
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (

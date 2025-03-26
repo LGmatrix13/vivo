@@ -9,10 +9,11 @@ import Select from "../common/Select";
 interface WeeklyFormProps {
   zoneId: number;
   weekly?: IWeeklyReport;
+  action?:string;
 }
 
 export default function WeeklyForm(props: WeeklyFormProps) {
-  const { weekly, zoneId } = props;
+  const { weekly, zoneId, action } = props;
   const ratingOptions = [
     {
       key: "Great",
@@ -31,7 +32,7 @@ export default function WeeklyForm(props: WeeklyFormProps) {
   ];
 
   return (
-    <Form button="Save Weekly Report" intent={weekly ? "update" : "create"}>
+    <Form button="Save Weekly Report" intent={weekly ? "update" : "create"} action={action}>
       <h2 className="font-bold text-xl">
         {weekly ? `Edit Weekly` : "Add Weekly Report"}
       </h2>
