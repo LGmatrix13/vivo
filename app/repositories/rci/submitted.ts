@@ -231,7 +231,7 @@ export async function readSubmittedRCIsAsRD(
         eq(readTable.reportType, `RCI_${type}`)
       )
     )
-    .where(eq(staffTable.id, id))
+    .where(and(eq(staffTable.id, id),eq(RCITable.status, type)))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {

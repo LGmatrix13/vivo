@@ -6,7 +6,6 @@ import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { delay } from "~/utilties/delay.server";
 import Instruction from "~/components/common/Instruction";
-import type { ICompleteRCI } from "~/models/rci";
 import { auth } from "~/utilties/auth.server";
 import { IBuildingDropdown } from "~/models/housing";
 import { createReadReport } from "~/repositories/read/reports";
@@ -21,6 +20,7 @@ import {
   readSubmittedRCIsAsRD,
 } from "~/repositories/rci/submitted";
 import WideButton from "~/components/common/WideButton";
+import { ISubmittedRCI } from "~/models/rci";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [completeRCIs] = await Promise.all([
     admin
       ? readSubmittedRCIsAsAdmin("CHECKED_OUT")
-      : readSubmittedRCIsAsRD(user.id, "ACTIVE"),
+      : readSubmittedRCIsAsRD(user.id, "CHECKED_OUT"),
     delay(100),
   ]);
   return {
@@ -84,7 +84,7 @@ export default function StaffHousingRCIsActivePage() {
   ];
 
   return (
-    <Table<ICompleteRCI>
+    <Table<ISubmittedRCI>
       columnKeys={columnKeys}
       rows={data.completeRCIs}
       search={{
