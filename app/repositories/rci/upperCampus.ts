@@ -19,7 +19,15 @@ export async function createUpperCampus(
   if (result.success && issues.success) {
     await db.client
       .insert(RCITable)
-      .values({ residentId, issues: issues.data, status: "AWAITING_RA" });
+      .values({ residentId, issues: issues.data, status: "AWAITING_RA" })
+      .onConflictDoUpdate({
+        target: RCITable.id,
+        set: {
+          residentId,
+          checkoutIssues: issues.data,
+          status: "RA_CHECKOUT"
+        }
+      });
 
     return mutate(request.url, {
       message: "Saved Check-in form",

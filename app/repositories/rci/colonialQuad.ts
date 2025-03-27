@@ -17,11 +17,21 @@ export async function createColonialQuad(
   const issues = ColonialQuadIssues.safeParse(values);
 
   if (result.success && issues.success) {
-    await db.client.insert(RCITable).values({
-      residentId,
-      issues: issues.data,
-      status: "AWAITING_RA",
-    });
+    await db.client
+      .insert(RCITable)
+      .values({
+        residentId,
+        issues: issues.data,
+        status: "AWAITING_RA",
+      })
+      .onConflictDoUpdate({
+        target: RCITable.id,
+        set: {
+          residentId,
+          checkoutIssues: issues.data,
+          status: "RA_CHECKOUT"
+        }
+      });
 
     return mutate(request.url, {
       message: "Saved Check-in form",
