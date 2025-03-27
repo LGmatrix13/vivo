@@ -24,7 +24,7 @@ export default function Select(props: SelectProps) {
         <span className="text-red-600 text-sm"> {required ? "*" : ""}</span>
       </label>
       {explanation && <p>{explanation}</p>}
-      <div className="relative border rounded-lg w-full">
+      <div className="relative border border-gray-300 rounded-lg w-full">
         <select
           className="w-full bg-white p-3 rounded-lg focus:ring-blue-600 appearance-none h-12"
           {...props}

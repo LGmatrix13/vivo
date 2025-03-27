@@ -17,12 +17,8 @@ export default function Header(props: HeaderProps) {
   const currentPath = location.pathname;
   const { routes, root } = props;
 
-  function isActivePage(path: string) {
-    return;
-  }
-
   return (
-    <header className="border-b mb-7">
+    <header className="border-b border-gray-300 mb-7">
       <nav className="max-w-screen-2xl mx-auto md:flex md:items-center md:px-10 md:justify-between">
         <Link to={root} data-discover="true" title={routes[0].name}>
           <div className="md:p-0 px-7 pt-5">

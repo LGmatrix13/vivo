@@ -28,7 +28,7 @@ export default function Index() {
           </span>
         </div>
       </div>
-      <nav className="flex items-center justify-between border-b px-10 py-7">
+      <nav className="flex items-center justify-between border-gray-300 border-b px-10 py-7">
         <Logo />
         <Link to="/auth/login">
           <span className="font-bold">Login</span>

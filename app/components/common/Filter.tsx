@@ -13,7 +13,7 @@ export default function Filter(props: FilterProps) {
   const { options, selected, handleFilter } = props;
 
   return (
-    <div className="relative border rounded-lg">
+    <div className="relative border border-gray-300 rounded-lg">
       <select
         className="md:w-40 w-full bg-white p-2 h-12 items-center rounded-lg focus:ring-blue-600 appearance-none"
         defaultValue={selected}

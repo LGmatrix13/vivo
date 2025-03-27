@@ -147,7 +147,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
           {ActionButtons && <ActionButtons rows={sortedRows} />}
         </div>
       )}
-      <div className="flex flex-row border rounded-lg md:divide-x h-[600px] overflow-y-auto">
+      <div className="flex flex-row border border-gray-300 rounded-lg md:divide-x divide-gray-300 h-[600px] overflow-y-auto">
         <div
           className={`md:w-3/5 w-full md:overflow-y-auto ${
             opened >= 0 ? "hidden md:block" : ""
@@ -155,7 +155,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
           tabIndex={0}
         >
           <table className="text-left table-fixed w-full">
-            <thead className="uppercase border-b">
+            <thead className="uppercase border-b border-gray-300">
               <tr>
                 {enableReads && <td className="w-[2px]" />}
                 {originalColumnKeys.map((originalColumnKey, index) => (
@@ -189,7 +189,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
                 {DeleteComponent && <td className="w-5" />}
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-gray-300">
               {sortedRows.map((row, rowIndex) => (
                 <tr
                   className={`${

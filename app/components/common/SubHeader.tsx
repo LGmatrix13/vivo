@@ -13,7 +13,9 @@ export default function SubHeader(props: SubHeaderProps) {
   const { pages } = props;
 
   function isActivePage(path: string) {
-    return currentPath === path ? "bg-gray-50 border cursor-default" : "border";
+    return currentPath === path
+      ? "bg-gray-50 border cursor-default border-gray-300"
+      : "border border-gray-300";
   }
 
   return (

@@ -25,7 +25,7 @@ export default function Input(props: InputProps) {
       {explanation && <p>{explanation}</p>}
       <input
         {...props}
-        className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600 placeholder:text-gray-300 h-12"
+        className="border border-gray-300 p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600 placeholder:text-gray-300 h-12"
       />
     </div>
   );

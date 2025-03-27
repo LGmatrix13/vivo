@@ -10,7 +10,7 @@ export default function RDOnDuty(props: RDOnDutyProps) {
   const { rdOnDuty } = props;
   const { name, building, email } = rdOnDuty;
   return (
-    <div className="border rounded-lg divide-y">
+    <div className="border border-gray-300 rounded-lg divide-y divide-gray-300">
       <div className="p-5 space-x-5 flex items-center">
         <img
           src={`/avatars/rd/${rdOnDuty.staffId}`}
@@ -24,7 +24,7 @@ export default function RDOnDuty(props: RDOnDutyProps) {
           </div>
           <div className="space-x-2 flex">
             <EmailButton email={email}></EmailButton>
-            <PhoneButton phoneNumber={'7249672120'}>RD On Call</PhoneButton>
+            <PhoneButton phoneNumber={"7249672120"}>RD On Call</PhoneButton>
           </div>
         </div>
       </div>

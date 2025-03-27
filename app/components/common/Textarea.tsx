@@ -28,7 +28,7 @@ export default function Textarea(props: TextareaProps) {
         onChange={(e) => {
           setState && setState(e.target.value);
         }}
-        className="border p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
+        className="border border-gray-300 p-2 rounded-lg focus:ring-blue-600 focus:border-blue-600"
       />
     </div>
   );

@@ -16,7 +16,7 @@ export default function Search(props: SearchProps) {
       </div>
       <input
         type="text"
-        className="h-12 w-full p-3 ps-10 text-sm text-gray-900 border rounded-lg focus:outline-none"
+        className="h-12 w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none"
         placeholder={placeholder}
         onChange={(e) => handleSearch(e.target.value)}
         value={value}
