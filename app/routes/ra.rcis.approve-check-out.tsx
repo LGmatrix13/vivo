@@ -46,6 +46,7 @@ export default function RARCIsApproveCheckOutPage() {
   const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Submitted",
+    resident: "Resident",
     room: "Room",
     totalIssues: "Issues",
   };
