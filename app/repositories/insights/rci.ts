@@ -1,4 +1,4 @@
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import {
   RCITable,
   residentTable,

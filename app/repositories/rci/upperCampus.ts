@@ -2,7 +2,7 @@ import {
   CreatedUpperCampus,
   UpperCampusIssues,
 } from "~/schemas/rcis/upperCampus";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import { RCITable } from "~/utilties/schema.server";
 

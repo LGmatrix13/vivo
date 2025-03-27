@@ -1,5 +1,5 @@
 import { roundReportTable, buildingTable } from "~/utilties/schema.server";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
@@ -75,7 +75,7 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
   return {
     title: `${count} violations`,
     level: calculateLevelViolation(count),
-    href: '/staff/reports/round?hasViolations=true',
+    href: "/staff/reports/round?hasViolations=true",
   };
 }
 

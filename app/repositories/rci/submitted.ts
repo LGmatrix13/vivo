@@ -1,7 +1,7 @@
 import { desc, eq, sql, and } from "drizzle-orm";
 import { alias, PgSelect } from "drizzle-orm/pg-core";
 import { UpdatedSubmittedRCI } from "~/schemas/rcis/submitted";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,

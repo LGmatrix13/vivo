@@ -6,7 +6,7 @@ import { auth } from "~/utilties/auth.server";
 import { like, eq } from "drizzle-orm";
 import { IGraphUser } from "~/models/graphUser";
 import { Role } from "~/models/role";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import {
   residentTable,
   zoneTable,

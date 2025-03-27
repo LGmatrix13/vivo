@@ -5,7 +5,7 @@ import {
   CreatedStaffShift,
   UpdatedStaffShift,
 } from "~/schemas/shifts/staffShift";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { csv } from "~/utilties/csv";
 import { formatDate } from "~/utilties/formatDate";
 import mutate from "~/utilties/mutate.server";

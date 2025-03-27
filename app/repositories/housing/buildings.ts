@@ -1,6 +1,6 @@
 import { sql, eq, asc, count } from "drizzle-orm";
 import { Building, CreatedBuiling } from "~/schemas/housing/building";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import {
   buildingTable,

@@ -1,7 +1,7 @@
 import { sql, eq, asc, and, exists } from "drizzle-orm";
 import { UpdatedZoneShift, CreatedZoneShift } from "~/schemas/shifts/zoneShift";
 import { RAScheduleCSV } from "~/schemas/schedules/RAScheduleCSV";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { csv } from "~/utilties/csv";
 import {
   buildingTable,

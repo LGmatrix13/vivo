@@ -2,7 +2,7 @@ import { sql, eq, asc, notExists, SQL } from "drizzle-orm";
 import { alias, PgTable } from "drizzle-orm/pg-core";
 import { IResident } from "~/models/people";
 import { CreatedResident, Resident } from "~/schemas/people/resident";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import {
   residentTable,
