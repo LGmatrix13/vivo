@@ -47,7 +47,7 @@ async function exists(userId: number, role: Role) {
   const absolutePath = path.join(
     __dirname,
     `../../public/avatars`,
-    `${role}_${userId}.webp`
+    `${userId}_${role}.webp`
   );
   return access(absolutePath, fs.constants.F_OK)
     .then(() => true)

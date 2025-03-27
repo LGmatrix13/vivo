@@ -9,7 +9,6 @@ import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
 import mutate from "~/utilties/mutate.server";
 import WideButton from "~/components/common/WideButton";
-import { backup } from "~/utilties/backup.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -38,21 +37,6 @@ export async function action({ request }: ActionFunctionArgs) {
         message: "Failed to upload avatar",
         level: "failure",
       });
-    case "create.backup":
-      await auth.rejectUnauthorized(request, ["admin"]);
-      const backupSuccess = await backup.export();
-
-      if (backupSuccess) {
-        return mutate(request.url, {
-          message: "Backed up Vivo",
-          level: "success",
-        });
-      }
-
-      return mutate(request.url, {
-        message: "Failed to backup Vivo",
-        level: "failure",
-      });
   }
 }
 
@@ -76,10 +60,12 @@ export default function StaffSettings() {
         </CollaspableContent>
         {admin && (
           <CollaspableContent title="Backups" collasped>
-            <div className="space-y-3">
+            <div className="space-y-3 flex flex-col">
               <h3 className="font-bold">Download Backup</h3>
               <p>Backups are executed nightly at midnight.</p>
-              <a href="/backup.vivo">Download Backup</a>
+              <a href="/backup.vivo">
+                <WideButton>Download Latest Backup</WideButton>
+              </a>
             </div>
           </CollaspableContent>
         )}
