@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return await createUpperCampus(request, user.id, values);
     case "create.colonialDouble":
       return await createColonialDouble(request, user.id, values);
-    case "create.colonialQusad":
+    case "create.colonialQuad":
       return await createColonialQuad(request, user.id, values);
   }
 }
@@ -75,7 +75,7 @@ export default function ResidentCheckInPage() {
     case "COLONIAL_QUAD":
       return (
         <RCIForm
-          intent={`${action}.colonialQusad`}
+          intent={`${action}.colonialQuad`}
           mapping={colonialQuadMapping}
           submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />

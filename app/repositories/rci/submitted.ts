@@ -44,6 +44,7 @@ export async function readSubmittedRCI(residentId: number) {
       roomType: roomTable.roomType,
       roomId: roomTable.id,
       issues: RCITable.issues,
+      status: RCITable.status,
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
@@ -66,6 +67,7 @@ export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      roomId: roomTable.id,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
