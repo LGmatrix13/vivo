@@ -16,8 +16,8 @@ import { getResidentRCIDraftData } from "~/repositories/rci/incomplete";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Vivo: Check-In" },
-    { name: "Vivo: Check-In", content: "Check-in page" },
+    { title: "Vivo: My Room" },
+    { name: "Vivo: My Room", content: "RCI management page" },
   ];
 };
 
@@ -50,7 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function ResidentCheckInPage() {
+export default function ResidentMyRoomPage() {
   const data = useLoaderData<typeof loader>();
   const action = data.submittedRCI.id ? "update" : "create";
 

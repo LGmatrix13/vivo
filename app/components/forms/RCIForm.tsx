@@ -56,7 +56,7 @@ export default function RCIForm(props: RCIFormProps) {
           value: intent,
         }}
       >
-        Save Check-in Form
+        Save RCI
       </WideButton>
     </Form>
   );

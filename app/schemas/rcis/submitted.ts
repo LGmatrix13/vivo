@@ -13,4 +13,5 @@ export const UpdatedSubmittedRCI = z.object({
     ],
     { message: "Status is required" }
   ),
+  checkedOut: z.coerce.date().optional().nullable()
 });

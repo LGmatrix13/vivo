@@ -30,10 +30,10 @@ export default function AdminLayout() {
       parent: "/resident/my-ra",
     },
     {
-      name: "Check-in",
+      name: "My Room",
       Icon: Door,
-      default: "/resident/check-in",
-      parent: "/resident/check-in",
+      default: "/resident/my-room",
+      parent: "/resident/my-room",
     },
     {
       name: "Settings",
