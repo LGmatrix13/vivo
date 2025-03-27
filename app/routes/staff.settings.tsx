@@ -53,7 +53,6 @@ export default function StaffSettings() {
             Logout
           </IconButton>
         </Link>
-        {/* <ModeToggle></ModeToggle> */}
         <CollaspableContent title="User Info">
           <UserInfo user={context.user} />
         </CollaspableContent>

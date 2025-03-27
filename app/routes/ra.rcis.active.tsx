@@ -47,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  await auth.rejectUnauthorized(request, ["ra"]);
+  const user = await auth.readUser(request, ["ra"]);
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
@@ -60,6 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
         const taskId = await limble.createWorkOrder(
           createdWorkOrder.room,
           createdWorkOrder.issues,
+          user,
           MAPPINGS[createdWorkOrder.roomType]
         );
 

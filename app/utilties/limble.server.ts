@@ -1,4 +1,5 @@
 import { ITask, IAsset } from "~/models/limble";
+import { IUser } from "~/models/user";
 
 const LOCATION_ID = 18691;
 
@@ -55,6 +56,7 @@ async function getAsset(room: string) {
 async function createWorkOrder(
   room: string,
   issues: Record<string, string>,
+  user: IUser,
   mapping: Record<string, string>
 ) {
   const due = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
@@ -74,6 +76,8 @@ async function createWorkOrder(
     // 6 indicates work order
     type: 6,
     name: `Work Order - ${room}`,
+    requestName: `${user.firstName} ${user.lastName}`,
+    requestEmail: user.email,
     locationID: LOCATION_ID,
     assetID,
     description,
