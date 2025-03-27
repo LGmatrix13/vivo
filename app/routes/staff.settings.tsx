@@ -1,4 +1,4 @@
-import { Link, useFetcher, useOutletContext } from "@remix-run/react";
+import { Link, useOutletContext } from "@remix-run/react";
 import CollaspableContent from "~/components/common/CollaspableContent";
 import IconButton from "~/components/common/IconButton";
 import { Logout } from "~/components/common/Icons";
@@ -45,9 +45,8 @@ export default function StaffSettings() {
     user: IUser;
   }>();
   const admin = context.user.role === "admin";
-  const fetcher = useFetcher();
   return (
-    <main className="max-w-screen-2xl mx-auto px-7 mb-7">
+    <main className="max-w-screen-2xl mx-auto md:px-10 px-7 mb-7">
       <section className="space-y-5">
         <Link to="/auth/logout">
           <IconButton Icon={Logout} className="ml-auto order-2">
