@@ -1,6 +1,6 @@
 import {
   ColonialDoubleIssues,
-  CreatedColonialDouble,
+  UpsertedColonialDouble,
 } from "~/schemas/rcis/colonialDouble";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
@@ -13,7 +13,7 @@ export async function createColonialDouble(
   residentId: number,
   values: Values
 ) {
-  const result = CreatedColonialDouble.safeParse(values);
+  const result = UpsertedColonialDouble.safeParse(values);
   const issues = ColonialDoubleIssues.safeParse(values);
 
   if (result.success && issues.success) {
@@ -21,6 +21,7 @@ export async function createColonialDouble(
       .insert(RCITable)
       .values({
         residentId,
+        id: result.data.id,
         issues: issues.data,
         status: "AWAITING_RA",
       })
@@ -34,7 +35,7 @@ export async function createColonialDouble(
       });
 
     return mutate(request.url, {
-      message: "Saved Check-in form",
+      message: "Saved RCI",
       level: "success",
     });
   }

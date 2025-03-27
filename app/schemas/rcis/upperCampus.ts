@@ -17,6 +17,7 @@ export const UpperCampusIssues = z.object({
   towelbarRings: z.string().optional(),
 });
 
-export const CreatedUpperCampus = UpperCampusIssues.extend({
+export const UpsertedUpperCampus = UpperCampusIssues.extend({
+  id: z.coerce.number().optional(),
   studentSignature: z.string({ message: "Student Signature is required" }),
 });

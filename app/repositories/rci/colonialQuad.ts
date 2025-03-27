@@ -1,6 +1,6 @@
 import {
   ColonialQuadIssues,
-  CreatedColonialQuad,
+  UpsertedColonialQuad,
 } from "~/schemas/rcis/colonialQuad";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
@@ -13,7 +13,7 @@ export async function createColonialQuad(
   residentId: number,
   values: Values
 ) {
-  const result = CreatedColonialQuad.safeParse(values);
+  const result = UpsertedColonialQuad.safeParse(values);
   const issues = ColonialQuadIssues.safeParse(values);
 
   if (result.success && issues.success) {
@@ -21,6 +21,7 @@ export async function createColonialQuad(
       .insert(RCITable)
       .values({
         residentId,
+        id: result.data.id,
         issues: issues.data,
         status: "AWAITING_RA",
       })
@@ -34,7 +35,7 @@ export async function createColonialQuad(
       });
 
     return mutate(request.url, {
-      message: "Saved Check-in form",
+      message: "Saved RCI",
       level: "success",
     });
   }
