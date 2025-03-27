@@ -88,8 +88,9 @@ export async function action({ request }: ActionFunctionArgs) {
         DeletedWorkOrder.safeParse(values);
       if (deletedSuccess) {
         const sucess = await limble.deleteWorkOrder(deletedWorkOrder.id);
-        await deleteWorkOrder(deletedWorkOrder.id);
+
         if (sucess) {
+          await deleteWorkOrder(deletedWorkOrder.id);
           return mutate(request.url, {
             message: "Canceled work order",
             level: "success",
