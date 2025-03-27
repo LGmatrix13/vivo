@@ -131,7 +131,7 @@ export default function StaffHousingRCIsActivePage() {
             csv.download(rows, "Complete_RCIs", columnKeys);
           }}
         >
-          Export Complete RCIs
+          Export Active RCIs
         </IconButton>
       )}
       SelectedRowComponent={({ row }) => (
