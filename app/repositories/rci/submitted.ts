@@ -44,6 +44,7 @@ export async function readSubmittedRCI(residentId: number) {
       roomType: roomTable.roomType,
       roomId: roomTable.id,
       issues: RCITable.issues,
+      status: RCITable.status,
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
@@ -64,7 +65,9 @@ export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
     .select({
       id: RCITable.id,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      roomId: roomTable.id,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
@@ -109,6 +112,7 @@ export async function readActiveRCIsAsRA(zoneId: number) {
     .select({
       id: RCITable.id,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
@@ -148,6 +152,7 @@ export async function readSubmittedRCIsAsRA(
     .select({
       id: RCITable.id,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
@@ -178,6 +183,11 @@ export async function updateSubmittedRCIStatus(
   request: Request,
   values: Values
 ) {
+  if (values && values.status == "CHECKED_OUT") {
+    console.log("bruh")
+    values.checkedOut = new Date().toISOString()
+    console.log(`${values.checkedOut}`)
+  }
   return db.update(
     request,
     RCITable,
@@ -202,6 +212,7 @@ export async function readSubmittedRCIsAsRD(
       id: RCITable.id,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       status: RCITable.status,
       buildingId: buildingTable.id,
@@ -227,7 +238,7 @@ export async function readSubmittedRCIsAsRD(
         eq(readTable.reportType, `RCI_${type}`)
       )
     )
-    .where(eq(staffTable.id, id))
+    .where(and(eq(staffTable.id, id),eq(RCITable.status, type)))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {

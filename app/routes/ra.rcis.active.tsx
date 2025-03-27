@@ -113,6 +113,7 @@ export default function RARCIsApproveCheckInPage() {
   const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Submitted",
+    resident: "Resident",
     room: "Room",
     totalIssues: "Issues",
   };
@@ -156,7 +157,7 @@ export default function RARCIsApproveCheckInPage() {
             csv.download(rows, "Complete_RCIs", columnKeys);
           }}
         >
-          Export Complete RCIs
+          Export Active RCIs
         </IconButton>
       )}
       SelectedRowComponent={({ row }) => (

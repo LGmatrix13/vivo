@@ -1,6 +1,6 @@
 import {
-  CreatedUpperCampus,
   UpperCampusIssues,
+  UpsertedUpperCampus,
 } from "~/schemas/rcis/upperCampus";
 import { db } from "~/utilties/connection.server";
 import mutate from "~/utilties/mutate.server";
@@ -13,16 +13,29 @@ export async function createUpperCampus(
   residentId: number,
   values: Values
 ) {
-  const result = CreatedUpperCampus.safeParse(values);
+  const result = UpsertedUpperCampus.safeParse(values);
   const issues = UpperCampusIssues.safeParse(values);
 
   if (result.success && issues.success) {
     await db.client
       .insert(RCITable)
-      .values({ residentId, issues: issues.data, status: "AWAITING_RA" });
+      .values({
+        residentId,
+        id: result.data.id,
+        issues: issues.data,
+        status: "AWAITING_RA"
+      })
+      .onConflictDoUpdate({
+        target: RCITable.id,
+        set: {
+          residentId,
+          checkoutIssues: issues.data,
+          status: "RA_CHECKOUT"
+        }
+      });
 
     return mutate(request.url, {
-      message: "Saved Check-in form",
+      message: "Saved RCI",
       level: "success",
     });
   }

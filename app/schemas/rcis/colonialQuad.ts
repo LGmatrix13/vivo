@@ -68,6 +68,7 @@ export const ColonialQuadIssues = z.object({
   bedroomDDresser: z.string().optional(),
 });
 
-export const CreatedColonialQuad = ColonialQuadIssues.extend({
+export const UpsertedColonialQuad = ColonialQuadIssues.extend({
+  id: z.coerce.number().optional(),
   studentSignature: z.string({ message: "Student Signature is required" }),
 });

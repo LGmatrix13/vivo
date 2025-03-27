@@ -50,6 +50,7 @@ export const ColonialDoubleIssues = z.object({
   bedroomRightDresser: z.string().optional(),
 });
 
-export const CreatedColonialDouble = ColonialDoubleIssues.extend({
+export const UpsertedColonialDouble = ColonialDoubleIssues.extend({
+  id: z.coerce.number().optional(),
   studentSignature: z.string({ message: "Student Signature is required" }),
 });

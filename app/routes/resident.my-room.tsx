@@ -16,8 +16,8 @@ import { getResidentRCIDraftData } from "~/repositories/rci/incomplete";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Vivo: Check-In" },
-    { name: "Vivo: Check-In", content: "Check-in page" },
+    { title: "Vivo: My Room" },
+    { name: "Vivo: My Room", content: "RCI management page" },
   ];
 };
 
@@ -39,22 +39,65 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create.upperCampus":
+    case "update.upperCampus":
       return await createUpperCampus(request, user.id, values);
     case "create.colonialDouble":
+    case "update.colonialDouble":
       return await createColonialDouble(request, user.id, values);
-    case "create.colonialQusad":
+    case "create.colonialQuad":
+    case "update.colonialQuad":
       return await createColonialQuad(request, user.id, values);
   }
 }
 
-export default function ResidentCheckInPage() {
+export default function ResidentMyRoomPage() {
   const data = useLoaderData<typeof loader>();
   const action = data.submittedRCI.id ? "update" : "create";
+
+  // Check out process
+  if (data.submittedRCI.id && data.submittedRCI.status == "RESIDENT_CHECKOUT") {
+    switch (data.submittedRCI.roomType) {
+      case "UPPER_CAMPUS":
+        return (
+          <RCIForm
+            intent={`${action}.upperCampus`}
+            mapping={upperCampusMapping}
+            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
+          />
+        );
+      case "COLONIAL_DOUBLE":
+        return (
+          <RCIForm
+            intent={`${action}.colonialDouble`}
+            mapping={upperCampusMapping}
+            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
+          />
+        );
+      case "COLONIAL_QUAD":
+        return (
+          <RCIForm
+            intent={`${action}.colonialQuad`}
+            mapping={colonialQuadMapping}
+            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
+          />
+        );
+      default:
+        return (
+          <Indication
+            level="warning"
+            title="You don't have a room"
+            message="Looks like you are not assigned a room."
+            Icon={Home}
+          />
+        );
+    }
+  }
 
   if (data.submittedRCI.id) {
     return <RCIProgress />;
   }
 
+  // Check in process
   switch (data.submittedRCI.roomType) {
     case "UPPER_CAMPUS":
       return (
@@ -75,7 +118,7 @@ export default function ResidentCheckInPage() {
     case "COLONIAL_QUAD":
       return (
         <RCIForm
-          intent={`${action}.colonialQusad`}
+          intent={`${action}.colonialQuad`}
           mapping={colonialQuadMapping}
           submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
         />
