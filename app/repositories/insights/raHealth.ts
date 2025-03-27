@@ -1,5 +1,5 @@
 import { zoneTable, weeklyReportTable } from "~/utilties/schema.server";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
@@ -151,19 +151,19 @@ function processInsights(data: any): IInsight[] {
       title: `${data.greatMentalHealth} reported great mental health`,
       level: "great",
       value: data.greatMentalHealth,
-      href: '/staff/reports/weekly?mentalHealth=GREAT',
+      href: "/staff/reports/weekly?mentalHealth=GREAT",
     },
     {
       title: `${data.goodMentalHealth} reported good mental health`,
       level: "great",
       value: data.goodMentalHealth,
-      href: '/staff/reports/weekly?mentalHealth=GOOD',
+      href: "/staff/reports/weekly?mentalHealth=GOOD",
     },
     {
       title: `${data.okMentalHealth} reported ok mental health`,
       level: "warning",
       value: data.okMentalHealth,
-      href: '/staff/reports/weekly?mentalHealth=OK',
+      href: "/staff/reports/weekly?mentalHealth=OK",
     },
     {
       title: `${
@@ -171,25 +171,25 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough mental health`,
       level: "danger",
       value: data.roughMentalHealth + data.reallyRoughMentalHealth,
-      href: '/staff/reports/weekly?mentalHealth=ROUGH&mentalHealth=REALLY_ROUGH',
+      href: "/staff/reports/weekly?mentalHealth=ROUGH&mentalHealth=REALLY_ROUGH",
     },
     {
       title: `${data.greatPersonalLife} reported great personal life`,
       level: "great",
       value: data.greatPersonalLife,
-      href: '/staff/reports/weekly?personalLife=GREAT',
+      href: "/staff/reports/weekly?personalLife=GREAT",
     },
     {
       title: `${data.goodPersonalLife} reported good personal life`,
       level: "good",
       value: data.goodPersonalLife,
-      href: '/staff/reports/weekly?personalLife=GOOD',
+      href: "/staff/reports/weekly?personalLife=GOOD",
     },
     {
       title: `${data.okPersonalLife} reported ok personal life`,
       level: "warning",
       value: data.okPersonalLife,
-      href: '/staff/reports/weekly?personalLife=OK',
+      href: "/staff/reports/weekly?personalLife=OK",
     },
     {
       title: `${
@@ -197,25 +197,25 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough personal life`,
       level: "danger",
       value: data.roughPersonalLife + data.reallyRoughPersonalLife,
-      href: '/staff/reports/weekly?personalLife=ROUGH&personalLife=REALLY_ROUGH',
+      href: "/staff/reports/weekly?personalLife=ROUGH&personalLife=REALLY_ROUGH",
     },
     {
       title: `${data.greatSpiritualHealth} reported great spiritual health`,
       level: "great",
       value: data.greatSpiritualHealth,
-      href: '/staff/reports/weekly?spiritualHealth=GREAT',
+      href: "/staff/reports/weekly?spiritualHealth=GREAT",
     },
     {
       title: `${data.goodSpiritualHealth} reported good spiritual health`,
       level: "good",
       value: data.goodSpiritualHealth,
-      href: '/staff/reports/weekly?spiritualHealth=GOOD',
+      href: "/staff/reports/weekly?spiritualHealth=GOOD",
     },
     {
       title: `${data.okSpiritualHealth} reported ok spiritual health`,
       level: "warning",
       value: data.okSpiritualHealth,
-      href: '/staff/reports/weekly?spiritualHealth=OK',
+      href: "/staff/reports/weekly?spiritualHealth=OK",
     },
     {
       title: `${
@@ -223,7 +223,7 @@ function processInsights(data: any): IInsight[] {
       } reported rough or really rough spiritual health`,
       level: "danger",
       value: data.roughSpiritualHealth + data.reallySpiritualHealth,
-      href: '/staff/reports/weekly?spiritualHealth=ROUGH&spirtualHealth=REALLY_ROUGH',
+      href: "/staff/reports/weekly?spiritualHealth=ROUGH&spirtualHealth=REALLY_ROUGH",
     },
   ];
 

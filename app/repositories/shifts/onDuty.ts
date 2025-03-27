@@ -1,6 +1,6 @@
 import { sql, eq } from "drizzle-orm";
 import { RDScheduleCSV } from "~/schemas/schedules/RDScheduleCSV";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { csv } from "~/utilties/csv";
 import {
   buildingTable,

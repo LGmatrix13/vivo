@@ -50,7 +50,7 @@ export default function Index() {
         </div>
 
         <div className="border rounded-lg divide-y">
-          <div className="rounded-lg min-h-[250px] p-7 space-y-3">
+          <div className="rounded-lg p-7 space-y-3">
             <div className="space-x-2 flex items-center">
               <File className="w-7 h-7" />
               <h2 className="font-bold text-xl">Reporting made easy </h2>
@@ -62,7 +62,7 @@ export default function Index() {
               clear, at-a-glance understanding of key trends.
             </p>
           </div>
-          <div className="rounded-lg min-h-[250px] p-7 space-y-3">
+          <div className="rounded-lg p-7 space-y-3">
             <div className="space-x-2 flex items-center">
               <User className="w-7 h-7" />
               <h2 className="font-bold text-xl">
@@ -76,7 +76,7 @@ export default function Index() {
               to maintain organization and privacy.
             </p>
           </div>
-          <div className="rounded-lg min-h-[250px] p-7 space-y-3">
+          <div className="rounded-lg p-7 space-y-3">
             <div className="space-x-2 flex items-center">
               <Home className="w-7 h-7" />
               <h2 className="font-bold text-xl">
@@ -89,7 +89,7 @@ export default function Index() {
               order creation for maintenance and repairs.
             </p>
           </div>
-          <div className="rounded-lg min-h-[250px] p-7 space-y-3">
+          <div className="rounded-lg p-7 space-y-3">
             <div className="space-x-2 flex items-center">
               <Chart className="w-7 h-7" />
               <h2 className="font-bold text-xl">Insights made easy </h2>
@@ -102,7 +102,7 @@ export default function Index() {
               and operational efficiency.
             </div>
           </div>
-          <div className="rounded-lg min-h-[250px] p-7 space-y-3">
+          <div className="rounded-lg p-7 space-y-3">
             <div className="space-x-2 flex items-center">
               <Sparkles className="w-7 h-7" />
               <h2 className="font-bold text-xl">Quick answers</h2>

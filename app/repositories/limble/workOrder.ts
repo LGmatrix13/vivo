@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { number } from "zod";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { LimbleTable } from "~/utilties/schema.server";
 
 export async function deleteWorkOrder(id: number) {

@@ -1,7 +1,7 @@
 import { sql, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { CreatedRoom, Room, UpdatedRoomIssues } from "~/schemas/housing/room";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import {
   residentTable,

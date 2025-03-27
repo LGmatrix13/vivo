@@ -1,6 +1,6 @@
 import { sql, eq, desc, and } from "drizzle-orm";
 import { CreatedWeekly, Weekly } from "~/schemas/reports/weekly";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,

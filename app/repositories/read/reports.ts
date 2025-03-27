@@ -1,6 +1,6 @@
 import { Conversation } from "~/schemas/reports/conversation";
 import { ReadReport } from "~/schemas/reports/readReport";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { readTable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };

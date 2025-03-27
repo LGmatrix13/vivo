@@ -3,7 +3,7 @@ import {
   Conversation,
   CreatedConversation,
 } from "~/schemas/reports/conversation";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
   buildingTable,

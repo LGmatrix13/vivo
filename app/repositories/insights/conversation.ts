@@ -4,7 +4,7 @@ import {
   residentTable,
   roomTable,
 } from "~/utilties/schema.server";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import { and, eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 

@@ -1,6 +1,6 @@
 import { sql, eq } from "drizzle-orm";
 import { ARD, CreatedARD, UpdatedARD } from "~/schemas/people/ard";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import {
   assistantStaffTable,
   residentTable,

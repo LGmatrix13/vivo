@@ -1,6 +1,6 @@
 import { sql, eq, asc } from "drizzle-orm";
 import { CreatedRD, RD } from "~/schemas/people/rd";
-import { db } from "~/utilties/connection.server";
+import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import { staffTable, buildingTable, zoneTable } from "~/utilties/schema.server";
 
