@@ -41,9 +41,9 @@ export default function InsightsTable(props: IInsightsTable) {
             ).length;
             const color =
               countDanger > 0
-                ? "bg-red-600"
+                ? "bg-red-700"
                 : countWarning
-                ? "bg-orange-600"
+                ? "bg-orange-500"
                 : null;
             return (
               <div className="space-x-3 flex items-center">
