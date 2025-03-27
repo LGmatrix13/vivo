@@ -75,26 +75,10 @@ export default function StaffSettings() {
           <UserInfo user={context.user} />
         </CollaspableContent>
         {admin && (
-          <CollaspableContent title="Backup and Restore">
+          <CollaspableContent title="Backups" collasped>
             <div className="space-y-3">
-              <h3 className="font-bold">Backup</h3>
-              <WideButton
-                onClick={() => {
-                  fetcher.submit(
-                    {
-                      intent: "create.backup",
-                    },
-                    {
-                      method: "POST",
-                    }
-                  );
-                }}
-              >
-                Export Backup
-              </WideButton>
-            </div>
-            <div className="space-y-3">
-              <h3 className="font-bold">Backup</h3>
+              <h3 className="font-bold">Download Backup</h3>
+              <p>Backups are executed nightly at midnight.</p>
               <a href="/backup.vivo">Download Backup</a>
             </div>
           </CollaspableContent>
