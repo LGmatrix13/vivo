@@ -38,8 +38,8 @@ export default function StaffHousingRCIsIncompletePage() {
   }>();
   const data = useLoaderData<typeof loader>();
   const columnKeys = {
-    ra: "RA",
     resident: "Resident",
+    ra: "RA",
     room: "Room",
   };
   const rowKeys = {

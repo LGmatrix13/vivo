@@ -69,6 +69,7 @@ export default function StaffHousingRCIsActivePage() {
   const fetcher = useFetcher();
   const columnKeys = {
     submitted: "Submitted",
+    resident: "Resident",
     ra: "RA",
     room: "Room",
     totalIssues: "Issues",

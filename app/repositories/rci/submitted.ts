@@ -64,6 +64,7 @@ export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
     .select({
       id: RCITable.id,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
@@ -109,6 +110,7 @@ export async function readActiveRCIsAsRA(zoneId: number) {
     .select({
       id: RCITable.id,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
@@ -148,6 +150,7 @@ export async function readSubmittedRCIsAsRA(
     .select({
       id: RCITable.id,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       submitted: RCITable.submitted,
       status: RCITable.status,
@@ -202,6 +205,7 @@ export async function readSubmittedRCIsAsRD(
       id: RCITable.id,
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
+      resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
       building: buildingTable.name,
       status: RCITable.status,
       buildingId: buildingTable.id,
