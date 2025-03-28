@@ -17,11 +17,6 @@ export default function RCIDraftForm(props: RCIDraftFormProps) {
       {roomId && (
         <input name="id" type="hidden" value={roomId} />
       )}
-      <input
-        name="roomId"
-        type="hidden"
-        value={roomId as number}
-      />
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}

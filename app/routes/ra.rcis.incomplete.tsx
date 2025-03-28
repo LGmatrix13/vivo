@@ -35,9 +35,20 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
 
+  let cleanedIssues: {[key: string]: string} = {}
+  for (const key of Object.keys(values)) {
+    if (!key.startsWith("condition") && key != "id") {
+      cleanedIssues[key] = values[key] as string
+    }
+  }
+
+  const id = parseInt(values["id"] as string)
+
+  const cleanedVals = {id: id, issuesRCI: JSON.stringify(cleanedIssues)};
+
   switch (intent) {
     case "update":
-      return await updateRoom(values, request);
+      return await updateRoomIssues(cleanedVals, request);
   }
 }
 
