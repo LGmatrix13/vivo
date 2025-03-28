@@ -36,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
+  console.log(values)
   switch (intent) {
     case "create.upperCampus":
     case "update.upperCampus":
@@ -55,45 +55,9 @@ export default function ResidentMyRoomPage() {
   const action = data.submittedRCI.id ? "update" : "create";
 
   // Check out process
-  if (data.submittedRCI.id && data.submittedRCI.status == "RESIDENT_CHECKOUT") {
-    switch (data.submittedRCI.roomType) {
-      case "UPPER_CAMPUS":
-        return (
-          <RCIForm
-            intent={`${action}.upperCampus`}
-            mapping={upperCampusMapping}
-            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
-          />
-        );
-      case "COLONIAL_DOUBLE":
-        return (
-          <RCIForm
-            intent={`${action}.colonialDouble`}
-            mapping={upperCampusMapping}
-            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
-          />
-        );
-      case "COLONIAL_QUAD":
-        return (
-          <RCIForm
-            intent={`${action}.colonialQuad`}
-            mapping={colonialQuadMapping}
-            submittedRCI={(data.submittedRCI.id ? data.submittedRCI : data.rciDraftData) as ISubmittedRCI}
-          />
-        );
-      default:
-        return (
-          <Indication
-            level="warning"
-            title="You don't have a room"
-            message="Looks like you are not assigned a room."
-            Icon={Home}
-          />
-        );
-    }
-  }
+  const editable = data.submittedRCI.status === "RESIDENT_CHECKOUT" || data.submittedRCI.status === 'AWAITING_RESIDENT'
 
-  if (data.submittedRCI.id) {
+  if (data.submittedRCI.id && !editable) {
     return <RCIProgress />;
   }
 

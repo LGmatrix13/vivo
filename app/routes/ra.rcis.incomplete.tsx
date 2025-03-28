@@ -43,7 +43,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-
   let cleanedIssues: {[key: string]: string} = {}
   for (const key of Object.keys(values)) {
     if (!key.startsWith("condition") && key != "id") {

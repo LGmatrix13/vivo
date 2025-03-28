@@ -86,7 +86,7 @@ export default function StaffHousingRCIsActivePage() {
   return (
     <Table<ISubmittedRCI>
       columnKeys={columnKeys}
-      rows={data.completeRCIs}
+      rows={data.completeRCIs as ISubmittedRCI[]}
       search={{
         placeholder: "Search for an active RCI...",
       }}
