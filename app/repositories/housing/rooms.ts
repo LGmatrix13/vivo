@@ -139,3 +139,22 @@ export async function createRoom(values: Values, request: Request) {
     level: "success",
   });
 }
+
+export async function getRoomRCIDraftData(roomId: number) {
+  const data = await db.client
+    .select({
+      issues: roomTable.issuesRCI || {},
+    })
+    .from(roomTable)
+    .where(eq(roomTable.id, roomId));
+
+  if (data.length == 0) {
+    return {
+      issues: {} as Record<string, string>,
+    };
+  }
+
+  return {
+    issues: data[0].issues as Record<string, string>,
+  };
+}

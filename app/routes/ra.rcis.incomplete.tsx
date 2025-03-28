@@ -8,7 +8,10 @@ import Instruction from "~/components/common/Instruction";
 import { IIncompleteRCI } from "~/models/rci";
 import { readIncompleteRCIsAsRA } from "~/repositories/rci/incomplete";
 import { auth } from "~/utilties/auth.server";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { upperCampusMapping } from "~/mappings/rci";
+import { getRoomRCIDraftData, updateRoom, updateRoomIssues } from "~/repositories/housing/rooms";
+import RCIDraftForm from "~/components/forms/RCIDraftForm";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -16,9 +19,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
     readIncompleteRCIsAsRA(user.id),
     delay(100),
   ]);
+  let issuesMap: Record<number, Record<string, string>> = {};
+  for (let i = 0; i < incompleteRCIs.length; i++) {
+    issuesMap[incompleteRCIs[i].roomId] = (await getRoomRCIDraftData(incompleteRCIs[i].roomId)).issues
+  }
   return {
     incompleteRCIs,
+    issuesMap,
   };
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  await auth.rejectUnauthorized(request, ["ra"]);
+
+  const formData = await request.formData();
+  const { intent, ...values } = Object.fromEntries(formData);
+
+  switch (intent) {
+    case "update":
+      return await updateRoom(values, request);
+  }
 }
 
 export default function RARCIsIncompletePage() {
@@ -42,6 +62,13 @@ export default function RARCIsIncompletePage() {
       InstructionComponent={() => (
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
+      EditComponent={({ row }) =>
+        <RCIDraftForm
+          roomId={row.roomId}
+          mapping={upperCampusMapping}
+          issues={data.issuesMap[row.roomId]}  
+        />
+      }
       ActionButtons={({ rows }) => (
         <IconButton
           Icon={Download}
