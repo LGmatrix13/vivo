@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, notExists, sql } from "drizzle-orm";
+import { and, desc, eq, notExists, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "~/utilties/postgres.server";
 import {
@@ -18,6 +18,7 @@ export async function readIncompleteRCIsAsAdmin() {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       roomId: roomTable.id,
+      roomType: roomTable.roomType,
       buildingId: buildingTable.id,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })
@@ -51,6 +52,7 @@ export async function readIncompleteRCIsAsRA(zoneId: number) {
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       buildingId: buildingTable.id,
       roomId: roomTable.id,
+      roomType: roomTable.roomType,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })
     .from(roomTable)
@@ -87,6 +89,7 @@ export async function readIncompleteRCIsAsRD(id: number) {
       ra: sql<string>`concat(${raInfoTable.firstName}, ' ', ${raInfoTable.lastName})`,
       room: sql<string>`concat(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
       roomId: roomTable.id,
+      roomType: roomTable.roomType,
       buildingId: buildingTable.id,
       resident: sql<string>`concat(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
     })

@@ -9,9 +9,16 @@ import { IIncompleteRCI } from "~/models/rci";
 import { readIncompleteRCIsAsRA } from "~/repositories/rci/incomplete";
 import { auth } from "~/utilties/auth.server";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { upperCampusMapping } from "~/mappings/rci";
+import { colonialDoubleMapping, colonialQuadMapping, colonialTripleMapping, upperCampusMapping } from "~/mappings/rci";
 import { getRoomRCIDraftData, updateRoom, updateRoomIssues } from "~/repositories/housing/rooms";
 import RCIDraftForm from "~/components/forms/RCIDraftForm";
+
+const MAPPINGS = {
+  UPPER_CAMPUS: upperCampusMapping,
+  COLONIAL_QUAD: colonialQuadMapping,
+  COLONIAL_DOUBLE: colonialDoubleMapping,
+  COLONIAL_TRIPLE: colonialTripleMapping,
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
@@ -19,10 +26,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     readIncompleteRCIsAsRA(user.id),
     delay(100),
   ]);
+
   let issuesMap: Record<number, Record<string, string>> = {};
   for (let i = 0; i < incompleteRCIs.length; i++) {
     issuesMap[incompleteRCIs[i].roomId] = (await getRoomRCIDraftData(incompleteRCIs[i].roomId)).issues
   }
+
   return {
     incompleteRCIs,
     issuesMap,
@@ -76,7 +85,7 @@ export default function RARCIsIncompletePage() {
       EditComponent={({ row }) =>
         <RCIDraftForm
           roomId={row.roomId}
-          mapping={upperCampusMapping}
+          mapping={MAPPINGS[row.roomType]}
           issues={data.issuesMap[row.roomId]}  
         />
       }
