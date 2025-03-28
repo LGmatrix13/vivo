@@ -36,7 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.formData();
   const { intent, ...values } = Object.fromEntries(formData);
-  console.log(values)
   switch (intent) {
     case "create.upperCampus":
     case "update.upperCampus":

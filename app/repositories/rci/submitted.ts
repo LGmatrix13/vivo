@@ -184,9 +184,7 @@ export async function updateSubmittedRCIStatus(
   values: Values
 ) {
   if (values && values.status == "CHECKED_OUT") {
-    console.log("bruh")
     values.checkedOut = new Date().toISOString()
-    console.log(`${values.checkedOut}`)
   }
   return db.update(
     request,
