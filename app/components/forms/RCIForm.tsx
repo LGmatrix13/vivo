@@ -33,7 +33,7 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name={key}
-            placeholder={`Describe the issues with the ${mapping[key]}`}
+            placeholder={`Describe the issues with the ${mapping[key].toLowerCase()}`}
             defaultValue={submittedRCI?.issues ? submittedRCI?.issues[key] : ""}
           />
         </AcknowledgeIssueRadio>
