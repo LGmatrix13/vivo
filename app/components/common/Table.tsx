@@ -193,7 +193,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
               {sortedRows.map((row, rowIndex) => (
                 <tr
                   className={`${
-                    opened === rowIndex ? "bg-gray-50" : "hover:bg-gray-50"
+                    opened === rowIndex ? "bg-gray-100" : "hover:bg-gray-100"
                   } transition ease-in-out`}
                   key={rowIndex}
                 >
