@@ -11,6 +11,7 @@ import {
   staffTable,
   roomTypeEnum,
 } from "~/utilties/schema.server";
+import { redirect } from "@remix-run/react";
 
 type Values = { [key: string]: any };
 
@@ -108,15 +109,16 @@ export async function deleteRoom(values: Values, request: Request) {
   });
 }
 
-export async function updateRoomIssues(values: Values) {
-  const { success, data } = UpdatedRoomIssues.safeParse(values);
-
-  if (success) {
+export async function updateRoomIssues(values: Values, request: Request) {
     await db.client
       .update(roomTable)
-      .set({ issuesRCI: data.issuesRCI })
-      .where(eq(roomTable.id, data.id));
-  }
+      .set({ issuesRCI: values.issuesRCI })
+      .where(eq(roomTable.id, values.id));
+      
+    return mutate(request.url, {
+      message: "RCI draft updated",
+      level: "success",
+    });
 }
 
 export async function updateRoom(values: Values, request: Request) {
@@ -138,4 +140,23 @@ export async function createRoom(values: Values, request: Request) {
     message: "Created Room",
     level: "success",
   });
+}
+
+export async function getRoomRCIDraftData(roomId: number) {
+  const data = await db.client
+    .select({
+      issues: roomTable.issuesRCI || {},
+    })
+    .from(roomTable)
+    .where(eq(roomTable.id, roomId));
+
+  if (data.length == 0) {
+    return {
+      issues: {} as Record<string, string>,
+    };
+  }
+
+  return {
+    issues: data[0].issues as Record<string, string>,
+  };
 }
