@@ -1,5 +1,5 @@
-import { desc, eq, sql, and } from "drizzle-orm";
-import { alias, PgSelect } from "drizzle-orm/pg-core";
+import { desc, eq, sql, and, inArray } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { UpdatedSubmittedRCI } from "~/schemas/rcis/submitted";
 import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -13,6 +13,7 @@ import {
   staffTable,
   zoneTable,
 } from "~/utilties/schema.server";
+import mutate from "~/utilties/mutate.server";
 
 type Values = { [key: string]: any };
 
@@ -247,4 +248,19 @@ export async function readSubmittedRCIsAsRD(
     };
   });
   return formattedData;
+}
+
+export async function releaseRCIsForCheckout(request: Request, values: Values) {
+  const rciIds = JSON.parse(values.ids as string) as number[];
+  await db.client
+    .update(RCITable)
+    .set({
+      status: "RESIDENT_CHECKOUT"
+    })
+    .where(inArray(RCITable.id, rciIds));
+
+  return mutate(request.url, {
+    message: "Released RCIs for Checkout",
+    level: "success",
+  });
 }

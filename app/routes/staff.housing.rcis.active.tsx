@@ -1,6 +1,6 @@
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import IconButton from "~/components/common/IconButton";
-import { Download, FileSearch } from "~/components/common/Icons";
+import { Door, Download, FileSearch } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
 import { csv } from "~/utilties/csv";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -18,10 +18,13 @@ import SelectedRow from "~/components/common/SelectedRow";
 import {
   readSubmittedRCIsAsAdmin,
   readSubmittedRCIsAsRD,
+  releaseRCIsForCheckout,
   updateSubmittedRCIStatus,
 } from "~/repositories/rci/submitted";
 import WideButton from "~/components/common/WideButton";
 import { ISubmittedRCI } from "~/models/rci";
+import { DrawerButton, DrawerContent, DrawerProvider } from "~/components/common/Drawer";
+import ReleaseAllRCIsForm from "~/components/forms/ReleaseAllRCIsForm";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["admin", "rd"]);
@@ -57,6 +60,8 @@ export async function action({ request }: ActionFunctionArgs) {
       );
     case "update.status":
       return await updateSubmittedRCIStatus(request, values);
+    case "updateAll":
+      return await releaseRCIsForCheckout(request, values);
   }
 }
 
@@ -124,15 +129,32 @@ export default function StaffHousingRCIsActivePage() {
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
       ActionButtons={({ rows }) => (
-        <IconButton
-          Icon={Download}
-          className="md:w-fit w-full"
-          onClick={() => {
-            csv.download(rows, "Complete_RCIs", columnKeys);
-          }}
-        >
-          Export Active RCIs
-        </IconButton>
+        <div className="flex flex-row space-x-3">
+          <DrawerProvider>
+            <DrawerContent>
+              <ReleaseAllRCIsForm
+                rciIds={rows.map(rows => rows.id)}
+                title={"Release All RCIs for Checkout"}
+                prompt={'Are you sure you want to release all RCIs for checkout?'}
+                toast={'Released ASll RCIs for Checkout'}
+              />
+            </DrawerContent>
+            <DrawerButton>
+              <IconButton Icon={Door} className="md:w-fit w-full">
+                Release All RCIs for Checkout
+              </IconButton>
+            </DrawerButton>
+            <IconButton
+              Icon={Download}
+              className="md:w-fit w-full"
+              onClick={() => {
+                csv.download(rows, "Complete_RCIs", columnKeys);
+              }}
+            >
+              Export Active RCIs
+            </IconButton>
+          </DrawerProvider>
+        </div>
       )}
       SelectedRowComponent={({ row }) => (
         <SelectedRow
