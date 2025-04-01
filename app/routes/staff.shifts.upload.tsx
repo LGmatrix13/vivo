@@ -10,6 +10,8 @@ import Loading from "~/components/common/Loading";
 import { csv } from "~/utilties/csv";
 import { uploadDutyScheduleForRD } from "~/repositories/shifts/rd";
 import { uploadDutyScheduleForRAs } from "~/repositories/shifts/ra";
+import { files } from "~/utilties/files.server";
+import mutate from "~/utilties/mutate.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   console.log("ran");
@@ -20,6 +22,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const { intent, ...values } = Object.fromEntries(formData);
   switch (intent) {
     case "upload":
+      const file = values["file"] as File;
+      if (!files.checkExtension(file.name, ".csv")) {
+        return mutate(request.url, {
+          message: "File must be a .csv",
+          level: "failure",
+        });
+      }
+
       if (admin) {
         return await uploadDutyScheduleForRD(values);
       } else {

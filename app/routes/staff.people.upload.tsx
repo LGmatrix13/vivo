@@ -9,6 +9,8 @@ import { Link, useFetcher } from "@remix-run/react";
 import WideButton from "~/components/common/WideButton";
 import Loading from "~/components/common/Loading";
 import { csv } from "~/utilties/csv";
+import { files } from "~/utilties/files.server";
+import mutate from "~/utilties/mutate.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   await auth.rejectUnauthorized(request, ["admin"]);
@@ -18,6 +20,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "upload":
+      const file = values["file"] as File;
+      if (!files.checkExtension(file.name, ".png")) {
+        return mutate(request.url, {
+          message: "File must be a .png",
+          level: "failure",
+        });
+      }
+
       return await uploadMasterCSV(values, request);
   }
 }

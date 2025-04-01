@@ -5,8 +5,7 @@ import fs from "fs";
 import { auth } from "./auth.server";
 import { fileURLToPath } from "url";
 import { Role } from "~/models/role";
-import { Readable } from "stream";
-import { fileStream } from "./fileStrem.server";
+import { files } from "./files.server";
 
 async function upload(
   request: Request,
@@ -55,11 +54,11 @@ async function exists(userId: number, role: Role) {
 }
 
 async function _fileStream(userId: number, role: Role) {
-  return fileStream(`../../public/avatars/${userId}_${role}.webp`);
+  return files.stream(`../../public/avatars/${userId}_${role}.webp`);
 }
 
 async function defaultFileStream() {
-  return fileStream(`../../public/avatars/default.webp`);
+  return files.stream(`../../public/avatars/default.webp`);
 }
 
 export const avatar = {

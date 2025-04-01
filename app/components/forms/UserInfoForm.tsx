@@ -15,7 +15,7 @@ export default function UserInfoForm() {
         <input
           type="file"
           name="avatar"
-          accept="image/*"
+          accept="image/png"
           className="w-full border-gray-300 file:border-0 file:bg-gray-100 file:text-black border rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
           required
         />
