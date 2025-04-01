@@ -32,22 +32,26 @@ export default function UserInfo(props: IUserInfoProps) {
         <h3 className="font-bold">Role</h3>
         <p>{formattedRoles[user.role]}</p>
       </div>
-      <div className="space-y-3">
-        <h3 className="font-bold">Avatar</h3>
-        <img
-          src={`/avatars/${user.role}/${user.id}`}
-          className="w-7 h-7 rounded-full"
-        />
-      </div>
-      <DrawerProvider>
-        <DrawerContent>
-          <h1 className="font-bold text-xl">Edit User Info</h1>
-          <UploadAvatarForm />
-        </DrawerContent>
-        <DrawerButton>
-          <WideButton>Edit User Info</WideButton>
-        </DrawerButton>
-      </DrawerProvider>
+      {user.role !== "resident" && (
+        <>
+          <div className="space-y-3">
+            <h3 className="font-bold">Avatar</h3>
+            <img
+              src={`/avatars/${user.role}/${user.id}`}
+              className="w-7 h-7 rounded-full"
+            />
+          </div>
+          <DrawerProvider>
+            <DrawerContent>
+              <h1 className="font-bold text-xl">Edit User Info</h1>
+              <UploadAvatarForm />
+            </DrawerContent>
+            <DrawerButton>
+              <WideButton>Edit User Info</WideButton>
+            </DrawerButton>
+          </DrawerProvider>
+        </>
+      )}
     </>
   );
 }
