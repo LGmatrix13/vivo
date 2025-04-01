@@ -124,7 +124,7 @@ export default function StaffAdminPeopleResidentsPage() {
             </DrawerContent>
             <DrawerButton>
               <IconButton Icon={Plus} className="md:w-fit w-full">
-                Resident
+                Add Resident
               </IconButton>
             </DrawerButton>
           </DrawerProvider>
