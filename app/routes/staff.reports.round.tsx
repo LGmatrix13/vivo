@@ -74,6 +74,8 @@ export default function StaffReportsRoundPage() {
   const rowKeys = {
     ...columnKeys,
     description: "Description",
+    violations: "Violations",
+    outstandingWorkOrders: "Outstanding Work Orders",
   };
   const buildingOptions = [
     {

@@ -74,6 +74,8 @@ export async function readRoundReportsAsRD(id: number) {
       read: sql<boolean>`CASE WHEN ${readTable.reportId} IS NOT NULL THEN TRUE ELSE FALSE END`.as(
         "read"
       ),
+      violations: roundReportTable.violations,
+      outstandingWorkOrders: roundReportTable.outstandingWorkOrders,
     })
     .from(roundReportTable)
     .innerJoin(zoneTable, eq(roundReportTable.zoneId, zoneTable.id))
