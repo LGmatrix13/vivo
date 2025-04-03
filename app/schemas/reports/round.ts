@@ -5,8 +5,10 @@ export const Round = z.object({
   zoneId: z.coerce.number({ message: "Zone Id is required" }),
   time: z.coerce.date({ message: "Time is required" }),
   description: z.string({ message: "Description is required" }),
-  violations: z.string().optional().nullable(),
-  outstandingWorkOrders: z.string().optional().nullable(),
+  violations: z.string().transform((val) => (!val.length ? null : val)),
+  outstandingWorkOrders: z
+    .string()
+    .transform((val) => (!val.length ? null : val)),
 });
 
 export const CreatedRound = Round.extend({

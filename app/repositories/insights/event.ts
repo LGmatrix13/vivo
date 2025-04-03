@@ -56,7 +56,7 @@ export async function readEventInsightsAttendanceAsRA(
   }
 
   return {
-    title: `${sum} residents have attended your events`,
+    title: `${sum} total residents have attended your events`,
     level: calculateLevel(),
 
     href: "/ra/reports/event",
@@ -120,7 +120,7 @@ export async function readEventInsightsAttendanceAsRD(
   }
 
   return {
-    title: `${sum} residents have attended Events`,
+    title: `${sum} total residents have attended events`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
@@ -174,7 +174,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   }
 
   return {
-    title: `${sum} residents have attended events`,
+    title: `${sum} total residents have attended events`,
     level: calculateLevel(),
     href: "/staff/reports/event",
   };
