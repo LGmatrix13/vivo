@@ -97,6 +97,8 @@ export async function readRoundReportsAsRD(id: number) {
     return {
       ...round,
       time: formatDate(round.submitted, true),
+      hasViolations: !!round.violations,
+      hasOutstandingWorkOrders: !!round.outstandingWorkOrders,
     };
   });
 
@@ -130,6 +132,8 @@ export async function readRoundReportsAsRA(id: number) {
     return {
       ...round,
       time: formatDate(round.submitted, true),
+      hasViolations: !!round.violations,
+      hasOutstandingWorkOrders: !!round.outstandingWorkOrders,
     };
   });
 
