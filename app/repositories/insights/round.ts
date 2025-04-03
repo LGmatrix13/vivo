@@ -1,4 +1,4 @@
-import { roundReportTable, buildingTable } from "~/utilties/schema.server";
+import { roundReportTable, buildingTable, staffTable } from "~/utilties/schema.server";
 import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
@@ -32,7 +32,7 @@ export async function readRoundReportInsightsViolationsAsRD(
     })
     .from(roundReportTable)
     .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
-    .where(eq(buildingTable.staffId, staffId));
+    .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
 
   const { count } = data[0];
 
@@ -52,7 +52,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
     })
     .from(roundReportTable)
     .innerJoin(buildingTable, eq(roundReportTable.zoneId, buildingTable.id))
-    .where(eq(buildingTable.id, staffId));
+    .innerJoin(staffTable, eq(buildingTable.staffId, staffTable.id))
 
   const { count } = data[0];
 
