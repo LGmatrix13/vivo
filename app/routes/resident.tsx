@@ -18,19 +18,19 @@ export default function AdminLayout() {
   const data = useLoaderData<typeof loader>();
   const routes = [
     {
-      name: "On Duty",
+      name: "On\u00A0Duty",
       Icon: Calendar,
       default: "/resident/on-duty",
       parent: "/resident/on-duty",
     },
     {
-      name: "My RA",
+      name: "My\u00A0RA",
       Icon: User,
       default: "/resident/my-ra",
       parent: "/resident/my-ra",
     },
     {
-      name: "My Room",
+      name: "My\u00A0Room",
       Icon: Door,
       default: "/resident/my-room",
       parent: "/resident/my-room",

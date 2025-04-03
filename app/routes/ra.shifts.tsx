@@ -33,11 +33,11 @@ export default function RAShiftsLayout() {
   }>();
   const raPages = [
     {
-      name: "On Duty",
+      name: "On\u00A0Duty",
       path: "/ra/shifts/on-duty",
     },
     {
-      name: "RA Shifts",
+      name: "RA\u00A0Shifts",
       path: "/ra/shifts/schedule",
     },
   ];

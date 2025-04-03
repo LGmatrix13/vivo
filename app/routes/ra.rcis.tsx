@@ -22,7 +22,7 @@ export default function RARCIsLayout() {
   const { state } = useNavigation();
   const pages = [
     {
-      name: "Approve Check-in",
+      name: "Approve\u00A0Check\u2011in",
       path: "/ra/rcis/approve-check-in",
     },
     {
@@ -30,7 +30,7 @@ export default function RARCIsLayout() {
       path: "/ra/rcis/active",
     },
     {
-      name: "Approve Checkout",
+      name: "Approve\u00A0Checkout",
       path: "/ra/rcis/approve-check-out",
     },
     {
@@ -38,7 +38,7 @@ export default function RARCIsLayout() {
       path: "/ra/rcis/incomplete",
     },
     {
-      name: "Personal RCI",
+      name: "Personal\u00A0RCI",
       path: "/ra/rcis/personal",
     },
   ];
