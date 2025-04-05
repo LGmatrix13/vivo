@@ -82,7 +82,7 @@ export async function readRCIInsightsAsRD(
 
   return [
     {
-      title: `${completeRCIs} completed RCIs`,
+      title: `${completeRCIs} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 5),
       href: `/staff/housing/rcis/active`,
     },
@@ -112,7 +112,7 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
 
   return [
     {
-      title: `${completeRCIs} completed RCIs`,
+      title: `${completeRCIs} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 45),
 
       href: `/staff/housing/rcis/active`,
