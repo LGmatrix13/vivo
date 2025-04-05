@@ -6,7 +6,7 @@ import { IInsight } from "~/models/insights";
 function calculateLevelViolation(violations: number) {
   if (violations > 2) {
     return "danger";
-  } else if (violations > 1) {
+  } else if (violations >= 1) {
     return "warning";
   } else {
     return "great";
@@ -16,7 +16,7 @@ function calculateLevelViolation(violations: number) {
 function calculateLevelOutstandingWorkOrders(outstandingWorkOrders: number) {
   if (outstandingWorkOrders > 3) {
     return "danger";
-  } else if (outstandingWorkOrders > 1) {
+  } else if (outstandingWorkOrders >= 1) {
     return "warning";
   } else {
     return "great";

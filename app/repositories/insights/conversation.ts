@@ -71,7 +71,7 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   function calculateLevel() {
     if (count == 0) {
       return "great";
-    } else if (count < 3 * 5) {
+    } else if (count > 5 && count < 15) {
       return "warning";
     } else {
       return "danger";
@@ -166,7 +166,7 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   function calculateLevel() {
     if (count == 0) {
       return "great";
-    } else if (count < 3 * 5) {
+    } else if (count > 5 && count < 15) {
       return "warning";
     } else {
       return "danger";
@@ -220,9 +220,9 @@ export async function readConversationInsightsLastConversatonsAsRA(
     .groupBy(residentTable.id);
 
   function calculateLevel(daysSinceLastConvo: number) {
-    if (daysSinceLastConvo > 40) {
+    if (daysSinceLastConvo > 30) {
       return "danger";
-    } else if (daysSinceLastConvo > 25) {
+    } else if (daysSinceLastConvo > 14) {
       return "warning";
     } else {
       return "great";

@@ -18,7 +18,7 @@ export async function readEventInsightsCountAsRA(
   function calculateLevel() {
     if (count >= 3) {
       return "great";
-    } else if (count > 1) {
+    } else if (count >= 1) {
       return "warning";
     } else {
       return "danger";
@@ -48,7 +48,7 @@ export async function readEventInsightsAttendanceAsRA(
   function calculateLevel() {
     if (sum >= 10) {
       return "great";
-    } else if (sum > 5) {
+    } else if (sum >= 5) {
       return "warning";
     } else {
       return "danger";
@@ -80,7 +80,7 @@ export async function readEventInsightsCountAsRD(
   function calculateLevel() {
     if (count >= 3 * 5) {
       return "great";
-    } else if (count > 1 * 5) {
+    } else if (count >= 1 * 5) {
       return "warning";
     } else {
       return "danger";
@@ -112,7 +112,7 @@ export async function readEventInsightsAttendanceAsRD(
   function calculateLevel() {
     if (sum >= 10 * 5) {
       return "great";
-    } else if (sum > 5 * 5) {
+    } else if (sum >= 5 * 5) {
       return "warning";
     } else {
       return "danger";
@@ -139,7 +139,7 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   function calculateLevel() {
     if (count >= 3 * 45) {
       return "great";
-    } else if (count > 1 * 45) {
+    } else if (count >= 1 * 45) {
       return "warning";
     } else {
       return "danger";
@@ -166,7 +166,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   function calculateLevel() {
     if (sum >= 10 * 45) {
       return "great";
-    } else if (sum > 5 * 45) {
+    } else if (sum >= 5 * 45) {
       return "warning";
     } else {
       return "danger";
@@ -191,9 +191,9 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
   const { difference } = data[0];
 
   function calculateLevel() {
-    if (difference > 45) {
+    if (difference < 20) {
       return "great";
-    } else if (difference > 25) {
+    } else if (difference < 40) {
       return "warning";
     } else {
       return "danger";

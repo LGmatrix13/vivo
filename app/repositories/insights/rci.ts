@@ -8,13 +8,13 @@ import {
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
-function calculateLevelCompleteRCI(completeRCIs: number, scale: number) {
-  if (completeRCIs > 20 * scale) {
-    return "great";
-  } else if (completeRCIs > 10 * scale) {
+function calculateLevelCompleteRCI(needsApprovedRCI: number, scale: number) {
+  if (needsApprovedRCI > 20 * scale) {
+    return "danger";
+  } else if (needsApprovedRCI > 10 * scale) {
     return "warning";
   } else {
-    return "danger";
+    return "great";
   }
 }
 
@@ -51,7 +51,7 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
 
   return [
     {
-      title: `${completeRCIs} completed RCIs`,
+      title: `${completeRCIs} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 1),
       href: `/ra/rcis/approve-check-in`,
     },
