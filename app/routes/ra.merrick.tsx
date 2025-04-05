@@ -45,7 +45,7 @@ export default function RAMerrick() {
           <div key={index}>
             <div className="space-y-2 text-right">
               <span className="text-sm font-bold">You</span>
-              <div className="bg-gray-100 p-3 rounded-lg ml-auto order-2 w-fit">
+              <div className="bg-gray-200 p-3 rounded-lg ml-auto order-2 w-fit">
                 {query}
               </div>
             </div>
@@ -61,7 +61,7 @@ export default function RAMerrick() {
             {responses.length > index && (
               <div className="space-y-2">
                 <span className="text-sm font-bold">Merrick</span>
-                <div className="bg-gray-100 p-3 rounded-lg w-fit">
+                <div className="bg-gray-200 p-3 rounded-lg w-fit">
                   {responses[index]}
                 </div>
               </div>
