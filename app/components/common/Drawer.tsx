@@ -13,6 +13,9 @@ type DrawerProps = {
   children: React.ReactNode;
 };
 
+/**
+ * to show/hide content with a chevron
+ */
 export function DrawerProvider(props: DrawerProps) {
   const [open, setOpen] = useState(props.open ? props.open : false);
 

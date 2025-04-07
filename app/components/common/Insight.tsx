@@ -1,12 +1,14 @@
 import { Link } from "@remix-run/react";
 import { Check, ExclamationMark } from "./Icons";
 import { IInsight } from "~/models/insights";
-import { channel } from "diagnostics_channel";
 
 interface InsightProps {
   insight: IInsight;
 }
 
+/**
+ * an insight to be used inside the insights table
+ */
 export default function Insight(props: InsightProps) {
   const { insight } = props;
   return (

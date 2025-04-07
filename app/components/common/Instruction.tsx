@@ -5,6 +5,9 @@ interface InstructionProps {
   Icon?: (props: any) => React.ReactNode;
 }
 
+/**
+ * instructions to be used inside of a table to intruct the user to open a record
+ */
 export default function Instruction(props: InstructionProps) {
   const { title, Icon = InputSearch } = props;
 

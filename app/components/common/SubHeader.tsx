@@ -7,6 +7,9 @@ interface SubHeaderProps {
   }[];
 }
 
+/**
+ * secondary level navigation
+ */
 export default function SubHeader(props: SubHeaderProps) {
   const location = useLocation();
   const currentPath = location.pathname;

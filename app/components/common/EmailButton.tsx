@@ -4,6 +4,9 @@ interface EmailButtonProps {
   email: string;
 }
 
+/**
+ * button to open an email draft with the user's email client
+ */
 export function EmailButton(props: EmailButtonProps) {
   const { email } = props;
   return (

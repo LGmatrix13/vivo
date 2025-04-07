@@ -11,6 +11,9 @@ interface RCIFormProps {
   submittedRCI?: ISubmittedRCI;
 }
 
+/**
+ * form to create/modify an RCI
+ */
 export default function RCIForm(props: RCIFormProps) {
   const { submittedRCI, mapping, intent } = props;
 
@@ -33,7 +36,9 @@ export default function RCIForm(props: RCIFormProps) {
             required
             label="Comments"
             name={key}
-            placeholder={`Describe the issues with the ${mapping[key].toLowerCase()}`}
+            placeholder={`Describe the issues with the ${mapping[
+              key
+            ].toLowerCase()}`}
             defaultValue={submittedRCI?.issues ? submittedRCI?.issues[key] : ""}
           />
         </AcknowledgeIssueRadio>

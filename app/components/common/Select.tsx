@@ -14,6 +14,9 @@ interface SelectProps {
   [key: string]: any;
 }
 
+/**
+ * dropdown to be used in forms
+ */
 export default function Select(props: SelectProps) {
   const { name, label, required, options, explanation, selected } = props;
 

@@ -13,6 +13,9 @@ interface ToastProps {
   children: React.ReactNode;
 }
 
+/**
+ * generic toast to be used after form submissions
+ */
 export function Toast(props: ToastProps) {
   const [show, setShow] = useState(false);
   const { level, children } = props;

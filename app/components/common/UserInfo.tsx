@@ -7,6 +7,9 @@ interface IUserInfoProps {
   user: IUser;
 }
 
+/**
+ * display user info for the settings page
+ */
 export default function UserInfo(props: IUserInfoProps) {
   const { user } = props;
   const formattedRoles = {

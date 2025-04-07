@@ -9,6 +9,9 @@ interface BuildingFormProps {
   building?: IBuilding;
 }
 
+/**
+ * form for modifying/creating building
+ */
 export default function BuildingForm(props: BuildingFormProps) {
   const { building, rds } = props;
   const options = rds.map((option) => {

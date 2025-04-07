@@ -11,6 +11,9 @@ const jwtCookie = createCookie("jwt", {
   maxAge: 86400, // one day
 });
 
+/**
+ * for redirecting back to login
+ */
 async function loginRedirect() {
   return redirect("/auth/login", {
     headers: {
@@ -19,6 +22,9 @@ async function loginRedirect() {
   });
 }
 
+/**
+ * sign a jwt
+ */
 async function signJwt(user: IUser) {
   const signedJwt = await new SignJWT({ ...user })
     .setProtectedHeader({ alg: "HS256" })
@@ -30,6 +36,9 @@ async function signJwt(user: IUser) {
   return signedJwt;
 }
 
+/**
+ * read a user safely (catch exceptions)
+ */
 async function safeReadUser(request: Request) {
   try {
     const cookieHeader = request.headers.get("Cookie");
@@ -50,6 +59,9 @@ async function safeReadUser(request: Request) {
   }
 }
 
+/**
+ * read whether a user is authorized safely (catch exceptions)
+ */
 async function safeAuthorized(request: Request, roles: Role[]) {
   const user = await safeReadUser(request);
 
@@ -62,6 +74,9 @@ async function safeAuthorized(request: Request, roles: Role[]) {
   return true;
 }
 
+/**
+ * reject unauthroized users (redirect to login)
+ */
 async function rejectUnauthorized(request: Request, roles: Role[]) {
   const authorized = await safeAuthorized(request, roles);
 
@@ -70,6 +85,9 @@ async function rejectUnauthorized(request: Request, roles: Role[]) {
   }
 }
 
+/**
+ * reject based on role if attempting to visiting another
+ */
 function redirectRole(role: Role, headers?: HeadersInit) {
   switch (role) {
     case "admin":
@@ -88,6 +106,9 @@ function redirectRole(role: Role, headers?: HeadersInit) {
   }
 }
 
+/**
+ * reject authorized users (don't let authorized users see login)
+ */
 async function rejectAuthorized(request: Request) {
   const user = await safeReadUser(request);
 
@@ -96,6 +117,9 @@ async function rejectAuthorized(request: Request) {
   }
 }
 
+/**
+ * read user. redirect as necessary if unauthorized
+ */
 async function readUser(request: Request, roles: Role[]) {
   const user = await safeReadUser(request);
 
@@ -108,15 +132,14 @@ async function readUser(request: Request, roles: Role[]) {
   return user;
 }
 
+/**
+ * read user. redirect as necessary if unauthorized
+ */
 async function login(user: IUser) {
   const jwt = await signJwt(user);
   return redirectRole(user.role, {
     "Set-Cookie": await auth.jwtCookie.serialize(jwt),
   });
-}
-
-async function logout() {
-  return loginRedirect();
 }
 
 export const auth = {
@@ -128,5 +151,4 @@ export const auth = {
   safeAuthorized,
   readUser,
   login,
-  logout,
 };

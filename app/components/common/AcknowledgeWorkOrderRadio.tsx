@@ -6,6 +6,9 @@ interface AcknowledgeWorkOrderRadioProps {
   yes?: boolean;
 }
 
+/**
+ * Radio field to specify there are work orders for weekly
+ */
 export default function AcknowledgeWorkOrderRadio(
   props: AcknowledgeWorkOrderRadioProps
 ) {

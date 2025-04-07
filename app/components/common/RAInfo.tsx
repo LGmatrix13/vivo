@@ -6,6 +6,9 @@ interface RAInfoProps {
   ra: IRAInfo;
 }
 
+/**
+ * info about an RA to be used on the "my ra page"
+ */
 export default function RAInfo(props: RAInfoProps) {
   const { ra } = props;
   const { name, room, email, phoneNumber } = ra;

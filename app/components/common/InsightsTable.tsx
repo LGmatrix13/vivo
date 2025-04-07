@@ -15,6 +15,9 @@ interface IInsightsTable {
   ActionButtons?: () => React.ReactNode;
 }
 
+/**
+ * a table of insights for the insights page
+ */
 export default function InsightsTable(props: IInsightsTable) {
   const { filter, rows, ActionButtons } = props;
   const nonemptyInsights = rows.filter((row) => row.insights.length > 0);

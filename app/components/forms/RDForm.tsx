@@ -7,6 +7,9 @@ interface RDFormProps {
   rd?: IRD;
 }
 
+/**
+ * form to create/modify an RD
+ */
 export default function RDForm(props: RDFormProps) {
   const { rd } = props;
   const genderOptions = [

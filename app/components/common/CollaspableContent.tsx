@@ -8,6 +8,9 @@ interface CollaspableContentProps {
   children: React.ReactNode;
 }
 
+/**
+ * generic button for forms and opening drawers
+ */
 export default function CollaspableContent(props: CollaspableContentProps) {
   const { title, children, className, collasped = false } = props;
   const [collapsed, setCollapsed] = useState(collasped);

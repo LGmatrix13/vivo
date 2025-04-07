@@ -1,5 +1,3 @@
-import IconButton from "./IconButton";
-
 interface IconProps {
   className?: string;
 }

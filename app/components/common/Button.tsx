@@ -7,6 +7,9 @@ interface ButtonProps {
   };
 }
 
+/**
+ * generic button for forms and opening drawers
+ */
 export default function Button(props: ButtonProps) {
   const { onClick, children, options, className } = props;
 

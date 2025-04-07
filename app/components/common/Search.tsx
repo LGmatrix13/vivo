@@ -6,6 +6,9 @@ interface SearchProps {
   placeholder?: string;
 }
 
+/**
+ * search bar to be used in tables
+ */
 export default function Search(props: SearchProps) {
   const { handleSearch, placeholder, value } = props;
 

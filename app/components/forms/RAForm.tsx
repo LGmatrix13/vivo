@@ -9,6 +9,9 @@ interface RAFormProps {
   rdsDropdown: IRDDropdown[];
 }
 
+/**
+ * form to create/delete an RA
+ */
 export default function RAForm(props: RAFormProps) {
   const { residentDropdown, rdsDropdown, ra } = props;
   const residentOptions = residentDropdown?.map((option) => {

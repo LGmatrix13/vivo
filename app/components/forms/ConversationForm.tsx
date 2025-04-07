@@ -8,11 +8,14 @@ interface ConversationFormProps {
   zoneId: number;
   residentsDropdown: IResidentDropdown[];
   conversation?: IConversationReportAsRA;
-  action?:string;
+  action?: string;
 }
 
+/**
+ * form for modifying/creating a conversation
+ */
 export default function ConversationForm(props: ConversationFormProps) {
-  const { conversation, zoneId, residentsDropdown,action } = props;
+  const { conversation, zoneId, residentsDropdown, action } = props;
   const levelOptions = ["1", "2", "3"].map((option) => ({
     key: option,
     value: option,

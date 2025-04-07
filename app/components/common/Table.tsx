@@ -34,6 +34,9 @@ interface TableProps<T> {
   onRowRead?: (args: { row: T }) => void;
 }
 
+/**
+ * generic table for showing a list of data
+ */
 export default function Table<T extends { [key: string]: any; read?: boolean }>(
   props: TableProps<T>
 ) {

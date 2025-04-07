@@ -9,6 +9,9 @@ interface ZoneShiftFormProps {
   raDropdown: IRADropdown[];
 }
 
+/**
+ * form to create/modify a zone shift
+ */
 export default function ZoneShiftForm(props: ZoneShiftFormProps) {
   const { shift, raDropdown } = props;
   const raOptions = raDropdown

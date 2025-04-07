@@ -1,11 +1,9 @@
-import { useFetcher } from "@remix-run/react";
-import Loading from "../common/Loading";
-import WideButton from "../common/WideButton";
 import Form from "../common/Form";
 
+/**
+ * form to show user info on the settings page
+ */
 export default function UserInfoForm() {
-  const fetcher = useFetcher();
-
   return (
     <Form encType="multipart/form-data" intent="update.userInfo" button="Save">
       <div className="space-y-3">

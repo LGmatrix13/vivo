@@ -6,6 +6,9 @@ interface RDOnDutyProps {
   rdOnDuty: IRDOnDuty;
 }
 
+/**
+ * show details for an RD on duty
+ */
 export default function RDOnDuty(props: RDOnDutyProps) {
   const { rdOnDuty } = props;
   const { name, building, email } = rdOnDuty;

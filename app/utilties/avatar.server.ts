@@ -7,6 +7,9 @@ import { fileURLToPath } from "url";
 import { Role } from "~/models/role";
 import { files } from "./files.server";
 
+/**
+ * handle uploading a user's avatar
+ */
 async function upload(
   request: Request,
   values: Record<string, FormDataEntryValue>
@@ -40,6 +43,9 @@ async function upload(
   return true;
 }
 
+/**
+ * see if uer avatar exists
+ */
 async function exists(userId: number, role: Role) {
   const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
   const __dirname = path.dirname(__filename); // get the name of the directo
@@ -53,10 +59,16 @@ async function exists(userId: number, role: Role) {
     .catch(() => false);
 }
 
+/**
+ * create stream to an avatar file
+ */
 async function _fileStream(userId: number, role: Role) {
   return files.stream(`../../public/avatars/${userId}_${role}.webp`);
 }
 
+/**
+ * stream to default avatar
+ */
 async function defaultFileStream() {
   return files.stream(`../../public/avatars/default.webp`);
 }

@@ -8,6 +8,9 @@ interface WideButtonProps {
   };
 }
 
+/**
+ * generic wide button for forms and opening drawers
+ */
 export default function WideButton(props: WideButtonProps) {
   const { onClick, children, options, className, disabled } = props;
 

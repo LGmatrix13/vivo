@@ -6,6 +6,9 @@ interface RAOnDutyProps {
   raOnDuty: IRAOnDuty;
 }
 
+/**
+ * details for an RA on duty
+ */
 export default function RAOnDuty(props: RAOnDutyProps) {
   const { raOnDuty } = props;
   const { name, room, email, phoneNumber } = raOnDuty;

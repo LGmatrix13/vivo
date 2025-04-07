@@ -6,13 +6,20 @@ import Textarea from "../common/Textarea";
 interface EventFormProps {
   zoneId: number;
   event?: IEventReport;
-  action?:string;
+  action?: string;
 }
 
+/**
+ * form to create/delete an event
+ */
 export default function EventForm(props: EventFormProps) {
-  const { event, zoneId, action} = props;
+  const { event, zoneId, action } = props;
   return (
-    <Form button="Save Event" intent={event ? "update" : "create"} action={action}>
+    <Form
+      button="Save Event"
+      intent={event ? "update" : "create"}
+      action={action}
+    >
       <h2 className="font-bold text-xl">
         {event ? "Edit Event" : "Add Event"}
       </h2>
@@ -34,7 +41,7 @@ export default function EventForm(props: EventFormProps) {
         type="number"
         defaultValue={event?.attendance}
         required
-        min = "0"
+        min="0"
       />
       <Textarea
         label="Description"
