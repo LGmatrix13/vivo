@@ -4,14 +4,17 @@ import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import {
   buildingTable,
-  residentTable,
   roomTable,
   staffTable,
-  zoneTable,
 } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * This function reads the buildings from the buildingTable in the database with the attributes
+ * selected in the .select statement
+ * @returns a list of buildings with the specified attributes
+ */
 export async function readBuildings() {
   const buildings = await db.client
     .select({
@@ -34,6 +37,12 @@ export async function readBuildings() {
   return buildings;
 }
 
+
+/**
+ * selects buildings by there id and name for the dropdown in the UI. The admin version of this function
+ * includes all buildings.
+ * @returns a list of buildings with the specified attributes
+ */
 export async function readBuildingsDropdownAsAdmin() {
   const buildings = await db.client
     .select({
@@ -45,6 +54,11 @@ export async function readBuildingsDropdownAsAdmin() {
   return buildings;
 }
 
+/**
+ * selects buildings by there id and name for the dropdown in the UI. The RD version of this function
+ * selects buildings based on the users ID.
+ * @returns a list of buildings with the specified attributes
+ */
 export async function readBuildingsDropdownAsRD(id: number) {
   const buildings = await db.client
     .select({
@@ -58,6 +72,11 @@ export async function readBuildingsDropdownAsRD(id: number) {
   return buildings;
 }
 
+/**
+ * This function creates an insert request to the db to insert a new building into the buildingTable
+ * in the database
+ * @returns a message as to whether or not the insert was a success or failure
+ */
 export async function createBuilding(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -72,6 +91,11 @@ export async function createBuilding(values: Values, request: Request) {
   );
 }
 
+/**
+ * This function creates an delete request to the db to delete the given building from the buildingTable
+ * in the database
+ * @returns a message as to whether or not the delete was a success or failure
+ */
 export async function deleteBuilding(values: Values, request: Request) {
   const id = Number(values["id"]);
   const assignedRooms = await db.client
@@ -95,6 +119,11 @@ export async function deleteBuilding(values: Values, request: Request) {
   });
 }
 
+/**
+ * This function creates an update request to the db to update a building in the buildingTable
+ * in the database
+ * @returns a message as to whether or not the update was a success or failure
+ */
 export async function updateBuilding(values: Values, request: Request) {
   return db.update(
     request,
