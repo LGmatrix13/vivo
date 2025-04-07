@@ -1,6 +1,6 @@
 import { sql, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { CreatedRoom, Room, UpdatedRoomIssues } from "~/schemas/housing/room";
+import { CreatedRoom, Room} from "~/schemas/housing/room";
 import { db } from "~/utilties/postgres.server";
 import mutate from "~/utilties/mutate.server";
 import {
@@ -9,12 +9,14 @@ import {
   buildingTable,
   zoneTable,
   staffTable,
-  roomTypeEnum,
 } from "~/utilties/schema.server";
-import { redirect } from "@remix-run/react";
 
 type Values = { [key: string]: any };
 
+/**
+ * reads the rooms from the roomTable in the database with the specified properties in the .select statement
+ * @returns a list of rooms from the database
+ */
 export async function readRoomsDropdown() {
   const rooms = await db.client
     .select({
@@ -29,6 +31,11 @@ export async function readRoomsDropdown() {
   return rooms;
 }
 
+/**
+ * This selects all rooms in the roomTable in the database, since the admin has access to all rooms
+ * all rooms are selected
+ * @returns a list of all rooms
+ */
 export async function readRoomsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -56,6 +63,11 @@ export async function readRoomsAsAdmin() {
   return rooms;
 }
 
+/**
+ * This selects rooms in the roomTable in the database, based on the RDs id. This works by selecting
+ * all of the rooms in that RDs building.
+ * @returns a list of rooms
+ */
 export async function readRoomsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -85,6 +97,10 @@ export async function readRoomsAsRD(id: number) {
   return rooms;
 }
 
+/**
+ * Deletes a specific room from the roomTable in the database
+ * @returns a message as to whether the deletion was a success or not
+ */
 export async function deleteRoom(values: Values, request: Request) {
   const id = Number(values["id"]);
   const peopleInRoom = await db.client
@@ -109,6 +125,10 @@ export async function deleteRoom(values: Values, request: Request) {
   });
 }
 
+/**
+ * Updates a specific rooms issues in the roomTable in the database
+ * @returns a message as to whether the update was a success or not
+ */
 export async function updateRoomIssues(values: Values, request: Request) {
     await db.client
       .update(roomTable)
@@ -121,6 +141,10 @@ export async function updateRoomIssues(values: Values, request: Request) {
     });
 }
 
+/**
+ * Updates a specific room in the roomTable in the database
+ * @returns a message as to whether the update was a success or not
+ */
 export async function updateRoom(values: Values, request: Request) {
   return db.update(
     request,
@@ -135,6 +159,10 @@ export async function updateRoom(values: Values, request: Request) {
   );
 }
 
+/**
+ * Creates a new room in the roomTable in the database
+ * @returns a message as to whether the creation was a success or not
+ */
 export async function createRoom(values: Values, request: Request) {
   return await db.insert(request, roomTable, CreatedRoom, values, true, {
     message: "Created Room",
@@ -142,6 +170,10 @@ export async function createRoom(values: Values, request: Request) {
   });
 }
 
+/**
+ * gets a rooms rci draft from the roomtable based on a room id
+ * @returns a list of issues from the room as a record
+ */
 export async function getRoomRCIDraftData(roomId: number) {
   const data = await db.client
     .select({
