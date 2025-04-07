@@ -8,6 +8,9 @@ import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * Creates a RCI for a Colonial apartment quad. Can also be used for a triple because they have the same room setup.
+ */
 export async function createColonialQuad(
   request: Request,
   residentId: number,

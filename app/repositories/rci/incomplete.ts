@@ -10,6 +10,9 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
+/**
+ * Returns all residents that have not completed an RCI
+ */
 export async function readIncompleteRCIsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const innerRoomTable = alias(roomTable, "innerRoomTable");
@@ -44,6 +47,9 @@ export async function readIncompleteRCIsAsAdmin() {
   return data;
 }
 
+/**
+ * Returns all residents that have not completed an RCI on a given RA's hall
+ */
 export async function readIncompleteRCIsAsRA(zoneId: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const innerRoomTable = alias(roomTable, "innerRoomTable");
@@ -80,6 +86,9 @@ export async function readIncompleteRCIsAsRA(zoneId: number) {
   return data;
 }
 
+/**
+ * Returns all residents that have not completed an RCI for a given RD
+ */
 export async function readIncompleteRCIsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const innerRoomTable = alias(roomTable, "innerRoomTable");
@@ -120,6 +129,9 @@ export async function readIncompleteRCIsAsRD(id: number) {
   return data;
 }
 
+/**
+ * Gets the RCI draft information in JSON format for a given resident's room
+ */
 export async function getResidentRCIDraftData(residentId: number) {
   const data = await db.client
     .select({
@@ -140,6 +152,9 @@ export async function getResidentRCIDraftData(residentId: number) {
   };
 }
 
+/**
+ * Gets the RCI draft information in JSON format for a given RA's room
+ */
 export async function getRAPersonalRCIDraftData(zoneId: number) {
   const data = await db.client
     .select({
