@@ -38,7 +38,7 @@ export default function Index() {
         <div className="w-full flex flex-col items-center justify-center">
           <div className="text-center space-y-3 my-40 max-w-[600px] mx-auto">
             <h1 className="text-4xl font-bold">
-              Effortless organization
+              Effortless Organization
               <br />
               and Collaboration
             </h1>
