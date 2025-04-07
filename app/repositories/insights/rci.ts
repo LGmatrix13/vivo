@@ -70,7 +70,6 @@ export async function readRCIInsightsAsRD(
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
-      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RESIDENT' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -78,7 +77,7 @@ export async function readRCIInsightsAsRD(
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .where(eq(zoneTable.staffId, staffId));
 
-  const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
+  const { completeRCIs, approvedRCIs } = data[0];
 
   return [
     {
@@ -91,11 +90,6 @@ export async function readRCIInsightsAsRD(
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
       href: `/staff/housing/rcis/active`,
     },
-    {
-      title: `${approvedRCIs} awaiting Residents`,
-      level: calculateLevelSentToLimble(sentToLimble, 5),
-      href: `/staff/housing/rcis/active`,
-    },
   ];
 }
 
@@ -104,29 +98,20 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
-      sentToLimble: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RESIDENT' THEN 1 END)::integer`,
     })
     .from(RCITable);
 
-  const { completeRCIs, approvedRCIs, sentToLimble } = data[0];
+  const { completeRCIs, approvedRCIs } = data[0];
 
   return [
     {
       title: `${completeRCIs} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 45),
-
       href: `/staff/housing/rcis/active`,
     },
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
-
-      href: `/staff/housing/rcis/active`,
-    },
-    {
-      title: `${approvedRCIs} awaiting Residents`,
-      level: calculateLevelSentToLimble(sentToLimble, 45),
-
       href: `/staff/housing/rcis/active`,
     },
   ];
