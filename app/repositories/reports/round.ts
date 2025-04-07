@@ -1,5 +1,5 @@
 import { sql, eq, desc, and } from "drizzle-orm";
-import { CreatedRound, Round, UpdatedRound } from "~/schemas/reports/round";
+import { CreatedRound, UpdatedRound } from "~/schemas/reports/round";
 import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -12,6 +12,9 @@ import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
+/**
+ * Reads the round reports submitted by all RAs
+ */
 export async function readRoundReports() {
   const data = await db.client
     .select({
@@ -59,6 +62,9 @@ export async function readRoundReports() {
   return formattedData;
 }
 
+/**
+ * Reads the round reports submitted by all RAs that work for a given RD
+ */
 export async function readRoundReportsAsRD(id: number) {
   const data = await db.client
     .select({
@@ -105,6 +111,9 @@ export async function readRoundReportsAsRD(id: number) {
   return formattedData;
 }
 
+/**
+ * Reads the round reports submitted by a given RA
+ */
 export async function readRoundReportsAsRA(id: number) {
   const data = await db.client
     .select({
@@ -140,6 +149,9 @@ export async function readRoundReportsAsRA(id: number) {
   return formattedData;
 }
 
+/**
+ * Creates a new round report in the database
+ */
 export async function createRound(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -154,6 +166,9 @@ export async function createRound(values: Values, request: Request) {
   );
 }
 
+/**
+ * Updates a round report in the database
+ */
 export async function updateRound(values: Values, request: Request) {
   return db.update(
     request,
@@ -168,6 +183,9 @@ export async function updateRound(values: Values, request: Request) {
   );
 }
 
+/**
+ * Deletes a round report from the database
+ */
 export async function deleteRound(values: Values, request: Request) {
   return db.delete(
     request,
