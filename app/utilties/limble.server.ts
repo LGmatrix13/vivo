@@ -3,6 +3,9 @@ import { IUser } from "~/models/user";
 
 const LOCATION_ID = 18691;
 
+/**
+ * create a task in limble
+ */
 async function postTask(task: ITask) {
   const response = await fetch("https://api.limblecmms.com:443/v2/tasks/", {
     method: "POST",
@@ -17,6 +20,9 @@ async function postTask(task: ITask) {
   return data.taskID as number;
 }
 
+/**
+ * delete task in limble
+ */
 async function deleteTask(id: number) {
   const response = await fetch(
     `https://api.limblecmms.com:443/v2/tasks/${id}`,
@@ -32,6 +38,9 @@ async function deleteTask(id: number) {
   return response.ok;
 }
 
+/**
+ * get asset to reference in a task for limble
+ */
 async function getAsset(room: string) {
   const response = await fetch(
     `https://api.limblecmms.com:443/v2/assets?name=${room}`,
@@ -52,6 +61,9 @@ async function getAsset(room: string) {
   return assetID;
 }
 
+/**
+ * create a work order in limble
+ */
 async function createWorkOrder(
   room: string,
   issues: Record<string, string>,
@@ -85,6 +97,9 @@ async function createWorkOrder(
   return await postTask(payload);
 }
 
+/**
+ * delete work order in limble
+ */
 async function deleteWorkOrder(id: number) {
   return await deleteTask(id);
 }

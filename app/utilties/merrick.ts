@@ -2,6 +2,9 @@ import manual_data from "RAManual_output.json";
 import crimson_data from "Crimson_Output.json";
 import { IChunk } from "~/models/merrick";
 
+/**
+ * examine context from the ra manual and crimson for merrick
+ */
 function readContext(query_vector: number[]): string[] {
   const all_data = [
     ...(manual_data as IChunk[]),
@@ -23,10 +26,16 @@ function readContext(query_vector: number[]): string[] {
   return topChunks;
 }
 
+/**
+ * generic cosine similarity for sorting context
+ */
 function cosineSimilarity(v1: number[], v2: number[]): number {
   return dotProduct(v1, v2) / (magnitude(v1) * magnitude(v2));
 }
 
+/**
+ * used in cosine similarity
+ */
 function dotProduct(v1: number[], v2: number[]): number {
   let dp = 0;
   for (let i = 0; i < v1.length; i++) {
@@ -35,6 +44,9 @@ function dotProduct(v1: number[], v2: number[]): number {
   return dp;
 }
 
+/**
+ * used in cosine similarity
+ */
 function magnitude(v: number[]): number {
   let m = 0;
   for (const x of v) {

@@ -1,3 +1,6 @@
+/**
+ * format date in simplier notation for tables
+ */
 export function formatDate(
   dateString: string,
   includeTime?: boolean,

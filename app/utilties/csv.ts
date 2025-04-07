@@ -1,3 +1,6 @@
+/**
+ * download json and convert it to a csv
+ */
 function download(
   data: Record<string, any>[],
   filename: string,
@@ -20,6 +23,9 @@ function download(
   URL.revokeObjectURL(blobUrl);
 }
 
+/**
+ * parse csv text and convert it into json
+ */
 function parse(content: string) {
   let lines = content.split("\n");
 

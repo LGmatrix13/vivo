@@ -1,5 +1,8 @@
 import { IRAOnDuty } from "~/models/shifts";
 
+/**
+ * generic haversine for sorting
+ */
 export function haversine(
   lata: number,
   longa: number,
@@ -19,6 +22,9 @@ export function haversine(
   return R * c;
 }
 
+/**
+ * use haversine to sort a list of items
+ */
 export function locataionSort(
   items: IRAOnDuty[],
   lat: number,
