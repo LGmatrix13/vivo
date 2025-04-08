@@ -23,7 +23,7 @@ export default function UploadMasterCSVForm() {
         type="file"
         name="file"
         accept=".csv"
-        className="w-full file:border-0 file:bg-gray-100 file:text-black border border-gray-300 rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
+        className="w-full file:border-0 file:bg-gray-200 file:text-black border border-gray-300 rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
         required
       />
       <WideButton

@@ -1,5 +1,5 @@
-import { desc, eq, sql, and } from "drizzle-orm";
-import { alias, PgSelect } from "drizzle-orm/pg-core";
+import { desc, eq, sql, and, inArray } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { UpdatedSubmittedRCI } from "~/schemas/rcis/submitted";
 import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
@@ -13,9 +13,13 @@ import {
   staffTable,
   zoneTable,
 } from "~/utilties/schema.server";
+import mutate from "~/utilties/mutate.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * Gets the submitted RCIs on a given RA's hall
+ */
 export async function readSubmittedRCIAsRA(zoneId: number) {
   const data = await db.client
     .select({
@@ -37,6 +41,9 @@ export async function readSubmittedRCIAsRA(zoneId: number) {
   };
 }
 
+/**
+ * Gets the submitted RCI for a given resident
+ */
 export async function readSubmittedRCI(residentId: number) {
   const data = await db.client
     .select({
@@ -48,7 +55,7 @@ export async function readSubmittedRCI(residentId: number) {
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(RCITable, eq(RCITable.residentId, residentTable.id)) // Fix: Use RCITable.roomId
+    .leftJoin(RCITable, eq(RCITable.residentId, residentTable.id)) 
     .where(eq(residentTable.id, residentId));
 
   const rci = data[0];
@@ -58,6 +65,9 @@ export async function readSubmittedRCI(residentId: number) {
   };
 }
 
+/**
+ * Gets the submitted RCIs for all residents
+ */
 export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -105,6 +115,9 @@ export async function readSubmittedRCIsAsAdmin(type: "ACTIVE" | "CHECKED_OUT") {
   return formattedData;
 }
 
+/**
+ * Gets the active RCIs on a given RA's hall
+ */
 export async function readActiveRCIsAsRA(zoneId: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
 
@@ -142,6 +155,9 @@ export async function readActiveRCIsAsRA(zoneId: number) {
   return formattedData;
 }
 
+/**
+ * Gets the submitted RCIs on a given RA's hall
+ */
 export async function readSubmittedRCIsAsRA(
   zoneId: number,
   status: "AWAITING_RA" | "ACTIVE" | "RA_CHECKOUT"
@@ -179,6 +195,9 @@ export async function readSubmittedRCIsAsRA(
   return formattedData;
 }
 
+/**
+ * Updates an RCI's status
+ */
 export async function updateSubmittedRCIStatus(
   request: Request,
   values: Values
@@ -199,6 +218,9 @@ export async function updateSubmittedRCIStatus(
   );
 }
 
+/**
+ * Gets the submitted RCIs on in given RD's building
+ */
 export async function readSubmittedRCIsAsRD(
   id: number,
   type: "ACTIVE" | "CHECKED_OUT"
@@ -247,4 +269,22 @@ export async function readSubmittedRCIsAsRD(
     };
   });
   return formattedData;
+}
+
+/**
+ * Releases all currently active RCIs within the Admin/RD's scope for checkout
+ */
+export async function releaseRCIsForCheckout(request: Request, values: Values) {
+  const rciIds = JSON.parse(values.ids as string) as number[];
+  await db.client
+    .update(RCITable)
+    .set({
+      status: "RESIDENT_CHECKOUT"
+    })
+    .where(inArray(RCITable.id, rciIds));
+
+  return mutate(request.url, {
+    message: "Released RCIs for Checkout",
+    level: "success",
+  });
 }

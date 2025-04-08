@@ -17,6 +17,10 @@ import {
 
 type Values = { [key: string]: any };
 
+/**
+ * reads residents ids from the database based on the given ra
+ * @returns a list of the selected resident ids
+ */
 export async function readResidentIdAsRA(zoneId: number) {
   const data = await db.client
     .select({
@@ -32,6 +36,10 @@ export async function readResidentIdAsRA(zoneId: number) {
   };
 }
 
+/**
+ * reads all ras from the database
+ * @returns a list of those ras from the database
+ */
 export async function readRAsAsAdmin() {
   const ras = await db.client
     .select({
@@ -77,6 +85,10 @@ export async function readRAsAsAdmin() {
   return ras;
 }
 
+/**
+ * reads ras from the database for a specific rd
+ * @returns a list of those ras from the database
+ */
 export async function readRAsAsRD(id: number) {
   const ras = await db.client
     .select({
@@ -123,6 +135,10 @@ export async function readRAsAsRD(id: number) {
   return ras;
 }
 
+/**
+ * read the list of ras to create a dropdown
+ * @returns a list of selected ras
+ */
 export async function readRAsDropdownAsAdmin() {
   const ras = await db.client
     .select({
@@ -141,6 +157,10 @@ export async function readRAsDropdownAsAdmin() {
   return ras;
 }
 
+/**
+ * read the list of ras to create a dropdown for a given rd
+ * @returns a list of selected ras
+ */
 export async function readRAsDropdownAsRD(id: number) {
   const ras = await db.client
     .select({
@@ -160,6 +180,10 @@ export async function readRAsDropdownAsRD(id: number) {
   return ras;
 }
 
+/**
+ * create a new ra in the database
+ * @returns whether or not creation was a success or not
+ */
 export async function createRA(values: Values, request: Request) {
   return await db.insert(request, zoneTable, CreatedRA, values, true, {
     message: "Resident Created",
@@ -167,6 +191,10 @@ export async function createRA(values: Values, request: Request) {
   });
 }
 
+/**
+ * deletes a ra in the database
+ * @returns whether or not deletion was a success or not
+ */
 export async function deleteRA(values: Values, request: Request) {
   const id = Number(values["id"]);
   const roomsAssigned = await db.client
@@ -189,6 +217,10 @@ export async function deleteRA(values: Values, request: Request) {
   });
 }
 
+/**
+ * updates a ra in the database
+ * @returns whether or not updating was a success or not
+ */
 export async function updateRA(values: Values, request: Request) {
   return db.update(
     request,
@@ -203,6 +235,10 @@ export async function updateRA(values: Values, request: Request) {
   );
 }
 
+/**
+ * based on a cvs, uploads all residents to the database, assigning both roles and rooms
+ * @returns whether or not the upload succeeded as well as any errors
+ */
 export async function uploadMasterCSV(values: Values, request: Request) {
   const file = values["file"] as File;
 

@@ -8,6 +8,9 @@ import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * Creates a RCI for a Colonial apartment double
+ */
 export async function createColonialDouble(
   request: Request,
   residentId: number,

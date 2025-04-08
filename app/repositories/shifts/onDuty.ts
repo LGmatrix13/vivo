@@ -1,7 +1,5 @@
 import { sql, eq } from "drizzle-orm";
-import { RDScheduleCSV } from "~/schemas/schedules/RDScheduleCSV";
 import { db } from "~/utilties/postgres.server";
-import { csv } from "~/utilties/csv";
 import {
   buildingTable,
   residentTable,
@@ -12,8 +10,9 @@ import {
   zoneTable,
 } from "~/utilties/schema.server";
 
-type Values = { [key: string]: any };
-
+/**
+ * Reads the current on-duty RAs for all buildings
+ */
 export async function readOnDutyRAAsAdmin() {
   const data = await db.client
     .select({
@@ -38,30 +37,9 @@ export async function readOnDutyRAAsAdmin() {
   return data;
 }
 
-export async function readOnDutyRAAsRD(id: number) {
-  const data = await db.client
-    .select({
-      zoneId: zoneTable.id,
-      date: zoneShiftTable.date,
-      name: sql<string>`CONCAT(${residentTable.firstName}, ' ', ${residentTable.lastName})`,
-      email: residentTable.emailAddress,
-      phoneNumber: residentTable.phoneNumber,
-      room: sql<string>`CONCAT(${buildingTable.name}, ' ', ${roomTable.roomNumber})`,
-      buildingId: buildingTable.id,
-      latitude: buildingTable.latitude,
-      longitude: buildingTable.longitude,
-    })
-    .from(zoneShiftTable)
-    .innerJoin(zoneTable, eq(zoneShiftTable.zoneId, zoneTable.id))
-    .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
-    .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
-    .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
-    .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-    .where(sql`${zoneShiftTable.date} = CURRENT_DATE`);
-
-  return data;
-}
-
+/**
+ * Reads the current on-duty RDs
+ */
 export async function readOnDutyRD() {
   const data = await db.client
     .select({

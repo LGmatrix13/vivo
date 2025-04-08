@@ -109,7 +109,7 @@ export default function StaffAdminPeopleRDsPage() {
             to learn how to convert from Excel to a CSV.
           </li>
           <li>
-            All scheuling information, names, dates, etc., will be "archived".
+            All scheduling information will be archived.
           </li>
           <li>
             Ensure your upload is formatted correctly. Compare with our{" "}
@@ -132,7 +132,7 @@ export default function StaffAdminPeopleRDsPage() {
         type="file"
         name="file"
         accept=".csv"
-        className="w-full file:border-0 border-gray-300 file:bg-gray-100 file:text-black border rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
+        className="w-full file:border-0 border-gray-300 file:bg-gray-200 file:text-black border rounded-lg border-input mr-5 file:cursor-pointer file:px-3 file:py-2 file:me-3"
         required
       />
       <WideButton

@@ -13,6 +13,9 @@ import { staffShiftTable, staffTable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * Reads the RD duty schedule
+ */
 export async function readShiftsRDAsAdmin() {
   const data = await db.client
     .select({
@@ -34,6 +37,9 @@ export async function readShiftsRDAsAdmin() {
   return formattedData;
 }
 
+/**
+ * Updates an RD on-duty shift
+ */
 export async function updateRDShift(request: Request, values: Values) {
   return db.update(
     request,
@@ -48,6 +54,9 @@ export async function updateRDShift(request: Request, values: Values) {
   );
 }
 
+/**
+ * Creates a new RD on-duty shift
+ */
 export async function createRDShift(request: Request, values: Values) {
   return await db.insert(
     request,
@@ -62,6 +71,9 @@ export async function createRDShift(request: Request, values: Values) {
   );
 }
 
+/**
+ * Deletes an RD on-duty shift
+ */
 export async function deleteRDShift(request: Request, values: Values) {
   return db.delete(
     request,
@@ -75,6 +87,9 @@ export async function deleteRDShift(request: Request, values: Values) {
   );
 }
 
+/**
+ * Upload RD on-duty schedule from CSV
+ */
 export async function uploadDutyScheduleForRD(values: Values) {
   const file = values["file"] as File;
   const arrayBuffer = await file.arrayBuffer();

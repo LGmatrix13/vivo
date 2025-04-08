@@ -15,6 +15,9 @@ import mutate from "~/utilties/mutate.server";
 import { formatDate } from "~/utilties/formatDate";
 type Values = { [key: string]: any };
 
+/**
+ * Reads the RA duty schedule for all building staffs
+ */
 export async function readShiftsRAAsAdmin() {
   const data = await db.client
     .select({
@@ -39,6 +42,9 @@ export async function readShiftsRAAsAdmin() {
   return formattedData;
 }
 
+/**
+ * Reads a given RA's duty shifts
+ */
 export async function readShiftsRAAsRA(id: number) {
   const data = await db.client
     .select({
@@ -75,6 +81,9 @@ export async function readShiftsRAAsRA(id: number) {
   return formattedData;
 }
 
+/**
+ * Reads the RA duty schedule for a given RD's staff
+ */
 export async function readShiftsRAAsRD(id: number) {
   const data = await db.client
     .select({
@@ -105,6 +114,9 @@ export async function readShiftsRAAsRD(id: number) {
   return formattedData;
 }
 
+/**
+ * Creates a new RA on-duty shift
+ */
 export async function createRAShift(request: Request, values: Values) {
   return await db.insert(
     request,
@@ -119,6 +131,9 @@ export async function createRAShift(request: Request, values: Values) {
   );
 }
 
+/**
+ * Updates an RA on-duty shift
+ */
 export async function updateRAShift(request: Request, values: Values) {
   return await db.update(
     request,
@@ -133,6 +148,9 @@ export async function updateRAShift(request: Request, values: Values) {
   );
 }
 
+/**
+ * Deletes an RA on-duty shift
+ */
 export async function deleteRAShift(request: Request, values: Values) {
   return await db.delete(
     request,
@@ -146,7 +164,9 @@ export async function deleteRAShift(request: Request, values: Values) {
   );
 }
 
-//rds do this
+/**
+ * Upload RA on-duty schedule from CSV
+ */
 export async function uploadDutyScheduleForRAs(values: Values, id: number) {
   const file = values["file"] as File;
 

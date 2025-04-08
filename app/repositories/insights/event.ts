@@ -3,6 +3,10 @@ import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+/**
+ * counts the number of events a specific ra has
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsRA(
   zoneId: number
 ): Promise<IInsight> {
@@ -18,7 +22,7 @@ export async function readEventInsightsCountAsRA(
   function calculateLevel() {
     if (count >= 3) {
       return "great";
-    } else if (count > 1) {
+    } else if (count >= 1) {
       return "warning";
     } else {
       return "danger";
@@ -33,6 +37,10 @@ export async function readEventInsightsCountAsRA(
   };
 }
 
+/**
+ * counts the total event attendance for a specific ra
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsRA(
   zoneId: number
 ): Promise<IInsight> {
@@ -48,7 +56,7 @@ export async function readEventInsightsAttendanceAsRA(
   function calculateLevel() {
     if (sum >= 10) {
       return "great";
-    } else if (sum > 5) {
+    } else if (sum >= 5) {
       return "warning";
     } else {
       return "danger";
@@ -56,13 +64,17 @@ export async function readEventInsightsAttendanceAsRA(
   }
 
   return {
-    title: `${sum} residents have attended your events`,
+    title: `${sum} total residents have attended your events`,
     level: calculateLevel(),
 
     href: "/ra/reports/event",
   };
 }
 
+/**
+ * counts the number of events that are in an RDs building
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -80,7 +92,7 @@ export async function readEventInsightsCountAsRD(
   function calculateLevel() {
     if (count >= 3 * 5) {
       return "great";
-    } else if (count > 1 * 5) {
+    } else if (count >= 1 * 5) {
       return "warning";
     } else {
       return "danger";
@@ -95,6 +107,10 @@ export async function readEventInsightsCountAsRD(
   };
 }
 
+/**
+ * counts the total event attendance for a specific RDs building
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -112,7 +128,7 @@ export async function readEventInsightsAttendanceAsRD(
   function calculateLevel() {
     if (sum >= 10 * 5) {
       return "great";
-    } else if (sum > 5 * 5) {
+    } else if (sum >= 5 * 5) {
       return "warning";
     } else {
       return "danger";
@@ -120,13 +136,17 @@ export async function readEventInsightsAttendanceAsRD(
   }
 
   return {
-    title: `${sum} residents have attended Events`,
+    title: `${sum} total residents have attended events`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
   };
 }
 
+/**
+ * counts the total events in all buildings
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -139,7 +159,7 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   function calculateLevel() {
     if (count >= 3 * 45) {
       return "great";
-    } else if (count > 1 * 45) {
+    } else if (count >= 1 * 45) {
       return "warning";
     } else {
       return "danger";
@@ -154,6 +174,10 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   };
 }
 
+/**
+ * counts the total event attendance for all buildings
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -166,7 +190,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   function calculateLevel() {
     if (sum >= 10 * 45) {
       return "great";
-    } else if (sum > 5 * 45) {
+    } else if (sum >= 5 * 45) {
       return "warning";
     } else {
       return "danger";
@@ -174,12 +198,16 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   }
 
   return {
-    title: `${sum} residents have attended events`,
+    title: `${sum} total residents have attended events`,
     level: calculateLevel(),
     href: "/staff/reports/event",
   };
 }
 
+/**
+ * insight for how long its been since an ras last event
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsLastEventAsRA(zoneId: number) {
   const data = await db.client
     .select({
@@ -191,9 +219,9 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
   const { difference } = data[0];
 
   function calculateLevel() {
-    if (difference > 45) {
+    if (difference < 20) {
       return "great";
-    } else if (difference > 25) {
+    } else if (difference < 40) {
       return "warning";
     } else {
       return "danger";

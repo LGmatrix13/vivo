@@ -12,6 +12,9 @@ import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
+/**
+ * Reads the weekly reports submitted by all RAs
+ */
 export async function readWeeklyReports() {
   const data = await db.client
     .select({
@@ -73,6 +76,9 @@ export async function readWeeklyReports() {
   return formattedData;
 }
 
+/**
+ * Reads the weekly reports submitted by all RAs who work for a given RD
+ */
 export async function readWeeklyReportsAsRD(id: number) {
   const data = await db.client
     .select({
@@ -135,6 +141,9 @@ export async function readWeeklyReportsAsRD(id: number) {
   return formattedData;
 }
 
+/**
+ * Reads the weekly reports submitted by a given RA
+ */
 export async function readWeeklyReportsAsRA(id: number) {
   const data = await db.client
     .select({
@@ -186,6 +195,9 @@ export async function readWeeklyReportsAsRA(id: number) {
   return formattedData;
 }
 
+/**
+ * Creates a new weekly report in the database
+ */
 export async function createWeekly(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -200,6 +212,9 @@ export async function createWeekly(values: Values, request: Request) {
   );
 }
 
+/**
+ * Updates a weekly report in the database
+ */
 export async function updateWeekly(values: Values, request: Request) {
   return db.update(
     request,

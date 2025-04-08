@@ -34,11 +34,11 @@ export default function StaffReportsLayout() {
   const admin = context.user.role === "admin";
   const rdPages = [
     {
-      name: "On Duty",
+      name: "On\u00A0Duty",
       path: "/staff/shifts/on-duty",
     },
     {
-      name: "RA Shifts",
+      name: "RA\u00A0Shifts",
       path: "/staff/shifts/ra",
     },
     {
@@ -49,7 +49,7 @@ export default function StaffReportsLayout() {
   const adminPages = [
     ...rdPages.slice(0, 2),
     {
-      name: "RD Shifts",
+      name: "RD\u00A0Shifts",
       path: "/staff/shifts/rd",
     },
     {

@@ -8,6 +8,9 @@ import { RCITable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * Creates an RCI for an upper campus room
+ */
 export async function createUpperCampus(
   request: Request,
   residentId: number,

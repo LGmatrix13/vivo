@@ -86,13 +86,13 @@ export default function ShiftTable<T extends IShift>(
       <div className="flex h-12 justify-between">
         <div className="space-x-3 flex">
           <button
-            className="border bordr-gray-300 rounded-lg px-3 h-12 hover:bg-gray-100 transition ease-in-out"
+            className="border bordr-gray-300 rounded-lg px-3 h-12 hover:bg-gray-200 transition ease-in-out"
             onClick={() => setWeek(week - 1)}
           >
             <ChevronLeft />
           </button>
           <button
-            className="border border-gray-300 rounded-lg px-3 h-12 hover:bg-gray-100"
+            className="border border-gray-300 rounded-lg px-3 h-12 hover:bg-gray-200"
             onClick={() => setWeek(week + 1)}
           >
             <ChevronRight />

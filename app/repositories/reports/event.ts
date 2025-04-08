@@ -1,5 +1,5 @@
 import { sql, eq, desc, and } from "drizzle-orm";
-import { CreatedEvent, Event, UpdatedEvent } from "~/schemas/reports/event";
+import { CreatedEvent, UpdatedEvent } from "~/schemas/reports/event";
 import { db } from "~/utilties/postgres.server";
 import { formatDate } from "~/utilties/formatDate";
 import {
@@ -12,6 +12,9 @@ import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
+/**
+ * Reads the event reports submitted by all RAs
+ */
 export async function readEventReportsAdmin() {
   const data = await db.client
     .select({
@@ -53,6 +56,9 @@ export async function readEventReportsAdmin() {
   return formattedData;
 }
 
+/**
+ * Reads the event reports submitted by all RAs that work for a given RD
+ */
 export async function readEventReportsRD(id: number) {
   const data = await db.client
     .select({
@@ -95,6 +101,9 @@ export async function readEventReportsRD(id: number) {
   return formattedData;
 }
 
+/**
+ * Reads the event reports submitted by a given RA
+ */
 export async function readEventReportsRA(id: number) {
   const data = await db.client
     .select({
@@ -127,6 +136,9 @@ export async function readEventReportsRA(id: number) {
   return formattedData;
 }
 
+/**
+ * Creates a new event report in the database
+ */
 export async function createEvent(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -141,6 +153,9 @@ export async function createEvent(values: Values, request: Request) {
   );
 }
 
+/**
+ * Updates an event report in the database
+ */
 export async function updateEvent(values: Values, request: Request) {
   return db.update(
     request,
@@ -155,6 +170,9 @@ export async function updateEvent(values: Values, request: Request) {
   );
 }
 
+/**
+ * Deletes an event report from the database
+ */
 export async function deleteEvent(values: Values, request: Request) {
   return db.delete(
     request,

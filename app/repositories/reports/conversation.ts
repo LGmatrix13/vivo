@@ -15,6 +15,9 @@ import { residentTable } from "~/utilties/schema.server";
 import { zoneTable } from "~/utilties/schema.server";
 type Values = { [key: string]: any };
 
+/**
+ * Reads the conversation reports submitted by all RAs
+ */
 export async function readConversationReports() {
   const raTable = aliasedTable(residentTable, "ra"); // Alias residentTable for RA
 
@@ -61,6 +64,9 @@ export async function readConversationReports() {
   return formattedData;
 }
 
+/**
+ * Reads the conversation reports submitted by all RAs that work for a given RD
+ */
 export async function readConversationReportsAsRD(id: number) {
   const raTable = aliasedTable(residentTable, "ra"); // Alias residentTable for RA
 
@@ -110,6 +116,9 @@ export async function readConversationReportsAsRD(id: number) {
   return formattedData;
 }
 
+/**
+ * Reads the conversation reports submitted by a given RA
+ */
 export async function readConversationReportsAsRA(id: number) {
   const data = await db.client
     .select({
@@ -150,6 +159,9 @@ export async function readConversationReportsAsRA(id: number) {
   return formattedData;
 }
 
+/**
+ * Creates a new conversation report in the database
+ */
 export async function createConversation(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -164,6 +176,9 @@ export async function createConversation(values: Values, request: Request) {
   );
 }
 
+/**
+ * Updates a conversation report in the database
+ */
 export async function updateConversation(values: Values, request: Request) {
   return db.update(
     request,
@@ -178,6 +193,9 @@ export async function updateConversation(values: Values, request: Request) {
   );
 }
 
+/**
+ * Deletes a conversation report from the database
+ */
 export async function deleteConversation(values: Values, request: Request) {
   return db.delete(
     request,

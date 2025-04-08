@@ -133,7 +133,7 @@ export const roundReportTable = pgTable("RoundReport", {
     .references(() => zoneTable.id),
   submitted: timestamp("submitted", { mode: "string" }).notNull().defaultNow(),
   time: timestamp("time", { mode: "string" }).notNull(),
-  description: varchar("description", { length: 225 }).notNull(),
+  description: varchar("description", { length: 225 }),
   violations: varchar("violations", { length: 225 }),
   outstandingWorkOrders: varchar("outstanding_work_orders", {
     length: 225,

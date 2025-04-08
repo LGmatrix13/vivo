@@ -3,6 +3,10 @@ import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+/**
+ * counts each how many of each value of ra health there are for a specific RD
+ * @returns those numbers as a processed data value from our database
+ */
 export async function readRAHealthInsightsAsRD(staffId: number) {
   const data = await db.client
     .select({
@@ -74,6 +78,10 @@ export async function readRAHealthInsightsAsRD(staffId: number) {
   return processInsights(data[0]);
 }
 
+/**
+ * counts each how many of each value of ra health there are for all RAs
+ * @returns those numbers as a processed data value from our database
+ */
 export async function readRAHealthInsightsAsAdmin() {
   const data = await db.client
     .select({
@@ -143,8 +151,12 @@ export async function readRAHealthInsightsAsAdmin() {
   return processInsights(data[0]);
 }
 
-//TODO: add search for data within reports to sort these reports by health
 
+/**
+ * 
+ * process ra health into insights
+ * @returns a list of insights based on the given data from the database
+ */
 function processInsights(data: any): IInsight[] {
   const insights = [
     {

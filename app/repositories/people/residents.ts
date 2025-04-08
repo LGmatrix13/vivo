@@ -1,9 +1,7 @@
 import { sql, eq, asc, notExists, SQL } from "drizzle-orm";
 import { alias, PgTable } from "drizzle-orm/pg-core";
-import { IResident } from "~/models/people";
 import { CreatedResident, Resident } from "~/schemas/people/resident";
 import { db } from "~/utilties/postgres.server";
-import mutate from "~/utilties/mutate.server";
 import {
   residentTable,
   buildingTable,
@@ -14,6 +12,10 @@ import {
 
 type Values = { [key: string]: any };
 
+/**
+ * reads residents under a specific ra for a dropdown
+ * @returns a list of those residents
+ */
 export async function readResidentsDropdownAsRA(zoneId: number) {
   const residents = await db.client
     .select({
@@ -28,6 +30,10 @@ export async function readResidentsDropdownAsRA(zoneId: number) {
   return residents;
 }
 
+/**
+ * reads residents from the database for the admin, so all residents
+ * @returns a list of those residents
+ */
 export async function readResidentsAsAdmin() {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const residents = await db.client
@@ -70,6 +76,10 @@ export async function readResidentsAsAdmin() {
   return residents;
 }
 
+/**
+ * reads residents from the database for a specific rd
+ * @returns a list of those residents
+ */
 export async function readResidentsAsRD(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const residents = await db.client
@@ -114,6 +124,10 @@ export async function readResidentsAsRD(id: number) {
   return residents;
 }
 
+/**
+ * reads residents from the database for a specific ra
+ * @returns a list of those residents
+ */
 export async function readResidentsAsRA(id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const residents = await db.client
@@ -158,6 +172,10 @@ export async function readResidentsAsRA(id: number) {
   return residents;
 }
 
+/**
+ * reads residents from the database
+ * @returns a list of those residents
+ */
 export async function readResidents() {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const residents = await db.client
@@ -199,6 +217,10 @@ export async function readResidents() {
   return residents;
 }
 
+/**
+ * reads residents from the database for dropdown in the table
+ * @returns a list of those residents
+ */
 export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
   const rds = await db.client
     .select({
@@ -214,6 +236,10 @@ export async function readResidentsDropdown(table: PgTable, predicate: SQL) {
   return rds;
 }
 
+/**
+ * creates a new resident in the database
+ * @returns whether or not creation was a success or not
+ */
 export async function createResident(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -228,6 +254,10 @@ export async function createResident(values: Values, request: Request) {
   );
 }
 
+/**
+ * updates a resident in the database
+ * @returns whether or not updating was a success or not
+ */
 export async function updateResident(values: Values, request: Request) {
   return db.update(
     request,
@@ -242,6 +272,10 @@ export async function updateResident(values: Values, request: Request) {
   );
 }
 
+/**
+ * deletes a resident in the database
+ * @returns whether or not deletion was a success or not
+ */
 export async function deleteResident(values: Values, request: Request) {
   return db.delete(
     request,
@@ -255,6 +289,10 @@ export async function deleteResident(values: Values, request: Request) {
   );
 }
 
+/**
+ * selects a specific residents ra from the database to display their data
+ * @returns a specific ra
+ */
 export async function myRA(resident_id: number) {
   const raInfoTable = alias(residentTable, "raInfoTable");
   const raRoomTable = alias(roomTable, "raRoomTable");

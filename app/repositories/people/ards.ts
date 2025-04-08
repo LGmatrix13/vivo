@@ -1,5 +1,5 @@
 import { sql, eq } from "drizzle-orm";
-import { ARD, CreatedARD, UpdatedARD } from "~/schemas/people/ard";
+import {CreatedARD, UpdatedARD } from "~/schemas/people/ard";
 import { db } from "~/utilties/postgres.server";
 import {
   assistantStaffTable,
@@ -11,6 +11,10 @@ import {
 
 type Values = { [key: string]: any };
 
+/**
+ * read all Ards from the database
+ * @returns the sql list of ards from the database
+ */
 export async function readARDs() {
   const ards = await db.client
     .select({
@@ -53,6 +57,10 @@ export async function readARDs() {
   return ards;
 }
 
+/**
+ * creates an ARD within the database 
+ * @returns a message as to whether the creation was a success or not
+ */
 export async function createARD(values: Values, request: Request) {
   return await db.insert(
     request,
@@ -67,6 +75,10 @@ export async function createARD(values: Values, request: Request) {
   );
 }
 
+/**
+ * updates an ARD within the database 
+ * @returns a message as to whether the update was a success or not
+ */
 export async function updateARD(values: Values, request: Request) {
   return db.update(
     request,
@@ -81,6 +93,10 @@ export async function updateARD(values: Values, request: Request) {
   );
 }
 
+/**
+ * deletes an ARD within the database 
+ * @returns a message as to whether the deletion was a success or not
+ */
 export async function deleteARD(values: Values, request: Request) {
   return db.delete(
     request,
