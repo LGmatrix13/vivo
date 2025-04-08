@@ -10,6 +10,9 @@ interface RoomFormProps {
   rasDropdown: IRADropdown[];
 }
 
+/**
+ * form to create/modify a room
+ */
 export default function RoomForm(props: RoomFormProps) {
   const { room, buildingsDropdown, rasDropdown } = props;
   const buildingOptions = buildingsDropdown.map((option) => {
@@ -28,7 +31,7 @@ export default function RoomForm(props: RoomFormProps) {
         key: option.name,
         value: option.id,
       };
-    })
+    }),
   ];
   const roomTypeOptions = [
     {

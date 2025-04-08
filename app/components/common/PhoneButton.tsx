@@ -5,6 +5,9 @@ interface PhoneButtonProps {
   children: React.ReactNode;
 }
 
+/**
+ * used to call a RA or RD on-duty
+ */
 export function PhoneButton(props: PhoneButtonProps) {
   const { phoneNumber, children } = props;
   return (

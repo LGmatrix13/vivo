@@ -7,6 +7,9 @@ interface IIndicationProps {
   Icon: (props: any) => ReactNode;
 }
 
+/**
+ * indicate to the user a message with a colored icon
+ */
 export default function Indication(props: IIndicationProps) {
   const { level, message, title, Icon } = props;
 

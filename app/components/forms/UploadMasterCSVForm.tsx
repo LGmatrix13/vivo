@@ -3,6 +3,9 @@ import WideButton from "../common/WideButton";
 import Loading from "../common/Loading";
 import { uploadMasterCSV } from "~/repositories/people/ras";
 
+/**
+ * form to upload the master csv for rooms, residents, and RAs.
+ */
 export default function UploadMasterCSVForm() {
   const fetcher = useFetcher<typeof uploadMasterCSV>();
 

@@ -9,14 +9,15 @@ interface RCIDraftFormProps {
   issues: Record<string, string>;
 }
 
+/**
+ * form to create an RCI draft
+ */
 export default function RCIDraftForm(props: RCIDraftFormProps) {
   const { mapping, issues, roomId } = props;
 
   return (
     <Form className="space-y-5" method="post">
-      {roomId && (
-        <input name="id" type="hidden" value={roomId} />
-      )}
+      {roomId && <input name="id" type="hidden" value={roomId} />}
       {Object.keys(mapping).map((key) => (
         <AcknowledgeIssueRadio
           title={mapping[key as keyof typeof mapping]}
@@ -26,7 +27,9 @@ export default function RCIDraftForm(props: RCIDraftFormProps) {
             required
             label="Comments"
             name={key}
-            placeholder={`Describe the issues with the ${mapping[key].toLowerCase()}`}
+            placeholder={`Describe the issues with the ${mapping[
+              key
+            ].toLowerCase()}`}
             defaultValue={issues ? issues[key] : ""}
           />
         </AcknowledgeIssueRadio>

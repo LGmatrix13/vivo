@@ -14,6 +14,7 @@ import { avatar } from "~/utilties/avatar.server";
 import { toast } from "~/utilties/toast.server";
 import { Toast } from "~/components/common/Toast";
 import mutate from "~/utilties/mutate.server";
+import { files } from "~/utilties/files.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,18 +35,27 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "update.userInfo":
+      const file = values["file"] as File;
+      if (!files.checkExtension(file.name, ".png")) {
+        return mutate(request.url, {
+          message: "File must be a .png",
+          level: "failure",
+        });
+      }
+
       const success = await avatar.upload(request, values);
+
       if (success) {
         return mutate(request.url, {
           message: "Uploaded avatar",
           level: "success",
         });
-      } else {
-        return mutate(request.url, {
-          message: "Failed to upload avatar",
-          level: "failure",
-        });
       }
+
+      return mutate(request.url, {
+        message: "Failed to upload avatar",
+        level: "failure",
+      });
   }
 }
 

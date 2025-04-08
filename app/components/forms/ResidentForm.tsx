@@ -9,6 +9,9 @@ interface ResidentFormProps {
   roomsDropdown: IRoomDropdown[];
 }
 
+/**
+ * form to create/modify a resident
+ */
 export default function ResidentForm(props: ResidentFormProps) {
   const { resident, roomsDropdown } = props;
   const roomOptions = [
@@ -21,7 +24,7 @@ export default function ResidentForm(props: ResidentFormProps) {
         key: option.room,
         value: option.id,
       };
-    })
+    }),
   ];
   return (
     <Form button="Save Resident" intent={resident ? "update" : "create"}>

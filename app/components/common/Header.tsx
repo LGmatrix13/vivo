@@ -12,6 +12,9 @@ interface HeaderProps {
   }[];
 }
 
+/**
+ * generic header component for navigation
+ */
 export default function Header(props: HeaderProps) {
   const location = useLocation();
   const currentPath = location.pathname;

@@ -9,6 +9,9 @@ interface FilterProps {
   handleFilter: (id: number) => void;
 }
 
+/**
+ * dropdown to enable filtering
+ */
 export default function Filter(props: FilterProps) {
   const { options, selected, handleFilter } = props;
 

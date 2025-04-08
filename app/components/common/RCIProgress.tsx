@@ -1,5 +1,8 @@
 import { Check } from "./Icons";
 
+/**
+ * show that an RCI has been submitted
+ */
 export default function RCIProgress() {
   return (
     <ol className="relative border-s border-gray-300 ms-3.5">

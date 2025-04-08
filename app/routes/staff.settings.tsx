@@ -9,6 +9,7 @@ import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
 import mutate from "~/utilties/mutate.server";
 import WideButton from "~/components/common/WideButton";
+import { files } from "~/utilties/files.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,8 +25,17 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "update.userInfo":
       await auth.rejectUnauthorized(request, ["rd", "admin"]);
+      const file = values["file"] as File;
+
+      if (!files.checkExtension(file.name, ".csv")) {
+        return mutate(request.url, {
+          message: "File must be a .png",
+          level: "failure",
+        });
+      }
 
       const avatarSuccess = await avatar.upload(request, values);
+
       if (avatarSuccess) {
         return mutate(request.url, {
           message: "Uploaded avatar",

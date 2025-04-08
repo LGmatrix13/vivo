@@ -9,6 +9,9 @@ interface StaffShiftFormProps {
   rdDropdown: IRDDropdown[];
 }
 
+/**
+ * form to create/modify a staff shift
+ */
 export default function StaffShiftForm(props: StaffShiftFormProps) {
   const { shift, rdDropdown } = props;
   const rdOptions = rdDropdown.map((option) => {

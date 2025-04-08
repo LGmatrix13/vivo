@@ -11,6 +11,9 @@ interface InputProps {
   [key: string]: any;
 }
 
+/**
+ * generic input to use inside of forms
+ */
 export default function Input(props: InputProps) {
   const { name, label, explanation, required } = props;
 

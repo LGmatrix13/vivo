@@ -34,6 +34,9 @@ interface IScheduleTableProps<T> {
   EditShiftComponent?: (props: { shift: T }) => React.ReactElement;
 }
 
+/**
+ * table to display shifts
+ */
 export default function ShiftTable<T extends IShift>(
   props: IScheduleTableProps<T>
 ) {

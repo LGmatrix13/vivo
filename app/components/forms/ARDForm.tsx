@@ -8,6 +8,9 @@ interface ARDFormProps {
   rdDropdown: IRDDropdown[];
 }
 
+/**
+ * form to modifying/creating an ARD
+ */
 export default function ARDForm(props: ARDFormProps) {
   const { ard, rdDropdown, residentDropdown } = props;
 

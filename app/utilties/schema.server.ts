@@ -144,7 +144,7 @@ export const consverationReportTable = pgTable("ConversationReport", {
   id: serial("id").notNull().primaryKey(),
   residentId: integer()
     .notNull()
-    .references(() => residentTable.id),
+    .references(() => residentTable.id, { onDelete: "cascade" }),
   zoneId: integer()
     .notNull()
     .references(() => zoneTable.id),

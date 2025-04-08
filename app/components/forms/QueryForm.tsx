@@ -8,6 +8,9 @@ interface IQueryFormProps {
   onReponse: (response: string) => void;
 }
 
+/**
+ * form to query merrick
+ */
 export default function QueryForm(props: IQueryFormProps) {
   const { setLoading, onQuery, onReponse } = props;
   const [query, setQuery] = useState("");
@@ -30,7 +33,7 @@ export default function QueryForm(props: IQueryFormProps) {
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if ((e.key === "Enter")) {
+    if (e.key === "Enter") {
       // Submit form on Enter
       e.preventDefault();
       handleSubmit(e as any);

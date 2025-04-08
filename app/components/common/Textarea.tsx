@@ -11,6 +11,9 @@ interface TextareaProps {
   [key: string]: any;
 }
 
+/**
+ * generic textarea for forms
+ */
 export default function Textarea(props: TextareaProps) {
   const { name, label, required, defaultValue, setState } = props;
 

@@ -1,3 +1,6 @@
+/**
+ * download json and convert it to a csv
+ */
 function download(
   data: Record<string, any>[],
   filename: string,
@@ -20,11 +23,14 @@ function download(
   URL.revokeObjectURL(blobUrl);
 }
 
+/**
+ * parse csv text and convert it into json
+ */
 function parse(content: string) {
   let lines = content.split("\n");
 
-  if (lines[lines.length-1] == "") {
-    lines = lines.slice(0, lines.length-1);
+  if (lines[lines.length - 1] == "") {
+    lines = lines.slice(0, lines.length - 1);
   }
 
   // Helper function to parse a CSV line while respecting quoted fields

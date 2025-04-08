@@ -1,17 +1,18 @@
 import { IWeeklyReport } from "~/models/reports";
 import Form from "../common/Form";
-import Input from "../common/Input";
 import Textarea from "../common/Textarea";
-import AcknowledgeWorkOrderRadio from "../common/AcknowledgeWorkOrderRadio";
 import { z } from "zod";
 import Select from "../common/Select";
 
 interface WeeklyFormProps {
   zoneId: number;
   weekly?: IWeeklyReport;
-  action?:string;
+  action?: string;
 }
 
+/**
+ * form to create/modify a weekly report
+ */
 export default function WeeklyForm(props: WeeklyFormProps) {
   const { weekly, zoneId, action } = props;
   const ratingOptions = [
@@ -32,7 +33,11 @@ export default function WeeklyForm(props: WeeklyFormProps) {
   ];
 
   return (
-    <Form button="Save Weekly Report" intent={weekly ? "update" : "create"} action={action}>
+    <Form
+      button="Save Weekly Report"
+      intent={weekly ? "update" : "create"}
+      action={action}
+    >
       <h2 className="font-bold text-xl">
         {weekly ? `Edit Weekly` : "Add Weekly Report"}
       </h2>

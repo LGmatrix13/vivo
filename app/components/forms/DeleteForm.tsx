@@ -8,6 +8,9 @@ interface DeleteFormProps {
   toast?: string;
 }
 
+/**
+ * generic delete form to delete an entity
+ */
 export default function DeleteForm(props: DeleteFormProps) {
   const { id, title, prompt } = props;
   const submit = useSubmit();

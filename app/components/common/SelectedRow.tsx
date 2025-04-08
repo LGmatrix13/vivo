@@ -8,6 +8,9 @@ interface SelectedRowProps {
   children?: React.ReactNode;
 }
 
+/**
+ * used to show data relative to a selected row
+ */
 export default function SelectedRow(props: SelectedRowProps) {
   const { row, keys, children } = props;
   const originalKeys = Object.keys(keys);

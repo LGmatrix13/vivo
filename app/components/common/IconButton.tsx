@@ -10,6 +10,9 @@ interface IconButtonProps {
   };
 }
 
+/**
+ * button with icon for opening drawers and links
+ */
 export default function IconButton(props: IconButtonProps) {
   const { Icon, children, onClick, options, className } = props;
 

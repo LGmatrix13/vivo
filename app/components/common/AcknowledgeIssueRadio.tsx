@@ -6,6 +6,9 @@ interface AcknowledgeIssueRadioProps {
   yes?: boolean;
 }
 
+/**
+ * a toggle on/off for a part of an RCI
+ */
 export default function AcknowledgeIssueRadio(
   props: AcknowledgeIssueRadioProps
 ) {

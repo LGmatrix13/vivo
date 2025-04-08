@@ -11,9 +11,12 @@ interface FormProps {
     | "application/x-www-form-urlencoded"
     | "multipart/form-data"
     | "text/plain";
-    action?:string;
+  action?: string;
 }
 
+/**
+ * generic form component for uploading and user input
+ */
 export default function Form(props: FormProps) {
   const { children, button, encType, intent, action } = props;
   const navigation = useNavigation();

@@ -5,8 +5,14 @@ import { z } from "zod";
 import mutate from "./mutate.server";
 import { SQL } from "drizzle-orm";
 
+/**
+ * client to connect to postgres
+ */
 const client = drizzle(process.env.DATABASE_URL!);
 
+/**
+ * generic insert that handles mutations and validation
+ */
 async function insert<T extends z.ZodTypeAny>(
   request: Request,
   table: PgTable,
@@ -42,6 +48,9 @@ async function insert<T extends z.ZodTypeAny>(
   return null;
 }
 
+/**
+ * generic delete that handles mutations and validation
+ */
 async function _delete(
   request: Request,
   table: PgTable,
@@ -56,6 +65,9 @@ async function _delete(
   return mutate(request.url, toast);
 }
 
+/**
+ * generic insert that handles mutations and validation
+ */
 async function update<T extends z.ZodTypeAny>(
   request: Request,
   table: PgTable,
