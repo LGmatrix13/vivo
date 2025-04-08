@@ -1,5 +1,5 @@
 export const upperCampusMapping = {
-  doorsLocks: "Doors Locks",
+  doorLocks: "Door Locks",
   emergencyItems: "Emergency Items",
   walls: "Walls",
   floor: "Floor",
@@ -7,7 +7,7 @@ export const upperCampusMapping = {
   lightFixtures: "Light Fixtures",
   closetWardrobeMirror: "Closet",
   windowScreens: "Window Screens",
-  curtainsRods: "Curtain Rods",
+  curtainRods: "Curtain Rods",
   deskChair: "Desk Chair",
   bedMattress: "Bed Mattress",
   dresser: "Dresser",
