@@ -6,6 +6,10 @@ import { staffTable, buildingTable, zoneTable } from "~/utilties/schema.server";
 
 type Values = { [key: string]: any };
 
+/**
+ * reads rds from the database
+ * @returns a list of those rds
+ */
 export async function readRDs() {
   const rds = await db.client
     .select({
@@ -31,6 +35,10 @@ export async function readRDs() {
   return rds;
 }
 
+/**
+ * reads rds from the database using their names to make a dropdown
+ * @returns a list of rds
+ */
 export async function readRDsDropdown() {
   const rds = await db.client
     .select({
@@ -45,6 +53,10 @@ export async function readRDsDropdown() {
   return rds;
 }
 
+/**
+ * creates a new rd in the database
+ * @returns whether or not creation was a success or not
+ */
 export async function createRD(values: Values, request: Request) {
   return db.insert(request, staffTable, CreatedRD, values, true, {
     message: "RD Created",
@@ -52,6 +64,10 @@ export async function createRD(values: Values, request: Request) {
   });
 }
 
+/**
+ * updates a rd in the database
+ * @returns whether or not updating was a success or not
+ */
 export async function updateRD(values: Values, request: Request) {
   return db.update(
     request,
@@ -66,6 +82,10 @@ export async function updateRD(values: Values, request: Request) {
   );
 }
 
+/**
+ * deletes a rd in the database
+ * @returns whether or not deletion was a success or not
+ */
 export async function deleteRD(values: Values, request: Request) {
   const id = Number(values["id"]);
   const rasAssigned = await db.client
