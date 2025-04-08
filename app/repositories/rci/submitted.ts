@@ -55,7 +55,7 @@ export async function readSubmittedRCI(residentId: number) {
     })
     .from(residentTable)
     .leftJoin(roomTable, eq(residentTable.roomId, roomTable.id))
-    .leftJoin(RCITable, eq(RCITable.residentId, residentTable.id)) 
+    .leftJoin(RCITable, eq(RCITable.residentId, residentTable.id))
     .where(eq(residentTable.id, residentId));
 
   const rci = data[0];
@@ -145,6 +145,8 @@ export async function readActiveRCIsAsRA(zoneId: number) {
     .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, "ACTIVE")))
     .orderBy(desc(RCITable.id));
 
+  console.log(data);
+
   const formattedData = data.map((rci) => {
     return {
       ...rci,
@@ -203,7 +205,7 @@ export async function updateSubmittedRCIStatus(
   values: Values
 ) {
   if (values && values.status == "CHECKED_OUT") {
-    values.checkedOut = new Date().toISOString()
+    values.checkedOut = new Date().toISOString();
   }
   return db.update(
     request,
@@ -258,7 +260,7 @@ export async function readSubmittedRCIsAsRD(
         eq(readTable.reportType, `RCI_${type}`)
       )
     )
-    .where(and(eq(staffTable.id, id),eq(RCITable.status, type)))
+    .where(and(eq(staffTable.id, id), eq(RCITable.status, type)))
     .orderBy(desc(RCITable.id));
 
   const formattedData = data.map((rci) => {
@@ -279,7 +281,7 @@ export async function releaseRCIsForCheckout(request: Request, values: Values) {
   await db.client
     .update(RCITable)
     .set({
-      status: "RESIDENT_CHECKOUT"
+      status: "RESIDENT_CHECKOUT",
     })
     .where(inArray(RCITable.id, rciIds));
 

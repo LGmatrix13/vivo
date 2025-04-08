@@ -1,49 +1,53 @@
 /**
- * format date in simplier notation for tables
+ * Format a UTC date string into "Today", "Yesterday", or MM/DD[, Day][, Time] format in EST/EDT
  */
 export function formatDate(
   dateString: string,
   includeTime?: boolean,
   includeDay?: boolean
 ) {
-  const date = new Date(Date.parse(dateString));
-  const today = new Date(
-    new Date().toLocaleString("en", {
-      timeZone: "America/New_York",
-    })
-  );
+  const EDT_OFFSET = 4 * 60 * 60 * 1000; // 4 hours behind UTC for EDT
 
-  const diffDays = today.getDate() - date.getDate();
-  const diffMonths = today.getMonth() - date.getMonth();
-  const diffYears = today.getFullYear() - date.getFullYear();
-  const time = date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: "America/New_York",
-  });
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const utcDate = new Date(dateString); // Original UTC date
+  const now = new Date(); // Current time in local time zone (usually UTC in backend)
 
-  if (diffYears === 0 && diffDays === 0 && diffMonths === 0) {
+  // Manually adjust UTC date to EST/EDT
+  const estDate = new Date(utcDate.getTime() - EDT_OFFSET);
+
+  // Get today's date and yesterday's date in EST/EDT
+  const today = new Date(now.getTime() - EDT_OFFSET); // Today's date in EST/EDT
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  // Extract parts of the EST date
+  const estMonth = estDate.getMonth() + 1; // Months are 0-indexed
+  const estDay = estDate.getDate();
+  const estWeekday = estDate.toLocaleString("en-US", { weekday: "long" });
+  const estHour = estDate.getHours();
+  const estMinute = estDate.getMinutes();
+  const ampm = estHour >= 12 ? "PM" : "AM";
+
+  // Format the time
+  const time = `${estHour % 12 || 12}:${
+    estMinute < 10 ? "0" + estMinute : estMinute
+  } ${ampm}`;
+
+  // Check if the date is today or yesterday
+  const isToday = estDate.toDateString() === today.toDateString();
+  const isYesterday = estDate.toDateString() === yesterday.toDateString();
+
+  // Return "Today" or "Yesterday" or the formatted date
+  if (isToday) {
     return `Today${includeTime ? `, ${time}` : ""}`;
-  } else if (diffYears === 0 && diffDays === 1 && diffMonths === 0) {
-    return includeTime ? `Yesterday, ${time}` : "Yesterday";
-  } else if (includeTime && includeDay) {
-    return `${date.getMonth() + 1}/${date.getDate()}, ${
-      days[date.getDay()]
-    }, ${time}`;
-  } else if (includeDay) {
-    return `${date.getMonth() + 1}/${date.getDate()}, ${days[date.getDay()]}`;
-  } else if (includeTime) {
-    return `${date.getMonth() + 1}/${date.getDate()}, ${time}`;
-  } else {
-    return `${date.getMonth() + 1}/${date.getDate()}`;
   }
+
+  if (isYesterday) {
+    return `Yesterday${includeTime ? `, ${time}` : ""}`;
+  }
+
+  // Format as MM/DD or MM/DD, Day if includeDay is true, with time if includeTime is true
+  let result = `${estMonth}/${estDay}`;
+  if (includeDay) result += `, ${estWeekday}`;
+  if (includeTime) result += `, ${time}`;
+  return result;
 }
