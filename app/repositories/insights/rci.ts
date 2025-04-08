@@ -8,6 +8,10 @@ import {
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+/**
+ * calculates a danger level based on RCI approval numbers
+ * @returns a string representation of a danger level
+ */
 function calculateLevelCompleteRCI(needsApprovedRCI: number, scale: number) {
   if (needsApprovedRCI > 20 * scale) {
     return "danger";
@@ -18,6 +22,10 @@ function calculateLevelCompleteRCI(needsApprovedRCI: number, scale: number) {
   }
 }
 
+/**
+ * calculates a danger level based on RCI approval numbers
+ * @returns a string representation of a danger level
+ */
 function calculateLevelApprovedRCI(approvedRCIs: number, scale: number) {
   if (approvedRCIs > 25 * scale) {
     return "great";
@@ -28,15 +36,10 @@ function calculateLevelApprovedRCI(approvedRCIs: number, scale: number) {
   }
 }
 
-function calculateLevelSentToLimble(sentToLimble: number, scale: number) {
-  if (sentToLimble > 10 * scale) {
-    return "danger";
-  } else if (sentToLimble > 5 * scale) {
-    return "warning";
-  } else {
-    return "great";
-  }
-}
+/**
+ * creates insights for completed and approved RCIs for a given ra
+ * @returns a list of those insights
+ */
 export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
   const data = await db.client
     .select({
@@ -63,6 +66,10 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
   ];
 }
 
+/**
+ * creates insights for completed and approved RCIs for a given rd
+ * @returns a list of those insights
+ */
 export async function readRCIInsightsAsRD(
   staffId: number
 ): Promise<IInsight[]> {
@@ -93,6 +100,10 @@ export async function readRCIInsightsAsRD(
   ];
 }
 
+/**
+ * creates insights for completed and approved RCIs for the admin, so all RCIs
+ * @returns a list of those insights
+ */
 export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
   const data = await db.client
     .select({

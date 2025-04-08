@@ -3,6 +3,10 @@ import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+/**
+ * counts the number of events a specific ra has
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsRA(
   zoneId: number
 ): Promise<IInsight> {
@@ -33,6 +37,10 @@ export async function readEventInsightsCountAsRA(
   };
 }
 
+/**
+ * counts the total event attendance for a specific ra
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsRA(
   zoneId: number
 ): Promise<IInsight> {
@@ -63,6 +71,10 @@ export async function readEventInsightsAttendanceAsRA(
   };
 }
 
+/**
+ * counts the number of events that are in an RDs building
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -95,6 +107,10 @@ export async function readEventInsightsCountAsRD(
   };
 }
 
+/**
+ * counts the total event attendance for a specific RDs building
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -127,6 +143,10 @@ export async function readEventInsightsAttendanceAsRD(
   };
 }
 
+/**
+ * counts the total events in all buildings
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -154,6 +174,10 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   };
 }
 
+/**
+ * counts the total event attendance for all buildings
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -180,6 +204,10 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   };
 }
 
+/**
+ * insight for how long its been since an ras last event
+ * @returns an insight representing that number
+ */
 export async function readEventInsightsLastEventAsRA(zoneId: number) {
   const data = await db.client
     .select({

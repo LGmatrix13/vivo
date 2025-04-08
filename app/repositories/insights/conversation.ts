@@ -8,6 +8,12 @@ import { db } from "~/utilties/postgres.server";
 import { and, eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+
+/**
+ * 
+ * reads how many conversations have taken place in a specific RDs building
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsCountAsRD(
   buildingId: number
 ): Promise<IInsight> {
@@ -23,11 +29,15 @@ export async function readConversationInsightsCountAsRD(
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
     .where(
-      eq(buildingTable.id, buildingId) // Replace someBuildingId with the actual value
+      eq(buildingTable.id, buildingId)
     );
 
   const { count } = data[0];
 
+  /**
+   * calculates the level of concern about the number of conversations
+   * @returns a string representing a level of concern
+   */
   function calculateLevel() {
     if (count > 10 * 5) {
       return "great";
@@ -46,6 +56,11 @@ export async function readConversationInsightsCountAsRD(
   };
 }
 
+/**
+ * 
+ * reads how many high priority conversations have taken place in a specific RDs building
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsHighPriorityCountAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -68,6 +83,10 @@ export async function readConversationInsightsHighPriorityCountAsRD(
     );
 
   const { count } = data[0];
+    /**
+   * calculates the level of concern about the number of conversations
+   * @returns a string representing a level of concern
+   */
   function calculateLevel() {
     if (count == 0) {
       return "great";
@@ -85,6 +104,11 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   };
 }
 
+/**
+ * 
+ * reads how many level 3 conversations have taken place in a specific RDs building
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsLevelThreeCountAsRD(
   buildingId: number
 ): Promise<IInsight> {
@@ -115,6 +139,11 @@ export async function readConversationInsightsLevelThreeCountAsRD(
   };
 }
 
+/**
+ * 
+ * reads how many conversations have taken place in all buildings
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -130,6 +159,10 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
 
   const { count } = data[0];
 
+   /**
+   * calculates the level of concern about the number of conversations
+   * @returns a string representing a level of concern
+   */
   function calculateLevel() {
     if (count > 10 * 45) {
       return "great";
@@ -147,6 +180,11 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
   };
 }
 
+/**
+ * 
+ * reads how many high priority conversations have taken place in all buildings
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsHighPriorityCountAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -163,6 +201,10 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
 
   const { count } = data[0];
 
+   /**
+   * calculates the level of concern about the number of conversations
+   * @returns a string representing a level of concern
+   */
   function calculateLevel() {
     if (count == 0) {
       return "great";
@@ -180,6 +222,11 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   };
 }
 
+/**
+ * 
+ * reads how many level 3 conversations have taken place in all buildings
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsight> {
   const data = await db.client
     .select({
@@ -203,6 +250,11 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   };
 }
 
+/**
+ * 
+ * reads how many late conversations have taken place for a specific RA
+ * @returns a insight representing the count of conversations
+ */
 export async function readConversationInsightsLastConversatonsAsRA(
   zoneId: number
 ): Promise<IInsight[]> {
@@ -219,6 +271,10 @@ export async function readConversationInsightsLastConversatonsAsRA(
     .where(eq(consverationReportTable.zoneId, zoneId))
     .groupBy(residentTable.id);
 
+     /**
+   * calculates the level of concern about the number of conversations
+   * @returns a string representing a level of concern
+   */
   function calculateLevel(daysSinceLastConvo: number) {
     if (daysSinceLastConvo > 30) {
       return "danger";

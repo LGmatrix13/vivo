@@ -3,6 +3,10 @@ import { db } from "~/utilties/postgres.server";
 import { eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
 
+/**
+ * calculates a danger level based on the number of violations
+ * @returns the danger level as a string
+ */
 function calculateLevelViolation(violations: number) {
   if (violations > 2) {
     return "danger";
@@ -13,6 +17,10 @@ function calculateLevelViolation(violations: number) {
   }
 }
 
+/**
+ * calculates a danger level based on the number of outstanding work orders
+ * @returns the danger level as a string
+ */
 function calculateLevelOutstandingWorkOrders(outstandingWorkOrders: number) {
   if (outstandingWorkOrders > 3) {
     return "danger";
@@ -23,6 +31,10 @@ function calculateLevelOutstandingWorkOrders(outstandingWorkOrders: number) {
   }
 }
 
+/**
+ * counts the number of violations on a report bases for a specific RD
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsViolationsAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -43,6 +55,10 @@ export async function readRoundReportInsightsViolationsAsRD(
   };
 }
 
+/**
+ * counts the number of outstanding work orders on a report bases for a specific RD
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
   staffId: number
 ): Promise<IInsight> {
@@ -63,6 +79,10 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
   };
 }
 
+/**
+ * counts the number of violations on a report bases for the admin, so all reports
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsViolationsAsAdmin() {
   const data = await db.client
     .select({
@@ -79,6 +99,10 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
   };
 }
 
+/**
+ * counts the number of outstanding work orders on a report bases for the admin, so all reports
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
   const data = await db.client
     .select({
@@ -95,6 +119,10 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
   };
 }
 
+/**
+ * counts the number of violations on a report bases for a specific RA
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
   const data = await db.client
     .select({
@@ -112,6 +140,10 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
   };
 }
 
+/**
+ * counts the number of outstanding work orders on a report bases for a specific RA
+ * @returns the insight of this number
+ */
 export async function readRoundReportInsightsOutstandingWorkOrdersAsRA(
   zoneId: number
 ) {
