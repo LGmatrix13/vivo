@@ -14,7 +14,7 @@ type DrawerProps = {
 };
 
 /**
- * to show/hide content with a chevron
+ * provider for the context relative to a drawer
  */
 export function DrawerProvider(props: DrawerProps) {
   const [open, setOpen] = useState(props.open ? props.open : false);

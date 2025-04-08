@@ -146,6 +146,7 @@ export const auth = {
   jwtCookie,
   signJwt,
   safeReadUser,
+  loginRedirect,
   rejectUnauthorized,
   rejectAuthorized,
   safeAuthorized,

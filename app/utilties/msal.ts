@@ -1,3 +1,6 @@
+/**
+ * config use for ms oauth
+ */
 export const msalConfig = {
   auth: {
     clientId: "0330f383-e27e-46c7-8146-8c54963af0cd",

@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 export function action() {
-  return auth.logout();
+  return auth.loginRedirect();
 }
 
 export default function AuthLogout() {

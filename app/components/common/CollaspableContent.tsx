@@ -9,7 +9,7 @@ interface CollaspableContentProps {
 }
 
 /**
- * generic button for forms and opening drawers
+ * to show/hide content with a chevron
  */
 export default function CollaspableContent(props: CollaspableContentProps) {
   const { title, children, className, collasped = false } = props;

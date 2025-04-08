@@ -66,7 +66,7 @@ async function _delete(
 }
 
 /**
- * generic insert that handles mutations and validation
+ * generic update that handles mutations and validation
  */
 async function update<T extends z.ZodTypeAny>(
   request: Request,

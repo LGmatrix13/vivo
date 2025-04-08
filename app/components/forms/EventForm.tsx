@@ -10,7 +10,7 @@ interface EventFormProps {
 }
 
 /**
- * form to create/delete an event
+ * form to create/delete an events
  */
 export default function EventForm(props: EventFormProps) {
   const { event, zoneId, action } = props;
