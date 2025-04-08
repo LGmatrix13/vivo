@@ -5,6 +5,7 @@ import { DrawerProvider, DrawerButton, DrawerContent } from "./Drawer";
 import Search from "./Search";
 import Filter from "./Filter";
 import { useSearchParams } from "@remix-run/react";
+import IconButton from "./IconButton";
 
 interface TableProps<T> {
   columnKeys: Record<string, string>;
@@ -55,7 +56,7 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
     onRowRead = () => {},
     enableReads = false,
   } = props;
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { cells } = mixins;
   const originalColumnKeys = Object.keys(columnKeys);
   const [opened, setOpened] = useState<number>(-1);
@@ -67,12 +68,16 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
   } | null>(null);
 
   let prefilteredRows = rows;
+  let filtering = false;
   if (rows.length > 0) {
     const filters: Record<string, string | null> = {};
 
     for (const key of Object.keys(rows[0])) {
       const param = searchParams.get(key);
-      if (param) filters[key] = param.toLowerCase();
+      if (param) {
+        filters[key] = param.toLowerCase();
+        filtering = true;
+      }
     }
 
     prefilteredRows = rows.filter((row) =>
@@ -147,7 +152,19 @@ export default function Table<T extends { [key: string]: any; read?: boolean }>(
               />
             )}
           </div>
-          {ActionButtons && <ActionButtons rows={sortedRows} />}
+          <div className="flex space-x-3">
+            {filtering && (
+              <IconButton
+                onClick={() => {
+                  setSearchParams(new URLSearchParams());
+                }}
+                Icon={Close}
+              >
+                Clear Filter
+              </IconButton>
+            )}
+            {ActionButtons && <ActionButtons rows={sortedRows} />}
+          </div>
         </div>
       )}
       <div className="flex flex-row border border-gray-300 rounded-lg md:divide-x divide-gray-300 h-[600px] overflow-y-auto">
