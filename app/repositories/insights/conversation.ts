@@ -3,6 +3,7 @@ import {
   consverationReportTable,
   residentTable,
   roomTable,
+  zoneTable,
 } from "~/utilties/schema.server";
 import { db } from "~/utilties/postgres.server";
 import { and, eq, sql } from "drizzle-orm";
@@ -28,6 +29,7 @@ export async function readConversationInsightsCountAsRD(
     )
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
+    .where(eq(buildingTable.id, buildingId));
 
   const { count } = data[0];
 
@@ -62,22 +64,12 @@ export async function readConversationInsightsHighPriorityCountAsRD(
 ): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.highPriority} THEN 1 END)::integer`,
+      count: sql<number>`COUNT(CASE WHEN ${consverationReportTable.highPriority} = TRUE THEN 1 END)::integer`,
     })
     .from(consverationReportTable)
-    .innerJoin(
-      residentTable,
-      eq(residentTable.id, consverationReportTable.residentId)
-    )
-    .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-    .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-    .where(
-      and(
-        eq(consverationReportTable.highPriority, true),
-        eq(buildingTable.staffId, staffId)
-      )
-    );
-
+    .innerJoin(zoneTable, eq(zoneTable.id, consverationReportTable.zoneId))
+    .where(eq(zoneTable.staffId, staffId))
+    
   const { count } = data[0];
     /**
    * calculates the level of concern about the number of conversations
@@ -86,7 +78,7 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   function calculateLevel() {
     if (count == 0) {
       return "great";
-    } else if (count > 5 && count < 15) {
+    } else if (count < 3 * 5) {
       return "warning";
     } else {
       return "danger";
@@ -204,7 +196,7 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   function calculateLevel() {
     if (count == 0) {
       return "great";
-    } else if (count > 5 && count < 15) {
+    } else if (count < 3 * 10) {
       return "warning";
     } else {
       return "danger";
