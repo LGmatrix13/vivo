@@ -8,6 +8,7 @@ import {
 import { db } from "~/utilties/postgres.server";
 import { and, eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
+import ConversationForm from "~/components/forms/ConversationForm";
 
 
 /**
@@ -16,20 +17,15 @@ import { IInsight } from "~/models/insights";
  * @returns a insight representing the count of conversations
  */
 export async function readConversationInsightsCountAsRD(
-  buildingId: number
+  staffId: number
 ): Promise<IInsight> {
   const data = await db.client
     .select({
-      count: sql<number>`COUNT(*)`,
+      count: sql<number>`COUNT(${consverationReportTable.id})`,
     })
     .from(consverationReportTable)
-    .innerJoin(
-      residentTable,
-      eq(residentTable.id, consverationReportTable.residentId)
-    )
-    .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-    .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-    .where(eq(buildingTable.id, buildingId));
+    .innerJoin(zoneTable, eq(zoneTable.id, consverationReportTable.zoneId))
+    .where(eq(zoneTable.staffId, staffId))
 
   const { count } = data[0];
 
