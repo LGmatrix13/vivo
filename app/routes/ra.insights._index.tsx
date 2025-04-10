@@ -33,7 +33,6 @@ import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
 import RoundForm from "~/components/forms/RoundForm";
 import { createRound } from "~/repositories/reports/round";
 import EventForm from "~/components/forms/EventForm";
-import { createEvent } from "~/repositories/reports/event";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);

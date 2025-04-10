@@ -100,7 +100,7 @@ export async function readEventInsightsCountAsRD(
   }
 
   return {
-    title: `You have had ${count} events`,
+    title: `${count} events have occured with your building`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
@@ -167,7 +167,7 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   }
 
   return {
-    title: `${count} events have occured`,
+    title: `${count} events have occured on campus`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",

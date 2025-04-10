@@ -45,16 +45,17 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
+      checkoutRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'RA_CHECKOUT' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
     .innerJoin(roomTable, eq(residentTable.roomId, roomTable.id))
     .where(eq(roomTable.zoneId, zoneId));
-  const { completeRCIs, approvedRCIs } = data[0];
+  const { completeRCIs, approvedRCIs, checkoutRCIs } = data[0];
 
   return [
     {
-      title: `${completeRCIs} RCIs waiting for RA approval`,
+      title: `${completeRCIs} RCIs waiting for RA check-in approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 1),
       href: `/ra/rcis/approve-check-in`,
     },
@@ -62,6 +63,11 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
       href: `/ra/rcis/approve-check-in`,
+    },
+    {
+      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      level: calculateLevelCompleteRCI(checkoutRCIs, 1),
+      href: `/ra/rcis/approve-check-out`,
     },
   ];
 }
@@ -77,6 +83,7 @@ export async function readRCIInsightsAsRD(
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
+      checkoutRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'RA_CHECKOUT' THEN 1 END)::integer`,
     })
     .from(RCITable)
     .innerJoin(residentTable, eq(RCITable.residentId, residentTable.id))
@@ -84,7 +91,7 @@ export async function readRCIInsightsAsRD(
     .innerJoin(zoneTable, eq(zoneTable.id, roomTable.zoneId))
     .where(eq(zoneTable.staffId, staffId));
 
-  const { completeRCIs, approvedRCIs } = data[0];
+  const { completeRCIs, approvedRCIs, checkoutRCIs } = data[0];
 
   return [
     {
@@ -96,6 +103,11 @@ export async function readRCIInsightsAsRD(
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
       href: `/staff/housing/rcis/active`,
+    },
+    {
+      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      level: calculateLevelCompleteRCI(checkoutRCIs, 5),
+      href: `/staff/housing/rcis/checked-out`,
     },
   ];
 }
@@ -109,10 +121,11 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
     .select({
       completeRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'AWAITING_RA' THEN 1 END)::integer`,
       approvedRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'ACTIVE' THEN 1 END)::integer`,
+      checkoutRCIs: sql<number>`COUNT(CASE WHEN ${RCITable.status} = 'RA_CHECKOUT' THEN 1 END)::integer`,
     })
     .from(RCITable);
 
-  const { completeRCIs, approvedRCIs } = data[0];
+  const { completeRCIs, approvedRCIs, checkoutRCIs } = data[0];
 
   return [
     {
@@ -124,6 +137,11 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
       href: `/staff/housing/rcis/active`,
+    },
+    {
+      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      level: calculateLevelCompleteRCI(checkoutRCIs, 45),
+      href: `/staff/housing/rcis/checked-out`,
     },
   ];
 }

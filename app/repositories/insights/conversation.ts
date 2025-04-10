@@ -28,9 +28,6 @@ export async function readConversationInsightsCountAsRD(
     )
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
-    .where(
-      eq(buildingTable.id, buildingId)
-    );
 
   const { count } = data[0];
 
@@ -51,7 +48,6 @@ export async function readConversationInsightsCountAsRD(
   return {
     title: `${count} conversations have been logged`,
     level: calculateLevel(),
-
     href: "/staff/reports/conversation",
   };
 }
@@ -100,7 +96,7 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   return {
     title: `${count} high priority conversations`,
     level: calculateLevel(),
-    href: "/staff/reports/conversation?highPriority=true",
+    href: "/staff/reports/conversation?highPriority=Yes",
   };
 }
 
