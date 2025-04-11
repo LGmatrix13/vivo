@@ -2,7 +2,6 @@ import {
   json,
   useLoaderData,
   useOutletContext,
-  useSearchParams,
 } from "@remix-run/react";
 import { Download, FileSearch, Plus } from "~/components/common/Icons";
 import Table from "~/components/common/Table";
@@ -27,7 +26,6 @@ import {
 import EventForm from "~/components/forms/EventForm";
 import { IUser } from "~/models/user";
 import DeleteForm from "~/components/forms/DeleteForm";
-import RoundForm from "~/components/forms/RoundForm";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const user = await auth.readUser(request, ["ra"]);
