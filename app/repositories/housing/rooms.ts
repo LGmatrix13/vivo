@@ -52,6 +52,7 @@ export async function readRoomsAsAdmin() {
       roomType: roomTable.roomType,
       capacity: roomTable.capacity,
       zoneId: zoneTable.id,
+      zone: sql<string>`coalesce(${zoneTable.alias}, '')`
     })
     .from(roomTable)
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))
@@ -84,6 +85,7 @@ export async function readRoomsAsRD(id: number) {
       roomType: roomTable.roomType,
       capacity: roomTable.capacity,
       zoneId: zoneTable.id,
+      zone: sql<string>`coalesce(${zoneTable.alias}, '')`
     })
     .from(roomTable)
     .innerJoin(buildingTable, eq(buildingTable.id, roomTable.buildingId))

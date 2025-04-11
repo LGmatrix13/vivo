@@ -28,7 +28,7 @@ export default function RoomForm(props: RoomFormProps) {
     },
     ...rasDropdown.map((option) => {
       return {
-        key: option.name,
+        key: option.zoneAliasAndRA,
         value: option.id,
       };
     }),
@@ -80,7 +80,7 @@ export default function RoomForm(props: RoomFormProps) {
         required
       />
       <Select
-        label="RA"
+        label="Zone"
         name="zoneId"
         options={raOptions}
         selected={room?.zoneId}

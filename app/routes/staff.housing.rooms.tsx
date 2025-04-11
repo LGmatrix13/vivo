@@ -65,11 +65,13 @@ export default function StaffHousingRoomsPage() {
   const columnKeys = {
     room: "Room",
     capacity: "Capacity",
+    zone: "Zone",
     raFullName: "RA",
   };
   const rowKeys = {
     building: "Building",
     roomNumber: "Room #",
+    zone: "Zone",
     raFullName: "RA",
     capacity: "Capacity",
   };

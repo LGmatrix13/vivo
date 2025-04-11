@@ -147,6 +147,10 @@ export async function readRAsDropdownAsAdmin() {
         "rd"
       ),
       buildingId: buildingTable.id,
+      zoneName: zoneTable.alias,
+      zoneAliasAndRA: sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+        "zoneAliasAndRA"
+      ),
     })
     .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
@@ -169,6 +173,10 @@ export async function readRAsDropdownAsRD(id: number) {
         "rd"
       ),
       buildingId: buildingTable.id,
+      zoneName: zoneTable.alias,
+      zoneAliasAndRA: sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+        "zoneAliasAndRA"
+      ),
     })
     .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
