@@ -1,4 +1,4 @@
-import { IConversationReport, IConversationReportAsRA } from "~/models/reports";
+import { IConversationReportAsRA } from "~/models/reports";
 import Form from "../common/Form";
 import Textarea from "../common/Textarea";
 import Select from "../common/Select";
