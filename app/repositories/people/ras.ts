@@ -156,7 +156,9 @@ export async function readRAsDropdownAsAdmin() {
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
     .innerJoin(staffTable, eq(staffTable.id, zoneTable.staffId))
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
-    .orderBy(asc(residentTable.lastName));
+    .orderBy(asc(sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+      "zoneAliasAndRA"
+    )));
 
   return ras;
 }
@@ -183,7 +185,9 @@ export async function readRAsDropdownAsRD(id: number) {
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
     .where(eq(staffTable.id, id))
-    .orderBy(asc(residentTable.lastName));
+    .orderBy(asc(sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+      "zoneAliasAndRA"
+    )));
 
   return ras;
 }
