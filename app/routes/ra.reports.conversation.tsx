@@ -22,6 +22,7 @@ import ConversationForm from "~/components/forms/ConversationForm";
 import { readResidentsDropdownAsRA } from "~/repositories/people/residents";
 import DeleteForm from "~/components/forms/DeleteForm";
 import { IConversationReportAsRA } from "~/models/reports";
+import Instruction from "~/components/common/Instruction";
 
 export async function loader({ request }: ActionFunctionArgs) {
   const ra = await auth.readUser(request, ["ra"]);
@@ -94,10 +95,7 @@ export default function AdminReportsRoundPage() {
       }}
       rowKeys={rowKeys}
       InstructionComponent={() => (
-        <div className="w-2/5 p-5 space-y-3 flex flex-col items-center justify-center">
-          <FileSearch className="w-7 h-7" />
-          <h2 className="text-xl font-bold">First Select a Conversation</h2>
-        </div>
+        <Instruction Icon={FileSearch} title="First Select a Converstation Report" />
       )}
       EditComponent={({ row }) => (
         <ConversationForm
