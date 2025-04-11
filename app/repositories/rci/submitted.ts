@@ -23,22 +23,13 @@ type Values = { [key: string]: any };
 export async function readSubmittedRCIAsRA(zoneId: number) {
   const data = await db.client
     .select({
-      id: RCITable.id,
-      roomType: roomTable.roomType,
-      roomId: roomTable.id,
-      issues: RCITable.issues,
+      id: residentTable.id,
     })
-    .from(roomTable)
-    .innerJoin(residentTable, eq(residentTable.roomId, roomTable.id))
+    .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
-    .leftJoin(RCITable, eq(roomTable.id, residentTable.roomId))
     .where(eq(zoneTable.id, zoneId));
 
-  const rci = data[0];
-  return {
-    ...rci,
-    issues: rci.issues as Record<string, string> | undefined,
-  };
+  return readSubmittedRCI(data[0].id);
 }
 
 /**
@@ -144,8 +135,6 @@ export async function readActiveRCIsAsRA(zoneId: number) {
     .leftJoin(LimbleTable, eq(LimbleTable.roomId, roomTable.id))
     .where(and(eq(zoneTable.id, zoneId), eq(RCITable.status, "ACTIVE")))
     .orderBy(desc(RCITable.id));
-
-  console.log(data);
 
   const formattedData = data.map((rci) => {
     return {
