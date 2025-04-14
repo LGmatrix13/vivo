@@ -62,7 +62,7 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
     {
       title: `${approvedRCIs} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
-      href: `/ra/rcis/approve-check-in`,
+      href: `/ra/rcis/active`,
     },
     {
       title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
