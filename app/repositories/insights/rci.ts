@@ -55,17 +55,17 @@ export async function readRCIInsightsAsRA(zoneId: number): Promise<IInsight[]> {
 
   return [
     {
-      title: `${completeRCIs} RCIs waiting for RA check-in approval`,
+      title: `${completeRCIs || 0} RCIs waiting for RA check-in approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 1),
       href: `/ra/rcis/approve-check-in`,
     },
     {
-      title: `${approvedRCIs} approved RCIs`,
+      title: `${approvedRCIs || 0} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 1),
       href: `/ra/rcis/active`,
     },
     {
-      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      title: `${checkoutRCIs || 0} RCIs waiting for RA check-out approval`,
       level: calculateLevelCompleteRCI(checkoutRCIs, 1),
       href: `/ra/rcis/approve-check-out`,
     },
@@ -95,17 +95,17 @@ export async function readRCIInsightsAsRD(
 
   return [
     {
-      title: `${completeRCIs} RCIs waiting for RA approval`,
+      title: `${completeRCIs || 0} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 5),
       href: `/staff/housing/rcis/active`,
     },
     {
-      title: `${approvedRCIs} approved RCIs`,
+      title: `${approvedRCIs || 0} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 5),
       href: `/staff/housing/rcis/active`,
     },
     {
-      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      title: `${checkoutRCIs || 0} RCIs waiting for RA check-out approval`,
       level: calculateLevelCompleteRCI(checkoutRCIs, 5),
       href: `/staff/housing/rcis/checked-out`,
     },
@@ -129,17 +129,17 @@ export async function readRCIInsightsAsAdmin(): Promise<IInsight[]> {
 
   return [
     {
-      title: `${completeRCIs} RCIs waiting for RA approval`,
+      title: `${completeRCIs || 0} RCIs waiting for RA approval`,
       level: calculateLevelCompleteRCI(completeRCIs, 45),
       href: `/staff/housing/rcis/active`,
     },
     {
-      title: `${approvedRCIs} approved RCIs`,
+      title: `${approvedRCIs || 0} approved RCIs`,
       level: calculateLevelApprovedRCI(approvedRCIs, 45),
       href: `/staff/housing/rcis/active`,
     },
     {
-      title: `${checkoutRCIs} RCIs waiting for RA check-out approval`,
+      title: `${checkoutRCIs || 0} RCIs waiting for RA check-out approval`,
       level: calculateLevelCompleteRCI(checkoutRCIs, 45),
       href: `/staff/housing/rcis/checked-out`,
     },

@@ -49,7 +49,7 @@ export async function readRoundReportInsightsViolationsAsRD(
   const { count } = data[0];
 
   return {
-    title: `${count} violations`,
+    title: `${count || 0} violations`,
     level: calculateLevelViolation(count),
     href: "/staff/reports/round?hasViolations=true",
   };
@@ -73,7 +73,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRD(
   const { count } = data[0];
 
   return {
-    title: `${count} outstanding work orders`,
+    title: `${count || 0} outstanding work orders`,
     level: calculateLevelOutstandingWorkOrders(count),
     href: "/staff/reports/round?hasOutstandingWorkOrders=true",
   };
@@ -93,7 +93,7 @@ export async function readRoundReportInsightsViolationsAsAdmin() {
   const { count } = data[0];
 
   return {
-    title: `${count} violations`,
+    title: `${count || 0} violations`,
     level: calculateLevelViolation(count),
     href: "/staff/reports/round?hasViolations=true",
   };
@@ -113,7 +113,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsAdmin() {
   const { sum } = data[0];
 
   return {
-    title: `${sum} outstanding work orders`,
+    title: `${sum || 0} outstanding work orders`,
     level: calculateLevelOutstandingWorkOrders(sum),
     href: "/staff/reports/round?hasOutstandingWorkOrders=true",
   };
@@ -134,7 +134,7 @@ export async function readRoundReportInsightsViolationsAsRA(zoneId: number) {
   const { count } = data[0];
 
   return {
-    title: `${count} violations`,
+    title: `${count || 0} violations`,
     level: calculateLevelViolation(count),
     href: "/ra/reports/round?hasViolations=true",
   };
@@ -157,7 +157,7 @@ export async function readRoundReportInsightsOutstandingWorkOrdersAsRA(
   const { sum } = data[0];
 
   return {
-    title: `${sum} outstanding work orders`,
+    title: `${sum || 0} outstanding work orders`,
     level: calculateLevelOutstandingWorkOrders(sum),
     href: "/ra/reports/round?hasOutstandingWorkOrders=true",
   };

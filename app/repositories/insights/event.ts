@@ -30,7 +30,7 @@ export async function readEventInsightsCountAsRA(
   }
 
   return {
-    title: `You have had ${count} events`,
+    title: `You have had ${count || 0} events`,
     level: calculateLevel(),
 
     href: "/ra/reports/event",
@@ -64,7 +64,7 @@ export async function readEventInsightsAttendanceAsRA(
   }
 
   return {
-    title: `${sum} total residents have attended your events`,
+    title: `${sum || 0} total residents have attended your events`,
     level: calculateLevel(),
 
     href: "/ra/reports/event",
@@ -100,7 +100,7 @@ export async function readEventInsightsCountAsRD(
   }
 
   return {
-    title: `${count} events have occured with your building`,
+    title: `${count || 0} events have occured in your building`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
@@ -136,7 +136,7 @@ export async function readEventInsightsAttendanceAsRD(
   }
 
   return {
-    title: `${sum} total residents have attended events`,
+    title: `${sum || 0} total residents have attended events`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
@@ -167,7 +167,7 @@ export async function readEventInsightsCountAsAdmin(): Promise<IInsight> {
   }
 
   return {
-    title: `${count} events have occured on campus`,
+    title: `${count || 0} events have occured on campus`,
     level: calculateLevel(),
 
     href: "/staff/reports/event",
@@ -198,7 +198,7 @@ export async function readEventInsightsAttendanceAsAdmin(): Promise<IInsight> {
   }
 
   return {
-    title: `${sum} total residents have attended events`,
+    title: `${sum || 0} total residents have attended events`,
     level: calculateLevel(),
     href: "/staff/reports/event",
   };
@@ -229,7 +229,7 @@ export async function readEventInsightsLastEventAsRA(zoneId: number) {
   }
 
   return {
-    title: `${difference} days since your last event`,
+    title: `${difference || 0} days since your last event`,
     level: calculateLevel(),
     action: {
       title: "Create an Event Report",

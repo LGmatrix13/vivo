@@ -8,8 +8,6 @@ import {
 import { db } from "~/utilties/postgres.server";
 import { and, eq, sql } from "drizzle-orm";
 import { IInsight } from "~/models/insights";
-import ConversationForm from "~/components/forms/ConversationForm";
-
 
 /**
  * 
@@ -44,7 +42,7 @@ export async function readConversationInsightsCountAsRD(
   }
 
   return {
-    title: `${count} conversations have been logged`,
+    title: `${count || 0} conversations have been logged`,
     level: calculateLevel(),
     href: "/staff/reports/conversation",
   };
@@ -82,7 +80,7 @@ export async function readConversationInsightsHighPriorityCountAsRD(
   }
 
   return {
-    title: `${count} high priority conversations`,
+    title: `${count || 0} high priority conversations`,
     level: calculateLevel(),
     href: "/staff/reports/conversation?highPriority=Yes",
   };
@@ -117,7 +115,7 @@ export async function readConversationInsightsLevelThreeCountAsRD(
   const { count } = data[0];
 
   return {
-    title: `${count} level 3 conversations`,
+    title: `${count || 0} level 3 conversations`,
     level: "great",
     href: "/staff/reports/conversation?level=3",
   };
@@ -158,7 +156,7 @@ export async function readConversationInsightsCountAsAdmin(): Promise<IInsight> 
   }
 
   return {
-    title: `${count} conversations have been logged`,
+    title: `${count || 0} conversations have been logged`,
     level: calculateLevel(),
     href: "/staff/reports/conversation",
   };
@@ -200,7 +198,7 @@ export async function readConversationInsightsHighPriorityCountAsAdmin(): Promis
   }
 
   return {
-    title: `${count} high priority conversations`,
+    title: `${count || 0} high priority conversations`,
     level: calculateLevel(),
     href: "/staff/reports/conversation?highPriority=Yes",
   };
@@ -228,7 +226,7 @@ export async function readConversationInsightsLevelThreeAsAdmin(): Promise<IInsi
   const { count } = data[0];
 
   return {
-    title: `${count} level 3 conversations`,
+    title: `${count || 0} level 3 conversations`,
     level: "great",
     href: "/staff/reports/conversation?level=3",
   };
