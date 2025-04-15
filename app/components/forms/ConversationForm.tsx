@@ -49,6 +49,9 @@ export default function ConversationForm(props: ConversationFormProps) {
     },
   ];
 
+  console.log(conversation?.highPriority)
+  console.log(typeof conversation?.highPriority)
+
   return (
     <Form
       button="Save Conversation"
@@ -67,7 +70,7 @@ export default function ConversationForm(props: ConversationFormProps) {
         placeholder="Who was the conversation with..."
         name="residentId"
         options={residentOptions}
-        defaultValue={conversation?.residentId}
+        selected={conversation?.residentId}
         step=".01"
         required
       />
@@ -96,7 +99,7 @@ export default function ConversationForm(props: ConversationFormProps) {
         label="High Priority"
         name="highPriority"
         options={highPriorityOptions}
-        selected={conversation?.highPriority || false}
+        selected={conversation?.highPriority && conversation.highPriority === "Yes"}
         required
       />
     </Form>
