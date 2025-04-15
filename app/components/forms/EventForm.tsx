@@ -14,6 +14,11 @@ interface EventFormProps {
  */
 export default function EventForm(props: EventFormProps) {
   const { event, zoneId, action } = props;
+
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const defaultDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
   return (
     <Form
       button="Save Event"
@@ -31,6 +36,7 @@ export default function EventForm(props: EventFormProps) {
           placeholder="Time"
           name="time"
           type="datetime-local"
+          defaultValue={defaultDateTime}
           required
         />
       )}

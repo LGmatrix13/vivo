@@ -15,6 +15,11 @@ interface ConversationFormProps {
 export default function RoundForm(props: ConversationFormProps) {
   const { round, zoneId, action } = props;
 
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const defaultDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+
   return (
     <Form
       button="Save Round Report"
@@ -32,6 +37,7 @@ export default function RoundForm(props: ConversationFormProps) {
           placeholder="Time"
           name="time"
           type="datetime-local"
+          defaultValue={defaultDateTime}
           required
         />
       )}
