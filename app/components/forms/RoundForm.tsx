@@ -38,7 +38,7 @@ export default function RoundForm(props: ConversationFormProps) {
       <Textarea
         label="Round Description"
         name="description"
-        defaultValue={round?.description}
+        defaultValue={round?.description || ""}
         required
       />
       <Textarea
