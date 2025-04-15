@@ -52,36 +52,43 @@ export default function WeeklyForm(props: WeeklyFormProps) {
         label={"Self Assess RA Responsibilities"}
         name={"raResponsibilities"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Academic Responsibilities"}
         name={"academics"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Spiritual Health"}
         name={"spiritualHealth"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Physical Health"}
         name={"physicalHealth"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Mental Health"}
         name={"mentalHealth"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Person Life"}
         name={"personalLife"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Select
         label={"Self Assess Technology & Media"}
         name={"technologyAndMedia"}
         options={ratingOptions}
+        selected={"OK"}
       />
       <Textarea label="Explain your choices above" name="explainChoices" />
     </Form>
