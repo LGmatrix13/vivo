@@ -129,7 +129,7 @@ export default function StaffHousingRCIsActivePage() {
         <Instruction Icon={FileSearch} title="First Select an RCI" />
       )}
       ActionButtons={({ rows }) => (
-        <div className="flex flex-row space-x-3">
+        <div className="flex flex-wrap gap-3">
           <DrawerProvider>
             <DrawerContent>
               <ReleaseAllRCIsForm
