@@ -35,10 +35,13 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "update.userInfo":
-      const file = values["file"] as File;
-      if (!files.checkExtension(file.name, ".png")) {
+      const file = values["avatar"] as File;
+      if (
+        !files.checkExtension(file.name, ".png") ||
+        !files.checkExtension(file.name, ".jpeg")
+      ) {
         return mutate(request.url, {
-          message: "File must be a .png",
+          message: "File must be an image",
           level: "failure",
         });
       }

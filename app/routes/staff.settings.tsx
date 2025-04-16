@@ -25,11 +25,14 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "update.userInfo":
       await auth.rejectUnauthorized(request, ["rd", "admin"]);
-      const file = values["file"] as File;
+      const file = values["avatar"] as File;
 
-      if (!files.checkExtension(file.name, ".csv")) {
+      if (
+        !files.checkExtension(file.name, ".png") ||
+        !files.checkExtension(file.name, ".jpeg")
+      ) {
         return mutate(request.url, {
-          message: "File must be a .png",
+          message: "File must be an image",
           level: "failure",
         });
       }

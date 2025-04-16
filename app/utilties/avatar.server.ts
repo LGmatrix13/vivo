@@ -14,21 +14,13 @@ async function upload(
   request: Request,
   values: Record<string, FormDataEntryValue>
 ) {
-  const user = await auth.readUser(request, [
-    "admin",
-    "admin",
-    "ra",
-    "rd",
-    "ard",
-    "resident",
-  ]);
+  const user = await auth.readUser(request, ["admin", "admin", "ra", "rd"]);
 
   const { avatar } = values;
 
   if (!avatar) {
     return false;
   }
-
   const buffer = await (avatar as File).arrayBuffer();
   const imageBuffer = Buffer.from(buffer);
   const processedImage = await sharp(imageBuffer).resize(100).webp().toBuffer();
@@ -52,7 +44,7 @@ async function exists(userId: number, role: Role) {
   const absolutePath = path.join(
     __dirname,
     `../../public/avatars`,
-    `${userId}_${role}.webp`
+    `${role}_${userId}.webp`
   );
   return access(absolutePath, fs.constants.F_OK)
     .then(() => true)
@@ -63,7 +55,7 @@ async function exists(userId: number, role: Role) {
  * create stream to an avatar file
  */
 async function _fileStream(userId: number, role: Role) {
-  return files.stream(`../../public/avatars/${userId}_${role}.webp`);
+  return files.stream(`../../public/avatars/${role}_${userId}.webp`);
 }
 
 /**
