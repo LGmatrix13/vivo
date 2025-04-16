@@ -7,7 +7,7 @@ import {
 } from "~/schemas/shifts/staffShift";
 import { db } from "~/utilties/postgres.server";
 import { csv } from "~/utilties/csv";
-import { formatDate } from "~/utilties/formatDate";
+import { formatDateWithoutOffset } from "~/utilties/formatDate";
 import mutate from "~/utilties/mutate.server";
 import { staffShiftTable, staffTable } from "~/utilties/schema.server";
 
@@ -31,7 +31,7 @@ export async function readShiftsRDAsAdmin() {
 
   const formattedData = data.map((shift) => ({
     ...shift,
-    day: formatDate(shift.date, false, true),
+    day: formatDateWithoutOffset(shift.date),
   }));
 
   return formattedData;

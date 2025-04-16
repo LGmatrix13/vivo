@@ -32,7 +32,7 @@ export async function readOnDutyRAAsAdmin() {
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
     .innerJoin(residentTable, eq(residentTable.id, zoneTable.residentId))
     .innerJoin(roomTable, eq(roomTable.id, residentTable.roomId))
-    .where(sql`${zoneShiftTable.date} = CURRENT_DATE - INTERVAL '1 day'`);
+    .where(sql`${zoneShiftTable.date} = CURRENT_DATE`);
 
   return data;
 }

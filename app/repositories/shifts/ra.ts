@@ -12,7 +12,7 @@ import {
 } from "~/utilties/schema.server";
 import { json } from "@remix-run/node";
 import mutate from "~/utilties/mutate.server";
-import { formatDate } from "~/utilties/formatDate";
+import { formatDateWithoutOffset } from "~/utilties/formatDate";
 type Values = { [key: string]: any };
 
 /**
@@ -37,7 +37,7 @@ export async function readShiftsRAAsAdmin() {
 
   const formattedData = data.map((shift) => ({
     ...shift,
-    day: formatDate(shift.date, false, true),
+    day: formatDateWithoutOffset(shift.date),
   }));
   return formattedData;
 }
@@ -76,8 +76,9 @@ export async function readShiftsRAAsRA(id: number) {
 
   const formattedData = data.map((shift) => ({
     ...shift,
-    day: formatDate(shift.date, false, true),
+    day: formatDateWithoutOffset(shift.date),
   }));
+
   return formattedData;
 }
 
@@ -108,7 +109,7 @@ export async function readShiftsRAAsRD(id: number) {
 
   const formattedData = data.map((shift) => ({
     ...shift,
-    day: formatDate(shift.date, false, true),
+    day: formatDateWithoutOffset(shift.date),
   }));
 
   return formattedData;
