@@ -21,9 +21,9 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (intent) {
     case "upload":
       const file = values["file"] as File;
-      if (!files.checkExtension(file.name, ".png")) {
+      if (!files.checkExtension(file.name, ".csv")) {
         return mutate(request.url, {
-          message: "File must be a .png",
+          message: "File must be a .csv",
           level: "failure",
         });
       }
