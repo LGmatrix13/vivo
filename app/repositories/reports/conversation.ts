@@ -1,4 +1,4 @@
-import { sql, eq, and, aliasedTable } from "drizzle-orm";
+import { sql, eq, and, aliasedTable, desc } from "drizzle-orm";
 import {
   Conversation,
   CreatedConversation,
@@ -52,7 +52,7 @@ export async function readConversationReports() {
         eq(readTable.reportType, "CONVERSATION")
       )
     )
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((event) => {
     return {
@@ -104,7 +104,7 @@ export async function readConversationReportsAsRD(id: number) {
       )
     )
     .where(eq(staffTable.id, id))
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((event) => {
     return {
@@ -146,7 +146,7 @@ export async function readConversationReportsAsRA(id: number) {
       eq(residentTable.id, consverationReportTable.residentId)
     )
     .where(eq(zoneTable.id, id))
-    .orderBy(consverationReportTable.submitted);
+    .orderBy(desc(consverationReportTable.submitted));
 
   const formattedData = data.map((conversation) => {
     return {

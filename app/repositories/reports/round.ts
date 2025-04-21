@@ -57,8 +57,6 @@ export async function readRoundReports() {
     };
   });
 
-  console.log("tes", formattedData);
-
   return formattedData;
 }
 
