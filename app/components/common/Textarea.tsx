@@ -28,6 +28,7 @@ export default function Textarea(props: TextareaProps) {
       <textarea
         {...props}
         defaultValue={defaultValue}
+        maxLength={220}
         onChange={(e) => {
           setState && setState(e.target.value);
         }}
