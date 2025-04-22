@@ -28,7 +28,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const file = values["avatar"] as File;
 
       if (
-        !files.checkExtension(file.name, ".png") ||
+        !files.checkExtension(file.name, ".png") &&
         !files.checkExtension(file.name, ".jpeg")
       ) {
         return mutate(request.url, {
