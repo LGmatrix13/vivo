@@ -151,9 +151,8 @@ export async function readRAHealthInsightsAsAdmin() {
   return processInsights(data[0]);
 }
 
-
 /**
- * 
+ *
  * process ra health into insights
  * @returns a list of insights based on the given data from the database
  */
@@ -193,7 +192,7 @@ function processInsights(data: any): IInsight[] {
     },
     {
       title: `${data.goodPersonalLife} reported good personal life`,
-      level: "good",
+      level: "great",
       value: data.goodPersonalLife,
       href: "/staff/reports/weekly?personalLife=GOOD",
     },
