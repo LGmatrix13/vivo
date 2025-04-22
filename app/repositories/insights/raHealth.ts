@@ -218,7 +218,7 @@ function processInsights(data: any): IInsight[] {
     },
     {
       title: `${data.goodSpiritualHealth} reported good spiritual health`,
-      level: "good",
+      level: "great",
       value: data.goodSpiritualHealth,
       href: "/staff/reports/weekly?spiritualHealth=GOOD",
     },
