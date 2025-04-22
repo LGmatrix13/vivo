@@ -34,10 +34,44 @@ export async function action({ request }: LoaderFunctionArgs) {
       ra: 3,
     };
 
+    const users: Record<
+      Role,
+      {
+        firstName: string;
+        lastName: string;
+        email: string;
+      }
+    > = {
+      admin: {
+        firstName: "Tori",
+        lastName: "Wright",
+        email: "wrightt@gcc.edu",
+      },
+      ra: {
+        firstName: "Josh",
+        lastName: "Beliz",
+        email: "belizj@gcc.edu",
+      },
+      ard: {
+        firstName: "Josh",
+        lastName: "Beliz",
+        email: "belizj@gcc.edu",
+      },
+      rd: {
+        firstName: "Chris",
+        lastName: "Merrick",
+        email: "merrickc@gcc.edu",
+      },
+      resident: {
+        firstName: "Chris",
+        lastName: "Merrick",
+        email: "merrickc@gcc.edu",
+      },
+    };
+
     const user = {
+      ...users[role as Role],
       id: id[role as Role],
-      firstName: "Ethan",
-      lastName: "Kesterholt",
       role: role as Role,
       email: "kesterholter21@gcc.edu",
       avatar:

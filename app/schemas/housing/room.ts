@@ -8,7 +8,11 @@ export const Room = z.object({
     z.literal("null").transform(() => null),
     z.coerce.number({ message: "Zone ID must be a number or null" }),
   ]),
-  capacity: z.coerce.number({ message: "Capacity is required" }),
+  capacity: z.coerce
+    .number({ message: "Capacity is required" })
+    .refine((val) => val < 6, {
+      message: "Capacity must be less than 6",
+    }),
   roomType: z.enum(
     ["UPPER_CAMPUS", "COLONIAL_QUAD", "COLONIAL_TRIPLE", "COLONIAL_DOUBLE"],
     { message: "Room Type is required" }
