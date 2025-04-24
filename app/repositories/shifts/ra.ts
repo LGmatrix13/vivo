@@ -186,6 +186,7 @@ export async function uploadDutyScheduleForRAs(values: Values, id: number) {
     //error check rows here
     if (!row["Email"] || !row["Date"]) {
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
+      erroredRows.push(row);
       continue;
     }
 

@@ -107,6 +107,7 @@ export async function uploadDutyScheduleForRD(values: Values) {
 
     //check to see if row has the correct data
     if (!row["Email"] || !row["Date"]) {
+      erroredRows.push(row);
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
       continue;
     }
