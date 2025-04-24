@@ -1,15 +1,21 @@
-import { Link, useOutletContext } from "@remix-run/react";
+import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import CollaspableContent from "~/components/common/CollaspableContent";
 import IconButton from "~/components/common/IconButton";
 import { Logout } from "~/components/common/Icons";
 import UserInfo from "~/components/common/UserInfo";
 import { IUser } from "~/models/user";
-import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { auth } from "~/utilties/auth.server";
 import { avatar } from "~/utilties/avatar.server";
 import mutate from "~/utilties/mutate.server";
 import WideButton from "~/components/common/WideButton";
 import { files } from "~/utilties/files.server";
+import { toast } from "~/utilties/toast.server";
+import { Toast } from "~/components/common/Toast";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,6 +23,10 @@ export const meta: MetaFunction = () => {
     { name: "Vivo: Settings", content: "Settings page" },
   ];
 };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return toast(request, {});
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -54,6 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function StaffSettings() {
+  const data = useLoaderData<typeof loader>();
   const context = useOutletContext<{
     user: IUser;
   }>();
@@ -81,6 +92,9 @@ export default function StaffSettings() {
           </CollaspableContent>
         )}
       </section>
+      {data.toast && (
+        <Toast level={data.toast.level}>{data.toast.message}</Toast>
+      )}
     </main>
   );
 }

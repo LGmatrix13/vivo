@@ -48,6 +48,8 @@ export default function BuildingForm(props: BuildingFormProps) {
         type="number"
         defaultValue={building?.latitude || undefined}
         step=".01"
+        min="-90.0"
+        max="90"
         required
       />
       <Input
@@ -57,6 +59,8 @@ export default function BuildingForm(props: BuildingFormProps) {
         type="number"
         defaultValue={building?.longitude || undefined}
         step=".01"
+        min="-90.0"
+        max="90"
         required
       />
     </Form>
