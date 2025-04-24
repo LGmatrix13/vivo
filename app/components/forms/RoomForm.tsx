@@ -92,6 +92,7 @@ export default function RoomForm(props: RoomFormProps) {
         name="capacity"
         type="number"
         defaultValue={room?.capacity || undefined}
+        max="6"
         required
       />
     </Form>

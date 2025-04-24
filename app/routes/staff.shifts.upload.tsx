@@ -68,7 +68,7 @@ export default function StaffAdminPeopleRDsPage() {
               className="md:flex hidden"
               onClick={() => {
                 csv.download(erroredRows, "errored_rows", {
-                  ID: "ID",
+                  Email: "Email",
                   Date: "Date",
                 });
               }}
@@ -108,9 +108,7 @@ export default function StaffAdminPeopleRDsPage() {
             </a>{" "}
             to learn how to convert from Excel to a CSV.
           </li>
-          <li>
-            All scheduling information will be archived.
-          </li>
+          <li>All scheduling information will be archived.</li>
           <li>
             Ensure your upload is formatted correctly. Compare with our{" "}
             <a href="/Schedule Template.csv" className="text-blue-600">

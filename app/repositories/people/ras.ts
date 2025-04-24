@@ -148,17 +148,22 @@ export async function readRAsDropdownAsAdmin() {
       ),
       buildingId: buildingTable.id,
       zoneName: zoneTable.alias,
-      zoneAliasAndRA: sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
-        "zoneAliasAndRA"
-      ),
+      zoneAliasAndRA:
+        sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+          "zoneAliasAndRA"
+        ),
     })
     .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
     .innerJoin(staffTable, eq(staffTable.id, zoneTable.staffId))
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
-    .orderBy(asc(sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
-      "zoneAliasAndRA"
-    )));
+    .orderBy(
+      asc(
+        sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+          "zoneAliasAndRA"
+        )
+      )
+    );
 
   return ras;
 }
@@ -176,18 +181,23 @@ export async function readRAsDropdownAsRD(id: number) {
       ),
       buildingId: buildingTable.id,
       zoneName: zoneTable.alias,
-      zoneAliasAndRA: sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
-        "zoneAliasAndRA"
-      ),
+      zoneAliasAndRA:
+        sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+          "zoneAliasAndRA"
+        ),
     })
     .from(residentTable)
     .innerJoin(zoneTable, eq(zoneTable.residentId, residentTable.id))
     .innerJoin(staffTable, eq(zoneTable.staffId, staffTable.id))
     .innerJoin(buildingTable, eq(buildingTable.staffId, staffTable.id))
     .where(eq(staffTable.id, id))
-    .orderBy(asc(sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
-      "zoneAliasAndRA"
-    )));
+    .orderBy(
+      asc(
+        sql<string>`concat(${zoneTable.alias}, ' (', ${residentTable.firstName}, ' ', ${residentTable.lastName}, ')')`.as(
+          "zoneAliasAndRA"
+        )
+      )
+    );
 
   return ras;
 }
@@ -291,7 +301,7 @@ export async function uploadMasterCSV(values: Values, request: Request) {
           error: error.message,
         });
       });
-      erroredRows.push(row);
+      erroredRows.push(data[i]);
     } else {
       const roomIndex = result.data.room.search(
         /\b[a-zA-Z0-9\-]*\d[a-zA-Z0-9\-]*\b/

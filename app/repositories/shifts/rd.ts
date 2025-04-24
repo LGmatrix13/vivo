@@ -107,7 +107,8 @@ export async function uploadDutyScheduleForRD(values: Values) {
 
     //check to see if row has the correct data
     if (!row["Email"] || !row["Date"]) {
-      erroredRows.push(row);
+      console.log(data[i]);
+      erroredRows.push(data[i]);
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
       continue;
     }
@@ -136,6 +137,7 @@ export async function uploadDutyScheduleForRD(values: Values) {
       .limit(1);
 
     if (staffRecord.length === 0) {
+      erroredRows.push(data[i]);
       errors.push({
         rowNumber: i + 1,
         error: `No staff found for email: ${formattedRow.email}`,
@@ -164,10 +166,10 @@ export async function uploadDutyScheduleForRD(values: Values) {
   }
 
   if (errors.length) {
-    return json({
+    return {
       errors,
       erroredRows,
-    });
+    };
   }
 
   return mutate("/staff/shifts/rd", {

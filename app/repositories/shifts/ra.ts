@@ -186,7 +186,7 @@ export async function uploadDutyScheduleForRAs(values: Values, id: number) {
     //error check rows here
     if (!row["Email"] || !row["Date"]) {
       errors.push({ rowNumber: i + 1, error: "Missing Email or Date" });
-      erroredRows.push(row);
+      erroredRows.push(data[i]);
       continue;
     }
 
@@ -218,6 +218,7 @@ export async function uploadDutyScheduleForRAs(values: Values, id: number) {
       .limit(1);
 
     if (zoneRecord.length === 0) {
+      erroredRows.push(data[i]);
       errors.push({
         rowNumber: i + 1,
         error: `No staff found for email: ${formattedRow.email}`,
@@ -246,10 +247,10 @@ export async function uploadDutyScheduleForRAs(values: Values, id: number) {
   }
 
   if (errors.length) {
-    return json({
+    return {
       errors,
       erroredRows,
-    });
+    };
   }
 
   return mutate("/staff/shifts/ra", {

@@ -73,7 +73,6 @@ export async function action({ request }: LoaderFunctionArgs) {
       ...users[role as Role],
       id: id[role as Role],
       role: role as Role,
-      email: "kesterholter21@gcc.edu",
       avatar:
         "https://media.licdn.com/dms/image/v2/D4D03AQFBb5N0Hlk4QA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686060645931?e=1741219200&v=beta&t=QVHwVCYIQSJowagCjG53uRAIg72CoDM7HdIxDni6o8E",
     };

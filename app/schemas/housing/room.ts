@@ -10,7 +10,7 @@ export const Room = z.object({
   ]),
   capacity: z.coerce
     .number({ message: "Capacity is required" })
-    .refine((val) => val < 6, {
+    .refine((val) => val <= 6, {
       message: "Capacity must be less than 6",
     }),
   roomType: z.enum(
