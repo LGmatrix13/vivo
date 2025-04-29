@@ -45,7 +45,7 @@ export default function RCIForm(props: RCIFormProps) {
       ))}
       <div className="space-x-2 flex items-center">
         <input type="checkbox" name="roomKeyRecieved" required />
-        <label htmlFor="roomKeyRecieved">Recieved Room Key</label>
+        <label htmlFor="roomKeyRecieved">Received Room Key</label>
       </div>
       <Input
         label="Student Signature"
