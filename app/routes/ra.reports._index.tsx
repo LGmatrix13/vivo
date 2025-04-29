@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
 
 export async function loader() {
-  return redirect("/ra/reports/weekly");
+  return redirect("/ra/reports/round");
 }

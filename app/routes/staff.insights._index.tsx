@@ -110,7 +110,7 @@ export default function StaffInsightsLayout() {
     <InsightsTable
       rows={[
         {
-          category: "On Duty",
+          category: "Rounds",
           insights: roundInsights,
         },
         {

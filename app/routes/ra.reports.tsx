@@ -34,16 +34,16 @@ export default function RAReportsLayout() {
   }>();
   const pages = [
     {
-      name: "Weekly",
-      path: "/ra/reports/weekly",
-    },
-    {
       name: "Round",
       path: "/ra/reports/round",
     },
     {
       name: "Conversation",
       path: "/ra/reports/conversation",
+    },
+    {
+      name: "Weekly",
+      path: "/ra/reports/weekly",
     },
     {
       name: "Event",
