@@ -30,7 +30,7 @@ export default function AdminLayout() {
     {
       name: "Reports",
       Icon: File,
-      default: "/ra/reports/weekly",
+      default: "/ra/reports/round",
       parent: "/ra/reports",
     },
     {
